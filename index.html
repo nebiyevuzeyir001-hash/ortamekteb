@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduPlan AZ — SingleFile</title>
+  <!-- Tailwind (no install) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
+  <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
+    <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
+  </div>
+
+  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 text-white grid place-items-center font-semibold shadow-sm">EP</div>
+        <span class="font-semibold tracking-tight">EduPlan AZ</span>
+        <span class="ml-2 inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">MVP</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <select id="lang" class="w-[130px] rounded-xl border px-3 py-2 text-sm bg-white">
+          <option value="az">Azərbaycanca</option>
+          <option value="en">English</option>
+        </select>
+        <button class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span data-i18n="nav.settings">Tənzimləmələr</span></button>
+        <button class="rounded-2xl bg-slate-900 text-white px-3 py-2 text-sm"><span data-i18n="nav.signIn">Daxil ol</span></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid lg:grid-cols-2 gap-8 items-center">
+      <div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight" id="hero-title">KSQ/BSQ və planlaşdırmanı 5 dəqiqəyə hazırla</h1>
+        <p class="mt-4 text-slate-600 text-lg" id="hero-subtitle">Sadə interfeys, premium görünüş, Azərbaycan məktəbləri üçün uyğunlaşdırılıb.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button class="rounded-2xl shadow-sm bg-slate-900 text-white px-4 py-2 text-sm"><span id="hero-cta1">Yeni sənəd</span></button>
+          <button class="rounded-2xl shadow-sm border px-4 py-2 text-sm"><span id="hero-cta2">Şablonlara bax</span></button>
+        </div>
+        <div class="mt-6 flex items-center gap-3 text-sm text-slate-600">
+          <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500 inline-block"></span><span id="hero-b1">KSQ & BSQ</span></span>
+          <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-indigo-500 inline-block"></span><span id="hero-b2">Perspektiv & gündəlik plan</span></span>
+          <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-500 inline-block"></span><span id="hero-b3">PDF/DOCX</span></span>
+        </div>
+      </div>
+      <div class="grid gap-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+            <div class="p-4">
+              <div class="text-base font-semibold">📄 <span id="feat-ksq-title">KSQ/BSQ</span></div>
+              <div class="text-sm text-slate-600 mt-1" id="feat-ksq-desc">Sinif, fənn, növ və nömrəyə görə faylları tap.</div>
+            </div>
+          </div>
+          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+            <div class="p-4">
+              <div class="text-base font-semibold">📅 <span id="feat-pp-title">Perspektiv plan (PP)</span></div>
+              <div class="text-sm text-slate-600 mt-1" id="feat-pp-desc">Fənn üzrə illik plan faylları.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">🧮 <span id="mini-calc">Kalkulyator</span></div>
+          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">🗂️ <span id="mini-templates">Şablonlar</span></div>
+          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">⬇️ <span id="mini-export">İxrac</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+    <div class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner">
+      <button data-tab="ksq" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-ksq">KSQ / BSQ</button>
+      <button data-tab="pp"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-pp">Perspektiv plan</button>
+      <button data-tab="tools" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-tools">Alətlər</button>
+    </div>
+
+    <section id="panel-ksq" class="mt-6">
+      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+        <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
+        <div class="p-4 grid lg:grid-cols-3 gap-6">
+          <div class="space-y-4">
+            <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
+              <select id="grade" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+            <div><label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
+              <select id="subject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+            <div><label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
+              <select id="ksqType" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
+                <option>KSQ</option><option>BSQ</option></select></div>
+            <div id="wrap-ksqNo"><label class="text-sm text-slate-700 block" id="lbl-ksqNo">KSQ nömrəsi</label>
+              <select id="ksqIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+            <div id="wrap-bsqNo" class="hidden"><label class="text-sm text-slate-700 block" id="lbl-bsqNo">BSQ nömrəsi</label>
+              <select id="bsqIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+          </div>
+          <div class="lg:col-span-2">
+            <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm">
+              <div class="flex items-center justify-end mb-3">
+                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
+              </div>
+              <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-pp" class="mt-6 hidden">
+      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+        <div class="p-4 border-b"><h3 class="font-semibold" id="pp-title">Perspektiv (illik) plan</h3></div>
+        <div class="p-4 grid lg:grid-cols-3 gap-6">
+          <div class="space-y-4">
+            <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
+              <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+          </div>
+          <div class="lg:col-span-2">
+            <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm">
+              <div class="flex items-center justify-end mb-3">
+                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
+              </div>
+              <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-tools" class="mt-6 hidden">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+          <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
+          <div class="p-4 space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <input type="number" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
+              <input type="number" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
+              <input type="number" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
+              <input type="number" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+            </div>
+            <input type="number" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm" />
+            <button class="rounded-2xl w-full mt-2 bg-slate-900 text-white px-4 py-2 text-sm" id="btn-calc">Hesabla</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+          <div class="p-4 border-b"><div class="text-base font-semibold">📄 <span id="tool-templates-title">Şablon kitabxanası</span></div></div>
+          <div class="p-4">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="rounded-full border px-2 py-1 text-xs">KSQ nümunələri</span>
+              <span class="rounded-full border px-2 py-1 text-xs">BSQ nümunələri</span>
+              <span class="rounded-full border px-2 py-1 text-xs">Qrublaşdırma</span>
+              <span class="rounded-full border px-2 py-1 text-xs">Rubrikalar</span>
+              <span class="rounded-full border px-2 py-1 text-xs">İllik plan</span>
+              <span class="rounded-full border px-2 py-1 text-xs">Gündəlik plan</span>
+            </div>
+            <button class="rounded-2xl w-full border px-4 py-2 text-sm" id="btn-browse">Bax</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+          <div class="p-4 border-b"><div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div></div>
+          <div class="p-4">
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              <span class="rounded-full border px-2 py-1 text-xs text-center">Multiple choice</span>
+              <span class="rounded-full border px-2 py-1 text-xs text-center">Qısa cavab</span>
+              <span class="rounded-full border px-2 py-1 text-xs text-center">Açıq sual</span>
+              <span class="rounded-full border px-2 py-1 text-xs text-center">Praktik tapşırıq</span>
+            </div>
+            <button class="rounded-2xl w-full bg-slate-900 text-white px-4 py-2 text-sm" id="btn-add">Əlavə et</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white md:col-span-2 lg:col-span-3">
+          <div class="p-4 border-b"><div class="text-base font-semibold">✅ Self-tests</div></div>
+          <ul id="tests" class="p-4 space-y-2 text-sm"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 py-10 text-sm">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · <span id="ft-rights">Bütün hüquqlar qorunur</span></p>
+      <div class="flex items-center gap-4 text-slate-600">
+        <a class="hover:underline" href="#" id="ft-terms">Şərtlər</a>
+        <a class="hover:underline" href="#" id="ft-privacy">Məxfilik</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  const demoCatalog = [
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '1',  file: 'materials/V/Azərbaycan dili/KSQ/1.docx' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '2',  file: 'materials/V/Azərbaycan dili/KSQ/2.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat',     type: 'BSQ', index: '1',  file: 'materials/V/Riyaziyyat/BSQ/1.docx' },
+    { grade: 'V', subject: 'Riyaziyyat',     type: 'BSQ', index: '2',  file: 'materials/V/Riyaziyyat/BSQ/2.docx' },
+    { grade: 'IX',subject: 'İngilis dili',   type: 'KSQ', index: '3',  file: 'materials/IX/İngilis dili/KSQ/3.docx' },
+    { grade: 'IX',subject: 'İngilis dili',   type: 'KSQ', index: '4',  file: 'materials/IX/İngilis dili/KSQ/4.docx' },
+    { subject: 'Azərbaycan dili',            type: 'PP',               file: 'materials/PP/Azərbaycan dili.docx' },
+    { subject: 'Riyaziyyat',                 type: 'PP',               file: 'materials/PP/Riyaziyyat.pdf' },
+  ];
+
+  const translations = {
+    az: {
+      nav: { settings: 'Tənzimləmələr', signIn: 'Daxil ol' },
+      hero: {
+        title: 'KSQ/BSQ və planlaşdırmanı 5 dəqiqəyə hazırla',
+        subtitle: 'Sadə interfeys, premium görünüş, Azərbaycan məktəbləri üçün uyğunlaşdırılıb.',
+        ctaPrimary: 'Yeni sənəd', ctaSecondary: 'Şablonlara bax',
+        badges: { one: 'KSQ & BSQ', two: 'Perspektiv & gündəlik plan', three: 'PDF/DOCX' }
+      },
+      features: {
+        ksqBsq: { title: 'KSQ/BSQ', desc: 'Sinif, fənn, növ və nömrəyə görə faylları tap.' },
+        pp: { title: 'Perspektiv plan (PP)', desc: 'Fənn üzrə illik plan faylları.' },
+        calc: 'Kalkulyator', templates: 'Şablonlar', export: 'İxrac'
+      },
+      tabs: { pp: 'Perspektiv plan', tools: 'Alətlər' },
+      ksq: { title: 'KSQ/BSQ', type: 'Növ' },
+      pp: { title: 'Perspektiv (illik) plan' },
+      tools: { calcTitle: 'Bal kalkulyatoru', templatesTitle: 'Şablon kitabxanası', bankTitle: 'Sual bankı' },
+      labels: { ksqNo: 'KSQ nömrəsi', bsqNo: 'BSQ nömrəsi' },
+      common: { grade: 'Sinif', subject: 'Fənn', calculate: 'Hesabla', browse: 'Bax', add: 'Əlavə et' },
+      subjects: {
+        az: 'Azərbaycan dili', lit: 'Ədəbiyyat', eng: 'İngilis dili', rus: 'Rus dili', math: 'Riyaziyyat',
+        algebra: 'Alqebra', geometry: 'Həndəsə', physics: 'Fizika', chemistry: 'Kimya', biology: 'Biologiya',
+        history: 'Tarix', az_history: 'Azərbaycan tarixi', world_history: 'Ümumi tarix', geography: 'Coğrafiya',
+        it: 'İnformatika', life: 'Həyat bilgisi', tech: 'Texnologiya', art: 'Təsviri incəsənət', music: 'Musiqi',
+        pe: 'Fiziki tərbiyə', premilitary: 'Çağırışaqədərki hazırlıq', law: 'Hüquq', economics: 'İqtisadiyyat',
+      },
+      footer: { rights: 'Bütün hüquqlar qorunur', terms: 'Şərtlər', privacy: 'Məxfilik' },
+    },
+    en: {
+      nav: { settings: 'Settings', signIn: 'Sign in' },
+      hero: {
+        title: 'Create KSQ/BSQ & yearly plans in minutes',
+        subtitle: 'Simple UX, premium look, tailored for Azerbaijan schools.',
+        ctaPrimary: 'New document', ctaSecondary: 'Browse templates',
+        badges: { one: 'KSQ & BSQ', two: 'Yearly & daily planning', three: 'PDF/DOCX' }
+      },
+      features: {
+        ksqBsq: { title: 'KSQ/BSQ', desc: 'Find files by grade, subject, type & index.' },
+        pp: { title: 'Perspective plan (Yearly)', desc: 'Yearly plan files by subject.' },
+        calc: 'Calculator', templates: 'Templates', export: 'Export'
+      },
+      tabs: { pp: 'Yearly plan', tools: 'Tools' },
+      ksq: { title: 'KSQ/BSQ', type: 'Type' },
+      pp: { title: 'Yearly plan (PP)' },
+      tools: { calcTitle: 'Term score calculator', templatesTitle: 'Template library', bankTitle: 'Question bank' },
+      labels: { ksqNo: 'KSQ number', bsqNo: 'BSQ number' },
+      common: { grade: 'Grade', subject: 'Subject', calculate: 'Calculate', browse: 'Browse', add: 'Add' },
+      subjects: {
+        az: 'Azerbaijani', lit: 'Literature', eng: 'English', rus: 'Russian', math: 'Mathematics',
+        algebra: 'Algebra', geometry: 'Geometry', physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology',
+        history: 'History', az_history: 'History of Azerbaijan', world_history: 'World History', geography: 'Geography',
+        it: 'Informatics', life: 'Life Science', tech: 'Technology', art: 'Visual Arts', music: 'Music', pe: 'Physical Education',
+        premilitary: 'Pre-military Training', law: 'Law / Civics', economics: 'Economics',
+      },
+      footer: { rights: 'All rights reserved', terms: 'Terms', privacy: 'Privacy' },
+    }
+  };
+
+  const subjectKeysByGrade = {
+    I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
+    II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+    III:['az','life','math','eng','rus','art','music','pe','tech','it'],
+    IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+    V:  ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
+    VI: ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
+    VII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+    VIII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+    IX: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
+    X:  ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+    XI: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+  };
+
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+  const state = {
+    lang: 'az', grade: 'V',
+    ksqType: 'KSQ', ksqIndex: '1', bsqIndex: '1',
+    subject: null, ppSubject: null,
+    catalog: demoCatalog,
+  };
+
+  function setActiveTab(name){
+    $$('.tab-btn').forEach(b=>{
+      const act = b.dataset.tab===name;
+      b.classList.toggle('bg-white', act);
+      b.classList.toggle('shadow-sm', act);
+      b.classList.toggle('text-slate-900', act);
+      b.classList.toggle('text-slate-600', !act);
+    });
+    ['ksq','pp','tools'].forEach(n=> $('#panel-'+n).classList.toggle('hidden', n!==name));
+  }
+  function option(el, val, text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o);}  
+
+  function subjectsFor(grade){
+    const keys = subjectKeysByGrade[grade] || Object.keys(translations[state.lang].subjects);
+    return keys.map(k => translations[state.lang].subjects[k]).filter(Boolean);
+  }
+
+  function renderSelects(){
+    const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+    const gradeEl = $('#grade'); gradeEl.innerHTML=''; grades.forEach(g=> option(gradeEl,g,g)); gradeEl.value=state.grade;
+
+    const subjEl = $('#subject'); subjEl.innerHTML='';
+    const S = subjectsFor(state.grade); S.forEach(s=> option(subjEl,s,s));
+    if(!S.includes(state.subject)) state.subject = S[0]; subjEl.value = state.subject;
+
+    $('#ksqType').value = state.ksqType;
+    const kEl=$('#ksqIndex'), bEl=$('#bsqIndex'); kEl.innerHTML=''; bEl.innerHTML='';
+    for(let i=1;i<=10;i++) option(kEl, String(i), String(i));
+    ['1','2'].forEach(i=> option(bEl,i,i));
+    kEl.value = state.ksqIndex; bEl.value = state.bsqIndex;
+
+    const ppEl = $('#ppSubject'); ppEl.innerHTML=''; const all = Object.values(translations[state.lang].subjects);
+    all.forEach(s=> option(ppEl,s,s)); if(!all.includes(state.ppSubject)) state.ppSubject=all[0]; ppEl.value=state.ppSubject;
+
+    $('#lbl-grade').textContent = translations[state.lang].common.grade;
+    $('#lbl-subject').textContent = translations[state.lang].common.subject;
+    $('#lbl-type').textContent = translations[state.lang].ksq.type;
+    $('#lbl-ksqNo').textContent = translations[state.lang].labels.ksqNo;
+    $('#lbl-bsqNo').textContent = translations[state.lang].labels.bsqNo;
+    $('#lbl-pp-subject').textContent = translations[state.lang].common.subject;
+
+    $('#ksq-title').textContent = translations[state.lang].ksq.title;
+    $('#pp-title').textContent  = translations[state.lang].pp.title;
+
+    $('#hero-title').textContent = translations[state.lang].hero.title;
+    $('#hero-subtitle').textContent = translations[state.lang].hero.subtitle;
+    $('#hero-cta1').textContent = translations[state.lang].hero.ctaPrimary;
+    $('#hero-cta2').textContent = translations[state.lang].hero.ctaSecondary;
+    $('#hero-b1').textContent = translations[state.lang].hero.badges.one;
+    $('#hero-b2').textContent = translations[state.lang].hero.badges.two;
+    $('#hero-b3').textContent = translations[state.lang].hero.badges.three;
+
+    $('#feat-ksq-title').textContent = translations[state.lang].features.ksqBsq.title;
+    $('#feat-ksq-desc').textContent  = translations[state.lang].features.ksqBsq.desc;
+    $('#feat-pp-title').textContent  = translations[state.lang].features.pp.title;
+    $('#feat-pp-desc').textContent   = translations[state.lang].features.pp.desc;
+
+    $('#tab-pp').textContent    = translations[state.lang].tabs.pp;
+    $('#tab-tools').textContent = translations[state.lang].tabs.tools;
+
+    $('#tool-calc-title').textContent      = translations[state.lang].tools.calcTitle;
+    $('#tool-templates-title').textContent = translations[state.lang].tools.templatesTitle;
+    $('#tool-bank-title').textContent      = translations[state.lang].tools.bankTitle;
+
+    $('#ft-rights').textContent  = translations[state.lang].footer.rights;
+    $('#ft-terms').textContent   = translations[state.lang].footer.terms;
+    $('#ft-privacy').textContent = translations[state.lang].footer.privacy;
+
+    document.querySelector('[data-i18n="nav.settings"]').textContent = translations[state.lang].nav.settings;
+    document.querySelector('[data-i18n="nav.signIn"]').textContent   = translations[state.lang].nav.signIn;
+  }
+
+  function buildTitle(it){
+    const format = it.file.split('.').pop().toUpperCase();
+    return it.type==='PP' ? `${it.subject} · PP · ${format}` : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
+  }
+
+  function renderKSQ(){
+    const wrap = $('#ksq-results'); wrap.innerHTML='';
+    const list = state.catalog.filter(it=>{
+      if(it.type!==state.ksqType) return false;
+      if(it.type!=='PP' && it.grade!==state.grade) return false;
+      if(it.type!=='PP' && it.subject!==state.subject) return false;
+      if(state.ksqType==='KSQ' && it.index!==state.ksqIndex) return false;
+      if(state.ksqType==='BSQ' && it.index!==state.bsqIndex) return false;
+      return true;
+    });
+    $('#ksq-count').textContent = list.length;
+    if(list.length===0){
+      wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+      return;
+    }
+    list.forEach(it=>{
+      const card = document.createElement('div');
+      card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+      card.innerHTML = `
+        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+          <div class="flex items-start gap-3">
+            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+            <div class="flex-1">
+              <div class="text-sm font-medium">${buildTitle(it)}</div>
+              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${it.file.split('.').pop().toUpperCase()}</span></div>
+              <div class="mt-3"><a href="${it.file}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç / Yüklə</a></div>
+            </div>
+          </div>
+        </div>`;
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderPP(){
+    const wrap = $('#pp-results'); wrap.innerHTML='';
+    const list = state.catalog.filter(it=> it.type==='PP' && it.subject===state.ppSubject);
+    $('#pp-count').textContent = list.length;
+    if(list.length===0){
+      wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+      return;
+    }
+    list.forEach(it=>{
+      const card = document.createElement('div');
+      card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+      card.innerHTML = `
+        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+          <div class="flex items-start gap-3">
+            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+            <div className="flex-1">
+              <div class="text-sm font-medium">${buildTitle(it)}</div>
+              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${it.file.split('.').pop().toUpperCase()}</span></div>
+              <div class="mt-3"><a href="${it.file}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç / Yüklə</a></div>
+            </div>
+          </div>
+        </div>`;
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderTests(){
+    const out = [];
+    out.push({ name:'translations.az', pass: !!translations.az });
+    out.push({ name:'translations.en', pass: !!translations.en });
+    out.push({ name:'KSQ numbers 1..10', pass: Array.from({length:10},(_,i)=>String(i+1))[9]==='10' });
+    out.push({ name:'BSQ numbers 1..2', pass: ['1','2'].length===2 });
+    out.push({ name:'Grade I has Life (no Algebra)', pass: subjectKeysByGrade.I.includes('life') && !subjectKeysByGrade.I.includes('algebra') });
+    out.push({ name:'Grade X has Algebra', pass: subjectKeysByGrade.X.includes('algebra') });
+    const ul = $('#tests'); ul.innerHTML='';
+    out.forEach(t=>{
+      const li=document.createElement('li');
+      li.className='flex items-center gap-2';
+      li.innerHTML = t.pass ? '<span class="text-emerald-600">✔</span>' : '<span class="text-red-600">✖</span>';
+      const sp=document.createElement('span'); sp.textContent=t.name; sp.className = t.pass? 'text-emerald-700 font-medium':'text-red-700 font-medium';
+      li.appendChild(sp); ul.appendChild(li);
+    });
+  }
+
+  document.getElementById('lang').addEventListener('change', e=>{ state.lang=e.target.value; renderSelects(); renderKSQ(); renderPP(); renderTests();});
+  document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); renderKSQ();});
+  document.getElementById('subject').addEventListener('change', e=>{ state.subject=e.target.value; renderKSQ();});
+  document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value; document.getElementById('wrap-ksqNo').classList.toggle('hidden', state.ksqType!=='KSQ'); document.getElementById('wrap-bsqNo').classList.toggle('hidden', state.ksqType!=='BSQ'); renderKSQ();});
+  document.getElementById('ksqIndex').addEventListener('change', e=>{ state.ksqIndex=e.target.value; renderKSQ();});
+  document.getElementById('bsqIndex').addEventListener('change', e=>{ state.bsqIndex=e.target.value; renderKSQ();});
+  document.getElementById('ppSubject').addEventListener('change', e=>{ state.ppSubject=e.target.value; renderPP();});
+
+  ['tab-ksq','tab-pp','tab-tools'].forEach(id=> document.getElementById(id).addEventListener('click', e => {
+    setActiveTab(e.target.dataset.tab);
+  }));
+
+  (function init(){
+    document.getElementById('year').textContent = new Date().getFullYear();
+    setActiveTab('ksq');
+    const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+    state.subject = (function(){ const S = (function(){ const k = {
+      I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      III:['az','life','math','eng','rus','art','music','pe','tech','it'],
+      IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      V:  ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
+      VI: ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
+      VII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+      VIII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+      IX: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
+      X:  ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+      XI: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+    }[state.grade] || Object.keys(translations[state.lang].subjects); return k.map(x=> translations[state.lang].subjects[x]).filter(Boolean); })(); return S[0]; })();
+    state.ppSubject = Object.values(translations[state.lang].subjects)[0];
+    renderSelects(); renderKSQ(); renderPP(); renderTests();
+  })();
+  </script>
+</body>
+</html>

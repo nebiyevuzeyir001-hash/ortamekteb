@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EduPlan AZ — SingleFile</title>
+  <title>EduPlan</title>
   <!-- Tailwind (no install) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -227,7 +227,7 @@
       common: { grade: 'Sinif', subject: 'Fənn', calculate: 'Hesabla', browse: 'Bax', add: 'Əlavə et' },
       subjects: {
         az: 'Azərbaycan dili', lit: 'Ədəbiyyat', eng: 'İngilis dili', rus: 'Rus dili', math: 'Riyaziyyat',
-        algebra: 'Alqebra', geometry: 'Həndəsə', physics: 'Fizika', chemistry: 'Kimya', biology: 'Biologiya',
+        physics: 'Fizika', chemistry: 'Kimya', biology: 'Biologiya',
         history: 'Tarix', az_history: 'Azərbaycan tarixi', world_history: 'Ümumi tarix', geography: 'Coğrafiya',
         it: 'İnformatika', life: 'Həyat bilgisi', tech: 'Texnologiya', art: 'Təsviri incəsənət', music: 'Musiqi',
         pe: 'Fiziki tərbiyə', premilitary: 'Çağırışaqədərki hazırlıq', law: 'Hüquq', economics: 'İqtisadiyyat',
@@ -255,7 +255,7 @@
       common: { grade: 'Grade', subject: 'Subject', calculate: 'Calculate', browse: 'Browse', add: 'Add' },
       subjects: {
         az: 'Azerbaijani', lit: 'Literature', eng: 'English', rus: 'Russian', math: 'Mathematics',
-        algebra: 'Algebra', geometry: 'Geometry', physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology',
+        physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology',
         history: 'History', az_history: 'History of Azerbaijan', world_history: 'World History', geography: 'Geography',
         it: 'Informatics', life: 'Life Science', tech: 'Technology', art: 'Visual Arts', music: 'Music', pe: 'Physical Education',
         premilitary: 'Pre-military Training', law: 'Law / Civics', economics: 'Economics',
@@ -271,11 +271,11 @@
     IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
     V:  ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
     VI: ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
-    VII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
-    VIII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
-    IX: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
-    X:  ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
-    XI: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+    VII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+    VIII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+    IX: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
+    X:  ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+    XI: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
   };
 
   const $ = sel => document.querySelector(sel);
@@ -430,8 +430,8 @@
     out.push({ name:'translations.en', pass: !!translations.en });
     out.push({ name:'KSQ numbers 1..10', pass: Array.from({length:10},(_,i)=>String(i+1))[9]==='10' });
     out.push({ name:'BSQ numbers 1..2', pass: ['1','2'].length===2 });
-    out.push({ name:'Grade I has Life (no Algebra)', pass: subjectKeysByGrade.I.includes('life') && !subjectKeysByGrade.I.includes('algebra') });
-    out.push({ name:'Grade X has Algebra', pass: subjectKeysByGrade.X.includes('algebra') });
+    out.push({ name:'Grade I has Life (no )', pass: subjectKeysByGrade.I.includes('life') && !subjectKeysByGrade.I.includes('') });
+    out.push({ name:'Grade X has ', pass: subjectKeysByGrade.X.includes('') });
     const ul = $('#tests'); ul.innerHTML='';
     out.forEach(t=>{
       const li=document.createElement('li');
@@ -465,11 +465,11 @@
       IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
       V:  ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
       VI: ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
-      VII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
-      VIII:['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
-      IX: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
-      X:  ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
-      XI: ['az','lit','eng','rus','algebra','geometry','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+      VII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+      VIII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
+      IX: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
+      X:  ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+      XI: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
     }[state.grade] || Object.keys(translations[state.lang].subjects); return k.map(x=> translations[state.lang].subjects[x]).filter(Boolean); })(); return S[0]; })();
     state.ppSubject = Object.values(translations[state.lang].subjects)[0];
     renderSelects(); renderKSQ(); renderPP(); renderTests();

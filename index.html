@@ -195,13 +195,34 @@
 
   <script>
   const demoCatalog = [
-    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '1',  file: 'materials/KSQ/Azərbaycan dili/V/1.docx' },
-    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '2',  file: 'materials/V/Azərbaycan dili/KSQ/2.pdf' },
-    { grade: 'V', subject: 'Riyaziyyat',     type: 'BSQ', index: '1',  file: 'materials/V/Riyaziyyat/BSQ/1.docx' },
-    { grade: 'V', subject: 'Riyaziyyat',     type: 'BSQ', index: '2',  file: 'materials/V/Riyaziyyat/BSQ/2.docx' },
-    { grade: 'IX',subject: 'İngilis dili',   type: 'KSQ', index: '3',  file: 'materials/IX/İngilis dili/KSQ/3.docx' },
-    { grade: 'IX',subject: 'İngilis dili',   type: 'KSQ', index: '4',  file: 'materials/IX/İngilis dili/KSQ/4.docx' },
-    { subject: 'Azərbaycan dili',            type: 'PP',               file: 'materials/PP/Azərbaycan dili.docx' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '1',  file: 'materials/KSQ/Azərbaycan dili/V/1.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '2',  file: 'materials/KSQ/Azərbaycan dili/V/2.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '3',  file: 'materials/KSQ/Azərbaycan dili/V/3.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '4',  file: 'materials/KSQ/Azərbaycan dili/V/4.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '5',  file: 'materials/KSQ/Azərbaycan dili/V/5.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '6',  file: 'materials/KSQ/Azərbaycan dili/V/6.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '7',  file: 'materials/KSQ/Azərbaycan dili/V/7.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '8',  file: 'materials/KSQ/Azərbaycan dili/V/8.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '9',  file: 'materials/KSQ/Azərbaycan dili/V/9.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '10',  file: 'materials/KSQ/Azərbaycan dili/V/10.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'BSQ', index: '1',  file: 'materials/BSQ/Azərbaycan dili/V/1.pdf' },
+    { grade: 'V', subject: 'Azərbaycan dili', type: 'BSQ', index: '2',  file: 'materials/BSQ/Azərbaycan dili/V/2.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '1',  file: 'materials/KSQ/Riyaziyyat/V/1.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '2',  file: 'materials/KSQ/Riyaziyyat/V/2.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '3',  file: 'materials/KSQ/Riyaziyyat/V/3.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '4',  file: 'materials/KSQ/Riyaziyyat/V/4.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '5',  file: 'materials/KSQ/Riyaziyyat/V/5.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '6',  file: 'materials/KSQ/Riyaziyyat/V/6.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '7',  file: 'materials/KSQ/Riyaziyyat/V/7.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '8',  file: 'materials/KSQ/Riyaziyyat/V/8.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '9',  file: 'materials/KSQ/Riyaziyyat/V/9.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'KSQ', index: '10',  file: 'materials/KSQ/Riyaziyyat/V/10.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'BSQ', index: '1',  file: 'materials/BSQ/Riyaziyyat/V/1.pdf' },
+    { grade: 'V', subject: 'Riyaziyyat', type: 'BSQ', index: '2',  file: 'materials/BSQ/Riyaziyyat/V/2.pdf' },
+    
+    { grade: 'IX',subject: 'İngilis dili', type: 'KSQ', index: '3',  file: 'materials/IX/İngilis dili/KSQ/3.pdf' },
+    { grade: 'IX',subject: 'İngilis dili', type: 'KSQ', index: '4',  file: 'materials/IX/İngilis dili/KSQ/4.pdf' },
+    { subject: 'Azərbaycan dili',            type: 'PP',               file: 'materials/PP/Azərbaycan dili.pdf' },
     { subject: 'Riyaziyyat',                 type: 'PP',               file: 'materials/PP/Riyaziyyat.pdf' },
   ];
 
@@ -228,9 +249,9 @@
       subjects: {
         az: 'Azərbaycan dili', lit: 'Ədəbiyyat', eng: 'İngilis dili', rus: 'Rus dili', math: 'Riyaziyyat',
         physics: 'Fizika', chemistry: 'Kimya', biology: 'Biologiya',
-        history: 'Tarix', az_history: 'Azərbaycan tarixi', world_history: 'Ümumi tarix', geography: 'Coğrafiya',
+        az_history: 'Azərbaycan tarixi', world_history: 'Ümumi tarix', geography: 'Coğrafiya',
         it: 'İnformatika', life: 'Həyat bilgisi', tech: 'Texnologiya', art: 'Təsviri incəsənət', music: 'Musiqi',
-        pe: 'Fiziki tərbiyə', premilitary: 'Çağırışaqədərki hazırlıq', law: 'Hüquq', economics: 'İqtisadiyyat',
+        pe: 'Fiziki tərbiyə', premilitary: 'Çağırışaqədərki hazırlıq',
       },
       footer: { rights: 'Bütün hüquqlar qorunur', terms: 'Şərtlər', privacy: 'Məxfilik' },
     },
@@ -256,9 +277,9 @@
       subjects: {
         az: 'Azerbaijani', lit: 'Literature', eng: 'English', rus: 'Russian', math: 'Mathematics',
         physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology',
-        history: 'History', az_history: 'History of Azerbaijan', world_history: 'World History', geography: 'Geography',
+        az_history: 'History of Azerbaijan', world_history: 'World History', geography: 'Geography',
         it: 'Informatics', life: 'Life Science', tech: 'Technology', art: 'Visual Arts', music: 'Music', pe: 'Physical Education',
-        premilitary: 'Pre-military Training', law: 'Law / Civics', economics: 'Economics',
+        premilitary: 'Pre-military Training'
       },
       footer: { rights: 'All rights reserved', terms: 'Terms', privacy: 'Privacy' },
     }
@@ -273,9 +294,9 @@
     VI: ['az','lit','eng','rus','math','it','history','geography','art','music','pe','tech'],
     VII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
     VIII:['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','geography','it','pe','art','music','tech','law'],
-    IX: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics'],
-    X:  ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
-    XI: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','law','economics','premilitary'],
+    IX: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech'],
+    X:  ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
+    XI: ['az','lit','eng','rus','math','physics','chemistry','biology','history','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
   };
 
   const $ = sel => document.querySelector(sel);

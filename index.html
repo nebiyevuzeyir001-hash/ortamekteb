@@ -192,8 +192,25 @@
       </div>
     </div>
   </footer>
+<!-- Əvvəlki scriptlərin altında əlavə et -->
+<script type="module">
+  import demoCatalog from './demoCatalog.js';
+
+  // global istifadə üçün
+  window.demoCatalog = demoCatalog;
+
+  // Saytın state-ini yenilə
+  state.catalog = demoCatalog;
+
+  // İlk renderlər
+  renderSelects();
+  renderKSQ();
+  renderPP();
+  renderTests();
+</script>
 
   <script>
+    <!--
   const demoCatalog = [
     { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '1',  file: 'materials/KSQ/Azərbaycan dili/V/1.pdf' },
     { grade: 'V', subject: 'Azərbaycan dili', type: 'KSQ', index: '2',  file: 'materials/KSQ/Azərbaycan dili/V/2.pdf' },
@@ -279,13 +296,37 @@
     { grade: 'V', subject: 'Coğrafiya', type: 'KSQ', index: '10',  file: 'materials/KSQ/Coğrafiya/V/10.pdf' },
     { grade: 'V', subject: 'Coğrafiya', type: 'BSQ', index: '1',  file: 'materials/BSQ/Coğrafiya/V/1.pdf' },
     { grade: 'V', subject: 'Coğrafiya', type: 'BSQ', index: '2',  file: 'materials/BSQ/Coğrafiya/V/2.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '1',  file: 'materials/KSQ/Təbiət/V/1.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '2',  file: 'materials/KSQ/Təbiət/V/2.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '3',  file: 'materials/KSQ/Təbiət/V/3.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '4',  file: 'materials/KSQ/Təbiət/V/4.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '5',  file: 'materials/KSQ/Təbiət/V/5.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '6',  file: 'materials/KSQ/Təbiət/V/6.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '7',  file: 'materials/KSQ/Təbiət/V/7.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '8',  file: 'materials/KSQ/Təbiət/V/8.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '9',  file: 'materials/KSQ/Təbiət/V/9.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'KSQ', index: '10',  file: 'materials/KSQ/Təbiət/V/10.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'BSQ', index: '1',  file: 'materials/BSQ/Təbiət/V/1.pdf' },
+    { grade: 'V', subject: 'Təbiət', type: 'BSQ', index: '2',  file: 'materials/BSQ/Təbiət/V/2.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '1',  file: 'materials/KSQ/Təsviri incəsənət/V/1.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '2',  file: 'materials/KSQ/Təsviri incəsənət/V/2.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '3',  file: 'materials/KSQ/Təsviri incəsənət/V/3.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '4',  file: 'materials/KSQ/Təsviri incəsənət/V/4.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '5',  file: 'materials/KSQ/Təsviri incəsənət/V/5.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '6',  file: 'materials/KSQ/Təsviri incəsənət/V/6.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '7',  file: 'materials/KSQ/Təsviri incəsənət/V/7.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '8',  file: 'materials/KSQ/Təsviri incəsənət/V/8.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '9',  file: 'materials/KSQ/Təsviri incəsənət/V/9.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'KSQ', index: '10',  file: 'materials/KSQ/Təsviri incəsənət/V/10.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'BSQ', index: '1',  file: 'materials/BSQ/Təsviri incəsənət/V/1.pdf' },
+    { grade: 'V', subject: 'Təsviri incəsənət', type: 'BSQ', index: '2',  file: 'materials/BSQ/Təsviri incəsənət/V/2.pdf' },
     
     { grade: 'IX',subject: 'İngilis dili', type: 'KSQ', index: '3',  file: 'materials/IX/İngilis dili/KSQ/3.pdf' },
     { grade: 'IX',subject: 'İngilis dili', type: 'KSQ', index: '4',  file: 'materials/IX/İngilis dili/KSQ/4.pdf' },
     { subject: 'Azərbaycan dili',            type: 'PP',               file: 'materials/PP/Azərbaycan dili.pdf' },
     { subject: 'Riyaziyyat',                 type: 'PP',               file: 'materials/PP/Riyaziyyat.pdf' },
   ];
-
+-->
   const translations = {
     az: {
       nav: { settings: 'Tənzimləmələr', signIn: 'Daxil ol' },
@@ -350,8 +391,8 @@
       II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
       III:['az','life','math','eng','rus','art','music','pe','tech','it'],
       IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      V:  ['az','lit','eng','rus','math','science','it','history','geography','art','music','pe','tech'],
-      VI: ['az','lit','eng','rus','math','science','it','history','geography','art','music','pe','tech'],
+      V:  ['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
+      VI: ['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
       VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
       VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
       IX: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
@@ -544,8 +585,8 @@
       II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
       III:['az','life','math','eng','rus','art','music','pe','tech','it'],
       IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      V:  ['az','lit','eng','rus','math','science','it','history','geography','art','music','pe','tech'],
-      VI: ['az','lit','eng','rus','math','science','it','history','geography','art','music','pe','tech'],
+      V:  ['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
+      VI: ['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
       VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
       VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
       IX: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],

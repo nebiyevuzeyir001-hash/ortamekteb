@@ -192,22 +192,6 @@
       </div>
     </div>
   </footer>
-<!-- Əvvəlki scriptlərin altında əlavə et -->
-<script type="module">
-  import demoCatalog from './demoCatalog.js';
-
-  // global istifadə üçün
-  window.demoCatalog = demoCatalog;
-
-  // Saytın state-ini yenilə
-  state.catalog = demoCatalog;
-
-  // İlk renderlər
-  renderSelects();
-  renderKSQ();
-  renderPP();
-  renderTests();
-</script>
 
   <script>
     
@@ -291,9 +275,10 @@
     lang: 'az', grade: 'V',
     ksqType: 'KSQ', ksqIndex: '1', bsqIndex: '1',
     subject: null, ppSubject: null,
-    catalog: demoCatalog,
+    catalog: [],
   };
-
+  window.state = state;
+    
   function setActiveTab(name){
     $$('.tab-btn').forEach(b=>{
       const act = b.dataset.tab===name;
@@ -481,5 +466,15 @@
     renderSelects(); renderKSQ(); renderPP(); renderTests();
   })();
   </script>
+  <script type="module">
+  import demoCatalog from './demoCatalog.js';
+  window.state.catalog = demoCatalog;
+
+  renderSelects();
+  renderKSQ();
+  renderPP();
+  renderTests();
+</script>
+
 </body>
 </html>

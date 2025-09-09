@@ -553,7 +553,7 @@ darkToggle.addEventListener('change', (e) => {
   <script type="module">
   import demoCatalog from './demoCatalog.js';
   window.state.catalog = demoCatalog;
-
+  console.log('demoCatalog length =', demoCatalog?.length);
   renderSelects();
   renderKSQ();
   renderPP();

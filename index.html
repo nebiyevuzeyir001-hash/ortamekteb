@@ -10,6 +10,43 @@
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
+    /* === DARK MODE === */
+:root {
+  --bg-from: #f8fafc;  /* light */
+  --bg-to:   #ffffff;
+  --text:    #0f172a;
+  --card:    #ffffff;
+  --muted:   #475569;
+  --border:  #e2e8f0;
+}
+.dark {
+  --bg-from: #0b1220;  /* dark */
+  --bg-to:   #0a0f1a;
+  --text:    #e2e8f0;
+  --card:    #0f172a;
+  --muted:   #cbd5e1;
+  --border:  #334155;
+}
+/* əsas fond və mətn */
+body { color: var(--text); }
+body.bg-gradient-to-b { 
+  background-image: linear-gradient(to bottom, var(--bg-from), var(--bg-to)) !important;
+}
+/* kartlar və panellər */
+.bg-white { background-color: var(--card) !important; }
+.text-slate-900, .text-slate-800, .text-slate-700 { color: var(--text) !important; }
+.text-slate-600, .text-slate-500 { color: var(--muted) !important; }
+/* sərhədlər */
+.border-slate-200 { border-color: var(--border) !important; }
+/* header blur fonu */
+.backdrop-blur.bg-white\/70 { background-color: color-mix(in srgb, var(--card) 70%, transparent) !important; }
+/* input/select fonu */
+select, input { background-color: var(--card) !important; color: var(--text) !important; }
+/* “Aç / Yüklə” düyməsi dark üçün kontrastlı qalsın */
+.bg-slate-900 { background-color:#0b1220 !important; color:#fff !important; }
+#dark-toggle:checked + span { background:#334155; }
+#dark-toggle:checked + span .dot { transform: translateX(16px); }
+
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
@@ -31,7 +68,19 @@
           <option value="en">English</option>
         </select>
         <button class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span data-i18n="nav.settings">Tənzimləmələr</span></button>
-        <button class="rounded-2xl bg-slate-900 text-white px-3 py-2 text-sm"><span data-i18n="nav.signIn">Daxil ol</span></button>
+        <!-- Settings popover -->
+<div id="settings-panel" class="hidden absolute right-4 mt-2 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+  <div class="flex items-center justify-between">
+    <div class="text-sm">🌙 Dark mode</div>
+    <label class="inline-flex items-center cursor-pointer">
+      <input id="dark-toggle" type="checkbox" class="sr-only">
+      <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
+        <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
+      </span>
+    </label>
+  </div>
+</div>
+
       </div>
     </div>
   </header>
@@ -41,10 +90,6 @@
       <div>
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight" id="hero-title">KSQ/BSQ və planlaşdırmanı 5 dəqiqəyə hazırla</h1>
         <p class="mt-4 text-slate-600 text-lg" id="hero-subtitle">Sadə interfeys, premium görünüş, Azərbaycan məktəbləri üçün uyğunlaşdırılıb.</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <button class="rounded-2xl shadow-sm bg-slate-900 text-white px-4 py-2 text-sm"><span id="hero-cta1">Yeni sənəd</span></button>
-          <button class="rounded-2xl shadow-sm border px-4 py-2 text-sm"><span id="hero-cta2">Şablonlara bax</span></button>
-        </div>
         <div class="mt-6 flex items-center gap-3 text-sm text-slate-600">
           <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500 inline-block"></span><span id="hero-b1">KSQ & BSQ</span></span>
           <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-indigo-500 inline-block"></span><span id="hero-b2">Perspektiv & gündəlik plan</span></span>
@@ -465,6 +510,45 @@
     state.ppSubject = Object.values(translations[state.lang].subjects)[0];
     renderSelects(); renderKSQ(); renderPP(); renderTests();
   })();
+    // ---- Dark Mode setup ----
+const settingsBtn = document.querySelector('button [data-i18n="nav.settings"]')
+  ? document.querySelector('button [data-i18n="nav.settings"]').closest('button')
+  : document.querySelector('button:has([data-i18n="nav.settings"])'); // ehtiyat
+
+const panel = document.getElementById('settings-panel');
+const darkToggle = document.getElementById('dark-toggle');
+
+// localStorage-dan oxu
+const savedTheme = localStorage.getItem('theme'); // 'dark' | 'light' | null
+if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.documentElement.classList.add('dark');
+  darkToggle.checked = true;
+} else {
+  document.documentElement.classList.remove('dark');
+  darkToggle.checked = false;
+}
+
+// düymə: paneli aç/bağla
+if (settingsBtn) {
+  settingsBtn.addEventListener('click', () => {
+    panel.classList.toggle('hidden');
+  });
+  // paneldən kənara klik bağlasın
+  document.addEventListener('click', (e) => {
+    if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) {
+      panel.classList.add('hidden');
+    }
+  });
+}
+
+// switch: temanı dəyiş və yadda saxla
+darkToggle.addEventListener('change', (e) => {
+  const on = e.target.checked;
+  document.documentElement.classList.toggle('dark', on);
+  localStorage.setItem('theme', on ? 'dark' : 'light');
+});
+// ---- /Dark Mode setup ----
+
   </script>
   <script type="module">
   import demoCatalog from './demoCatalog.js';

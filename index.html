@@ -60,24 +60,24 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
       <div class="flex items-center gap-3">
         <div class="h-9 w-9 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 text-white grid place-items-center font-semibold shadow-sm">EP</div>
         <span class="font-semibold tracking-tight">EduPlan AZ</span>
-        <span class="ml-2 inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">MVP</span>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="relative flex items-center gap-3" id="header-controls">
         <select id="lang" class="w-[130px] rounded-xl border px-3 py-2 text-sm bg-white">
           <option value="az">Azərbaycanca</option>
-          <option value="en">English</option>
         </select>
-        <button class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span data-i18n="nav.settings">Tənzimləmələr</span></button>
+        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span data-i18n="nav.settings">Tənzimləmələr</span></button>
         <!-- Settings popover -->
-<div id="settings-panel" class="hidden absolute right-4 mt-2 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-  <div class="flex items-center justify-between">
-    <div class="text-sm">🌙 Dark mode</div>
-    <label class="inline-flex items-center cursor-pointer">
-      <input id="dark-toggle" type="checkbox" class="sr-only">
-      <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
-        <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
-      </span>
-    </label>
+<div id="settings-panel"
+       class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+    <div class="flex items-center justify-between">
+      <div class="text-sm">🌙 Dark mode</div>
+      <label class="inline-flex items-center cursor-pointer">
+        <input id="dark-toggle" type="checkbox" class="sr-only">
+        <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
+          <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
+        </span>
+      </label>
+    </div>
   </div>
 </div>
 
@@ -340,7 +340,10 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
     const keys = subjectKeysByGrade[grade] || Object.keys(translations[state.lang].subjects);
     return keys.map(k => translations[state.lang].subjects[k]).filter(Boolean);
   }
-
+  function setText(sel, text){
+  const el = document.querySelector(sel);
+  if (el) el.textContent = text;
+}
   function renderSelects(){
     const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
     const gradeEl = $('#grade'); gradeEl.innerHTML=''; grades.forEach(g=> option(gradeEl,g,g)); gradeEl.value=state.grade;
@@ -358,42 +361,43 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
     const ppEl = $('#ppSubject'); ppEl.innerHTML=''; const all = Object.values(translations[state.lang].subjects);
     all.forEach(s=> option(ppEl,s,s)); if(!all.includes(state.ppSubject)) state.ppSubject=all[0]; ppEl.value=state.ppSubject;
 
-    $('#lbl-grade').textContent = translations[state.lang].common.grade;
-    $('#lbl-subject').textContent = translations[state.lang].common.subject;
-    $('#lbl-type').textContent = translations[state.lang].ksq.type;
-    $('#lbl-ksqNo').textContent = translations[state.lang].labels.ksqNo;
-    $('#lbl-bsqNo').textContent = translations[state.lang].labels.bsqNo;
-    $('#lbl-pp-subject').textContent = translations[state.lang].common.subject;
+setText('#lbl-grade',   translations[state.lang].common.grade);
+setText('#lbl-subject', translations[state.lang].common.subject);
+setText('#lbl-type',    translations[state.lang].ksq.type);
+setText('#lbl-ksqNo',   translations[state.lang].labels.ksqNo);
+setText('#lbl-bsqNo',   translations[state.lang].labels.bsqNo);
+setText('#lbl-pp-subject', translations[state.lang].common.subject);
 
-    $('#ksq-title').textContent = translations[state.lang].ksq.title;
-    $('#pp-title').textContent  = translations[state.lang].pp.title;
+setText('#ksq-title', translations[state.lang].ksq.title);
+setText('#pp-title',  translations[state.lang].pp.title);
 
-    $('#hero-title').textContent = translations[state.lang].hero.title;
-    $('#hero-subtitle').textContent = translations[state.lang].hero.subtitle;
-    $('#hero-cta1').textContent = translations[state.lang].hero.ctaPrimary;
-    $('#hero-cta2').textContent = translations[state.lang].hero.ctaSecondary;
-    $('#hero-b1').textContent = translations[state.lang].hero.badges.one;
-    $('#hero-b2').textContent = translations[state.lang].hero.badges.two;
-    $('#hero-b3').textContent = translations[state.lang].hero.badges.three;
+setText('#hero-title',    translations[state.lang].hero.title);
+setText('#hero-subtitle', translations[state.lang].hero.subtitle);
+setText('#hero-cta1',     translations[state.lang].hero.ctaPrimary);
+setText('#hero-cta2',     translations[state.lang].hero.ctaSecondary);
+setText('#hero-b1',       translations[state.lang].hero.badges.one);
+setText('#hero-b2',       translations[state.lang].hero.badges.two);
+setText('#hero-b3',       translations[state.lang].hero.badges.three);
 
-    $('#feat-ksq-title').textContent = translations[state.lang].features.ksqBsq.title;
-    $('#feat-ksq-desc').textContent  = translations[state.lang].features.ksqBsq.desc;
-    $('#feat-pp-title').textContent  = translations[state.lang].features.pp.title;
-    $('#feat-pp-desc').textContent   = translations[state.lang].features.pp.desc;
+setText('#feat-ksq-title', translations[state.lang].features.ksqBsq.title);
+setText('#feat-ksq-desc',  translations[state.lang].features.ksqBsq.desc);
+setText('#feat-pp-title',  translations[state.lang].features.pp.title);
+setText('#feat-pp-desc',   translations[state.lang].features.pp.desc);
 
-    $('#tab-pp').textContent    = translations[state.lang].tabs.pp;
-    $('#tab-tools').textContent = translations[state.lang].tabs.tools;
+setText('#tab-pp',    translations[state.lang].tabs.pp);
+setText('#tab-tools', translations[state.lang].tabs.tools);
 
-    $('#tool-calc-title').textContent      = translations[state.lang].tools.calcTitle;
-    $('#tool-templates-title').textContent = translations[state.lang].tools.templatesTitle;
-    $('#tool-bank-title').textContent      = translations[state.lang].tools.bankTitle;
+setText('#tool-calc-title',      translations[state.lang].tools.calcTitle);
+setText('#tool-templates-title', translations[state.lang].tools.templatesTitle);
+setText('#tool-bank-title',      translations[state.lang].tools.bankTitle);
 
-    $('#ft-rights').textContent  = translations[state.lang].footer.rights;
-    $('#ft-terms').textContent   = translations[state.lang].footer.terms;
-    $('#ft-privacy').textContent = translations[state.lang].footer.privacy;
+setText('#ft-rights',  translations[state.lang].footer.rights);
+setText('#ft-terms',   translations[state.lang].footer.terms);
+setText('#ft-privacy', translations[state.lang].footer.privacy);
 
-    document.querySelector('[data-i18n="nav.settings"]').textContent = translations[state.lang].nav.settings;
-    document.querySelector('[data-i18n="nav.signIn"]').textContent   = translations[state.lang].nav.signIn;
+setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
+setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
+
   }
 
   function buildTitle(it){
@@ -510,45 +514,36 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
     state.ppSubject = Object.values(translations[state.lang].subjects)[0];
     renderSelects(); renderKSQ(); renderPP(); renderTests();
   })();
-    // ---- Dark Mode setup ----
-const settingsBtn = document.querySelector('button [data-i18n="nav.settings"]')
-  ? document.querySelector('button [data-i18n="nav.settings"]').closest('button')
-  : document.querySelector('button:has([data-i18n="nav.settings"])'); // ehtiyat
+    
+  const settingsBtn = document.getElementById('btn-settings');
+  const panel = document.getElementById('settings-panel');
+  const darkToggle = document.getElementById('dark-toggle');
 
-const panel = document.getElementById('settings-panel');
-const darkToggle = document.getElementById('dark-toggle');
-
-// localStorage-dan oxu
-const savedTheme = localStorage.getItem('theme'); // 'dark' | 'light' | null
-if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  document.documentElement.classList.add('dark');
-  darkToggle.checked = true;
-} else {
-  document.documentElement.classList.remove('dark');
-  darkToggle.checked = false;
-}
-
-// düymə: paneli aç/bağla
-if (settingsBtn) {
-  settingsBtn.addEventListener('click', () => {
+  // paneli aç/bağla
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     panel.classList.toggle('hidden');
   });
-  // paneldən kənara klik bağlasın
+
+  // kənara klik = bağla
   document.addEventListener('click', (e) => {
     if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) {
       panel.classList.add('hidden');
     }
   });
-}
 
-// switch: temanı dəyiş və yadda saxla
-darkToggle.addEventListener('change', (e) => {
-  const on = e.target.checked;
-  document.documentElement.classList.toggle('dark', on);
-  localStorage.setItem('theme', on ? 'dark' : 'light');
-});
-// ---- /Dark Mode setup ----
-
+  // dark mode yadda saxla
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark' || (!savedTheme && matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+    if (darkToggle) darkToggle.checked = true;
+  }
+  darkToggle?.addEventListener('change', (e) => {
+    const on = e.target.checked;
+    document.documentElement.classList.toggle('dark', on);
+    localStorage.setItem('theme', on ? 'dark' : 'light');
+  });
+    
   </script>
   <script type="module">
   import demoCatalog from './demoCatalog.js';

@@ -12,7 +12,7 @@
     input[type=number] { -moz-appearance: textfield; }
     /* === DARK MODE === */
 :root {
-  --bg-from: #f8fafc;  /* light */
+  --bg-from: #f8fafc;  
   --bg-to:   #ffffff;
   --text:    #0f172a;
   --card:    #ffffff;
@@ -20,12 +20,19 @@
   --border:  #e2e8f0;
 }
 .dark {
-  --bg-from: #0b1220;  /* dark */
+  --bg-from: #0b1220;  
   --bg-to:   #0a0f1a;
   --text:    #e2e8f0;
   --card:    #0f172a;
   --muted:   #cbd5e1;
   --border:  #334155;
+}
+/* badge-lər, tab-lar, button-lar üçün düzəlişlər */
+.bg-slate-100\/80{ background-color:var(--tab-track)!important; }
+.bg-slate-100{ background-color:var(--pill)!important; }
+.badge, .pill, .inline-badge{
+  background-color:var(--pill)!important;
+  color:var(--pill-text)!important;
 }
 /* əsas fond və mətn */
 body { color: var(--text); }
@@ -534,10 +541,10 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
 
   // dark mode yadda saxla
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark' || (!savedTheme && matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-    if (darkToggle) darkToggle.checked = true;
-  }
+if (savedTheme === 'dark') {
+  document.documentElement.classList.add('dark');
+  if (darkToggle) darkToggle.checked = true;
+}
   darkToggle?.addEventListener('change', (e) => {
     const on = e.target.checked;
     document.documentElement.classList.toggle('dark', on);

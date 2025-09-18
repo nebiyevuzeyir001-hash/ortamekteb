@@ -18,6 +18,9 @@
   --card:    #ffffff;
   --muted:   #475569;
   --border:  #e2e8f0;
+  --tab-track:#eef2f6;
+  --pill:#e9edf3;
+  --pill-text:#334155;
 }
 .dark {
   --bg-from: #0b1220;  
@@ -26,6 +29,9 @@
   --card:    #0f172a;
   --muted:   #cbd5e1;
   --border:  #334155;
+  --tab-track:#111827;
+  --pill:#0f172a;
+  --pill-text:#cbd5e1;
 }
 /* badge-lər, tab-lar, button-lar üçün düzəlişlər */
 .bg-slate-100\/80{ background-color:var(--tab-track)!important; }
@@ -486,7 +492,6 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
     });
   }
 
-  document.getElementById('lang').addEventListener('change', e=>{ state.lang=e.target.value; renderSelects(); renderKSQ(); renderPP(); renderTests();});
   document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); renderKSQ();});
   document.getElementById('subject').addEventListener('change', e=>{ state.subject=e.target.value; renderKSQ();});
   document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value; document.getElementById('wrap-ksqNo').classList.toggle('hidden', state.ksqType!=='KSQ'); document.getElementById('wrap-bsqNo').classList.toggle('hidden', state.ksqType!=='BSQ'); renderKSQ();});
@@ -494,10 +499,14 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
   document.getElementById('bsqIndex').addEventListener('change', e=>{ state.bsqIndex=e.target.value; renderKSQ();});
   document.getElementById('ppSubject').addEventListener('change', e=>{ state.ppSubject=e.target.value; renderPP();});
 
-  ['tab-ksq','tab-pp','tab-tools'].forEach(id=> document.getElementById(id).addEventListener('click', e => {
-    setActiveTab(e.target.dataset.tab);
-  }));
-
+  ['tab-ksq','tab-pp','tab-tools'].forEach(id => {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.addEventListener('click', (e) => {
+    const name = e.currentTarget.dataset.tab; // <— FƏRQ
+    setActiveTab(name);
+  });
+});
   (function init(){
     document.getElementById('year').textContent = new Date().getFullYear();
     setActiveTab('ksq');

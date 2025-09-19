@@ -305,7 +305,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   };
   window.state = state;
     
-function setActiveTab(name){
+function setActiveTab(name, opts = { scroll: false }) {
   $$('.tab-btn').forEach(b=>{
     const act = b.dataset.tab===name;
     b.classList.toggle('bg-white', act);
@@ -315,12 +315,14 @@ function setActiveTab(name){
   });
   ['ksq','pp','tools'].forEach(n=> $('#panel-'+n).classList.toggle('hidden', n!==name));
 
-  const tabsBar = document.getElementById('tabs');
-  if (tabsBar) {
-    const headerOffset = 80; // sticky header üçün kiçik boşluq
-    const top = tabsBar.getBoundingClientRect().top + window.scrollY - headerOffset;
-    // smooth istəməsən 'auto' yaz
-    window.scrollTo({ top, behavior: 'smooth' });
+  // YALNIZ opts.scroll = true olanda yuxarı qaytar
+  if (opts.scroll) {
+    const tabsBar = document.getElementById('tabs');
+    if (tabsBar) {
+      const headerOffset = 80;
+      const top = tabsBar.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top, behavior: 'auto' }); // istəyirsən 'smooth' elə
+    }
   }
 }
 
@@ -480,14 +482,20 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
   ['tab-ksq','tab-pp','tab-tools'].forEach(id => {
   const btn = document.getElementById(id);
   if (!btn) return;
-  btn.addEventListener('click', (e) => {
-    const name = e.currentTarget.dataset.tab; // <— FƏRQ
-    setActiveTab(name);
-  });
+btn.addEventListener('click', (e) => {
+  const name = e.currentTarget.dataset.tab;
+  setActiveTab(name, { scroll: true }); // klikdə scroll et
+});
+
 });
   (function init(){
     document.getElementById('year').textContent = new Date().getFullYear();
-    setActiveTab('ksq');
+// brauzerin əvvəlki scroll-u bərpa etməməsi üçün (opsional, amma faydalıdır)
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
+// ilkin açılışda SCROLL ETMƏ
+setActiveTab('ksq', { scroll: false });
     state.subject = (function(){ const S = (function(){ const k = {
       I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
       II: ['az','life','math','eng','rus','art','music','pe','tech','it'],

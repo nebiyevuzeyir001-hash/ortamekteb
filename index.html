@@ -130,7 +130,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   </section>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-    <div class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner">
+    <div id="tabs" class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner">
       <button data-tab="ksq" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-ksq">KSQ / BSQ</button>
       <button data-tab="pp"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-pp">Perspektiv plan</button>
       <button data-tab="tools" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-tools">Alətlər</button>
@@ -305,16 +305,25 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   };
   window.state = state;
     
-  function setActiveTab(name){
-    $$('.tab-btn').forEach(b=>{
-      const act = b.dataset.tab===name;
-      b.classList.toggle('bg-white', act);
-      b.classList.toggle('shadow-sm', act);
-      b.classList.toggle('text-slate-900', act);
-      b.classList.toggle('text-slate-600', !act);
-    });
-    ['ksq','pp','tools'].forEach(n=> $('#panel-'+n).classList.toggle('hidden', n!==name));
+function setActiveTab(name){
+  $$('.tab-btn').forEach(b=>{
+    const act = b.dataset.tab===name;
+    b.classList.toggle('bg-white', act);
+    b.classList.toggle('shadow-sm', act);
+    b.classList.toggle('text-slate-900', act);
+    b.classList.toggle('text-slate-600', !act);
+  });
+  ['ksq','pp','tools'].forEach(n=> $('#panel-'+n).classList.toggle('hidden', n!==name));
+
+  const tabsBar = document.getElementById('tabs');
+  if (tabsBar) {
+    const headerOffset = 80; // sticky header üçün kiçik boşluq
+    const top = tabsBar.getBoundingClientRect().top + window.scrollY - headerOffset;
+    // smooth istəməsən 'auto' yaz
+    window.scrollTo({ top, behavior: 'smooth' });
   }
+}
+
   function option(el, val, text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o);}  
 
   function subjectsFor(grade){

@@ -91,7 +91,6 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   </div>
 </div>
 
-      </div>
     </div>
   </header>
 
@@ -378,7 +377,6 @@ setText('#ft-terms',   translations[state.lang].footer.terms);
 setText('#ft-privacy', translations[state.lang].footer.privacy);
 
 setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
-setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
 
   }
 
@@ -435,7 +433,7 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
         <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
           <div class="flex items-start gap-3">
             <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-            <div className="flex-1">
+            <div class="flex-1">
               <div class="text-sm font-medium">${buildTitle(it)}</div>
               <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${it.file.split('.').pop().toUpperCase()}</span></div>
               <div class="mt-3"><a href="${it.file}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç / Yüklə</a></div>
@@ -449,7 +447,6 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
   function renderTests(){
     const out = [];
     out.push({ name:'translations.az', pass: !!translations.az });
-    out.push({ name:'translations.en', pass: !!translations.en });
     out.push({ name:'KSQ numbers 1..10', pass: Array.from({length:10},(_,i)=>String(i+1))[9]==='10' });
     out.push({ name:'BSQ numbers 1..2', pass: ['1','2'].length===2 });
     out.push({ name:'Grade I has Life (no )', pass: subjectKeysByGrade.I.includes('life') && !subjectKeysByGrade.I.includes('') });
@@ -482,7 +479,6 @@ setText('[data-i18n="nav.signIn"]',   translations[state.lang].nav.signIn);
   (function init(){
     document.getElementById('year').textContent = new Date().getFullYear();
     setActiveTab('ksq');
-    const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
     state.subject = (function(){ const S = (function(){ const k = {
       I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
       II: ['az','life','math','eng','rus','art','music','pe','tech','it'],

@@ -332,7 +332,44 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   };
   window.state = state;
     
-function setActiveTab
+function setActiveTab(name, opts = { scroll: false }) {
+  // Tab düymələrinin aktivliyi
+  $$('.tab-btn').forEach(btn => {
+    const act = btn.dataset.tab === name;
+    btn.classList.toggle('bg-white', act);
+    btn.classList.toggle('shadow-sm', act);
+    btn.classList.toggle('text-slate-900', act);
+    btn.classList.toggle('text-slate-600', !act);
+    btn.setAttribute('aria-selected', act ? 'true' : 'false');
+  });
+
+  // Panelləri göstər/gizlət + animasiya
+  ['ksq','pp','tools'].forEach(n => {
+    const panel = document.getElementById('panel-' + n);
+    if (!panel) return;
+    if (n === name) {
+      panel.classList.add('is-active');
+      // düzgün display üçün (grid olan panel üçün)
+      if (panel.classList.contains('grid-on')) {
+        panel.style.display = 'grid';
+      } else {
+        panel.style.display = 'block';
+      }
+      // panelin başına yumşaq scroll (istəyinə görə)
+      if (opts.scroll) {
+        const y = panel.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    } else {
+      panel.classList.remove('is-active');
+      panel.style.display = 'none';
+    }
+  });
+
+  // iç scroll-u sıfırla (vizuallıq üçün)
+  document.getElementById('ksq-results')?.scrollTo?.(0,0);
+  document.getElementById('pp-results')?.scrollTo?.(0,0);
+}
 
   function option(el, val, text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o);}  
 

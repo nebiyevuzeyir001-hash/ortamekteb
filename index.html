@@ -256,10 +256,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
           </div>
         </div>
 
-        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white md:col-span-2 lg:col-span-3">
-          <div class="p-4 border-b"><div class="text-base font-semibold">✅ Self-tests</div></div>
-          <ul id="tests" class="p-4 space-y-2 text-sm"></ul>
-        </div>
+        
       </div>
     </section>
   </main>
@@ -500,22 +497,6 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
     });
   }
 
-  function renderTests(){
-    const out = [];
-    out.push({ name:'translations.az', pass: !!translations.az });
-    out.push({ name:'KSQ numbers 1..10', pass: Array.from({length:10},(_,i)=>String(i+1))[9]==='10' });
-    out.push({ name:'BSQ numbers 1..2', pass: ['1','2'].length===2 });
-    out.push({ name:'Grade I has Life (no )', pass: subjectKeysByGrade.I.includes('life') && !subjectKeysByGrade.I.includes('') });
-    out.push({ name:'Grade X has ', pass: subjectKeysByGrade.X.includes('') });
-    const ul = $('#tests'); ul.innerHTML='';
-    out.forEach(t=>{
-      const li=document.createElement('li');
-      li.className='flex items-center gap-2';
-      li.innerHTML = t.pass ? '<span class="text-emerald-600">✔</span>' : '<span class="text-red-600">✖</span>';
-      const sp=document.createElement('span'); sp.textContent=t.name; sp.className = t.pass? 'text-emerald-700 font-medium':'text-red-700 font-medium';
-      li.appendChild(sp); ul.appendChild(li);
-    });
-  }
 
   document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); renderKSQ();});
   document.getElementById('subject').addEventListener('change', e=>{ state.subject=e.target.value; renderKSQ();});
@@ -555,7 +536,7 @@ setActiveTab('ksq', { scroll: false });
       XI: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
     }[state.grade] || Object.keys(translations[state.lang].subjects); return k.map(x=> translations[state.lang].subjects[x]).filter(Boolean); })(); return S[0]; })();
     state.ppSubject = Object.values(translations[state.lang].subjects)[0];
-    renderSelects(); renderKSQ(); renderPP(); renderTests();
+    renderSelects(); renderKSQ(); renderPP(); 
   })();
     
   const settingsBtn = document.getElementById('btn-settings');
@@ -595,7 +576,6 @@ if (savedTheme === 'dark') {
   renderSelects();
   renderKSQ();
   renderPP();
-  renderTests();
 </script>
 
 </body>

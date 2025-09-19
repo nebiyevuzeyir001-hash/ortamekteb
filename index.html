@@ -59,6 +59,33 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
 .bg-slate-900 { background-color:#0b1220 !important; color:#fff !important; }
 #dark-toggle:checked + span { background:#334155; }
 #dark-toggle:checked + span .dot { transform: translateX(16px); }
+/* --- Tab keçid animasiyası --- */
+.tab-panel {
+  display: none;           /* ilkin vəziyyət: gizli */
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.tab-panel.is-active {
+  display: block;          /* görünən panel */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* grid panelləri üçün (səndə bəziləri grid-dir) */
+.tab-panel.grid-on.is-active { display: grid; }
+
+/* Tab düyməsi üçün vizual aktivlik */
+.tab-btn {
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+}
+.tab-btn[aria-selected="true"] {
+  background-color: var(--card);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
 
   </style>
 </head>
@@ -136,7 +163,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
       <button data-tab="tools" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-tools">Alətlər</button>
     </div>
 
-    <section id="panel-ksq" class="mt-6">
+    <section id="panel-ksq" class="tab-panel is-active mt-6">
       <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
         <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
         <div class="p-4 grid lg:grid-cols-3 gap-6">
@@ -165,7 +192,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
       </div>
     </section>
 
-    <section id="panel-pp" class="mt-6 hidden">
+    <section id="panel-pp"  class="tab-panel mt-6">
       <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
         <div class="p-4 border-b"><h3 class="font-semibold" id="pp-title">Perspektiv (illik) plan</h3></div>
         <div class="p-4 grid lg:grid-cols-3 gap-6">
@@ -185,7 +212,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
       </div>
     </section>
 
-    <section id="panel-tools" class="mt-6 hidden">
+    <section id="panel-tools" class="tab-panel grid-on mt-6">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
@@ -305,26 +332,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   };
   window.state = state;
     
-function setActiveTab(name, opts = { scroll: false }) {
-  $$('.tab-btn').forEach(b=>{
-    const act = b.dataset.tab===name;
-    b.classList.toggle('bg-white', act);
-    b.classList.toggle('shadow-sm', act);
-    b.classList.toggle('text-slate-900', act);
-    b.classList.toggle('text-slate-600', !act);
-  });
-  ['ksq','pp','tools'].forEach(n=> $('#panel-'+n).classList.toggle('hidden', n!==name));
-
-  // YALNIZ opts.scroll = true olanda yuxarı qaytar
-  if (opts.scroll) {
-    const tabsBar = document.getElementById('tabs');
-    if (tabsBar) {
-      const headerOffset = 80;
-      const top = tabsBar.getBoundingClientRect().top + window.scrollY - headerOffset;
-      window.scrollTo({ top, behavior: 'auto' }); // istəyirsən 'smooth' elə
-    }
-  }
-}
+function setActiveTab
 
   function option(el, val, text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o);}  
 

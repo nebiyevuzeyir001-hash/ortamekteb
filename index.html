@@ -569,13 +569,120 @@ if (savedTheme === 'dark') {
   });
     
   </script>
-  <script type="module">
-  import demoCatalog from './demoCatalog.js';
-  window.state.catalog = demoCatalog;
-  console.log('demoCatalog length =', demoCatalog?.length);
-  renderSelects();
-  renderKSQ();
-  renderPP();
+<script>
+const API_KEY = "AIzaSyCxwagH5fdAxT9rqP4sa0Po5kkxNmKt2Sw";
+const ROOT_ID = "1FJ91N56tPzQ0JpP6t3fioiQzV1NdNvT3";
+const driveCache = new Map();
+
+async function findChildFolder(parentId, name){
+  const k=`child:${parentId}:${name}`;
+  if(driveCache.has(k)) return driveCache.get(k);
+  const q=encodeURIComponent(
+    `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+  );
+  const url=`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&key=${API_KEY}`;
+  const r=await fetch(url); const d=await r.json();
+  const id=(d.files&&d.files[0]?.id)||null;
+  driveCache.set(k,id); return id;
+}
+async function fetchFiles(folderId){
+  const q=encodeURIComponent(`'${folderId}' in parents and trashed=false`);
+  const url=`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,webViewLink,fileExtension,mimeType)&key=${API_KEY}`;
+  const r=await fetch(url); const d=await r.json();
+  return Array.isArray(d.files)?d.files:[];
+}
+function renderFiles(files, targetWrapId, badgeId){
+  const wrap=document.getElementById(targetWrapId);
+  const badge=document.getElementById(badgeId);
+  if(badge) badge.textContent=files.length;
+  if(!files.length){ wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>'; return; }
+  wrap.innerHTML="";
+  files.forEach(f=>{
+    const ext=(f.fileExtension||(f.mimeType||"").split("/")[1]||"").toUpperCase();
+    wrap.insertAdjacentHTML("beforeend",`
+      <div class="group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100">
+        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+          <div class="flex items-start gap-3">
+            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+            <div class="flex-1">
+              <div class="text-sm font-medium">${f.name}</div>
+              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${ext||'FILE'}</span></div>
+              <div class="mt-3"><a href="${f.webViewLink}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç</a></div>
+            </div>
+          </div>
+        </div>
+      </div>`);
+  });
+}
+async function resolveKSQ_BSQ_Path(typeName, subjectName, gradeName){
+  let cur=ROOT_ID;
+  for(const step of [typeName, subjectName, gradeName]){
+    cur=await findChildFolder(cur, step);
+    if(!cur) return null;
+  }
+  return cur;
+}
+async function resolvePP_Path(subjectName){
+  let cur=ROOT_ID;
+  for(const step of ["PP", subjectName]){
+    cur=await findChildFolder(cur, step);
+    if(!cur) return null;
+  }
+  return cur;
+}
+async function loadKSQ_BSQ(){
+  const subject=document.getElementById('subject')?.value;
+  const grade=document.getElementById('grade')?.value;
+  const typeSel=document.getElementById('ksqType')?.value; // 'KSQ' | 'BSQ'
+  const idx = typeSel==='KSQ' ? document.getElementById('ksqIndex')?.value : document.getElementById('bsqIndex')?.value;
+
+  const wrap=document.getElementById('ksq-results'); const badge=document.getElementById('ksq-count');
+  if(!subject||!grade||!wrap) return;
+  wrap.innerHTML='<div class="text-slate-500">Yüklənir…</div>'; if(badge) badge.textContent='0';
+
+  const dirId=await resolveKSQ_BSQ_Path(typeSel, subject, grade);
+  if(!dirId){
+    wrap.innerHTML=`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+      Qovluq tapılmadı: materials / <b>${typeSel}</b> / <b>${subject}</b> / <b>${grade}</b>
+    </div>`; return;
+  }
+  let files=await fetchFiles(dirId);
+  const re=new RegExp(\`\\\\b\${typeSel}\\\\s*[-_ ]?\\\\s*\${idx}\\\\b\`,'i'); // “KSQ-1”, “BSQ 2” və s.
+  files=files.filter(f=>re.test(f.name));
+  renderFiles(files,'ksq-results','ksq-count');
+}
+async function loadPP(){
+  const subject=document.getElementById('ppSubject')?.value;
+  const wrap=document.getElementById('pp-results'); const badge=document.getElementById('pp-count');
+  if(!subject||!wrap) return;
+  wrap.innerHTML='<div class="text-slate-500">Yüklənir…</div>'; if(badge) badge.textContent='0';
+
+  const dirId=await resolvePP_Path(subject);
+  if(!dirId){
+    wrap.innerHTML=\`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+      Qovluq tapılmadı: materials / <b>PP</b> / <b>\${subject}</b>
+    </div>\`; return;
+  }
+  const files=await fetchFiles(dirId);
+  renderFiles(files,'pp-results','pp-count');
+}
+document.getElementById('grade')?.addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); loadKSQ_BSQ(); });
+document.getElementById('subject')?.addEventListener('change', e=>{ state.subject=e.target.value; loadKSQ_BSQ(); });
+document.getElementById('ksqType')?.addEventListener('change', e=>{
+  state.ksqType=e.target.value;
+  document.getElementById('wrap-ksqNo').classList.toggle('hidden', state.ksqType!=='KSQ');
+  document.getElementById('wrap-bsqNo').classList.toggle('hidden', state.ksqType!=='BSQ');
+  loadKSQ_BSQ();
+});
+document.getElementById('ksqIndex')?.addEventListener('change', e=>{ state.ksqIndex=e.target.value; loadKSQ_BSQ(); });
+document.getElementById('bsqIndex')?.addEventListener('change', e=>{ state.bsqIndex=e.target.value; loadKSQ_BSQ(); });
+document.getElementById('ppSubject')?.addEventListener('change', e=>{ state.ppSubject=e.target.value; loadPP(); });
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderSelects(); // səndə artıq var, təkrar olsa da problem deyil
+  loadKSQ_BSQ();
+  loadPP();
+});
 </script>
 
 </body>

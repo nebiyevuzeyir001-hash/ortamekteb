@@ -86,6 +86,32 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 1px 4px rgba(0,0,0,.06);
   transform: translateY(-1px);
 }
+/* DARK: tray və aktiv düymə üçün daha yüksək kontrast */
+.dark #tabs{
+  background:#0f172a;              /* tray fonu */
+  border-color:#253046;
+}
+.dark .tab-btn[aria-selected="true"]{
+  background:#1e293b;              /* aktiv tab fonu – traydan açıq */
+  color:#e5e7eb;
+  box-shadow:
+    0 0 0 1px #304155,             /* nazik ring */
+    0 8px 16px rgba(0,0,0,.35);
+}
+/* DARK: passiv tabı bir az solğun göstər */
+.dark .tab-btn[aria-selected="false"]{
+  color:#94a3b8;
+  opacity:.9;
+}
+/* Hər iki rejimdə aktiv tab altında indikator xətti */
+.tab-btn[aria-selected="true"]{ position:relative; }
+.tab-btn[aria-selected="true"]::after{
+  content:"";
+  position:absolute; left:12px; right:12px; bottom:-7px;
+  height:3px; border-radius:9999px;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa);
+  opacity:.95;
+}
 
   </style>
 </head>

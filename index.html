@@ -570,118 +570,130 @@ if (savedTheme === 'dark') {
     
   </script>
 <script>
-const API_KEY = "AIzaSyDWtsVPF0WJy-fHyiApeRL8HIZoOybtCHI";
-const ROOT_ID = "1FJ91N56tPzQ0JpP6t3fioiQzV1NdNvT3";
+/** ⚙️ Tənzimləmələr */
+const API_KEY = "AIzaSyDWtsVPF0WJy-fHyiApeRL8HIZoOybtCHI";          // referrer-lə domeninə məhdudlaşdır!
+const ROOT_ID = "1FJ91N56tPzQ0JpP6t3fioiQzV1NdNvT3";   // yalnız materials qovluğunun ID-si
 const driveCache = new Map();
 
-async function findChildFolder(parentId, name){
-  const k=`child:${parentId}:${name}`;
-  if(driveCache.has(k)) return driveCache.get(k);
-  const q=encodeURIComponent(
-    `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
-  );
-  const url=`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&key=${API_KEY}`;
-  const r=await fetch(url); const d=await r.json();
-  const id=(d.files&&d.files[0]?.id)||null;
-  driveCache.set(k,id); return id;
+/** Drive-dan səhifələnmiş siyahını oxu */
+async function listChildren(folderId) {
+  let pageToken = "", out = [];
+  do {
+    const params = new URLSearchParams({
+      q: `'${folderId}' in parents and trashed=false`,
+      fields: 'nextPageToken,files(id,name,mimeType,webViewLink,fileExtension,parents)',
+      pageSize: '1000',
+      key: API_KEY
+    });
+    if (pageToken) params.set('pageToken', pageToken);
+    const url = `https://www.googleapis.com/drive/v3/files?${params}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Drive sorğusu uğursuz oldu');
+    const data = await res.json();
+    out.push(...(data.files || []));
+    pageToken = data.nextPageToken || "";
+  } while (pageToken);
+  return out;
 }
-async function fetchFiles(folderId){
-  const q=encodeURIComponent(`'${folderId}' in parents and trashed=false`);
-  const url=`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,webViewLink,fileExtension,mimeType)&key=${API_KEY}`;
-  const r=await fetch(url); const d=await r.json();
-  return Array.isArray(d.files)?d.files:[];
+
+/** Bütün ağacı rekursiv gəz (ROOT_ID-dən başlayaraq) */
+async function walkTree(folderId, path = []) {
+  const key = `walk:${folderId}`;
+  if (driveCache.has(key)) return driveCache.get(key);
+
+  const children = await listChildren(folderId);
+  const nodes = [];
+
+  // əvvəlcə qovluqlar
+  const folders = children.filter(c => c.mimeType === 'application/vnd.google-apps.folder');
+  // sonra fayllar
+  const files   = children.filter(c => c.mimeType !== 'application/vnd.google-apps.folder');
+
+  // Faylları topla
+  files.forEach(f => nodes.push({ type: 'file', file: f, path }));
+
+  // Alt-qovluqları rekursiv gəz
+  for (const fld of folders) {
+    const subNodes = await walkTree(fld.id, [...path, fld.name]);
+    nodes.push({ type: 'folder', folder: fld, path, children: subNodes });
+  }
+
+  driveCache.set(key, nodes);
+  return nodes;
 }
-function renderFiles(files, targetWrapId, badgeId){
-  const wrap=document.getElementById(targetWrapId);
-  const badge=document.getElementById(badgeId);
-  if(badge) badge.textContent=files.length;
-  if(!files.length){ wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>'; return; }
-  wrap.innerHTML="";
-  files.forEach(f=>{
-    const ext=(f.fileExtension||(f.mimeType||"").split("/")[1]||"").toUpperCase();
-    wrap.insertAdjacentHTML("beforeend",`
-      <div class="group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100">
-        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-          <div class="flex items-start gap-3">
-            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-            <div class="flex-1">
-              <div class="text-sm font-medium">${f.name}</div>
-              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${ext||'FILE'}</span></div>
-              <div class="mt-3"><a href="${f.webViewLink}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç</a></div>
-            </div>
-          </div>
-        </div>
-      </div>`);
+
+/** Ağacdan sənin UI-nın anladığı kataloqa çevir (KSQ/BSQ/PP) */
+function treeToCatalog(nodes) {
+  const out = [];
+  const flat = [];
+
+  // dərinlikdən asılı olmayaraq bütün faylları düzləşdir
+  const stack = [...nodes];
+  while (stack.length) {
+    const n = stack.pop();
+    if (!n) continue;
+    if (n.type === 'file') flat.push(n);
+    if (n.type === 'folder' && Array.isArray(n.children)) stack.push(...n.children);
+  }
+
+  flat.forEach(n => {
+    const path = n.path; // ROOT-dan son qovluğa qədər adlar
+    // Gözlənən struktur:
+    // KSQ/BSQ:  [ 'KSQ' | 'BSQ',  '<Fənn>', '<Sinif>' , ...istəyə görə dərinlik ola bilər ]
+    // PP:       [ 'PP', '<Fənn>', ... ]
+    const top = (path[0] || '').toUpperCase();
+
+    if (top === 'KSQ' || top === 'BSQ') {
+      const subject = path[1] || '';
+      const grade   = path[2] || '';
+      // Fayl adından nömrəni çıxart
+      const m = n.file.name.match(/(KSQ|BSQ)\s*[-_ ]?\s*(\d+)/i);
+      const idx = m?.[2] || '1';
+      out.push({
+        type: top,                   // 'KSQ' | 'BSQ'
+        subject,                     // 'Azərbaycan dili' və s.
+        grade,                       // 'V', 'VI'...
+        index: String(idx),
+        file: n.file.webViewLink || `https://drive.google.com/file/d/${n.file.id}/view`,
+      });
+    } else if (top === 'PP') {
+      const subject = path[1] || '';
+      out.push({
+        type: 'PP',
+        subject,
+        file: n.file.webViewLink || `https://drive.google.com/file/d/${n.file.id}/view`,
+      });
+    }
   });
-}
-async function resolveKSQ_BSQ_Path(typeName, subjectName, gradeName){
-  let cur=ROOT_ID;
-  for(const step of [typeName, subjectName, gradeName]){
-    cur=await findChildFolder(cur, step);
-    if(!cur) return null;
-  }
-  return cur;
-}
-async function resolvePP_Path(subjectName){
-  let cur=ROOT_ID;
-  for(const step of ["PP", subjectName]){
-    cur=await findChildFolder(cur, step);
-    if(!cur) return null;
-  }
-  return cur;
-}
-async function loadKSQ_BSQ(){
-  const subject=document.getElementById('subject')?.value;
-  const grade=document.getElementById('grade')?.value;
-  const typeSel=document.getElementById('ksqType')?.value; // 'KSQ' | 'BSQ'
-  const idx = typeSel==='KSQ' ? document.getElementById('ksqIndex')?.value : document.getElementById('bsqIndex')?.value;
 
-  const wrap=document.getElementById('ksq-results'); const badge=document.getElementById('ksq-count');
-  if(!subject||!grade||!wrap) return;
-  wrap.innerHTML='<div class="text-slate-500">Yüklənir…</div>'; if(badge) badge.textContent='0';
-
-  const dirId=await resolveKSQ_BSQ_Path(typeSel, subject, grade);
-  if(!dirId){
-    wrap.innerHTML=`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
-      Qovluq tapılmadı: materials / <b>${typeSel}</b> / <b>${subject}</b> / <b>${grade}</b>
-    </div>`; return;
-  }
-  let files=await fetchFiles(dirId);
-  const re=new RegExp(\`\\\\b\${typeSel}\\\\s*[-_ ]?\\\\s*\${idx}\\\\b\`,'i'); // “KSQ-1”, “BSQ 2” və s.
-  files=files.filter(f=>re.test(f.name));
-  renderFiles(files,'ksq-results','ksq-count');
+  return out;
 }
-async function loadPP(){
-  const subject=document.getElementById('ppSubject')?.value;
-  const wrap=document.getElementById('pp-results'); const badge=document.getElementById('pp-count');
-  if(!subject||!wrap) return;
-  wrap.innerHTML='<div class="text-slate-500">Yüklənir…</div>'; if(badge) badge.textContent='0';
 
-  const dirId=await resolvePP_Path(subject);
-  if(!dirId){
-    wrap.innerHTML=\`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
-      Qovluq tapılmadı: materials / <b>PP</b> / <b>\${subject}</b>
-    </div>\`; return;
+/** UI-yə bağla */
+async function loadAllFromMaterials() {
+  const wrapKSQ = document.getElementById('ksq-results');
+  const wrapPP  = document.getElementById('pp-results');
+  if (wrapKSQ) wrapKSQ.innerHTML = '<div class="text-slate-500">Yüklənir…</div>';
+  if (wrapPP)  wrapPP.innerHTML  = '<div class="text-slate-500">Yüklənir…</div>';
+
+  try {
+    const tree = await walkTree(ROOT_ID, []);     // bütün ağacı oxu
+    const catalog = treeToCatalog(tree);          // kataloqa çevir
+    window.state.catalog = catalog;               // sənin mövcud render funksiyaların üçün
+    renderSelects();
+    renderKSQ();
+    renderPP();
+  } catch (e) {
+    const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+    if (wrapKSQ) wrapKSQ.innerHTML = msg;
+    if (wrapPP)  wrapPP.innerHTML  = msg;
   }
-  const files=await fetchFiles(dirId);
-  renderFiles(files,'pp-results','pp-count');
 }
-document.getElementById('grade')?.addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); loadKSQ_BSQ(); });
-document.getElementById('subject')?.addEventListener('change', e=>{ state.subject=e.target.value; loadKSQ_BSQ(); });
-document.getElementById('ksqType')?.addEventListener('change', e=>{
-  state.ksqType=e.target.value;
-  document.getElementById('wrap-ksqNo').classList.toggle('hidden', state.ksqType!=='KSQ');
-  document.getElementById('wrap-bsqNo').classList.toggle('hidden', state.ksqType!=='BSQ');
-  loadKSQ_BSQ();
-});
-document.getElementById('ksqIndex')?.addEventListener('change', e=>{ state.ksqIndex=e.target.value; loadKSQ_BSQ(); });
-document.getElementById('bsqIndex')?.addEventListener('change', e=>{ state.bsqIndex=e.target.value; loadKSQ_BSQ(); });
-document.getElementById('ppSubject')?.addEventListener('change', e=>{ state.ppSubject=e.target.value; loadPP(); });
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderSelects(); // səndə artıq var, təkrar olsa da problem deyil
-  loadKSQ_BSQ();
-  loadPP();
+// Hadisələr eyni qalır; sadəcə ilk yükləmədə kataloqu Drive-dan doldur
+document.addEventListener('DOMContentLoaded', () => {
+  renderSelects();
+  loadAllFromMaterials();
 });
 </script>
 

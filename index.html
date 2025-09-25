@@ -434,9 +434,12 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
   }
 
   function buildTitle(it){
-    const format = it.file.split('.').pop().toUpperCase();
-    return it.type==='PP' ? `${it.subject} · PP · ${format}` : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
-  }
+  const format = (it.ext || 'FILE').toUpperCase();
+  return it.type==='PP'
+    ? `${it.subject} · PP · ${format}`
+    : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
+}
+
 
   function renderKSQ(){
     const wrap = $('#ksq-results'); wrap.innerHTML='';
@@ -462,7 +465,7 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
             <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
             <div class="flex-1">
               <div class="text-sm font-medium">${buildTitle(it)}</div>
-              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${it.file.split('.').pop().toUpperCase()}</span></div>
+              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
               <div class="mt-3"><a href="${it.file}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç / Yüklə</a></div>
             </div>
           </div>
@@ -488,7 +491,7 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
             <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
             <div class="flex-1">
               <div class="text-sm font-medium">${buildTitle(it)}</div>
-              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${it.file.split('.').pop().toUpperCase()}</span></div>
+              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
               <div class="mt-3"><a href="${it.file}" target="_blank" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">↗ Aç / Yüklə</a></div>
             </div>
           </div>
@@ -583,9 +586,15 @@ async function listChildren(folderId) {
       q: `'${folderId}' in parents and trashed=false`,
       fields: 'nextPageToken,files(id,name,mimeType,webViewLink,fileExtension,parents)',
       pageSize: '1000',
-      key: API_KEY
+      key: API_KEY,
+
+      // 🔽 Shared Drive-lar üçün əlavə parametrlər
+      includeItemsFromAllDrives: 'true',
+      supportsAllDrives: 'true',
+      corpora: 'allDrives',
     });
     if (pageToken) params.set('pageToken', pageToken);
+
     const url = `https://www.googleapis.com/drive/v3/files?${params}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('Drive sorğusu uğursuz oldu');
@@ -595,6 +604,7 @@ async function listChildren(folderId) {
   } while (pageToken);
   return out;
 }
+
 
 /** Bütün ağacı rekursiv gəz (ROOT_ID-dən başlayaraq) */
 async function walkTree(folderId, path = []) {
@@ -622,12 +632,20 @@ async function walkTree(folderId, path = []) {
   return nodes;
 }
 
-/** Ağacdan sənin UI-nın anladığı kataloqa çevir (KSQ/BSQ/PP) */
+function mimeToExt(mime) {
+  if (!mime) return 'FILE';
+  // Google sənədləri üçün qısa etiketlər
+  if (mime === 'application/vnd.google-apps.document') return 'DOCS';
+  if (mime === 'application/vnd.google-apps.spreadsheet') return 'SHEETS';
+  if (mime === 'application/vnd.google-apps.presentation') return 'SLIDES';
+  if (mime === 'application/pdf') return 'PDF';
+  const p = mime.split('/')[1];
+  return (p || 'FILE').toUpperCase();
+}
+
 function treeToCatalog(nodes) {
   const out = [];
   const flat = [];
-
-  // dərinlikdən asılı olmayaraq bütün faylları düzləşdir
   const stack = [...nodes];
   while (stack.length) {
     const n = stack.pop();
@@ -637,31 +655,25 @@ function treeToCatalog(nodes) {
   }
 
   flat.forEach(n => {
-    const path = n.path; // ROOT-dan son qovluğa qədər adlar
-    // Gözlənən struktur:
-    // KSQ/BSQ:  [ 'KSQ' | 'BSQ',  '<Fənn>', '<Sinif>' , ...istəyə görə dərinlik ola bilər ]
-    // PP:       [ 'PP', '<Fənn>', ... ]
+    const path = n.path;
     const top = (path[0] || '').toUpperCase();
+    const ext = (n.file.fileExtension || mimeToExt(n.file.mimeType)).toUpperCase();
+    const link = n.file.webViewLink || `https://drive.google.com/file/d/${n.file.id}/view`;
 
     if (top === 'KSQ' || top === 'BSQ') {
       const subject = path[1] || '';
       const grade   = path[2] || '';
-      // Fayl adından nömrəni çıxart
       const m = n.file.name.match(/(KSQ|BSQ)\s*[-_ ]?\s*(\d+)/i);
       const idx = m?.[2] || '1';
       out.push({
-        type: top,                   // 'KSQ' | 'BSQ'
-        subject,                     // 'Azərbaycan dili' və s.
-        grade,                       // 'V', 'VI'...
-        index: String(idx),
-        file: n.file.webViewLink || `https://drive.google.com/file/d/${n.file.id}/view`,
+        type: top, subject, grade, index: String(idx),
+        file: link, ext
       });
     } else if (top === 'PP') {
       const subject = path[1] || '';
       out.push({
-        type: 'PP',
-        subject,
-        file: n.file.webViewLink || `https://drive.google.com/file/d/${n.file.id}/view`,
+        type: 'PP', subject,
+        file: link, ext
       });
     }
   });

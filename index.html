@@ -589,6 +589,35 @@ setActiveTab('ksq', { scroll: false });
   const settingsBtn = document.getElementById('btn-settings');
   const panel = document.getElementById('settings-panel');
   const darkToggle = document.getElementById('dark-toggle');
+// Sistem ayarını da nəzərə al
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+// LocalStorage-da yoxdursa, sistemi götür
+const saved = localStorage.getItem('theme');
+const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
+
+// Tətbiq et
+document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
+applyThemeAssets(initialTheme);
+
+// Toggle dəyişəndə
+darkToggle?.addEventListener('change', (e) => {
+  const theme = e.target.checked ? 'dark' : 'light';
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  localStorage.setItem('theme', theme);
+  applyThemeAssets(theme);
+});
+
+// İstifadəçi localStorage-da seçim etməyibsə, sistem teması dəyişəndə uyğunlaş
+mq.addEventListener?.('change', (e) => {
+  if (!localStorage.getItem('theme')) {
+    const theme = e.matches ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    if (darkToggle) darkToggle.checked = (theme === 'dark');
+    applyThemeAssets(theme);
+  }
+});
 
   // paneli aç/bağla
   settingsBtn.addEventListener('click', (e) => {
@@ -618,28 +647,6 @@ function applyThemeAssets(theme) {
   }
 }
 
-  
-  const darkToggle = document.getElementById('dark-toggle');
-
-  // əvvəlki seçim yadda saxlanılıbsa götür
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.documentElement.classList.add('dark');
-    if (darkToggle) darkToggle.checked = true;
-  } else {
-    document.documentElement.classList.remove('dark');
-    if (darkToggle) darkToggle.checked = false;
-  }
-
-  // istifadəçi dəyişəndə tətbiq et və yadda saxla
-  darkToggle?.addEventListener('change', (e) => {
-    const on = e.target.checked;
-    document.documentElement.classList.toggle('dark', on);
-    localStorage.setItem('theme', on ? 'dark' : 'light');
-  });
-
-
-    
   </script>
 <script>
 /** ⚙️ Tənzimləmələr */

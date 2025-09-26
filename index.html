@@ -112,6 +112,19 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   background:linear-gradient(90deg,#22d3ee,#a78bfa);
   opacity:.95;
 }
+/* Kartların hover kölgəsi */
+.bg-white {
+  transition: box-shadow 0.2s ease;
+}
+
+.bg-white:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* Light mode kölgə */
+}
+
+/* Dark mod üçün hover kölgəsi */
+.dark .bg-white:hover {
+  box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
+}
 
   </style>
 </head>

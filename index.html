@@ -633,13 +633,13 @@ mq.addEventListener?.('change', (e) => {
 function applyThemeAssets(theme) {
   const isDark = theme === 'dark';
 
-  // Header loqo
+  // Header loqo — favicon deyil, loqo faylları
   const logoEl = document.getElementById('site-logo');
   if (logoEl) {
-    logoEl.src = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-logo.svg';
+    logoEl.src = isDark ? 'assets/ep-logo-dark.svg' : 'assets/ep-logo.svg';
   }
 
-  // Apple Touch Icon (media dəstəkləmir, JS ilə dəyişək)
+  // Apple Touch Icon (mobil üçün)
   const apple = document.getElementById('apple-icon');
   if (apple) {
     apple.href = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';

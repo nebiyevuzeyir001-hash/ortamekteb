@@ -129,11 +129,11 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
 .dark .bg-white:hover {
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
-#hero-title {
-  display: block;
-  white-space: normal;
-}
   </style>
+  <style>
+  #hero-title { display:flex; flex-direction:column; }
+  #hero-title > * { display:block !important; }
+</style>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">

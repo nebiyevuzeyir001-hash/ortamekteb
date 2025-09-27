@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 256 256">
+  <!-- Ağ dairə -->
+  <circle cx="128" cy="128" r="128" fill="white"></circle>
+  
+  <!-- Hərflər (EP), dairənin rəngi ilə -->
+  <text x="50%" y="50%" font-family="Arial, Helvetica, sans-serif" font-size="110" font-weight="700" fill="#0b1220" text-anchor="middle" alignment-baseline="central" dominant-baseline="central">
+    EP
+  </text>
+</svg>

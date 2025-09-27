@@ -130,10 +130,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
   </style>
-  <style>
-  #hero-title { display:flex; flex-direction:column; }
-  #hero-title > * { display:block !important; }
-</style>
+  
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -171,11 +168,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   <section class="relative">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid lg:grid-cols-2 gap-8 items-center">
       <div>
-        <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug flex flex-col">
-          <span class="!block">Tədris resurslarını</span>
-          <span class="!block">saniyələr içində</span>
-          <span class="!block">tap və yüklə</span>
-        </h1>
+        <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug whitespace-normal text-balance text-pretty max-w-[28ch] sm:max-w-[32ch] lg:max-w-[36ch]">Tədris resurslarını saniyələr içində tap və yüklə</h1>
         <p class="mt-4 text-slate-600 text-lg" id="hero-subtitle">Sadə interfeys, premium görünüş, Azərbaycan məktəbləri üçün uyğunlaşdırılıb.</p>
         <div class="mt-6 flex items-center gap-3 text-sm text-slate-600">
           <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500 inline-block"></span><span id="hero-b1">KSQ & BSQ</span></span>
@@ -445,7 +438,7 @@ function setActiveTab(name, opts = { scroll: false }) {
 
     const ppEl = $('#ppSubject'); ppEl.innerHTML=''; const all = Object.values(translations[state.lang].subjects);
     all.forEach(s=> option(ppEl,s,s)); if(!all.includes(state.ppSubject)) state.ppSubject=all[0]; ppEl.value=state.ppSubject;
-
+setText('#hero-title', translations[state.lang].hero.title);
 setText('#lbl-grade',   translations[state.lang].common.grade);
 setText('#lbl-subject', translations[state.lang].common.subject);
 setText('#lbl-type',    translations[state.lang].ksq.type);

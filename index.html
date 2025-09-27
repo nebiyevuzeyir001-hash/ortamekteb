@@ -771,6 +771,7 @@ async function loadAllFromMaterials() {
     renderKSQ();
     renderPP();
   } catch (e) {
+    console.error('Drive error:', e);
     const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
     if (wrapKSQ) wrapKSQ.innerHTML = msg;
     if (wrapPP)  wrapPP.innerHTML  = msg;

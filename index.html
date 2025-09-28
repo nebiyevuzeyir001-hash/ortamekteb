@@ -422,6 +422,14 @@ function setActiveTab(name, opts = { scroll: false }) {
   const el = document.querySelector(sel);
   if (el) el.textContent = text;
 }
+    // --- GAS feed ---
+const FEED_URL = "https://script.google.com/macros/s/AKfycbwoe_f2nTx_fCCpNt-8lOVtBUeZtReoxjdNR1KwTfY/dev";
+
+async function fetchTreeGAS() {
+  const res = await fetch(FEED_URL, { cache: "no-store" });
+  if (!res.ok) throw new Error("GAS sorğusu uğursuz oldu");
+  return await res.json();
+}
   function renderSelects(){
     const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
     const gradeEl = $('#grade'); gradeEl.innerHTML=''; grades.forEach(g=> option(gradeEl,g,g)); gradeEl.value=state.grade;
@@ -758,25 +766,26 @@ function treeToCatalog(nodes) {
 
 /** UI-yə bağla */
 async function loadAllFromMaterials() {
-  const wrapKSQ = document.getElementById('ksq-results');
-  const wrapPP  = document.getElementById('pp-results');
-  if (wrapKSQ) wrapKSQ.innerHTML = '<div class="text-slate-500">Yüklənir…</div>';
-  if (wrapPP)  wrapPP.innerHTML  = '<div class="text-slate-500">Yüklənir…</div>';
-
-  try {
-    const tree = await walkTree(ROOT_ID, []);     // bütün ağacı oxu
-    const catalog = treeToCatalog(tree);          // kataloqa çevir
-    window.state.catalog = catalog;               // sənin mövcud render funksiyaların üçün
-    renderSelects();
-    renderKSQ();
-    renderPP();
-  } catch (e) {
-    console.error('Drive error:', e);
-    const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
-    if (wrapKSQ) wrapKSQ.innerHTML = msg;
-    if (wrapPP)  wrapPP.innerHTML  = msg;
-  }
+  const url = "https://script.google.com/macros/s/AKfycbwmsMHW8-5nL62kYL7L80WEw-UcTLDpqHOm75IeGTmaNkdZUHynAqr5Fic3x4JAJcoK/exec"; // sənin web app linkin
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Drive sorğusu uğursuz oldu");
+  const data = await res.json();
+  
+  // burada sən data-nı kataloqa çevirib render funksiyalarına ötürəcəksən
+  window.state.catalog = data.map(it => ({
+    type: it.path[0] || 'KSQ',
+    subject: it.path[1] || '',
+    grade: it.path[2] || '',
+    index: "1",
+    file: it.url,
+    ext: it.name.split('.').pop()
+  }));
+  
+  renderSelects();
+  renderKSQ();
+  renderPP();
 }
+
 
 // Hadisələr eyni qalır; sadəcə ilk yükləmədə kataloqu Drive-dan doldur
 document.addEventListener('DOMContentLoaded', () => {

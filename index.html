@@ -646,12 +646,7 @@ function applyThemeAssets(theme) {
   // GAS feed URL-ni tək mənbə kimi saxlayırıq
   const FEED_URL = "https://script.google.com/macros/s/AKfycbwSWOCF3WM7UK8AeENt9M163XFfAeRxGVMpSqTZhtAtsiTMC979wblrilgQhT_ajURCZA/exec";
 
-  // (İstəsən, bu helper-i silə bilərsən — istifadə etmirik)
-  // async function fetchTreeGAS() {
-  //   const res = await fetch(FEED_URL, { cache: "no-store" });
-  //   if (!res.ok) throw new Error("GAS sorğusu uğursuz oldu");
-  //   return await res.json();
-  // }
+  
 
   function buildTitle(it){
     const format = (it.ext || 'FILE').toUpperCase();

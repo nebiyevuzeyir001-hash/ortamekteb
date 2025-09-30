@@ -644,7 +644,7 @@ function applyThemeAssets(theme) {
 // ... (yuxarıdakı mövcud kodun qalan hissəsi: translations, subjectKeys, state, UI funksiyaları və s.) ...
 
   // GAS feed URL-ni tək mənbə kimi saxlayırıq
-  const FEED_URL = "https://script.google.com/macros/s/AKfycbwSWOCF3WM7UK8AeENt9M163XFfAeRxGVMpSqTZhtAtsiTMC979wblrilgQhT_ajURCZA/exec";
+  const FEED_URL = "https://script.google.com/macros/s/AKfycbyZvNHDQqsm-KAFlJdN-bEI1q0GXhf0PvBZwVJ6BuqxoQsMJvLqWo0K9UcSc-JCHHU9zQ/exec";
 
   
 
@@ -671,8 +671,9 @@ function applyThemeAssets(theme) {
       renderSelects();
       renderKSQ();
       renderPP();
-    } catch (e) {
-      const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+  } catch (e) {
+  console.error("GAS fetch error:", e);
+  const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
       if (wrapKSQ) wrapKSQ.innerHTML = msg;
       if (wrapPP)  wrapPP.innerHTML  = msg;
     }

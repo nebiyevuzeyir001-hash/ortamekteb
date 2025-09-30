@@ -478,13 +478,7 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
 
   }
 
-  function buildTitle(it){
-  const format = (it.ext || 'FILE').toUpperCase();
-  return it.type==='PP'
-    ? `${it.subject} · PP · ${format}`
-    : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
-}
-
+  
 
   function renderKSQ(){
     const wrap = $('#ksq-results'); wrap.innerHTML='';

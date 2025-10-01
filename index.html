@@ -130,7 +130,9 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
   </style>
-  
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://drive.usercontent.google.com">
+
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -643,46 +645,82 @@ function applyThemeAssets(theme) {
 }
 // ... (yuxarıdakı mövcud kodun qalan hissəsi: translations, subjectKeys, state, UI funksiyaları və s.) ...
 
-  // GAS feed URL-ni tək mənbə kimi saxlayırıq
-  const FEED_URL = "https://script.google.com/macros/s/AKfycbw3bRRJPMWBo4hbQvSMPsFGJsibYyiTcsdzYdUYhKWjF8onWxkaJxhh1d4GeNwcZFlIVQ/exec";
+// GAS linkin:
+const FEED_URL = "https://script.google.com/macros/s/AKfycbz9Zuct714G2eODRsXl4hHZg7cOBTsMmJCgOHsPuBgHbNl4OfAsqeLixOMLM9jqZFLtew/exec"; // .../exec
 
-  
+// ❶ LocalStorage oxu (10 dəq etibarlı)
+function readCachedCatalog() {
+  try {
+    const raw = localStorage.getItem('catalog_v1');
+    if (!raw) return null;
+    const { t, data } = JSON.parse(raw);
+    if (!Array.isArray(data)) return null;
+    // 10 dəq limit
+    if (Date.now() - t > 10*60*1000) return null;
+    return data;
+  } catch { return null; }
+}
 
-  function buildTitle(it){
-    const format = (it.ext || 'FILE').toUpperCase();
-    return it.type==='PP'
-      ? `${it.subject} · PP · ${format}`
-      : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
-  }
+// ❷ Keşə yaz
+function writeCachedCatalog(list) {
+  try {
+    localStorage.setItem('catalog_v1', JSON.stringify({ t: Date.now(), data: list || [] }));
+  } catch {}
+}
 
-  // Yeganə data yükləmə funksiyamız: GAS → catalog
-  async function loadAllFromMaterials() {
-    const wrapKSQ = document.getElementById('ksq-results');
-    const wrapPP  = document.getElementById('pp-results');
+// ❸ İlk ekranda dərhal göstər, arxada yenilə
+async function loadAllFromMaterials() {
+  const wrapKSQ = document.getElementById('ksq-results');
+  const wrapPP  = document.getElementById('pp-results');
+
+  // dərhal: keş varsa göstər
+  const cached = readCachedCatalog();
+  if (cached) {
+    state.catalog = cached;
+    renderSelects(); renderKSQ(); renderPP();
+  } else {
     if (wrapKSQ) wrapKSQ.innerHTML = '<div class="text-slate-500">Yüklənir…</div>';
     if (wrapPP)  wrapPP.innerHTML  = '<div class="text-slate-500">Yüklənir…</div>';
+  }
 
-    try {
-      const res = await fetch(FEED_URL, { cache: 'no-store' });
-      if (!res.ok) throw new Error('Serverdən cavab alınmadı');
-      const catalog = await res.json();
-
-      window.state.catalog = Array.isArray(catalog) ? catalog : [];
-      renderSelects();
-      renderKSQ();
-      renderPP();
+  // arxa planda həmişə yenilə
+  try {
+    const res = await fetch(FEED_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Serverdən cavab alınmadı');
+    const fresh = await res.json();
+    if (Array.isArray(fresh)) {
+      state.catalog = fresh;
+      writeCachedCatalog(fresh);
+      renderSelects(); renderKSQ(); renderPP();
+    }
   } catch (e) {
-  console.error("GAS fetch error:", e);
-  const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+    // xəta olsa, keşlə davam edirik
+    if (!cached) {
+      const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
       if (wrapKSQ) wrapKSQ.innerHTML = msg;
       if (wrapPP)  wrapPP.innerHTML  = msg;
     }
   }
+}
 
-  document.addEventListener('DOMContentLoaded', () => {
-    renderSelects();
-    loadAllFromMaterials();
-  });
+// kartdakı düyməni birbaşa endirmə üçün (preview-siz)
+function downloadName(it){
+  const ext = (it.ext || 'FILE').toLowerCase();
+  return (it.type==='PP'
+    ? `${it.subject} - PP.${ext}`
+    : `${it.grade} - ${it.subject} - ${it.type}${it.index}.${ext}`
+  ).replace(/[\/\\:?*"<>|]+/g,'-');
+}
+
+// render funksiyalarında düyməni belə saxla:
+/// <a href="${it.file}" download="${downloadName(it)}" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSelects();
+  loadAllFromMaterials();
+});
+
+
   </script>
 
 </body>

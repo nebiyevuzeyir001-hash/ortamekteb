@@ -8,6 +8,11 @@
 <link id="fav-light" rel="icon" type="image/svg+xml" media="(prefers-color-scheme: light)" href="assets/ep-favicon-light.svg">
 <link id="fav-dark"  rel="icon" type="image/svg+xml" media="(prefers-color-scheme: dark)"  href="assets/ep-favicon-dark.svg">
 <link id="apple-icon" rel="apple-touch-icon" href="assets/ep-favicon-light.svg">
+<script>
+  window.__catalogPromise = fetch("https://drive.usercontent.google.com/uc?export=download&id=YOUR_CATALOG_JSON_ID")
+    .then(r => r.json())
+    .catch(()=>[]);
+</script>
   <!-- Tailwind (no install) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -130,9 +135,8 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
   </style>
-<link rel="preconnect" href="https://script.googleusercontent.com">
-<link rel="preconnect" href="https://drive.usercontent.google.com">
-
+<link rel="dns-prefetch" href="https://drive.usercontent.google.com">
+<link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -672,9 +676,9 @@ function applyThemeAssets(theme) {
 }
 // ... (yuxarıdakı mövcud kodun qalan hissəsi: translations, subjectKeys, state, UI funksiyaları və s.) ...
 
-// GAS linkin:
-const FEED_URL = "https://script.google.com/macros/s/AKfycbz9Zuct714G2eODRsXl4hHZg7cOBTsMmJCgOHsPuBgHbNl4OfAsqeLixOMLM9jqZFLtew/exec"; // .../exec
-
+// Drive "catalog.json" üçün birbaşa download linki:
+const CATALOG_DRIVE_ID = 'YOUR_CATALOG_JSON_ID';
+const FEED_URL = `https://drive.usercontent.google.com/uc?export=download&id=${CATALOG_DRIVE_ID}`;
 // ❶ LocalStorage oxu (10 dəq etibarlı)
 function readCachedCatalog() {
   try {
@@ -742,10 +746,15 @@ function downloadName(it){
 // render funksiyalarında düyməni belə saxla:
 /// <a href="${it.file}" download="${downloadName(it)}" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderSelects();
-  loadAllFromMaterials();
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const fast = await (window.__catalogPromise || Promise.resolve([]));
+    if (Array.isArray(fast) && fast.length) state.catalog = fast;
+  } catch {}
+  renderSelects(); renderKSQ(); renderPP();
+  // Paralel: istəsən yenə də FEED_URL-ə normal fetch atıb localStorage-a yazarsan
 });
+
 
 
   </script>

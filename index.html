@@ -480,66 +480,93 @@ setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
 
   }
 
-  
+  // Kart başlığını formalaşdırır
+function buildTitle(it) {
+  const format = (it.ext || 'FILE').toUpperCase();
+  if (it.type === 'PP') {
+    const subject = it.subject || 'Fənn';
+    return `${subject} · PP · ${format}`;
+  }
+  const grade   = it.grade   || '—';
+  const subject = it.subject || 'Fənn';
+  const idx     = it.index   || '';
+  return `${grade} · ${subject} · ${it.type}-${idx} · ${format}`;
+}
 
-  function renderKSQ(){
-    const wrap = $('#ksq-results'); wrap.innerHTML='';
-    const list = state.catalog.filter(it=>{
-      if(it.type!==state.ksqType) return false;
-      if(it.type!=='PP' && it.grade!==state.grade) return false;
-      if(it.type!=='PP' && it.subject!==state.subject) return false;
-      if(state.ksqType==='KSQ' && it.index!==state.ksqIndex) return false;
-      if(state.ksqType==='BSQ' && it.index!==state.bsqIndex) return false;
-      return true;
-    });
-    $('#ksq-count').textContent = list.length;
-    if(list.length===0){
-      wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
-      return;
-    }
-    list.forEach(it=>{
-      const card = document.createElement('div');
-      card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
-      card.innerHTML = `
-        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-          <div class="flex items-start gap-3">
-            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-            <div class="flex-1">
-              <div class="text-sm font-medium">${buildTitle(it)}</div>
-              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
-              <div class="mt-3"><a href="${it.file}" download class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div>
+
+function renderKSQ(){
+  const wrap = $('#ksq-results'); wrap.innerHTML='';
+  const list = state.catalog.filter(it=>{
+    // yalnız PDF/DOCX
+    const ext = (it.ext || '').toUpperCase();
+    if (ext!=='PDF' && ext!=='DOCX') return false;
+
+    if (it.type!==state.ksqType) return false;
+    if (it.type!=='PP' && it.grade!==state.grade) return false;
+    if (it.type!=='PP' && it.subject!==state.subject) return false;
+    if (state.ksqType==='KSQ' && it.index!==state.ksqIndex) return false;
+    if (state.ksqType==='BSQ' && it.index!==state.bsqIndex) return false;
+    return true;
+  });
+  $('#ksq-count').textContent = list.length;
+  if(list.length===0){
+    wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+    return;
+  }
+  list.forEach(it=>{
+    const card = document.createElement('div');
+    card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+    card.innerHTML = `
+      <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+        <div class="flex items-start gap-3">
+          <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+          <div class="flex-1">
+            <div class="text-sm font-medium">${buildTitle(it)}</div>
+            <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
+            <div class="mt-3">
+              <a href="${it.file}" download="${downloadName(it)}"
+                 class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
             </div>
           </div>
-        </div>`;
-      wrap.appendChild(card);
-    });
-  }
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
 
-  function renderPP(){
-    const wrap = $('#pp-results'); wrap.innerHTML='';
-    const list = state.catalog.filter(it=> it.type==='PP' && it.subject===state.ppSubject);
-    $('#pp-count').textContent = list.length;
-    if(list.length===0){
-      wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
-      return;
-    }
-    list.forEach(it=>{
-      const card = document.createElement('div');
-      card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
-      card.innerHTML = `
-        <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-          <div class="flex items-start gap-3">
-            <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-            <div class="flex-1">
-              <div class="text-sm font-medium">${buildTitle(it)}</div>
-              <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
-              <div class="mt-3"><a href="${it.file}" download class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div>
+function renderPP(){
+  const wrap = $('#pp-results'); wrap.innerHTML='';
+  const list = state.catalog.filter(it=>{
+    // yalnız PDF/DOCX
+    const ext = (it.ext || '').toUpperCase();
+    return it.type==='PP' && it.subject===state.ppSubject && (ext==='PDF' || ext==='DOCX');
+  });
+  $('#pp-count').textContent = list.length;
+  if(list.length===0){
+    wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+    return;
+  }
+  list.forEach(it=>{
+    const card = document.createElement('div');
+    card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+    card.innerHTML = `
+      <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+        <div class="flex items-start gap-3">
+          <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+          <div class="flex-1">
+            <div class="text-sm font-medium">${buildTitle(it)}</div>
+            <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
+            <div class="mt-3">
+              <a href="${it.file}" download="${downloadName(it)}"
+                 class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
             </div>
           </div>
-        </div>`;
-      wrap.appendChild(card);
-    });
-  }
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+
 
 
   document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); renderKSQ();});

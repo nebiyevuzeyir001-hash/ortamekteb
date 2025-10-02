@@ -446,7 +446,7 @@ function renderSelects(){
   // Sinif
   const gradeEl = document.getElementById('grade');
   gradeEl.innerHTML = '';
-  addPlaceholder(gradeEl, 'Sinifi seçin');
+  addPlaceholder(gradeEl, 'Sinfi seçin');
   grades.forEach(g => option(gradeEl, g, g));
   gradeEl.value = state.grade ?? "";
 

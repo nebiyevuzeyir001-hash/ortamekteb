@@ -134,6 +134,8 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
 .dark .bg-white:hover {
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
+select:invalid { color:#9aa4b2; }
+    
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
@@ -371,12 +373,17 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-  const state = {
-    lang: 'az', grade: 'V',
-    ksqType: 'KSQ', ksqIndex: '1', bsqIndex: '1',
-    subject: null, ppSubject: null,
-    catalog: [],
-  };
+const state = {
+  lang: 'az',
+  grade: null,       // əvvəl 'V' idi → boş
+  subject: null,     // əvvəl null qalır
+  ksqType: null,     // KSQ/BSQ seçilməyib
+  ksqIndex: null,
+  bsqIndex: null,
+  ppSubject: null,   // PP fənni də seçilməyib
+  catalog: [],
+};
+
   window.state = state;
     
 function setActiveTab(name, opts = { scroll: false }) {
@@ -430,59 +437,105 @@ function setActiveTab(name, opts = { scroll: false }) {
 }
     // --- GAS feed ---
 
-  function renderSelects(){
-    const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
-    const gradeEl = $('#grade'); gradeEl.innerHTML=''; grades.forEach(g=> option(gradeEl,g,g)); gradeEl.value=state.grade;
+function renderSelects(){
+  const t = translations[state.lang];
 
-    const subjEl = $('#subject'); subjEl.innerHTML='';
-    const S = subjectsFor(state.grade); S.forEach(s=> option(subjEl,s,s));
-    if(!S.includes(state.subject)) state.subject = S[0]; subjEl.value = state.subject;
+  // === KSQ/BSQ select-ləri ===
+  const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
 
-    $('#ksqType').value = state.ksqType;
-    const kEl=$('#ksqIndex'), bEl=$('#bsqIndex'); kEl.innerHTML=''; bEl.innerHTML='';
-    for(let i=1;i<=10;i++) option(kEl, String(i), String(i));
-    ['1','2'].forEach(i=> option(bEl,i,i));
-    kEl.value = state.ksqIndex; bEl.value = state.bsqIndex;
+  // Sinif
+  const gradeEl = document.getElementById('grade');
+  gradeEl.innerHTML = '';
+  addPlaceholder(gradeEl, 'Sinifi seçin');
+  grades.forEach(g => option(gradeEl, g, g));
+  gradeEl.value = state.grade ?? "";
 
-    const ppEl = $('#ppSubject'); ppEl.innerHTML=''; const all = Object.values(translations[state.lang].subjects);
-    all.forEach(s=> option(ppEl,s,s)); if(!all.includes(state.ppSubject)) state.ppSubject=all[0]; ppEl.value=state.ppSubject;
-setText('#hero-title', translations[state.lang].hero.title);
-setText('#lbl-grade',   translations[state.lang].common.grade);
-setText('#lbl-subject', translations[state.lang].common.subject);
-setText('#lbl-type',    translations[state.lang].ksq.type);
-setText('#lbl-ksqNo',   translations[state.lang].labels.ksqNo);
-setText('#lbl-bsqNo',   translations[state.lang].labels.bsqNo);
-setText('#lbl-pp-subject', translations[state.lang].common.subject);
-
-setText('#ksq-title', translations[state.lang].ksq.title);
-setText('#pp-title',  translations[state.lang].pp.title);
-
-setText('#hero-subtitle', translations[state.lang].hero.subtitle);
-setText('#hero-cta1',     translations[state.lang].hero.ctaPrimary);
-setText('#hero-cta2',     translations[state.lang].hero.ctaSecondary);
-setText('#hero-b1',       translations[state.lang].hero.badges.one);
-setText('#hero-b2',       translations[state.lang].hero.badges.two);
-setText('#hero-b3',       translations[state.lang].hero.badges.three);
-
-setText('#feat-ksq-title', translations[state.lang].features.ksqBsq.title);
-setText('#feat-ksq-desc',  translations[state.lang].features.ksqBsq.desc);
-setText('#feat-pp-title',  translations[state.lang].features.pp.title);
-setText('#feat-pp-desc',   translations[state.lang].features.pp.desc);
-
-setText('#tab-pp',    translations[state.lang].tabs.pp);
-setText('#tab-tools', translations[state.lang].tabs.tools);
-
-setText('#tool-calc-title',      translations[state.lang].tools.calcTitle);
-setText('#tool-templates-title', translations[state.lang].tools.templatesTitle);
-setText('#tool-bank-title',      translations[state.lang].tools.bankTitle);
-
-setText('#ft-rights',  translations[state.lang].footer.rights);
-setText('#ft-terms',   translations[state.lang].footer.terms);
-setText('#ft-privacy', translations[state.lang].footer.privacy);
-
-setText('[data-i18n="nav.settings"]', translations[state.lang].nav.settings);
-
+  // Fənn (sinif seçilməyibsə, yalnız placeholder)
+  const subjEl = document.getElementById('subject');
+  subjEl.innerHTML = '';
+  addPlaceholder(subjEl, 'Fənni seçin');
+  if (state.grade){
+    const S = subjectsFor(state.grade);
+    S.forEach(s => option(subjEl, s, s));
   }
+  subjEl.value = state.subject ?? "";
+
+  // Növ (KSQ/BSQ)
+  const typeEl = document.getElementById('ksqType');
+  typeEl.innerHTML = '';
+  addPlaceholder(typeEl, 'Növü seçin');
+  option(typeEl, 'KSQ', 'KSQ');
+  option(typeEl, 'BSQ', 'BSQ');
+  typeEl.value = state.ksqType ?? "";
+
+  // KSQ/BSQ nömrələri – yalnız növ seçiləndən sonra
+  const kEl = document.getElementById('ksqIndex');
+  const bEl = document.getElementById('bsqIndex');
+  const wrapK = document.getElementById('wrap-ksqNo');
+  const wrapB = document.getElementById('wrap-bsqNo');
+
+  kEl.innerHTML = ''; bEl.innerHTML = '';
+  addPlaceholder(kEl, 'Nömrəni seçin');
+  addPlaceholder(bEl, 'Nömrəni seçin');
+
+  if (state.ksqType === 'KSQ'){
+    for (let i=1;i<=10;i++) option(kEl, String(i), String(i));
+    wrapK.classList.remove('hidden');
+    wrapB.classList.add('hidden');
+    kEl.value = state.ksqIndex ?? "";
+  } else if (state.ksqType === 'BSQ'){
+    ['1','2'].forEach(i=> option(bEl, i, i));
+    wrapK.classList.add('hidden');
+    wrapB.classList.remove('hidden');
+    bEl.value = state.bsqIndex ?? "";
+  } else {
+    // hələ növ seçilməyibsə, hər ikisini gizlət
+    wrapK.classList.add('hidden');
+    wrapB.classList.add('hidden');
+  }
+
+  // === PP fənn ===
+  const ppEl = document.getElementById('ppSubject');
+  ppEl.innerHTML = '';
+  addPlaceholder(ppEl, 'Fənni seçin');
+  Object.values(t.subjects).forEach(s => option(ppEl, s, s));
+  ppEl.value = state.ppSubject ?? "";
+
+  // === Mətnlər (dəyişməyib — sənin kodundakı kimi) ===
+  setText('#hero-title', t.hero.title);
+  setText('#lbl-grade',   t.common.grade);
+  setText('#lbl-subject', t.common.subject);
+  setText('#lbl-type',    t.ksq.type);
+  setText('#lbl-ksqNo',   t.labels.ksqNo);
+  setText('#lbl-bsqNo',   t.labels.bsqNo);
+  setText('#lbl-pp-subject', t.common.subject);
+
+  setText('#ksq-title', t.ksq.title);
+  setText('#pp-title',  t.pp.title);
+
+  setText('#hero-subtitle', t.hero.subtitle);
+  setText('#hero-b1', t.hero.badges.one);
+  setText('#hero-b2', t.hero.badges.two);
+  setText('#hero-b3', t.hero.badges.three);
+
+  setText('#feat-ksq-title', t.features.ksqBsq.title);
+  setText('#feat-ksq-desc',  t.features.ksqBsq.desc);
+  setText('#feat-pp-title',  t.features.pp.title);
+  setText('#feat-pp-desc',   t.features.pp.desc);
+
+  setText('#tab-pp',    t.tabs.pp);
+  setText('#tab-tools', t.tabs.tools);
+
+  setText('#tool-calc-title',      t.tools.calcTitle);
+  setText('#tool-templates-title', t.tools.templatesTitle);
+  setText('#tool-bank-title',      t.tools.bankTitle);
+
+  setText('#ft-rights',  t.footer.rights);
+  setText('#ft-terms',   t.footer.terms);
+  setText('#ft-privacy', t.footer.privacy);
+  setText('[data-i18n="nav.settings"]', t.nav.settings);
+}
+
 
   // Kart başlığını formalaşdırır
 function buildTitle(it) {
@@ -573,12 +626,43 @@ function renderPP(){
 
 
 
-  document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value; renderSelects(); renderKSQ();});
-  document.getElementById('subject').addEventListener('change', e=>{ state.subject=e.target.value; renderKSQ();});
-  document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value; document.getElementById('wrap-ksqNo').classList.toggle('hidden', state.ksqType!=='KSQ'); document.getElementById('wrap-bsqNo').classList.toggle('hidden', state.ksqType!=='BSQ'); renderKSQ();});
-  document.getElementById('ksqIndex').addEventListener('change', e=>{ state.ksqIndex=e.target.value; renderKSQ();});
-  document.getElementById('bsqIndex').addEventListener('change', e=>{ state.bsqIndex=e.target.value; renderKSQ();});
-  document.getElementById('ppSubject').addEventListener('change', e=>{ state.ppSubject=e.target.value; renderPP();});
+document.getElementById('grade').addEventListener('change', e=>{
+  state.grade = e.target.value || null;
+  // sinif dəyişdisə, fənni sıfırla
+  state.subject = null;
+  renderSelects();
+  toggleResults();
+});
+
+document.getElementById('subject').addEventListener('change', e=>{
+  state.subject = e.target.value || null;
+  toggleResults();
+});
+
+document.getElementById('ksqType').addEventListener('change', e=>{
+  state.ksqType = e.target.value || null;
+  // nömrələri sıfırla
+  state.ksqIndex = null;
+  state.bsqIndex = null;
+  renderSelects();
+  toggleResults();
+});
+
+document.getElementById('ksqIndex').addEventListener('change', e=>{
+  state.ksqIndex = e.target.value || null;
+  toggleResults();
+});
+
+document.getElementById('bsqIndex').addEventListener('change', e=>{
+  state.bsqIndex = e.target.value || null;
+  toggleResults();
+});
+
+document.getElementById('ppSubject').addEventListener('change', e=>{
+  state.ppSubject = e.target.value || null;
+  toggleResults();
+});
+
 
   ['tab-ksq','tab-pp','tab-tools'].forEach(id => {
   const btn = document.getElementById(id);
@@ -589,30 +673,20 @@ btn.addEventListener('click', (e) => {
 });
 
 });
-  (function init(){
-    document.getElementById('year').textContent = new Date().getFullYear();
-// brauzerin əvvəlki scroll-u bərpa etməməsi üçün (opsional, amma faydalıdır)
-if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-window.scrollTo(0, 0);
+(function init(){
+  document.getElementById('year').textContent = new Date().getFullYear();
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  setActiveTab('ksq', { scroll: false });
 
-// ilkin açılışda SCROLL ETMƏ
-setActiveTab('ksq', { scroll: false });
-    state.subject = (function(){ const S = (function(){ const k = {
-      I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      III:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      V:  ['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
-      VI: ['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
-      VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      IX: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      X:  ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-      XI: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-    }[state.grade] || Object.keys(translations[state.lang].subjects); return k.map(x=> translations[state.lang].subjects[x]).filter(Boolean); })(); return S[0]; })();
-    state.ppSubject = Object.values(translations[state.lang].subjects)[0];
-    renderSelects(); renderKSQ(); renderPP(); 
-  })();
+  // ARTİQ avtomatik seçim YOXDUR
+  // state.subject = ...  ← sil
+  // state.ppSubject = ... ← sil
+
+  renderSelects();
+  toggleResults();
+})();
+
     
   const settingsBtn = document.getElementById('btn-settings');
   const panel = document.getElementById('settings-panel');
@@ -792,9 +866,8 @@ async function loadAllFromMaterials() {
   const res = await fetch(FEED_URL, { cache: 'no-store' });
   const catalog = await res.json();
   state.catalog = Array.isArray(catalog) ? catalog : [];
-  renderSelects();
-  renderKSQ();
-  renderPP();
+    renderSelects(); 
+    toggleResults();
   } catch (e) {
     const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
     if (wrapKSQ) wrapKSQ.innerHTML = msg;
@@ -806,6 +879,51 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSelects();
   loadAllFromMaterials();
 });
+function addPlaceholder(selectEl, label){
+  const o = document.createElement('option');
+  o.value = "";
+  o.textContent = label;
+  o.disabled = true;
+  o.selected = true;
+  o.hidden = true;
+  selectEl.appendChild(o);
+  selectEl.required = true; // :invalid işləsin
+}
+
+function allChosenKSQ(){
+  if (!state.grade || !state.subject || !state.ksqType) return false;
+  if (state.ksqType === 'KSQ' && !state.ksqIndex) return false;
+  if (state.ksqType === 'BSQ' && !state.bsqIndex) return false;
+  return true;
+}
+function allChosenPP(){
+  return !!state.ppSubject;
+}
+
+function toggleResults(){
+  // KSQ/BSQ
+  const boxKSQ = document.getElementById('ksq-results');
+  if (boxKSQ){
+    if (allChosenKSQ()){
+      renderKSQ();
+      boxKSQ.parentElement.removeAttribute('hidden');
+    } else {
+      boxKSQ.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Zəhmət olmasa sinif, fənn, növ və nömrəni seçin</div>';
+      boxKSQ.parentElement.setAttribute('hidden','');
+    }
+  }
+  // PP
+  const boxPP = document.getElementById('pp-results');
+  if (boxPP){
+    if (allChosenPP()){
+      renderPP();
+      boxPP.parentElement.removeAttribute('hidden');
+    } else {
+      boxPP.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Zəhmət olmasa fənni seçin</div>';
+      boxPP.parentElement.setAttribute('hidden','');
+    }
+  }
+}
 
 
 

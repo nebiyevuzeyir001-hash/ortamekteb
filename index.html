@@ -677,7 +677,7 @@ function applyThemeAssets(theme) {
 
 
 
-const FEED_URL = "https://script.google.com/macros/s/AKfycbxrYQ-i43UYhgT3R8vYOYEi6tc-dnyqPuatjdGccNN5xpgyZtBKJ1ebd5vKz_ja_U-4GQ/exec";
+const FEED_URL = "https://script.google.com/macros/s/AKfycbwf_Q5D_XKwKB4MDnVYyd5tYRsb1QCsFfzk4J5Jh9c8FLXhcj6FfjIuWWoOX8D-scDQ/exec";
 
 // Kart başlığı
 function buildTitle(it){
@@ -727,10 +727,12 @@ function renderKSQ(){
             <div class="text-sm font-medium">${buildTitle(it)}</div>
             <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
             <div class="mt-3">
-              <a href="${it.file}" download="${downloadName(it)}"
+              <a href="${it.file}" target="_self" rel="noopener"
+                 download="${downloadName(it)}"
                  class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">
-                 ⬇️ Yüklə
+              ⬇️ Yüklə
               </a>
+
             </div>
           </div>
         </div>
@@ -762,10 +764,12 @@ function renderPP(){
             <div class="text-sm font-medium">${buildTitle(it)}</div>
             <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
             <div class="mt-3">
-              <a href="${it.file}" download="${downloadName(it)}"
+              <a href="${it.file}" target="_self" rel="noopener"
+                 download="${downloadName(it)}"
                  class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">
-                 ⬇️ Yüklə
+                ⬇️ Yüklə
               </a>
+
             </div>
           </div>
         </div>

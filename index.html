@@ -690,10 +690,10 @@ function buildTitle(it){
 // Göstəriləcək fayl adı (istəsən saxla)
 function downloadName(it){
   const ext = (it.ext || 'FILE').toLowerCase();
-  if (it.type === 'PP') {
-    return `${it.subject} - PP.${ext}`.replace(/[\/\\:?*"<>|]+/g,'-');
-  }
-  return `${it.grade} - ${it.subject} - ${it.type}${it.index}.${ext}`.replace(/[\/\\:?*"<>|]+/g,'-');
+  return (it.type==='PP'
+    ? `${it.subject} - PP.${ext}`
+    : `${it.grade} - ${it.subject} - ${it.type}${it.index}.${ext}`
+  ).replace(/[\/\\:?*"<>|]+/g,'-');
 }
 
 function renderKSQ(){
@@ -727,11 +727,13 @@ function renderKSQ(){
             <div class="text-sm font-medium">${buildTitle(it)}</div>
             <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
             <div class="mt-3">
-              <a href="${it.file}" target="_self" rel="noopener"
+              <a href="${it.dl}"
+                 target="_self" rel="noopener"
                  download="${downloadName(it)}"
                  class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">
               ⬇️ Yüklə
-              </a>
+            </a>
+
 
             </div>
           </div>
@@ -764,11 +766,13 @@ function renderPP(){
             <div class="text-sm font-medium">${buildTitle(it)}</div>
             <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext || 'FILE').toUpperCase()}</span></div>
             <div class="mt-3">
-              <a href="${it.file}" target="_self" rel="noopener"
+              <a href="${it.dl}"
+                 target="_self" rel="noopener"
                  download="${downloadName(it)}"
                  class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">
                 ⬇️ Yüklə
-              </a>
+            </a>
+
 
             </div>
           </div>
@@ -785,15 +789,12 @@ async function loadAllFromMaterials() {
   if (wrapPP)  wrapPP.innerHTML  = '<div class="text-slate-500">Yüklənir…</div>';
 
   try {
-    const res = await fetch(FEED_URL, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Serverdən cavab alınmadı');
-    const catalog = await res.json();
-
-    // Yalnız PDF və DOCX gəlir, linklər artıq birbaşa download üçündür
-    window.state.catalog = Array.isArray(catalog) ? catalog : [];
-    renderSelects();
-    renderKSQ();
-    renderPP();
+  const res = await fetch(FEED_URL, { cache: 'no-store' });
+  const catalog = await res.json();
+  state.catalog = Array.isArray(catalog) ? catalog : [];
+  renderSelects();
+  renderKSQ();
+  renderPP();
   } catch (e) {
     const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
     if (wrapKSQ) wrapKSQ.innerHTML = msg;

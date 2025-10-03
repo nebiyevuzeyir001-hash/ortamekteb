@@ -714,26 +714,14 @@ function renderKSQ(){
   // Sayı göstər
   document.getElementById('ksq-count').textContent = list.length;
 
-// 1–2 nəticə varsa ortala (wrap + grid)
-const wrapEl = document.getElementById('ksq-results-wrap');
+// 1–2 nəticə varsa yalnız grid-i mərkəzləşdir
 const gridEl = document.getElementById('ksq-results');
 const center = (list.length > 0 && list.length <= 2);
-
-if (wrapEl && gridEl) {
-  // kart sahəsinin özünü mərkəzləşdir
-  wrapEl.classList.toggle('flex', center);
-  wrapEl.classList.toggle('items-center', center);
-  wrapEl.classList.toggle('justify-center', center);
-  wrapEl.classList.toggle('min-h-[240px]', center);
-
-  // grid elementlərinin iç mərkəzləşməsi
-  gridEl.classList.toggle('place-content-center', center);
-  gridEl.classList.toggle('justify-items-center', center);
-
-  if (!center) {
-    wrapEl.classList.remove('flex','items-center','justify-center','min-h-[240px]');
-    gridEl.classList.remove('place-content-center','justify-items-center');
-  }
+gridEl.classList.toggle('min-h-[240px]', center);
+gridEl.classList.toggle('place-content-center', center);
+gridEl.classList.toggle('justify-items-center', center);
+if (!center) {
+  gridEl.classList.remove('min-h-[240px]','place-content-center','justify-items-center');
 }
 
 
@@ -776,25 +764,15 @@ function renderPP(){
 
   document.getElementById('pp-count').textContent = list.length;
 
-// 1–2 nəticə varsa ortala (wrap + grid)
-const wrapEl = document.getElementById('pp-results-wrap');
 const gridEl = document.getElementById('pp-results');
 const center = (list.length > 0 && list.length <= 2);
-
-if (wrapEl && gridEl) {
-  wrapEl.classList.toggle('flex', center);
-  wrapEl.classList.toggle('items-center', center);
-  wrapEl.classList.toggle('justify-center', center);
-  wrapEl.classList.toggle('min-h-[240px]', center);
-
-  gridEl.classList.toggle('place-content-center', center);
-  gridEl.classList.toggle('justify-items-center', center);
-
-  if (!center) {
-    wrapEl.classList.remove('flex','items-center','justify-center','min-h-[240px]');
-    gridEl.classList.remove('place-content-center','justify-items-center');
-  }
+gridEl.classList.toggle('min-h-[240px]', center);
+gridEl.classList.toggle('place-content-center', center);
+gridEl.classList.toggle('justify-items-center', center);
+if (!center) {
+  gridEl.classList.remove('min-h-[240px]','place-content-center','justify-items-center');
 }
+
 
 
   if (list.length === 0) {
@@ -829,23 +807,27 @@ if (wrapEl && gridEl) {
 
 
 async function loadAllFromMaterials() {
-  const wrapKSQ = document.getElementById('ksq-results');
-  const wrapPP  = document.getElementById('pp-results');
-  if (wrapKSQ) wrapKSQ.innerHTML = '<div class="text-slate-500">Yüklənir…</div>';
-  if (wrapPP)  wrapPP.innerHTML  = '<div class="text-slate-500">Yüklənir…</div>';
-
   try {
-  const res = await fetch(FEED_URL, { cache: 'no-store' });
-  const catalog = await res.json();
-  state.catalog = Array.isArray(catalog) ? catalog : [];
-    renderSelects(); 
+    const res = await fetch(FEED_URL, { cache: 'no-store' });
+    const catalog = await res.json();
+    state.catalog = Array.isArray(catalog) ? catalog : [];
+    renderSelects();
+    // Heç nəyi üstələmə — seçim yoxdursa "Zəhmət olmasa seçim edin" qalsın
     toggleResults();
   } catch (e) {
-    const msg = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
-    if (wrapKSQ) wrapKSQ.innerHTML = msg;
-    if (wrapPP)  wrapPP.innerHTML  = msg;
+    console.error(e);
+    // Yalnız seçimlər doludursa səhv mesajını göstər
+    if (allChosenKSQ()) {
+      document.getElementById('ksq-results').innerHTML =
+        `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+    }
+    if (allChosenPP()) {
+      document.getElementById('pp-results').innerHTML =
+        `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+    }
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   renderSelects();

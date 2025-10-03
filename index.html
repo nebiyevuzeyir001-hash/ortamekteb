@@ -234,9 +234,9 @@ select:invalid { color:#9aa4b2; }
           </div>
 <div class="lg:col-span-2">
   <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm" id="ksq-results-card">
-    <div class="flex items-center justify-end mb-3">
-      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
-    </div>
+<div id="ksq-count-row" class="flex items-center justify-end mb-3 hidden">
+  <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
+</div>
     <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
   </div>
 </div>
@@ -255,9 +255,9 @@ select:invalid { color:#9aa4b2; }
           </div>
 <div class="lg:col-span-2">
   <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm" id="pp-results-card">
-    <div class="flex items-center justify-end mb-3">
-      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
-    </div>
+<div id="pp-count-row" class="flex items-center justify-end mb-3 hidden">
+  <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
+</div>
     <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
   </div>
 </div>
@@ -854,55 +854,58 @@ function allChosenPP(){
   return !!state.ppSubject;
 }
 
+// YENİ: dizaynlı placeholder generatoru
+function placeholder(icon, title, subtitle){
+  return `
+    <div class="min-h-[260px] grid place-items-center">
+      <div class="w-full max-w-[680px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
+        <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 text-center">
+          <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">${icon}</div>
+          <div class="text-base font-semibold">${title}</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">${subtitle}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function toggleResults(){
   // === KSQ/BSQ ===
   const gridKSQ = document.getElementById('ksq-results');
+  const ksqRow  = document.getElementById('ksq-count-row');
   if (gridKSQ){
     if (allChosenKSQ()){
-      renderKSQ();
+      renderKSQ();                 // render sayını da yeniləyir
+      ksqRow?.classList.remove('hidden');   // say sırasını göstər
     } else {
       document.getElementById('ksq-count').textContent = 0;
-      gridKSQ.innerHTML = `
-        <div class="sm:col-span-2">
-          <div class="w-full flex items-center justify-center py-10">
-            <div class="w-full max-w-[520px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-              <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-6 text-center">
-                <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">🎯</div>
-                <div class="text-base font-semibold">Zəhmət olmasa seçim edin</div>
-                <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                  Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>`;
+      ksqRow?.classList.add('hidden');      // say sırasını gizlət
+      gridKSQ.innerHTML = placeholder(
+        '🎯',
+        'Zəhmət olmasa seçim edin',
+        'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'
+      );
     }
   }
 
   // === PP ===
   const gridPP = document.getElementById('pp-results');
+  const ppRow  = document.getElementById('pp-count-row');
   if (gridPP){
     if (allChosenPP()){
       renderPP();
+      ppRow?.classList.remove('hidden');
     } else {
       document.getElementById('pp-count').textContent = 0;
-      gridPP.innerHTML = `
-        <div class="sm:col-span-2">
-          <div class="w-full flex items-center justify-center py-10">
-            <div class="w-full max-w-[520px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-              <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-6 text-center">
-                <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">🗂️</div>
-                <div class="text-base font-semibold">Zəhmət olmasa fənni seçin</div>
-                <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                  Fənni seçdikdən sonra nəticələr burada görünəcək.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>`;
+      ppRow?.classList.add('hidden');
+      gridPP.innerHTML = placeholder(
+        '🗂️',
+        'Zəhmət olmasa fənni seçin',
+        'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+      );
     }
   }
 }
+
 
 
 

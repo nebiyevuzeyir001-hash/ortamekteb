@@ -854,13 +854,15 @@ function allChosenPP(){
   return !!state.ppSubject;
 }
 
-// YENİ: dizaynlı placeholder generatoru
 function placeholder(icon, title, subtitle){
+  // Kartın daxili 16px paddingini -m-4 ilə ləğv edirik ki,
+  // placeholder bütün çərçivəni EYNİ tam əhatə etsin.
+  // Min hündürlük YOXDUR – kontent qədər olur (avtomatik uyğunlaşır).
   return `
-    <div class="min-h-[260px] grid place-items-center">
-      <div class="w-full max-w-[680px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-        <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 text-center">
-          <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">${icon}</div>
+    <div class="-m-4 rounded-xl overflow-hidden">
+      <div class="bg-gradient-to-br from-indigo-500/35 via-fuchsia-500/35 to-amber-500/35">
+        <div class="px-6 py-10 sm:py-12 text-center backdrop-blur-sm bg-white/45 dark:bg-slate-900/30">
+          <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/40 dark:bg-white/10">${icon}</div>
           <div class="text-base font-semibold">${title}</div>
           <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">${subtitle}</div>
         </div>
@@ -868,17 +870,18 @@ function placeholder(icon, title, subtitle){
     </div>`;
 }
 
+
 function toggleResults(){
   // === KSQ/BSQ ===
   const gridKSQ = document.getElementById('ksq-results');
   const ksqRow  = document.getElementById('ksq-count-row');
   if (gridKSQ){
     if (allChosenKSQ()){
-      renderKSQ();                 // render sayını da yeniləyir
-      ksqRow?.classList.remove('hidden');   // say sırasını göstər
+      renderKSQ();                       // nəticələri çək
+      ksqRow?.classList.remove('hidden'); // say göstəricisini göstər
     } else {
       document.getElementById('ksq-count').textContent = 0;
-      ksqRow?.classList.add('hidden');      // say sırasını gizlət
+      ksqRow?.classList.add('hidden');    // say göstəricisini gizlət
       gridKSQ.innerHTML = placeholder(
         '🎯',
         'Zəhmət olmasa seçim edin',
@@ -905,6 +908,7 @@ function toggleResults(){
     }
   }
 }
+
 
 
 

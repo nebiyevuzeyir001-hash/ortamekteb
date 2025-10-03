@@ -232,14 +232,28 @@ select:invalid { color:#9aa4b2; }
             <div id="wrap-bsqNo" class="hidden"><label class="text-sm text-slate-700 block" id="lbl-bsqNo">BSQ nömrəsi</label>
               <select id="bsqIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
-          <div class="lg:col-span-2">
-            <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm">
-              <div class="flex items-center justify-end mb-3">
-                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
-              </div>
-              <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
-            </div>
-          </div>
+<div class="lg:col-span-2 grid lg:grid-cols-3 gap-4">
+
+  <!-- Nəticələr (əvvəlki kart eynidir) -->
+  <div class="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-4 text-sm" id="ksq-results-card">
+    <div class="flex items-center justify-end mb-3">
+      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
+    </div>
+    <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
+  </div>
+
+  <!-- REKLAM ZONASI (placeholder) -->
+  <aside id="ad-ksq"
+         class="rounded-xl border border-slate-200 bg-gradient-to-br from-indigo-500/90 to-purple-600/90
+                p-4 flex items-center justify-center text-white shadow-md min-h-[180px]">
+    <div class="text-center">
+      <div class="text-lg font-bold">🪧 Reklam zonası</div>
+      <div class="text-sm opacity-90">Burada Google Ads görünəcək</div>
+    </div>
+  </aside>
+
+</div>
+
         </div>
       </div>
     </section>
@@ -252,14 +266,28 @@ select:invalid { color:#9aa4b2; }
             <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
-          <div class="lg:col-span-2">
-            <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm">
-              <div class="flex items-center justify-end mb-3">
-                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
-              </div>
-              <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
-            </div>
-          </div>
+<div class="lg:col-span-2 grid lg:grid-cols-3 gap-4">
+
+  <!-- Nəticələr -->
+  <div class="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-4 text-sm" id="pp-results-card">
+    <div class="flex items-center justify-end mb-3">
+      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
+    </div>
+    <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
+  </div>
+
+  <!-- REKLAM ZONASI (placeholder) -->
+  <aside id="ad-pp"
+         class="rounded-xl border border-slate-200 bg-gradient-to-br from-indigo-500/90 to-purple-600/90
+                p-4 flex items-center justify-center text-white shadow-md min-h-[180px]">
+    <div class="text-center">
+      <div class="text-lg font-bold">🪧 Reklam zonası</div>
+      <div class="text-sm opacity-90">Burada Google Ads görünəcək</div>
+    </div>
+  </aside>
+
+</div>
+
         </div>
       </div>
     </section>

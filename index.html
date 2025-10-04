@@ -135,6 +135,7 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
 select:invalid { color:#9aa4b2; }
+<style>
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -144,6 +145,12 @@ select:invalid { color:#9aa4b2; }
   background-size: 200% 100%;
   animation: shimmer 2.2s infinite;
 }
+.badge-blur {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+</style>
+
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
@@ -316,89 +323,65 @@ select:invalid { color:#9aa4b2; }
           </div>
         </div>
 
-<!-- REKLAM BLOKU (yer saxlayan, responsive) -->
-<div class="w-full">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5">
-    <div class="flex items-center gap-2 mb-4">
-      <span class="i-lucide-badge-dollar w-5 h-5 opacity-80"></span>
-      <h3 class="text-lg font-semibold">Reklam</h3>
-    </div>
+<!-- ORTA KART İÇİ — REKLAM PLACEHOLDER (ÖLÇÜLƏR QEYRİ-DƏYİŞƏN) -->
+<div class="h-full flex flex-col">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="i-lucide-badge-dollar w-5 h-5 opacity-80"></span>
+    <h3 class="text-lg font-semibold">Reklam</h3>
+  </div>
 
-    <!-- Reklam konteyneri: ölçülər ekrana görə dəyişir, layout shift etməsin deyə hündürlük saxlanılır -->
-    <div class="w-full flex justify-center">
-      <div
-        id="ad-slot-1"
-        class="rounded-xl border border-white/10 bg-black/20 flex items-center justify-center text-sm opacity-90 text-white/70 overflow-hidden"
-        style="
-          width: 300px; height: 250px;
-        "
-      >
-        <!-- Placeholder: canlı reklama keçəndə bu div-i Google scripti ilə əvəz edəcəksən -->
-        <div class="w-full h-full flex items-center justify-center shimmer">
-          <div class="text-center px-3">
-            <div class="text-xs uppercase tracking-wider mb-1">Google Ads Yeri</div>
-            <div class="text-[11px]">Mobil: 300×250 • 336×280 • Masaüstü: 728×90</div>
-          </div>
+  <!-- Kartın qalan sahəsini dolduran, layout-u pozmayan konteyner -->
+  <div class="flex-1 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-center">
+    <!-- ƏVVƏLKİ KİMİ “Google ads yeri” placeholder-ı -->
+    <div id="ad-slot-1"
+         class="rounded-lg border border-white/10 bg-black/20 text-white/70 overflow-hidden flex items-center justify-center shimmer"
+         style="min-height: 180px; width: 100%;">
+      <div class="text-center px-4 py-6">
+        <div class="text-xs uppercase tracking-wider">Google ads yeri</div>
+        <div class="text-[11px] mt-1 opacity-80">
+          Avtomatik ölçü: mobil 300×250 / 336×280, masaüstü 728×90
         </div>
       </div>
     </div>
-
-    <!-- İstəyə görə: daha geniş ekranda 728×90 göstərmək üçün sadə JS -->
-    <script>
-      (function () {
-        const el = document.getElementById('ad-slot-1');
-        function setSize() {
-          const w = window.innerWidth;
-          if (w >= 1024) { el.style.width = '728px'; el.style.height = '90px'; }
-          else if (w >= 640) { el.style.width = '336px'; el.style.height = '280px'; }
-          else { el.style.width = '300px'; el.style.height = '250px'; }
-        }
-        setSize();
-        window.addEventListener('resize', setSize);
-      })();
-    </script>
   </div>
 </div>
 
 
-<!-- SUAL BANKI -->
-<div class="w-full">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5">
-    <div class="flex items-center gap-2 mb-4">
-      <span class="i-lucide-library-square w-5 h-5 opacity-80"></span>
-      <h3 class="text-lg font-semibold">Sual bankı</h3>
-    </div>
+<!-- SAĞ KART İÇİ — SUAL BANKI (TEZLİKLƏ ÖRTÜYÜ) -->
+<div class="relative h-full flex flex-col">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="i-lucide-library-square w-5 h-5 opacity-80"></span>
+    <h3 class="text-lg font-semibold">Sual bankı</h3>
+  </div>
 
-    <div class="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-white/0 p-8 text-center overflow-hidden">
-      <!-- “Tezliklə” badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mx-auto">
-        <span class="i-lucide-rocket w-4 h-4 opacity-80"></span>
-        <span class="text-sm font-medium tracking-wide">Tezliklə</span>
-      </div>
+  <!-- Köhnə düymələr yerinə yalnız placeholder bloklar: ölçünü qorumaq üçün -->
+  <div class="flex-1 rounded-xl border border-white/10 bg-white/5 p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="h-10 rounded-lg border border-white/10 bg-white/5"></div>
+    <div class="h-10 rounded-lg border border-white/10 bg-white/5"></div>
+    <div class="h-10 rounded-lg border border-white/10 bg-white/5"></div>
+    <div class="h-10 rounded-lg border border-white/10 bg-white/5"></div>
+    <div class="col-span-full h-12 rounded-lg border border-white/10 bg-white/5"></div>
+  </div>
 
-      <!-- Böyük başlıq -->
-      <div class="mt-6 text-2xl sm:text-3xl font-semibold leading-tight">
-        Peşəkar <span class="opacity-90">Multiple-choice</span>, <span class="opacity-90">qısa cavab</span> və <span class="opacity-90">praktik</span> suallar
-      </div>
-
-      <!-- Alt mətn -->
-      <p class="mt-3 text-sm text-white/70">
-        Hazırlandıqdan sonra burada aktiv olacaq. Abunə ol və ilk sınaqdan xəbər tut. 
-      </p>
-
-      <!-- Şimmerli “kilidli” placeholder sahə -->
-      <div class="mt-6 rounded-xl border border-white/10 bg-white/5 h-32 sm:h-36 shimmer"></div>
-    </div>
-
-    <!-- Alt düymə (passiv) -->
-    <button
-      class="mt-6 w-full rounded-xl bg-white/5 border border-white/10 py-3 text-white/70 cursor-not-allowed"
-      disabled
-    >
-      Tezliklə aktivləşəcək
+  <!-- Alt düymə kimi olan zolaq (ölçünü qoruyur) -->
+  <div class="mt-4">
+    <button class="w-full rounded-xl bg-white/5 border border-white/10 py-3 text-white/70 cursor-not-allowed" disabled>
+      Hazırlanır
     </button>
   </div>
+
+  <!-- ÜST ÖRTÜ: TEZLİKLƏ -->
+  <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+    <div class="relative px-6 py-3 rounded-full border border-white/15 bg-black/30 badge-blur">
+      <div class="absolute -inset-1 rounded-full shimmer opacity-30"></div>
+      <div class="relative flex items-center gap-2">
+        <span class="i-lucide-rocket w-4 h-4 opacity-90"></span>
+        <span class="text-sm sm:text-base font-semibold tracking-wide">Tezliklə</span>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 
         

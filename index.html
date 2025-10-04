@@ -135,7 +135,15 @@ select, input { background-color: var(--card) !important; color: var(--text) !im
   box-shadow: 0 6px 16px rgba(255,255,255,0.15); /* Açıq kölgə */
 }
 select:invalid { color:#9aa4b2; }
-    
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.06) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s infinite;
+}
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
@@ -308,33 +316,90 @@ select:invalid { color:#9aa4b2; }
           </div>
         </div>
 
-        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-          <div class="p-4 border-b"><div class="text-base font-semibold">📄 <span id="tool-templates-title">Şablon kitabxanası</span></div></div>
-          <div class="p-4">
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="rounded-full border px-2 py-1 text-xs">KSQ nümunələri</span>
-              <span class="rounded-full border px-2 py-1 text-xs">BSQ nümunələri</span>
-              <span class="rounded-full border px-2 py-1 text-xs">Qrublaşdırma</span>
-              <span class="rounded-full border px-2 py-1 text-xs">Rubrikalar</span>
-              <span class="rounded-full border px-2 py-1 text-xs">İllik plan</span>
-              <span class="rounded-full border px-2 py-1 text-xs">Gündəlik plan</span>
-            </div>
-            <button class="rounded-2xl w-full border px-4 py-2 text-sm" id="btn-browse">Bax</button>
-          </div>
-        </div>
+<!-- REKLAM BLOKU (yer saxlayan, responsive) -->
+<div class="w-full">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="i-lucide-badge-dollar w-5 h-5 opacity-80"></span>
+      <h3 class="text-lg font-semibold">Reklam</h3>
+    </div>
 
-        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-          <div class="p-4 border-b"><div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div></div>
-          <div class="p-4">
-            <div class="grid grid-cols-2 gap-2 mb-3">
-              <span class="rounded-full border px-2 py-1 text-xs text-center">Multiple choice</span>
-              <span class="rounded-full border px-2 py-1 text-xs text-center">Qısa cavab</span>
-              <span class="rounded-full border px-2 py-1 text-xs text-center">Açıq sual</span>
-              <span class="rounded-full border px-2 py-1 text-xs text-center">Praktik tapşırıq</span>
-            </div>
-            <button class="rounded-2xl w-full bg-slate-900 text-white px-4 py-2 text-sm" id="btn-add">Əlavə et</button>
+    <!-- Reklam konteyneri: ölçülər ekrana görə dəyişir, layout shift etməsin deyə hündürlük saxlanılır -->
+    <div class="w-full flex justify-center">
+      <div
+        id="ad-slot-1"
+        class="rounded-xl border border-white/10 bg-black/20 flex items-center justify-center text-sm opacity-90 text-white/70 overflow-hidden"
+        style="
+          width: 300px; height: 250px;
+        "
+      >
+        <!-- Placeholder: canlı reklama keçəndə bu div-i Google scripti ilə əvəz edəcəksən -->
+        <div class="w-full h-full flex items-center justify-center shimmer">
+          <div class="text-center px-3">
+            <div class="text-xs uppercase tracking-wider mb-1">Google Ads Yeri</div>
+            <div class="text-[11px]">Mobil: 300×250 • 336×280 • Masaüstü: 728×90</div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- İstəyə görə: daha geniş ekranda 728×90 göstərmək üçün sadə JS -->
+    <script>
+      (function () {
+        const el = document.getElementById('ad-slot-1');
+        function setSize() {
+          const w = window.innerWidth;
+          if (w >= 1024) { el.style.width = '728px'; el.style.height = '90px'; }
+          else if (w >= 640) { el.style.width = '336px'; el.style.height = '280px'; }
+          else { el.style.width = '300px'; el.style.height = '250px'; }
+        }
+        setSize();
+        window.addEventListener('resize', setSize);
+      })();
+    </script>
+  </div>
+</div>
+
+
+<!-- SUAL BANKI -->
+<div class="w-full">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="i-lucide-library-square w-5 h-5 opacity-80"></span>
+      <h3 class="text-lg font-semibold">Sual bankı</h3>
+    </div>
+
+    <div class="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-white/0 p-8 text-center overflow-hidden">
+      <!-- “Tezliklə” badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mx-auto">
+        <span class="i-lucide-rocket w-4 h-4 opacity-80"></span>
+        <span class="text-sm font-medium tracking-wide">Tezliklə</span>
+      </div>
+
+      <!-- Böyük başlıq -->
+      <div class="mt-6 text-2xl sm:text-3xl font-semibold leading-tight">
+        Peşəkar <span class="opacity-90">Multiple-choice</span>, <span class="opacity-90">qısa cavab</span> və <span class="opacity-90">praktik</span> suallar
+      </div>
+
+      <!-- Alt mətn -->
+      <p class="mt-3 text-sm text-white/70">
+        Hazırlandıqdan sonra burada aktiv olacaq. Abunə ol və ilk sınaqdan xəbər tut. 
+      </p>
+
+      <!-- Şimmerli “kilidli” placeholder sahə -->
+      <div class="mt-6 rounded-xl border border-white/10 bg-white/5 h-32 sm:h-36 shimmer"></div>
+    </div>
+
+    <!-- Alt düymə (passiv) -->
+    <button
+      class="mt-6 w-full rounded-xl bg-white/5 border border-white/10 py-3 text-white/70 cursor-not-allowed"
+      disabled
+    >
+      Tezliklə aktivləşəcək
+    </button>
+  </div>
+</div>
+
 
         
       </div>

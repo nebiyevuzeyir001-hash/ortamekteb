@@ -232,28 +232,14 @@ select:invalid { color:#9aa4b2; }
             </div>
           </div>
 <div class="lg:col-span-2">
-  <div id="ksq-results-card"
-       class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm overflow-hidden min-h-[320px]">
-    <div id="ksq-count-wrap" class="flex items-center justify-end mb-3 hidden">
+  <div class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm" id="ksq-results-card">
+    <div class="flex items-center justify-end mb-3" id="ksq-count-row">
       <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
     </div>
-
-    <!-- Boş halda tam örtən placeholder -->
-    <div id="ksq-empty" class="absolute inset-4 grid place-items-center">
-      <div class="w-full max-w-[560px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-        <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-6 text-center">
-          <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">🎯</div>
-          <div class="text-base font-semibold">Zəhmət olmasa seçim edin</div>
-          <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
   </div>
 </div>
+
 
 
         </div>
@@ -269,27 +255,14 @@ select:invalid { color:#9aa4b2; }
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
 <div class="lg:col-span-2">
-  <div id="pp-results-card"
-       class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm overflow-hidden min-h-[320px]">
-    <div id="pp-count-wrap" class="flex items-center justify-end mb-3 hidden">
+  <div class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm" id="pp-results-card">
+    <div class="flex items-center justify-end mb-3" id="pp-count-row">
       <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
     </div>
-
-    <div id="pp-empty" class="absolute inset-4 grid place-items-center">
-      <div class="w-full max-w-[560px] rounded-xl p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-        <div class="rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-6 text-center">
-          <div class="mx-auto mb-2 h-12 w-12 grid place-items-center rounded-full bg-white/30 dark:bg-white/10">🗂️</div>
-          <div class="text-base font-semibold">Zəhmət olmasa fənni seçin</div>
-          <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Fənni seçdikdən sonra nəticələr burada görünəcək.
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
   </div>
 </div>
+
 
 
         </div>
@@ -879,46 +852,77 @@ function placeholder(icon, title, subtitle){
     </div>`;
 }
 
+function showEmpty(cardId, { icon = '🎯', title = '', desc = '' }){
+  const card = document.getElementById(cardId);
+  if (!card) return;
+
+  // artıq varsa yenisini yaratma
+  if (card.querySelector('.empty-overlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'empty-overlay absolute inset-0 grid place-items-center';
+  overlay.innerHTML = `
+    <div class="w-full h-full rounded-[12px] p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
+      <div class="w-full h-full rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md grid place-items-center text-center px-6">
+        <div>
+          <div class="mx-auto mb-3 h-12 w-12 grid place-items-center rounded-full bg-white/40 dark:bg-white/10 text-xl">${icon}</div>
+          <div class="text-base font-semibold">${title}</div>
+          <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">${desc}</div>
+        </div>
+      </div>
+    </div>`;
+  card.appendChild(overlay);
+}
+
+function hideEmpty(cardId){
+  const card = document.getElementById(cardId);
+  const overlay = card?.querySelector('.empty-overlay');
+  if (overlay) overlay.remove();
+}
+
 
 function toggleResults(){
-// KSQ/BSQ
-{
-  const grid = document.getElementById('ksq-results');
-  const empty = document.getElementById('ksq-empty');
-  const badgeWrap = document.getElementById('ksq-count-wrap');
+  // === KSQ/BSQ ===
+  const gridKSQ   = document.getElementById('ksq-results');
+  const countRowK = document.getElementById('ksq-count-row');
 
-  if (allChosenKSQ()){
-    renderKSQ();
-    empty.classList.add('hidden');
-    badgeWrap.classList.remove('hidden');
-  } else {
-    grid.innerHTML = '';
-    document.getElementById('ksq-count').textContent = 0;
-    badgeWrap.classList.add('hidden');   // 0 badge görünməsin
-    empty.classList.remove('hidden');    // placeholder tam örtür
+  if (gridKSQ){
+    if (allChosenKSQ()){
+      hideEmpty('ksq-results-card');            // boş overlayi gizlət
+      countRowK?.classList.remove('hidden');    // say sətrini göstər
+      renderKSQ();                               // real nəticələri göstər
+    } else {
+      // nəticə yoxdursa: say sətri yox, grid boş, overlay tam ekranda
+      countRowK?.classList.add('hidden');
+      gridKSQ.innerHTML = '';
+      showEmpty('ksq-results-card', {
+        icon: '🎯',
+        title: 'Zəhmət olmasa seçim edin',
+        desc: 'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'
+      });
+    }
+  }
+
+  // === PP ===
+  const gridPP   = document.getElementById('pp-results');
+  const countRowP= document.getElementById('pp-count-row');
+
+  if (gridPP){
+    if (allChosenPP()){
+      hideEmpty('pp-results-card');
+      countRowP?.classList.remove('hidden');
+      renderPP();
+    } else {
+      countRowP?.classList.add('hidden');
+      gridPP.innerHTML = '';
+      showEmpty('pp-results-card', {
+        icon: '🗂️',
+        title: 'Zəhmət olmasa fənni seçin',
+        desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+      });
+    }
   }
 }
-
-// PP
-{
-  const grid = document.getElementById('pp-results');
-  const empty = document.getElementById('pp-empty');
-  const badgeWrap = document.getElementById('pp-count-wrap');
-
-  if (allChosenPP()){
-    renderPP();
-    empty.classList.add('hidden');
-    badgeWrap.classList.remove('hidden');
-  } else {
-    grid.innerHTML = '';
-    document.getElementById('pp-count').textContent = 0;
-    badgeWrap.classList.add('hidden');
-    empty.classList.remove('hidden');
-  }
-}
-}
-
-
 
 
 

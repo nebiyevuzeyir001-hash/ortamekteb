@@ -149,30 +149,45 @@ select:invalid { color:#9aa4b2; }
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
-/* --- Vahid primary düymə (light/dark dostu) --- */
-.ep-btn-primary{
-  border-radius: 1rem;               /* rounded-2xl */
-  padding: .6rem 1rem;               /* py-2 px-4 */
-  font-size: .875rem;
+/* --- Ciddi, professional primary düymə --- */
+.ep-btn-primary {
+  display: inline-block;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;            /* rounded-xl */
   font-weight: 600;
-  color:#fff;
-  background: linear-gradient(90deg,#22d3ee,#a78bfa);
-  box-shadow: 0 10px 22px rgba(34,211,238,.20), 0 6px 14px rgba(167,139,250,.18);
-  transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
-  border: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.2px;
+  color: #fff;
+  background: #1e293b;               /* light-də tünd boz */
+  border: 1px solid rgba(0,0,0,.25);
+  box-shadow: 0 3px 8px rgba(0,0,0,.25);
+  transition: background .2s ease, transform .15s ease, box-shadow .2s ease;
 }
-.ep-btn-primary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-.ep-btn-primary:active{ transform: translateY(0); }
+.ep-btn-primary:hover{
+  background: #334155;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,.30);
+}
+.ep-btn-primary:active{
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+/* Dark rejim üçün bir az açıq ton + yumşaq kölgə */
+.dark .ep-btn-primary{
+  background: #334155;
+  border-color: rgba(255,255,255,.15);
+  box-shadow: 0 3px 8px rgba(255,255,255,.08);
+}
+.dark .ep-btn-primary:hover{
+  background: #475569;
+  box-shadow: 0 4px 10px rgba(255,255,255,.12);
+}
 
 /* --- Passiv/boz düymə (footer-lər üçün) --- */
-.ep-btn-muted{
-  border-radius: 1rem;
-  padding: .75rem 1rem;
-  font-size: .875rem;
-  border: 1px solid var(--border);
-  background: var(--pill);
-  color: var(--pill-text);
-}
+/* Qeyd: aşağıdakı .ep-btn-muted səndə artıq var, eyni qalsın */
+
 
 
   </style>

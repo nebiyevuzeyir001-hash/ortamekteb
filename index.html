@@ -232,13 +232,14 @@ select:invalid { color:#9aa4b2; }
             </div>
           </div>
 <div class="lg:col-span-2">
-  <div class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm" id="ksq-results-card">
-    <div class="flex items-center justify-end mb-3" id="ksq-count-row">
+  <div class="relative rounded-xl border border-slate-200 bg-white text-sm overflow-hidden" id="ksq-results-card">
+    <div class="hidden items-center justify-end mb-3 px-4 pt-4" id="ksq-count-row">
       <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
     </div>
-    <div id="ksq-results" class="grid sm:grid-cols-2 gap-3"></div>
+    <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
   </div>
 </div>
+
 
 
 
@@ -255,11 +256,11 @@ select:invalid { color:#9aa4b2; }
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
 <div class="lg:col-span-2">
-  <div class="relative rounded-xl border border-slate-200 bg-white p-4 text-sm" id="pp-results-card">
-    <div class="flex items-center justify-end mb-3" id="pp-count-row">
+  <div class="relative rounded-xl border border-slate-200 bg-white text-sm overflow-hidden" id="pp-results-card">
+    <div class="hidden items-center justify-end mb-3 px-4 pt-4" id="pp-count-row">
       <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
     </div>
-    <div id="pp-results" class="grid sm:grid-cols-2 gap-3"></div>
+    <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
   </div>
 </div>
 
@@ -348,7 +349,7 @@ select:invalid { color:#9aa4b2; }
       ksq: { title: 'KSQ/BSQ', type: 'Növ' },
       pp: { title: 'Perspektiv (illik) plan' },
       tools: { calcTitle: 'Bal kalkulyatoru', templatesTitle: 'Şablon kitabxanası', bankTitle: 'Sual bankı' },
-      labels: { ksqNo: 'KSQ nömrəsi', bsqNo: 'BSQ nömrəsi' },
+      labels: { examNo: 'Nömrə' },
       common: { grade: 'Sinif', subject: 'Fənn', calculate: 'Hesabla', browse: 'Bax', add: 'Əlavə et' },
       subjects: {
         az: 'Azərbaycan dili', lit: 'Ədəbiyyat', science: 'Təbiət', eng: 'İngilis dili', rus: 'Rus dili', math: 'Riyaziyyat',
@@ -498,8 +499,7 @@ idxEl.disabled = !state.ksqType; // növ seçilməyibsə passiv
   setText('#lbl-grade',   t.common.grade);
   setText('#lbl-subject', t.common.subject);
   setText('#lbl-type',    t.ksq.type);
-  setText('#lbl-ksqNo',   t.labels.ksqNo);
-  setText('#lbl-bsqNo',   t.labels.bsqNo);
+  setText('#lbl-examNo', t.labels.examNo);
   setText('#lbl-pp-subject', t.common.subject);
 
   setText('#ksq-title', t.ksq.title);
@@ -528,21 +528,6 @@ idxEl.disabled = !state.ksqType; // növ seçilməyibsə passiv
   setText('[data-i18n="nav.settings"]', t.nav.settings);
 }
 
-
-  // Kart başlığını formalaşdırır
-function buildTitle(it) {
-  const format = (it.ext || 'FILE').toUpperCase();
-  if (it.type === 'PP') {
-    const subject = it.subject || 'Fənn';
-    return `${subject} · PP · ${format}`;
-  }
-  const grade   = it.grade   || '—';
-  const subject = it.subject || 'Fənn';
-  const idx     = it.index   || '';
-  return `${grade} · ${subject} · ${it.type}-${idx} · ${format}`;
-}
-
-
 document.getElementById('grade').addEventListener('change', e=>{
   state.grade = e.target.value || null;
   // sinif dəyişdisə, fənni sıfırla
@@ -558,12 +543,12 @@ document.getElementById('subject').addEventListener('change', e=>{
 
 document.getElementById('ksqType').addEventListener('change', e=>{
   state.ksqType = e.target.value || null;
-  // nömrələri sıfırla
-  state.ksqIndex = null;
-  state.bsqIndex = null;
+  state.examIndex = null;        // <-- bu bəs edir
   renderSelects();
   toggleResults();
 });
+
+
 
 document.getElementById('examIndex').addEventListener('change', e=>{
   state.examIndex = e.target.value || null;

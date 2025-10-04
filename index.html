@@ -231,8 +231,8 @@ select:invalid { color:#9aa4b2; }
               <select id="examIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
             </div>
           </div>
-<div class="lg:col-span-2 h-full">
-  <div id="ksq-results-card" class="relative h-full w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+<div class="lg:col-span-2">
+  <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
     <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
       <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
@@ -256,8 +256,8 @@ select:invalid { color:#9aa4b2; }
             <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
-<div class="lg:col-span-2 h-full">
-  <div id="pp-results-card" class="relative h-full w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+<div class="lg:col-span-2">
+  <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
     <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
       <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
@@ -839,12 +839,12 @@ function placeholder(icon, title, subtitle){
     </div>`;
 }
 
-function showEmpty(cardId, { icon = '🎯', title = '', desc = '' }){
+function showEmpty(cardId, { icon = '🎯', title = '', desc = '' }) {
   const card = document.getElementById(cardId);
-  if (!card) return;
+  if (!card || card.querySelector('.empty-overlay')) return;
 
-  // artıq varsa yenisini yaratma
-  if (card.querySelector('.empty-overlay')) return;
+  // Boş ekranda hündürlüyü eyniləşdir (KSQ ölçüsünə bərabər)
+  card.classList.add('min-h-[320px]', 'md:min-h-[340px]');
 
   const overlay = document.createElement('div');
   overlay.className = 'empty-overlay absolute inset-0 z-10 grid place-items-center pointer-events-none';
@@ -861,11 +861,13 @@ function showEmpty(cardId, { icon = '🎯', title = '', desc = '' }){
   card.appendChild(overlay);
 }
 
-function hideEmpty(cardId){
+function hideEmpty(cardId) {
   const card = document.getElementById(cardId);
-  const overlay = card?.querySelector('.empty-overlay');
-  if (overlay) overlay.remove();
+  card?.querySelector('.empty-overlay')?.remove();
+  // Nəticələr görünəndə məhdudiyyəti götür ki, kontent azad böyüsün
+  card?.classList.remove('min-h-[320px]', 'md:min-h-[340px]');
 }
+
 
 
 function toggleResults(){

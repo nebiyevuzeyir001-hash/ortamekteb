@@ -345,16 +345,71 @@ select:invalid { color:#9aa4b2; }
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
-          <div class="p-4 space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-              <input type="number" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
-              <input type="number" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
-              <input type="number" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
-              <input type="number" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
-            </div>
-            <input type="number" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm" />
-            <button class="ep-btn-primary w-full mt-2" id="btn-calc">Hesabla</button>
-          </div>
+<div class="p-4 space-y-4" id="calc-card">
+  <!-- KSQ-lar -->
+  <div class="grid grid-cols-2 gap-3">
+    <input id="ksq1" type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
+    <input id="ksq2" type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
+    <input id="ksq3" type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
+    <input id="ksq4" type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+  </div>
+
+  <!-- BSQ -->
+  <input id="bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm" />
+
+  <!-- Çəki seçimi -->
+  <div class="rounded-xl border px-3 py-3 text-sm bg-white/60 dark:bg-slate-900/30 flex flex-col gap-2">
+    <div class="flex items-center justify-between">
+      <span class="text-slate-600 dark:text-slate-300">Çəki nisbəti (KSQ / BSQ)</span>
+      <div class="flex gap-2">
+        <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-preset="50-50">50 / 50</button>
+        <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-preset="40-60">40 / 60</button>
+        <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-preset="30-70">30 / 70</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="text-xs text-slate-500 dark:text-slate-400">KSQ (%)</label>
+        <input id="wKsq" type="number" min="0" max="100" value="50" class="w-full rounded-xl border px-3 py-2 text-sm" />
+      </div>
+      <div>
+        <label class="text-xs text-slate-500 dark:text-slate-400">BSQ (%)</label>
+        <input id="wBsq" type="number" min="0" max="100" value="50" class="w-full rounded-xl border px-3 py-2 text-sm" />
+      </div>
+    </div>
+    <div id="wError" class="hidden text-[12px] text-rose-500">Cəmi 100% olmalıdır.</div>
+  </div>
+
+  <!-- Hesabla düyməsi -->
+  <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
+
+  <!-- Nəticə paneli -->
+  <div id="calc-output" class="hidden rounded-xl border px-4 py-4">
+    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticə</div>
+    <div class="mt-1 text-2xl font-semibold" id="out-total">—</div>
+    <div class="mt-2 grid sm:grid-cols-3 gap-3 text-sm">
+      <div class="rounded-lg border px-3 py-2">
+        <div class="text-slate-500 dark:text-slate-400">KSQ ortalaması</div>
+        <div id="out-ksq">—</div>
+      </div>
+      <div class="rounded-lg border px-3 py-2">
+        <div class="text-slate-500 dark:text-slate-400">BSQ</div>
+        <div id="out-bsq">—</div>
+      </div>
+      <div class="rounded-lg border px-3 py-2">
+        <div class="text-slate-500 dark:text-slate-400">5 ballıq qiymət</div>
+        <div id="out-grade">—</div>
+      </div>
+    </div>
+    <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">
+      * Boş buraxılan KSQ-lar hesablanmaya qatılmadı.
+    </div>
+  </div>
+
+  <!-- Xəta mətni -->
+  <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
+</div>
+
         </div>
 
 <!-- REKLAM — BAL KALKULYATORU KİMİ EYNİ KART SKELETİ -->
@@ -1012,9 +1067,114 @@ function toggleResults(){
   }
 }
 
+// ================= BAL KALKULYATORU — HESABLAYICI =================
+(function initCalculator(){
+  const $id = (x)=>document.getElementById(x);
 
+  const inputs = ['ksq1','ksq2','ksq3','ksq4','bsq'].map($id);
+  const btn = $id('btn-calc');
+  const outWrap = $id('calc-output');
+  const outTotal = $id('out-total');
+  const outKsq = $id('out-ksq');
+  const outBsq = $id('out-bsq');
+  const outGrade = $id('out-grade');
+  const warn = $id('calc-warn');
+  const err = $id('calc-error');
 
+  const wKsq = $id('wKsq');
+  const wBsq = $id('wBsq');
+  const wError = $id('wError');
 
+  // Preset düymələri
+  document.querySelectorAll('[data-preset]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const [a,bp] = b.dataset.preset.split('-');
+      wKsq.value = a; wBsq.value = bp;
+      checkWeights();
+    });
+  });
+
+  // Enter basanda da hesablansın
+  inputs.forEach(inp=>{
+    inp.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ e.preventDefault(); compute(); }
+    });
+  });
+
+  // Çəki cəmini yoxla
+  [wKsq, wBsq].forEach(el=>el.addEventListener('input', checkWeights));
+  function checkWeights(){
+    const sum = (+wKsq.value||0) + (+wBsq.value||0);
+    wError.classList.toggle('hidden', sum===100);
+    return sum===100;
+  }
+
+  btn.addEventListener('click', compute);
+
+  function numOrNull(v){
+    if(v==='' || v===null || v===undefined) return null;
+    const n = Number(v);
+    return (isFinite(n) ? n : null);
+  }
+
+  function validateField(el){
+    const n = numOrNull(el.value);
+    if(n===null){ el.classList.remove('border-rose-500'); return null; }
+    const ok = n>=0 && n<=100;
+    el.classList.toggle('border-rose-500', !ok);
+    return ok ? n : null;
+  }
+
+  function to5scale(x){
+    // 0-49 → 2 ; 50-69 → 3 ; 70-84 → 4 ; 85-100 → 5
+    if(x>=85) return 5;
+    if(x>=70) return 4;
+    if(x>=50) return 3;
+    return 2;
+  }
+
+  function compute(){
+    err.classList.add('hidden'); err.textContent='';
+    if(!checkWeights()){
+      err.textContent='Çəki cəmi 100% olmalıdır (məs: 50/50, 40/60).';
+      err.classList.remove('hidden'); return;
+    }
+
+    // Girişləri oxu və yoxla
+    const ksqVals = [validateField($id('ksq1')), validateField($id('ksq2')),
+                     validateField($id('ksq3')), validateField($id('ksq4'))].filter(v=>v!==null);
+    const bsqVal = validateField($id('bsq'));
+
+    // BSQ boş və ya səhvdirsə xəbərdar et
+    if(bsqVal===null){
+      err.textContent='BSQ dəyərini 0–100 arasında daxil edin.';
+      err.classList.remove('hidden'); return;
+    }
+
+    // KSQ ortalaması (yalnız daxil edilənlər)
+    let ksqAvg = 0;
+    if(ksqVals.length>0){
+      ksqAvg = ksqVals.reduce((a,b)=>a+b,0)/ksqVals.length;
+      warn.classList.toggle('hidden', ksqVals.length===4);
+    } else {
+      // heç biri yoxdursa KSQ=0 kimi götürülür
+      ksqAvg = 0;
+      warn.classList.add('hidden');
+    }
+
+    const w1 = (+wKsq.value||0)/100;
+    const w2 = (+wBsq.value||0)/100;
+
+    const total = +(ksqAvg*w1 + bsqVal*w2).toFixed(2);
+
+    outKsq.textContent = ksqAvg.toFixed(2);
+    outBsq.textContent = bsqVal.toFixed(2);
+    outTotal.textContent = total.toFixed(2);
+    outGrade.textContent = to5scale(total);
+
+    outWrap.classList.remove('hidden');
+  }
+})();
 
 
   </script>

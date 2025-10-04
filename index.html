@@ -218,7 +218,7 @@ select:invalid { color:#9aa4b2; }
     <section id="panel-ksq" class="tab-panel is-active mt-6">
       <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
         <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
-        <div class="p-4 grid lg:grid-cols-3 gap-6">
+        <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
           <div class="space-y-4">
             <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
               <select id="grade" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
@@ -231,14 +231,15 @@ select:invalid { color:#9aa4b2; }
               <select id="examIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
             </div>
           </div>
-<div class="lg:col-span-2">
-  <div class="relative rounded-xl border border-slate-200 bg-white text-sm overflow-hidden" id="ksq-results-card">
-    <div class="hidden items-center justify-end mb-3 px-4 pt-4" id="ksq-count-row">
-      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="ksq-count">0</span>
+<div class="lg:col-span-2 h-full">
+  <div id="ksq-results-card" class="relative h-full w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+    <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
+      <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
     <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
   </div>
 </div>
+
 
 
 
@@ -250,19 +251,20 @@ select:invalid { color:#9aa4b2; }
     <section id="panel-pp"  class="tab-panel mt-6">
       <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
         <div class="p-4 border-b"><h3 class="font-semibold" id="pp-title">Perspektiv (illik) plan</h3></div>
-          <div class="p-4 grid lg:grid-cols-3 lg:items-center gap-6">
+          <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
             <div class="space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
             <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
-<div class="lg:col-span-2">
-  <div class="relative rounded-xl border border-slate-200 bg-white text-sm overflow-hidden" id="pp-results-card">
-    <div class="hidden items-center justify-end mb-3 px-4 pt-4" id="pp-count-row">
-      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border" id="pp-count">0</span>
+<div class="lg:col-span-2 h-full">
+  <div id="pp-results-card" class="relative h-full w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+    <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
+      <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
     <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
   </div>
 </div>
+
 
 
 
@@ -845,7 +847,7 @@ function showEmpty(cardId, { icon = '🎯', title = '', desc = '' }){
   if (card.querySelector('.empty-overlay')) return;
 
   const overlay = document.createElement('div');
-  overlay.className = 'empty-overlay absolute inset-0 grid place-items-center';
+  overlay.className = 'empty-overlay absolute inset-0 z-10 grid place-items-center pointer-events-none';
   overlay.innerHTML = `
     <div class="w-full h-full rounded-[12px] p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
       <div class="w-full h-full rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md grid place-items-center text-center px-6">

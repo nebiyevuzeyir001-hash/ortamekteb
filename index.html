@@ -359,10 +359,19 @@ select:invalid { color:#9aa4b2; }
   <!-- ✔️ İstifadəçi seçimi -->
   <div class="rounded-xl border px-3 py-3 text-sm flex items-center justify-between gap-3">
     <span class="text-slate-600 dark:text-slate-300">Hesablama rejimi</span>
-    <div class="grid grid-cols-3 gap-2">
-      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="t1">I yarımil</button>
-      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="t2">II yarımil</button>
-      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="both">Hər ikisi</button>
+    <div class="flex flex-nowrap gap-2 w-full">
+<button type="button"
+  class="flex-1 min-w-0 whitespace-nowrap px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
+  data-mode="t1">I yarımil</button>
+
+<button type="button"
+  class="flex-1 min-w-0 whitespace-nowrap px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
+  data-mode="t2">II yarımil</button>
+
+<button type="button"
+  class="flex-1 min-w-0 whitespace-nowrap px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
+  data-mode="both">Hər ikisi</button>
+
     </div>
   </div>
 

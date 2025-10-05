@@ -348,7 +348,7 @@ select:invalid { color:#9aa4b2; }
 
     <section id="panel-tools" class="tab-panel grid-on mt-6">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+        <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white min-h-[360px]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <div class="p-4 space-y-5" id="calc-card">
   <!-- ✔️ İstifadəçi seçimi -->
@@ -1106,9 +1106,9 @@ function toggleResults(){
   });
 
 function updateModeUI(){
-  const card = document.getElementById('calc-card');
+  const card = $id('calc-card');
 
-  // düymələrin vizual aktivliyi (optional highlight)
+  // Rejim düymələrinin vizual aktivliyi
   document.querySelectorAll('[data-mode]').forEach(b=>{
     const act = (b.dataset.mode === mode);
     b.classList.toggle('bg-white/10', act);
@@ -1116,9 +1116,11 @@ function updateModeUI(){
     b.setAttribute('aria-pressed', act ? 'true' : 'false');
   });
 
-  if(!mode){
-    // seçim edilməyib → yalnız seçim paneli görünür və MƏRKƏZDƏ durur
-    card?.classList.add('vcenter');           // ✅ şaquli/üfüqi mərkəz
+  if (!mode) {
+    // Seçim YOXDUR → kart içini şaquli/üfüqi mərkəzlə
+    card?.classList.add('vcenter','max-w-xl','mx-auto');
+    card?.classList.remove('space-y-5');
+
     $id('fs-t1').classList.add('hidden');
     $id('fs-t2').classList.add('hidden');
     $id('out-t1-card')?.classList.add('hidden');
@@ -1128,15 +1130,17 @@ function updateModeUI(){
     return;
   }
 
-  // seçim edilib → formu göstər, mərkəzləməni söndür
-  card?.classList.remove('vcenter');          // ⛔ artıq mərkəz yox
-  $id('fs-t1').classList.toggle('hidden', mode==='t2');
-  $id('fs-t2').classList.toggle('hidden', mode==='t1');
+  // Seçim VAR → normal axına qayıt
+  card?.classList.remove('vcenter','max-w-xl','mx-auto');
+  card?.classList.add('space-y-5');
 
-  $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
-  $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
-  $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
+  $id('fs-t1').classList.toggle('hidden', mode === 't2');
+  $id('fs-t2').classList.toggle('hidden', mode === 't1');
+  $id('out-t1-card')?.classList.toggle('hidden', mode === 't2');
+  $id('out-t2-card')?.classList.toggle('hidden', mode === 't1');
+  $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
 }
+
 
 
   updateModeUI();

@@ -1090,7 +1090,7 @@ function toggleResults(){
   const $qs=(s)=>document.querySelector(s);
   const $qsa=(s)=>Array.from(document.querySelectorAll(s));
 
-  let mode = 'null'; // default: hər ikisi
+  let mode = null;   // default: seçim edilməyib
 
   // Rejim düymələri
   $qsa('[data-mode]').forEach(btn=>{
@@ -1179,7 +1179,8 @@ function updateModeUI(){
   });
 
 btn?.addEventListener('click', ()=>{
-  err.classList.add('hidden'); err.textContent='';
+  err.classList.add('hidden'); 
+  err.textContent = '';
   updateModeUI();
 
   if(!mode){
@@ -1188,9 +1189,52 @@ btn?.addEventListener('click', ()=>{
     return;
   }
 
-  let t1=null, t2=null;
-  ...
+  let t1 = null, t2 = null;
+
+  // I yarımil (mode !== 't2' olduqda hesabla)
+  if(mode !== 't2'){
+    const r1 = computeTerm('t1', { 
+      total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' 
+    });
+    if(r1 && r1.error) return;
+    t1 = typeof r1 === 'number' ? r1 : null;
+  } else {
+    $id('out-t1').textContent='—'; 
+    $id('out-t1-ksq').textContent='—'; 
+    $id('out-t1-bsq').textContent='—'; 
+    $id('out-t1-grade').textContent='—';
+  }
+
+  // II yarımil (mode !== 't1' olduqda hesabla)
+  if(mode !== 't1'){
+    const r2 = computeTerm('t2', { 
+      total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' 
+    });
+    if(r2 && r2.error) return;
+    t2 = typeof r2 === 'number' ? r2 : null;
+  } else {
+    $id('out-t2').textContent='—'; 
+    $id('out-t2-ksq').textContent='—'; 
+    $id('out-t2-bsq').textContent='—'; 
+    $id('out-t2-grade').textContent='—';
+  }
+
+  // Nəticələr bölməsini göstər
+  out.classList.remove('hidden');
+
+  // İllik yalnız "Hər ikisi" seçilərsə və hər iki yarımil hesablanıbsa
+  if(mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number'){
+    const yearVal = +(((t1 + t2) / 2).toFixed(2));
+    $id('out-year').textContent = yearVal.toFixed(2);
+    $id('out-year-grade').textContent = to5(yearVal);
+    $id('out-year-card').classList.remove('hidden');
+  } else {
+    $id('out-year').textContent = '—';
+    $id('out-year-grade').textContent = '—';
+    $id('out-year-card').classList.add('hidden');
+  }
 });
+
 
 })();
 

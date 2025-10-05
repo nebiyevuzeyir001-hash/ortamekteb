@@ -182,13 +182,16 @@ select:invalid { color:#9aa4b2; }
   filter: brightness(1.1);
   box-shadow: 0 6px 14px rgba(255,255,255,0.12);
 }
-/* şaquli mərkəz üçün helper */
-.vcenter {
-  min-height: 260px;       /* istəsən 280/300 eləyə bilərsən */
+/* şaquli mərkəz üçün helper — tam mərkəz, heç bir padding olmadan */
+.vcenter{
+  min-height: 320px;      /* mərkəzləmək üçün kifayət hündürlük */
+  height: 100%;
   display: grid;
-  place-content: center;   /* həm şaquli, həm üfüqi mərkəz */
-  gap: 16px;               /* calc-card içi aralıq */
+  place-content: center;  /* həm şaquli, həm üfüqi mərkəz */
+  gap: 16px;
+  padding: 0 !important;  /* PADDING sıfır → optik yuxarılıq yox olur */
 }
+
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -1106,9 +1109,8 @@ function toggleResults(){
   });
 
 function updateModeUI(){
-  const card = $id('calc-card');
+  const card = document.getElementById('calc-card');
 
-  // Rejim düymələrinin vizual aktivliyi
   document.querySelectorAll('[data-mode]').forEach(b=>{
     const act = (b.dataset.mode === mode);
     b.classList.toggle('bg-white/10', act);
@@ -1117,31 +1119,29 @@ function updateModeUI(){
   });
 
   if (!mode) {
-    // Seçim YOXDUR → kart içini şaquli/üfüqi mərkəzlə
+    // --- TAM MƏRKƏZ ---
     card?.classList.add('vcenter','max-w-xl','mx-auto');
-    card?.classList.remove('space-y-5');
-
-    $id('fs-t1').classList.add('hidden');
-    $id('fs-t2').classList.add('hidden');
-    $id('out-t1-card')?.classList.add('hidden');
-    $id('out-t2-card')?.classList.add('hidden');
-    $id('out-year-card')?.classList.add('hidden');
-    $id('calc-output')?.classList.add('hidden');
+    card?.classList.remove('space-y-5','p-4','pt-8'); // ← paddingləri söndür
+    // qalanları gizlət
+    document.getElementById('fs-t1').classList.add('hidden');
+    document.getElementById('fs-t2').classList.add('hidden');
+    document.getElementById('out-t1-card')?.classList.add('hidden');
+    document.getElementById('out-t2-card')?.classList.add('hidden');
+    document.getElementById('out-year-card')?.classList.add('hidden');
+    document.getElementById('calc-output')?.classList.add('hidden');
     return;
   }
 
-  // Seçim VAR → normal axına qayıt
+  // --- NORMAL REJİM ---
   card?.classList.remove('vcenter','max-w-xl','mx-auto');
-  card?.classList.add('space-y-5');
+  card?.classList.add('space-y-5','p-4','pt-8'); // ← paddingləri bərpa et
 
-  $id('fs-t1').classList.toggle('hidden', mode === 't2');
-  $id('fs-t2').classList.toggle('hidden', mode === 't1');
-  $id('out-t1-card')?.classList.toggle('hidden', mode === 't2');
-  $id('out-t2-card')?.classList.toggle('hidden', mode === 't1');
-  $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
+  document.getElementById('fs-t1').classList.toggle('hidden', mode === 't2');
+  document.getElementById('fs-t2').classList.toggle('hidden', mode === 't1');
+  document.getElementById('out-t1-card')?.classList.toggle('hidden', mode === 't2');
+  document.getElementById('out-t2-card')?.classList.toggle('hidden', mode === 't1');
+  document.getElementById('out-year-card')?.classList.toggle('hidden', mode !== 'both');
 }
-
-
 
   updateModeUI();
 

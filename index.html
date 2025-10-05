@@ -1121,8 +1121,8 @@ function updateModeUI(){
   });
 
   if (!mode) {
-    card?.classList.add('vcenter','max-w-xl','mx-auto','h-full'); // ← h-full əlavə
-    card?.classList.remove('space-y-5','p-4','pt-8');
+  card?.classList.add('vcenter','max-w-xl','mx-auto','h-full','w-full'); // + h-full, w-full
+  card?.classList.remove('space-y-5','p-4','pt-8');
 
     document.getElementById('fs-t1').classList.add('hidden');
     document.getElementById('fs-t2').classList.add('hidden');
@@ -1134,8 +1134,9 @@ function updateModeUI(){
   }
 
   // --- NORMAL REJİM ---
-  card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full'); // ← h-full çıxar
-  card?.classList.add('space-y-5','p-4','pt-8');
+card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
+card?.classList.add('space-y-5','p-4','pt-8');
+
 
   document.getElementById('fs-t1').classList.toggle('hidden', mode === 't2');
   document.getElementById('fs-t2').classList.toggle('hidden', mode === 't1');

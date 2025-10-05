@@ -1090,7 +1090,7 @@ function toggleResults(){
   const $qs=(s)=>document.querySelector(s);
   const $qsa=(s)=>Array.from(document.querySelectorAll(s));
 
-  let mode = 'both'; // default: hər ikisi
+  let mode = 'null'; // default: hər ikisi
 
   // Rejim düymələri
   $qsa('[data-mode]').forEach(btn=>{
@@ -1100,16 +1100,35 @@ function toggleResults(){
     });
   });
 
-  function updateModeUI(){
-    // Fieldset-ləri göstər/gizlə
-    $id('fs-t1').classList.toggle('hidden', mode==='t2');
-    $id('fs-t2').classList.toggle('hidden', mode==='t1');
+function updateModeUI(){
+  // düymələrin vizual aktivliyi (optional highlight)
+  document.querySelectorAll('[data-mode]').forEach(b=>{
+    const act = (b.dataset.mode === mode);
+    b.classList.toggle('bg-white/10', act);
+    b.classList.toggle('border-slate-300', act);
+    b.setAttribute('aria-pressed', act ? 'true' : 'false');
+  });
 
-    // Nəticə kartlarının görünüşünü idarə edirik (hesabdan sonra da işləyəcək)
-    $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
-    $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
-    $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
+  if(!mode){
+    // seçim edilməyib → hər şeyi gizlə
+    $id('fs-t1').classList.add('hidden');
+    $id('fs-t2').classList.add('hidden');
+    $id('out-t1-card')?.classList.add('hidden');
+    $id('out-t2-card')?.classList.add('hidden');
+    $id('out-year-card')?.classList.add('hidden');
+    $id('calc-output')?.classList.add('hidden');
+    return;
   }
+
+  // seçim edilib → rejimə uyğun göstər
+  $id('fs-t1').classList.toggle('hidden', mode==='t2');
+  $id('fs-t2').classList.toggle('hidden', mode==='t1');
+
+  $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
+  $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
+  $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
+}
+
   updateModeUI();
 
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn');
@@ -1159,40 +1178,20 @@ function toggleResults(){
     el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
   });
 
-  btn?.addEventListener('click', ()=>{
-    err.classList.add('hidden'); err.textContent='';
-    updateModeUI(); // rejimə görə kartları düzgün göstər
+btn?.addEventListener('click', ()=>{
+  err.classList.add('hidden'); err.textContent='';
+  updateModeUI();
 
-    let t1=null, t2=null;
+  if(!mode){
+    err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
+    err.classList.remove('hidden');
+    return;
+  }
 
-    if(mode!=='t2'){
-      t1 = computeTerm('t1',{ total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
-      if(t1 && t1.error) return;
-    } else { // gizlənibsə dəyərləri təmiz göstər
-      $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—';
-    }
+  let t1=null, t2=null;
+  ...
+});
 
-    if(mode!=='t1'){
-      t2 = computeTerm('t2',{ total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
-      if(t2 && t2.error) return;
-    } else {
-      $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
-    }
-
-    out.classList.remove('hidden');
-
-    // İllik yalnız mode==='both' və hər ikisi rəqəmdirsə
-    if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
-      const yearVal = +(((t1 + t2)/2).toFixed(2));
-      $id('out-year').textContent = yearVal.toFixed(2);
-      $id('out-year-grade').textContent = to5(yearVal);
-      $id('out-year-card').classList.remove('hidden');
-    } else {
-      $id('out-year').textContent='—';
-      $id('out-year-grade').textContent='—';
-      $id('out-year-card').classList.toggle('hidden', true);
-    }
-  });
 })();
 
 

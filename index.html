@@ -346,26 +346,40 @@ select:invalid { color:#9aa4b2; }
         <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <div class="p-4 space-y-5" id="calc-card">
+  <!-- ✔️ İstifadəçi seçimi -->
+  <div class="rounded-xl border px-3 py-3 text-sm flex items-center justify-between gap-3">
+    <span class="text-slate-600 dark:text-slate-300">Hesablama rejimi</span>
+    <div class="grid grid-cols-3 gap-2">
+      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="t1">I yarımil</button>
+      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="t2">II yarımil</button>
+      <button type="button" class="px-3 py-1 rounded-lg border text-xs" data-mode="both">Hər ikisi</button>
+    </div>
+  </div>
+
   <!-- I yarımil -->
-  <fieldset class="rounded-xl border px-3 py-3">
+  <fieldset id="fs-t1" class="rounded-xl border px-3 py-3">
     <legend class="px-2 text-sm font-medium">I yarımil</legend>
     <div class="grid grid-cols-2 gap-3 mt-2">
       <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+      <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
+      <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
     </div>
     <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
   </fieldset>
 
   <!-- II yarımil -->
-  <fieldset class="rounded-xl border px-3 py-3">
+  <fieldset id="fs-t2" class="rounded-xl border px-3 py-3">
     <legend class="px-2 text-sm font-medium">II yarımil</legend>
     <div class="grid grid-cols-2 gap-3 mt-2">
       <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
       <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+      <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
+      <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
     </div>
     <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
   </fieldset>
@@ -379,37 +393,36 @@ select:invalid { color:#9aa4b2; }
 
     <div class="mt-3 grid sm:grid-cols-3 gap-3">
       <!-- I yarımil -->
-      <div class="rounded-lg border px-3 py-2">
+      <div id="out-t1-card" class="rounded-lg border px-3 py-2">
         <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">I yarımil</div>
         <div class="text-lg font-semibold" id="out-t1">—</div>
         <div class="text-xs mt-1">KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span></div>
-        <div class="text-xs">5 ballıq: <span id="out-t1-grade">—</span></div>
+        <div class="text-xs">Qiymət: <span id="out-t1-grade">—</span></div>
       </div>
 
       <!-- II yarımil -->
-      <div class="rounded-lg border px-3 py-2">
+      <div id="out-t2-card" class="rounded-lg border px-3 py-2">
         <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">II yarımil</div>
         <div class="text-lg font-semibold" id="out-t2">—</div>
         <div class="text-xs mt-1">KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span></div>
-        <div class="text-xs">5 ballıq: <span id="out-t2-grade">—</span></div>
+        <div class="text-xs">Qiymət: <span id="out-t2-grade">—</span></div>
       </div>
 
       <!-- İllik -->
-      <div class="rounded-lg border px-3 py-2">
+      <div id="out-year-card" class="rounded-lg border px-3 py-2">
         <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">İllik</div>
         <div class="text-lg font-semibold" id="out-year">—</div>
         <div class="text-xs mt-1">Hesab: (I + II) / 2</div>
-        <div class="text-xs">5 ballıq: <span id="out-year-grade">—</span></div>
+        <div class="text-xs">Qiymət: <span id="out-year-grade">—</span></div>
       </div>
     </div>
 
-    <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">
-      * Boş buraxılan KSQ-lar hesablanmaya qatılmadı.
-    </div>
+    <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">* Boş buraxılan KSQ-lar hesablanmaya qatılmadı.</div>
   </div>
 
   <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
 </div>
+
 
 
         </div>
@@ -1069,38 +1082,65 @@ function toggleResults(){
   }
 }
 
-// ================= BAL KALKULYATORU — I/II/İLLİK (40/60) =================
+// ========== BAL KALKULYATORU — REJİM SEÇİMİ + 6 KSQ + DOĞRU QİYMƏT ==========
 (function initCalculator(){
-  const W_KSQ = 0.40, W_BSQ = 0.60; // default çəkilər
+  const W_KSQ = 0.40, W_BSQ = 0.60; // 40/60
 
   const $id=(x)=>document.getElementById(x);
+  const $qs=(s)=>document.querySelector(s);
+  const $qsa=(s)=>Array.from(document.querySelectorAll(s));
+
+  let mode = 'both'; // default: hər ikisi
+
+  // Rejim düymələri
+  $qsa('[data-mode]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      mode = btn.dataset.mode; // 't1' | 't2' | 'both'
+      updateModeUI();
+    });
+  });
+
+  function updateModeUI(){
+    // Fieldset-ləri göstər/gizlə
+    $id('fs-t1').classList.toggle('hidden', mode==='t2');
+    $id('fs-t2').classList.toggle('hidden', mode==='t1');
+
+    // Nəticə kartlarının görünüşünü idarə edirik (hesabdan sonra da işləyəcək)
+    $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
+    $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
+    $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
+  }
+  updateModeUI();
+
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn');
 
-  // Köməkçi
   const numOrNull = v => (v===''||v==null)?null:(isFinite(+v)?+v:null);
-  const to5 = x => x>=85?5 : x>=70?4 : x>=50?3 : 2;
+  // ✅ Düzgün qiymətləndirmə xəritəsi
+  const to5 = x => (x>=81)?5 : (x>=61)?4 : (x>=41)?3 : 2;
+
+  function idsFor(prefix){ return ['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`); }
+
   function readTerm(prefix){
-    const ksq = ['1','2','3','4'].map(n=>numOrNull($id(`${prefix}-ksq${n}`).value)).filter(v=>v!==null);
+    const ksqIds = idsFor(prefix);
+    const ksq = ksqIds.map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
     const bsq = numOrNull($id(`${prefix}-bsq`).value);
     return {ksq, bsq};
   }
-  function avg(arr){ return arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
+
+  const avg = arr => arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
   function computeTerm(prefix, outIds){
     const {ksq, bsq} = readTerm(prefix);
-    // heç məlumat yoxdursa -> null qaytar
-    if(ksq.length===0 && bsq===null) return null;
+    if(ksq.length===0 && bsq===null) return null; // tam boş
 
-    // BSQ boşdursa, xətaya sal (yarımili hesablamaq üçün BSQ lazımdır)
     if(bsq===null || bsq<0 || bsq>100){
       err.textContent = (prefix==='t1'?'I':'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
       err.classList.remove('hidden');
       return {error:true};
     }
 
-    // KSQ ortalaması (boşlar qatılmır)
     const kAvg = ksq.length? avg(ksq) : 0;
-    warn.classList.toggle('hidden', ksq.length===4 || ksq.length===0);
+    warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
 
     const total = +(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
 
@@ -1113,46 +1153,48 @@ function toggleResults(){
     return total;
   }
 
-  // Enter tuşu
-  ['t1-ksq1','t1-ksq2','t1-ksq3','t1-ksq4','t1-bsq',
-   't2-ksq1','t2-ksq2','t2-ksq3','t2-ksq4','t2-bsq'
-  ].forEach(id=>{
+  // Enter qısayolu
+  [...idsFor('t1'), 't1-bsq', ...idsFor('t2'), 't2-bsq'].forEach(id=>{
     const el=$id(id);
     el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
   });
 
   btn?.addEventListener('click', ()=>{
     err.classList.add('hidden'); err.textContent='';
+    updateModeUI(); // rejimə görə kartları düzgün göstər
 
-    // I yarımil
-    const t1 = computeTerm('t1',{
-      total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade'
-    });
-    if(t1 && t1.error) return;
+    let t1=null, t2=null;
 
-    // II yarımil
-    const t2 = computeTerm('t2',{
-      total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade'
-    });
-    if(t2 && t2.error) return;
-
-    // Nəticə panelini göstər
-    out.classList.remove('hidden');
-
-    // İllik (hər ikisi varsa orta, birisi yoxdursa — göstərilmir)
-    let yearVal = null;
-    if (typeof t1 === 'number' && typeof t2 === 'number') {
-      yearVal = +(((t1 + t2) / 2).toFixed(2));
-    } else if (typeof t1 === 'number' && (t2===null || t2===undefined)) {
-      // təkcə I yarımil varsa illik göstərməyək, xəritədə “—” qalsın
-    } else if (typeof t2 === 'number' && (t1===null || t1===undefined)) {
-      // təkcə II yarımil varsa da illik göstərməyək
+    if(mode!=='t2'){
+      t1 = computeTerm('t1',{ total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
+      if(t1 && t1.error) return;
+    } else { // gizlənibsə dəyərləri təmiz göstər
+      $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—';
     }
 
-    $id('out-year').textContent = (yearVal===null? '—' : yearVal.toFixed(2));
-    $id('out-year-grade').textContent = (yearVal===null? '—' : to5(yearVal));
+    if(mode!=='t1'){
+      t2 = computeTerm('t2',{ total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
+      if(t2 && t2.error) return;
+    } else {
+      $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
+    }
+
+    out.classList.remove('hidden');
+
+    // İllik yalnız mode==='both' və hər ikisi rəqəmdirsə
+    if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
+      const yearVal = +(((t1 + t2)/2).toFixed(2));
+      $id('out-year').textContent = yearVal.toFixed(2);
+      $id('out-year-grade').textContent = to5(yearVal);
+      $id('out-year-card').classList.remove('hidden');
+    } else {
+      $id('out-year').textContent='—';
+      $id('out-year-grade').textContent='—';
+      $id('out-year-card').classList.toggle('hidden', true);
+    }
   });
 })();
+
 
 
   </script>

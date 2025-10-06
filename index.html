@@ -42,6 +42,18 @@
   --pill:#0f172a;
   --pill-text:#cbd5e1;
 }
+  /* Ümumi üfüqi axını KƏS – scrollbar yaranmasın */
+:where(html, body, main, header, footer, section, .max-w-7xl, .tab-panel, .grid){
+  overflow-x: clip;         /* modern browsers – scroll yaratmır */
+  min-width: 0;             /* min-content enliyini sır */
+}
+
+/* iOS/Android select və inputların konteyneri itələməməsi üçün */
+select, input, button { max-width: 100%; }
+
+/* Tabs pseudo-elementi və kölgələri kənara çıxsa belə çəkmə */
+#tabs{ overflow: clip; contain: paint; }  /* artıq səndə overflow-hidden var, bunu üstünə veririk */
+
 /* badge-lər, tab-lar, button-lar üçün düzəlişlər */
 .bg-slate-100\/80{ background-color:var(--tab-track)!important; }
 .bg-slate-100{ background-color:var(--pill)!important; }
@@ -210,6 +222,8 @@ img, svg, video { max-width: 100%; height: auto; }
 
 #ksq-results .rounded-full,
 #pp-results .rounded-full { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Hər ehtimala qarşı panel/griddəki uşaq bloklar */
+#panel-tools *{ min-width: 0; }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -491,7 +505,7 @@ img, svg, video { max-width: 100%; height: auto; }
     <div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div>
   </div>
 
-  <div class="p-4 min-h-[320px] grid place-items-center">
+  <div class="p-4 min-h-[320px] grid place-items-center overflow-clip"><!-- ← əlavə -->
     <!-- Mərkəzi vitrin: gradient haşiyə + blur + shimmer -->
     <div class="relative rounded-2xl p-[1px] bg-gradient-to-r from-cyan-400/35 via-fuchsia-400/35 to-violet-400/35">
       <div class="rounded-2xl border border-white/30 dark:border-white/10 bg-white/65 dark:bg-slate-900/40 backdrop-blur-md text-center px-6 py-8">

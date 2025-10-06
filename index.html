@@ -197,6 +197,19 @@ html, body { max-width: 100%; overflow-x: hidden; }
 *, *::before, *::after { box-sizing: border-box; }
 img, svg, video { max-width: 100%; height: auto; }
 
+html, body { max-width: 100%; overflow-x: hidden; }
+*, *::before, *::after { box-sizing: border-box; }
+img, svg, video { max-width: 100%; height: auto; }
+
+/* Flex/Grid uşaq bloklar default genişlənməsin */
+.min-w-0 { min-width: 0 !important; }
+.min-h-0 { min-height: 0 !important; }
+
+/* Kartların içində “+1px” border/gradient trüklərinə sipər */
+.overflow-clip { overflow: clip; } /* modern, scroll bar yaratmır */
+
+#ksq-results .rounded-full,
+#pp-results .rounded-full { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -314,7 +327,7 @@ img, svg, video { max-width: 100%; height: auto; }
             </div>
           </div>
 <div class="lg:col-span-2 min-w-0">
-  <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+  <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
     <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
       <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
@@ -339,7 +352,7 @@ img, svg, video { max-width: 100%; height: auto; }
               <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
 <div class="lg:col-span-2 min-w-0">
-  <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+  <div id="pp-results-card"  class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
     <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
       <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
     </div>
@@ -360,7 +373,7 @@ img, svg, video { max-width: 100%; height: auto; }
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <div class="p-4 pt-8 space-y-5" id="calc-card">
   <!-- ✔️ İstifadəçi seçimi -->
-  <div class="rounded-xl border px-3 py-3 text-sm flex items-center gap-3 overflow-hidden">
+<div class="rounded-xl border px-3 py-3 text-sm flex items-center gap-3 overflow-hidden">
   <span class="shrink-0 text-slate-600 dark:text-slate-300">Hesablama rejimi</span>
   <div class="flex flex-nowrap gap-2 flex-1 min-w-0">
 <button type="button"

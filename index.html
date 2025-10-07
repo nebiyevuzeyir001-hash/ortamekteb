@@ -224,7 +224,10 @@ img, svg, video { max-width: 100%; height: auto; }
 #pp-results .rounded-full { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Hər ehtimala qarşı panel/griddəki uşaq bloklar */
 #panel-tools *{ min-width: 0; }
-
+/* Kalkulyator kartında scroll anchoring-i söndür: sıçrayış olmasın */
+#panel-tools, #calc-card {
+  overflow-anchor: none;
+}
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
@@ -1144,13 +1147,18 @@ function toggleResults(){
 
   let mode = null;   // default: seçim edilməyib
 
-  // Rejim düymələri
-  $qsa('[data-mode]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      mode = btn.dataset.mode; // 't1' | 't2' | 'both'
-      updateModeUI();
+$qsa('[data-mode]').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
+    const keepY = window.scrollY;   // mövcud scroll-u yadda saxla
+    mode = btn.dataset.mode;        // 't1' | 't2' | 'both'
+    updateModeUI();                 // UI dəyişir (hündürlük artır/azalır)
+    btn.blur();                     // fokusı düymədən götür
+    requestAnimationFrame(()=>{     // layout bitəndən sonra geri qayıt
+      window.scrollTo(0, keepY);
     });
   });
+});
+
 
 function updateModeUI(){
   const card = document.getElementById('calc-card');
@@ -1237,6 +1245,8 @@ card?.classList.add('space-y-5','p-4','pt-8');
   });
 
 btn?.addEventListener('click', ()=>{
+  const keepY = window.scrollY; // ⬅️ 1. Mövcud scroll-u saxla
+
   err.classList.add('hidden'); 
   err.textContent = '';
   updateModeUI();
@@ -1244,12 +1254,12 @@ btn?.addEventListener('click', ()=>{
   if(!mode){
     err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
     err.classList.remove('hidden');
+    requestAnimationFrame(()=> window.scrollTo(0, keepY)); // ⬅️ 2. Geri qaytar
     return;
   }
 
   let t1 = null, t2 = null;
 
-  // I yarımil (mode !== 't2' olduqda hesabla)
   if(mode !== 't2'){
     const r1 = computeTerm('t1', { 
       total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' 
@@ -1263,7 +1273,6 @@ btn?.addEventListener('click', ()=>{
     $id('out-t1-grade').textContent='—';
   }
 
-  // II yarımil (mode !== 't1' olduqda hesabla)
   if(mode !== 't1'){
     const r2 = computeTerm('t2', { 
       total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' 
@@ -1277,10 +1286,8 @@ btn?.addEventListener('click', ()=>{
     $id('out-t2-grade').textContent='—';
   }
 
-  // Nəticələr bölməsini göstər
   out.classList.remove('hidden');
 
-  // İllik yalnız "Hər ikisi" seçilərsə və hər iki yarımil hesablanıbsa
   if(mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number'){
     const yearVal = +(((t1 + t2) / 2).toFixed(2));
     $id('out-year').textContent = yearVal.toFixed(2);
@@ -1291,7 +1298,11 @@ btn?.addEventListener('click', ()=>{
     $id('out-year-grade').textContent = '—';
     $id('out-year-card').classList.add('hidden');
   }
+
+  // ⬅️ 3. Reflow bitəndən sonra eyni scroll yerinə qaytar
+  requestAnimationFrame(()=> window.scrollTo(0, keepY));
 });
+
 
 
 })();

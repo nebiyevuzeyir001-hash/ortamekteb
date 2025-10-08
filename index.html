@@ -1200,149 +1200,107 @@ function toggleResults(){
   const W_KSQ = 0.40, W_BSQ = 0.60; // 40/60
 
   const $id=(x)=>document.getElementById(x);
-  const $qs=(s)=>document.querySelector(s);
   const $qsa=(s)=>Array.from(document.querySelectorAll(s));
 
-  let mode = null;   // default: seçim edilməyib
+  let mode = null;   // seçim edilməyib
 
-$qsa('[data-mode]').forEach(btn=>{
-  btn.addEventListener('click', (e)=>{
-    const keepY = window.scrollY;
-    mode = btn.dataset.mode;        // 't1' | 't2' | 'both'
-    updateModeUI();
-    btn.blur();
-    requestAnimationFrame(()=>{ window.scrollTo(0, keepY); });
-  });
-});   // <-- BURADA bitir. İçində başqa funksiya və ya reset listeneri OLMASIN.
+  // --- UI rejim görünüşü (mode-a görə hissələri aç/qapat) ---
+  function updateModeUI(){
+    const card = document.getElementById('calc-card');
 
-  function clearOutputs(){
-  // I yarımil
-  $id('out-t1').textContent = '—';
-  $id('out-t1-ksq').textContent = '—';
-  $id('out-t1-bsq').textContent = '—';
-  $id('out-t1-grade').textContent = '—';
-  // II yarımil
-  $id('out-t2').textContent = '—';
-  $id('out-t2-ksq').textContent = '—';
-  $id('out-t2-bsq').textContent = '—';
-  $id('out-t2-grade').textContent = '—';
-  // İllik
-  $id('out-year').textContent = '—';
-  $id('out-year-grade').textContent = '—';
-}
-
-function resetCalc(){
-  // bütün inputları təmizlə
-  ['t1','t2'].forEach(p=>{
-    ['1','2','3','4','5','6'].forEach(n=>{
-      const el = $id(`${p}-ksq${n}`);
-      if (el) el.value = '';
+    document.querySelectorAll('[data-mode]').forEach(b=>{
+      const act = (b.dataset.mode === mode);
+      b.classList.toggle('bg-white/10', act);
+      b.classList.toggle('border-slate-300', act);
+      b.setAttribute('aria-pressed', act ? 'true' : 'false');
     });
-    const bsq = $id(`${p}-bsq`);
-    if (bsq) bsq.value = '';
-  });
 
-  // xəbərdarlıq/xəta/nəticə
-  err.classList.add('hidden'); err.textContent='';
-  $id('calc-warn').classList.add('hidden');
-  clearOutputs();
-  $id('calc-output').classList.add('hidden');
+    if (!mode) {
+      card?.classList.add('vcenter','max-w-xl','mx-auto','h-full','w-full');
+      card?.classList.remove('space-y-5','p-4','pt-8');
+      document.getElementById('fs-t1').classList.add('hidden');
+      document.getElementById('fs-t2').classList.add('hidden');
+      document.getElementById('out-t1-card')?.classList.add('hidden');
+      document.getElementById('out-t2-card')?.classList.add('hidden');
+      document.getElementById('out-year-card')?.classList.add('hidden');
+      document.getElementById('calc-output')?.classList.add('hidden');
+      return;
+    }
 
-  // kartın əvvəlinə qayıt
-  $id('calc-card')?.scrollTo({ top: 0, behavior: 'smooth' });
-}
-resetBtn?.addEventListener('click', resetCalc);
+    card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
+    card?.classList.add('space-y-5','p-4','pt-8');
 
-});
-
-
-function updateModeUI(){
-  const card = document.getElementById('calc-card');
-
-  document.querySelectorAll('[data-mode]').forEach(b=>{
-    const act = (b.dataset.mode === mode);
-    b.classList.toggle('bg-white/10', act);
-    b.classList.toggle('border-slate-300', act);
-    b.setAttribute('aria-pressed', act ? 'true' : 'false');
-  });
-
-  if (!mode) {
-  card?.classList.add('vcenter','max-w-xl','mx-auto','h-full','w-full'); // + h-full, w-full
-  card?.classList.remove('space-y-5','p-4','pt-8');
-
-    document.getElementById('fs-t1').classList.add('hidden');
-    document.getElementById('fs-t2').classList.add('hidden');
-    document.getElementById('out-t1-card')?.classList.add('hidden');
-    document.getElementById('out-t2-card')?.classList.add('hidden');
-    document.getElementById('out-year-card')?.classList.add('hidden');
-    document.getElementById('calc-output')?.classList.add('hidden');
-    return;
+    document.getElementById('fs-t1').classList.toggle('hidden', mode === 't2');
+    document.getElementById('fs-t2').classList.toggle('hidden', mode === 't1');
+    document.getElementById('out-t1-card')?.classList.toggle('hidden', mode === 't2');
+    document.getElementById('out-t2-card')?.classList.toggle('hidden', mode === 't1');
+    document.getElementById('out-year-card')?.classList.toggle('hidden', mode !== 'both');
   }
 
-  // --- NORMAL REJİM ---
-card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
-card?.classList.add('space-y-5','p-4','pt-8');
-
-
-  document.getElementById('fs-t1').classList.toggle('hidden', mode === 't2');
-  document.getElementById('fs-t2').classList.toggle('hidden', mode === 't1');
-  document.getElementById('out-t1-card')?.classList.toggle('hidden', mode === 't2');
-  document.getElementById('out-t2-card')?.classList.toggle('hidden', mode === 't1');
-  document.getElementById('out-year-card')?.classList.toggle('hidden', mode !== 'both');
-}
-
-  updateModeUI();
-
-  const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn');
-  const resetBtn = $id('btn-reset');
-    function clearOutputs(){
-  // I yarımil
-  $id('out-t1').textContent = '—';
-  $id('out-t1-ksq').textContent = '—';
-  $id('out-t1-bsq').textContent = '—';
-  $id('out-t1-grade').textContent = '—';
-  // II yarımil
-  $id('out-t2').textContent = '—';
-  $id('out-t2-ksq').textContent = '—';
-  $id('out-t2-bsq').textContent = '—';
-  $id('out-t2-grade').textContent = '—';
-  // İllik
-  $id('out-year').textContent = '—';
-  $id('out-year-grade').textContent = '—';
-}
-
-function resetCalc(){
-  ['t1','t2'].forEach(p=>{
-    ['1','2','3','4','5','6'].forEach(n=>{
-      const el = $id(`${p}-ksq${n}`); if (el) el.value = '';
+  // Rejim düymələri
+  $qsa('[data-mode]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const keepY = window.scrollY;
+      mode = btn.dataset.mode;         // 't1' | 't2' | 'both'
+      updateModeUI();
+      btn.blur();
+      requestAnimationFrame(()=>{ window.scrollTo(0, keepY); });
     });
-    const bsq = $id(`${p}-bsq`); if (bsq) bsq.value = '';
   });
 
-  err.classList.add('hidden'); err.textContent='';
-  warn.classList.add('hidden');
-  clearOutputs();
-  out.classList.add('hidden');
+  updateModeUI(); // ilkin görünüş (mərkəz “rejim seçimi”)
 
-  $id('calc-card')?.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  // --- Elementlər ---
+  const btn      = $id('btn-calc');
+  const out      = $id('calc-output');
+  const err      = $id('calc-error');
+  const warn     = $id('calc-warn');
+  const resetBtn = $id('btn-reset');
 
-resetBtn?.addEventListener('click', resetCalc);
+  // --- Yardımçı funksiyalar ---
+  function clearOutputs(){
+    // I yarımil
+    $id('out-t1').textContent = '—';
+    $id('out-t1-ksq').textContent = '—';
+    $id('out-t1-bsq').textContent = '—';
+    $id('out-t1-grade').textContent = '—';
+    // II yarımil
+    $id('out-t2').textContent = '—';
+    $id('out-t2-ksq').textContent = '—';
+    $id('out-t2-bsq').textContent = '—';
+    $id('out-t2-grade').textContent = '—';
+    // İllik
+    $id('out-year').textContent = '—';
+    $id('out-year-grade').textContent = '—';
+  }
+
+  function resetCalc(){
+    ['t1','t2'].forEach(p=>{
+      ['1','2','3','4','5','6'].forEach(n=>{
+        const el = $id(`${p}-ksq${n}`); if (el) el.value = '';
+      });
+      const bsq = $id(`${p}-bsq`); if (bsq) bsq.value = '';
+    });
+
+    err.classList.add('hidden'); err.textContent='';
+    warn.classList.add('hidden');
+    clearOutputs();
+    out.classList.add('hidden');
+
+    $id('calc-card')?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  resetBtn?.addEventListener('click', resetCalc);
 
   const numOrNull = v => (v===''||v==null)?null:(isFinite(+v)?+v:null);
-  // ✅ Düzgün qiymətləndirmə xəritəsi
   const to5 = x => (x>=81)?5 : (x>=61)?4 : (x>=41)?3 : 2;
-
-  function idsFor(prefix){ return ['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`); }
+  const idsFor = prefix => ['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`);
+  const avg = arr => arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
   function readTerm(prefix){
-    const ksqIds = idsFor(prefix);
-    const ksq = ksqIds.map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
+    const ksq = idsFor(prefix).map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
     const bsq = numOrNull($id(`${prefix}-bsq`).value);
     return {ksq, bsq};
   }
-
-  const avg = arr => arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
   function computeTerm(prefix, outIds){
     const {ksq, bsq} = readTerm(prefix);
@@ -1355,6 +1313,7 @@ resetBtn?.addEventListener('click', resetCalc);
     }
 
     const kAvg = ksq.length? avg(ksq) : 0;
+    // bəzi KSQ-lər boşdursa xəbərdarlıq göstər
     warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
 
     const total = +(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
@@ -1374,65 +1333,52 @@ resetBtn?.addEventListener('click', resetCalc);
     el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
   });
 
-btn?.addEventListener('click', ()=>{
+  // Hesabla
+  btn?.addEventListener('click', ()=>{
+    err.classList.add('hidden'); 
+    err.textContent = '';
+    updateModeUI();
 
-  err.classList.add('hidden'); 
-  err.textContent = '';
-  updateModeUI();
+    if(!mode){
+      err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
+      err.classList.remove('hidden');
+      return;
+    }
 
-  if(!mode){
-    err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-    err.classList.remove('hidden');
-    return;
-  }
+    let t1 = null, t2 = null;
 
-  let t1 = null, t2 = null;
+    if(mode !== 't2'){
+      const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
+      if(r1 && r1.error) return;
+      t1 = typeof r1 === 'number' ? r1 : null;
+    } else {
+      $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—';
+    }
 
-  if(mode !== 't2'){
-    const r1 = computeTerm('t1', { 
-      total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' 
-    });
-    if(r1 && r1.error) return;
-    t1 = typeof r1 === 'number' ? r1 : null;
-  } else {
-    $id('out-t1').textContent='—'; 
-    $id('out-t1-ksq').textContent='—'; 
-    $id('out-t1-bsq').textContent='—'; 
-    $id('out-t1-grade').textContent='—';
-  }
+    if(mode !== 't1'){
+      const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
+      if(r2 && r2.error) return;
+      t2 = typeof r2 === 'number' ? r2 : null;
+    } else {
+      $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
+    }
 
-  if(mode !== 't1'){
-    const r2 = computeTerm('t2', { 
-      total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' 
-    });
-    if(r2 && r2.error) return;
-    t2 = typeof r2 === 'number' ? r2 : null;
-  } else {
-    $id('out-t2').textContent='—'; 
-    $id('out-t2-ksq').textContent='—'; 
-    $id('out-t2-bsq').textContent='—'; 
-    $id('out-t2-grade').textContent='—';
-  }
+    out.classList.remove('hidden');
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  out.classList.remove('hidden');
-  // nəticə blokunu görünən yerə gətir
-out.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  if(mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number'){
-    const yearVal = +(((t1 + t2) / 2).toFixed(2));
-    $id('out-year').textContent = yearVal.toFixed(2);
-    $id('out-year-grade').textContent = to5(yearVal);
-    $id('out-year-card').classList.remove('hidden');
-  } else {
-    $id('out-year').textContent = '—';
-    $id('out-year-grade').textContent = '—';
-    $id('out-year-card').classList.add('hidden');
-  }
-
-});
-
-
-
+    if(mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number'){
+      const yearVal = +(((t1 + t2) / 2).toFixed(2));
+      $id('out-year').textContent = yearVal.toFixed(2);
+      $id('out-year-grade').textContent = to5(yearVal);
+      $id('out-year-card').classList.remove('hidden');
+    } else {
+      $id('out-year').textContent = '—';
+      $id('out-year-grade').textContent = '—';
+      $id('out-year-card').classList.add('hidden');
+    }
+  });
 })();
+
 
 
 

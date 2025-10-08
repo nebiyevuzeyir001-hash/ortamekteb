@@ -231,7 +231,7 @@ img, svg, video { max-width: 100%; height: auto; }
 /* === Panel ölçüləri (hamısı üçün) === */
 :root{
   --panel-min-h: 320px;   /* alt limit */
-  --panel-max-h: 460px;   /* üst limit — əvvəlkindən daha az */
+  --panel-max-h: 420px;   /* üst limit — əvvəlkindən daha az */
 }
 
 /* Üç kartın ortaq sinfi */
@@ -251,6 +251,36 @@ img, svg, video { max-width: 100%; height: auto; }
   min-height: 0;
   overflow-y: auto;                       /* iç scroll */
 }
+/* === Premium scrollbar (global) === */
+/* Firefox */
+html, body, .scrollarea{
+  scrollbar-width: thin;
+  scrollbar-color: #7c88a2 transparent;
+}
+.dark html, .dark body, .dark .scrollarea{
+  scrollbar-color: #8794aa #0b1220;
+}
+
+/* WebKit (Chrome/Edge/Safari) */
+*::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track{
+  background: transparent;
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb{
+  border-radius: 9999px;
+  background: linear-gradient(180deg,#22d3ee,#a78bfa);
+  border: 2px solid transparent;         /* “gap” effekti */
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover{ filter: brightness(1.08); }
+*::-webkit-scrollbar-corner{ background: transparent; }
+
+/* daxili scrollların layout-u tərpənməsin */
+.scrollarea{ scrollbar-gutter: stable both-edges; }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -506,11 +536,11 @@ img, svg, video { max-width: 100%; height: auto; }
 
         </div>
 
-<div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white min-h-[360px] grid grid-rows-[auto_1fr] h-full">
+<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
   <div class="p-4 border-b">
     <div class="text-base font-semibold">💠 <span id="tool-ads-title">Reklam</span></div>
   </div>
-<div class="p-6 min-h-[360px] grid place-items-center">
+<div class="p-6 grid place-items-center">
   <div class="w-full max-w-[560px] rounded-xl border border-slate-200 bg-white p-4">
     <div id="ad-slot-1"
          class="rounded-lg border border-slate-200 text-slate-600 overflow-hidden flex items-center justify-center shimmer"
@@ -527,12 +557,12 @@ img, svg, video { max-width: 100%; height: auto; }
 </div>
 
 <!-- SUAL BANKI — CƏLBEDİCİ "TEZLİKLƏ" BLOKU -->
-<div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white min-h-[360px] grid grid-rows-[auto_1fr] h-full">
+<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
   <div class="p-4 border-b">
     <div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div>
   </div>
 
-<div class="p-6 min-h-[360px] grid place-items-center overflow-clip">
+<div class="p-6 grid place-items-center overflow-clip">
   <div class="w-full max-w-[560px] relative rounded-2xl p-[1px] bg-gradient-to-r from-cyan-400/35 via-fuchsia-400/35 to-violet-400/35">
     <div class="rounded-2xl border border-white/30 dark:border-white/10 bg-white/65 dark:bg-slate-900/40 backdrop-blur-md text-center px-8 py-10">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/30 dark:border-white/10 bg-black/20 text-white/95 badge-blur">

@@ -916,25 +916,35 @@ const saved = localStorage.getItem('theme');
 const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
 
 // Tətbiq et
+// Tətbiq et
 document.documentElement.classList.toggle('dark', initialTheme === 'dark');
 if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
 applyThemeAssets(initialTheme);
 
-// Toggle dəyişəndə
+// NEW — ilk yüklənmədə boş kartların (KSQ/PP) placeholder-larını
+// mövcud temaya (light/dark) uyğun yenilə
+if (document.readyState !== 'loading') {
+  refreshEmptyPlaceholders();
+} else {
+  document.addEventListener('DOMContentLoaded', refreshEmptyPlaceholders);
+}
+
 darkToggle?.addEventListener('change', (e) => {
   const theme = e.target.checked ? 'dark' : 'light';
   document.documentElement.classList.toggle('dark', theme === 'dark');
   localStorage.setItem('theme', theme);
   applyThemeAssets(theme);
+  refreshEmptyPlaceholders(); // NEW
 });
 
-// İstifadəçi localStorage-da seçim etməyibsə, sistem teması dəyişəndə uyğunlaş
+
 mq.addEventListener?.('change', (e) => {
   if (!localStorage.getItem('theme')) {
     const theme = e.matches ? 'dark' : 'light';
     document.documentElement.classList.toggle('dark', theme === 'dark');
     if (darkToggle) darkToggle.checked = (theme === 'dark');
     applyThemeAssets(theme);
+    refreshEmptyPlaceholders(); // NEW
   }
 });
 
@@ -1121,6 +1131,7 @@ async function loadAllFromMaterials() {
 document.addEventListener('DOMContentLoaded', () => {
   renderSelects();
   loadAllFromMaterials();
+  refreshEmptyPlaceholders(); // NEW
 });
 function addPlaceholder(selectEl, label){
   const o = document.createElement('option');
@@ -1244,6 +1255,26 @@ function toggleResults(){
         desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
       });
     }
+  }
+}
+function refreshEmptyPlaceholders() {
+  // KSQ kartı
+  if (!allChosenKSQ()) {
+    hideEmpty('ksq-results-card');
+    showEmpty('ksq-results-card', {
+      icon: '🗂️',
+      title: 'Zəhmət olmasa seçim edin',
+      desc: 'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'
+    });
+  }
+  // PP kartı
+  if (!allChosenPP()) {
+    hideEmpty('pp-results-card');
+    showEmpty('pp-results-card', {
+      icon: '🗂️',
+      title: 'Zəhmət olmasa fənni seçin',
+      desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+    });
   }
 }
 

@@ -297,42 +297,52 @@ html, body, .scrollarea{
     grid-auto-rows: minmax(var(--panel-min-h), var(--panel-max-h));
   }
 }
-/* === EMPTY (light) — TAM MƏRKƏZ (overlay) === */
+/* LIGHT — mərkəzli mini-kart (520px) */
 .empty-light{
-  position: absolute;        /* kartın içində tam yayıl */
-  inset: 0;                  /* bütün sahəni tut */
-  display: grid;
-  place-items: center;       /* şaquli + üfüqi mərkəz */
-  padding: 0;
-  pointer-events: none;      /* kliklər select-lərə getsin */
+  position:absolute; inset:0; display:grid; place-items:center;
+  padding:0; pointer-events:none;
 }
-
 .empty-light .card{
-  width: min(520px, 100%);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  box-shadow: 0 6px 16px rgba(0,0,0,.06);
-  text-align: center;
-  padding: 22px 18px;
+  width:min(520px,100%);
+  border-radius:16px; border:1px solid var(--border);
+  background:var(--card);
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+  text-align:center; padding:22px 18px;
 }
-
 .empty-light .icon{
-  width: 44px; height: 44px; border-radius: 9999px;
-  display: grid; place-items: center;
-  margin: 0 auto 8px auto;
+  width:44px; height:44px; border-radius:9999px;
+  display:grid; place-items:center; margin:0 auto 8px;
   background:
     radial-gradient(closest-side, rgba(147,51,234,.12), transparent 70%),
     conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);
-  border: 1px solid #e9eaf0;
-  font-size: 20px;
+  border:1px solid #e9eaf0; font-size:20px;
 }
+.empty-light .title{ font-weight:600; font-size:15px; }
+.empty-light .desc { font-size:13px; color:var(--muted); margin-top:4px; }
 
-.empty-light .title{ font-weight: 600; font-size: 15px; }
-.empty-light .desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+/* DARK — arxa fonu saxla; içdə 520px-lik “kart”ı mərkəzlə */
+.empty-overlay{
+  position:absolute; inset:0; display:grid; place-items:center;
+  pointer-events:none;
+}
+.empty-overlay .inner{
+  width:min(520px,100%);
+  border-radius:16px; text-align:center; padding:22px 18px;
+}
+.empty-overlay .inner .icon{
+  width:44px; height:44px; border-radius:9999px; display:grid; place-items:center;
+  margin:0 auto 8px;
+  background:
+    radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%),
+    conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);
+  border:1px solid rgba(255,255,255,.22); font-size:20px;
+}
+.empty-overlay .inner .title{ font-weight:600; font-size:15px; }
+.empty-overlay .inner .desc { font-size:13px; color:var(--muted); margin-top:4px; }
 
-/* Dark rejimdə light-variant görünməsin (zaten ayrı overlay var) */
-.dark .empty-light{ display: none; }
+/* Light görünüşü dark-da gizlə */
+.dark .empty-light{ display:none; }
+
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -1183,22 +1193,25 @@ function showEmpty(cardId, { icon = '🗂️', title = '', desc = '' }) {
   // Hündürlüyü sabit saxla ki, layout tərpənməsin
   card.classList.add('min-h-[320px]', 'md:min-h-[340px]');
 
-  if (isDark) {
-    // DARK: mövcud tam-örtük overlay (səndə bəyənilən variant)
-    const overlay = document.createElement('div');
-    overlay.className = 'empty-overlay absolute inset-0 z-10 grid place-items-center pointer-events-none';
-    overlay.innerHTML = `
-      <div class="w-full h-full rounded-[12px] p-[1px] bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-        <div class="w-full h-full rounded-[11px] border border-white/20 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md grid place-items-center text-center px-6">
-          <div>
-            <div class="mx-auto mb-3 h-12 w-12 grid place-items-center rounded-full bg-white/40 dark:bg-white/10 text-xl">${icon}</div>
-            <div class="text-base font-semibold">${title}</div>
-            <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">${desc}</div>
-          </div>
+if (isDark) {
+  const overlay = document.createElement('div');
+  overlay.className = 'empty-overlay absolute inset-0 z-10';
+  overlay.innerHTML = `
+    <div class="w-full h-full rounded-[12px] p-[1px]
+                bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
+      <div class="w-full h-full rounded-[11px] border border-white/20
+                  bg-white/60 dark:bg-slate-900/40 backdrop-blur-md
+                  grid place-items-center px-6">
+        <!-- Mərkəzli kart: ölçü light ilə eyni (520px) -->
+        <div class="inner">
+          <div class="icon text-xl">${icon}</div>
+          <div class="title">${title}</div>
+          <div class="desc">${desc}</div>
         </div>
-      </div>`;
-    card.appendChild(overlay);
-  } else {
+      </div>
+    </div>`;
+  card.appendChild(overlay);
+} else {
     // LIGHT: kompakt, premium mini-card (tam çərçivəni tutmur)
     const box = document.createElement('div');
     box.className = 'empty-light';

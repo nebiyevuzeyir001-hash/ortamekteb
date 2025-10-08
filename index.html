@@ -297,12 +297,17 @@ html, body, .scrollarea{
     grid-auto-rows: minmax(var(--panel-min-h), var(--panel-max-h));
   }
 }
-/* === EMPTY (light) — zərif mini-card === */
-.empty-light {
-  display: grid; place-items: center;
-  padding: 18px;
+/* === EMPTY (light) — TAM MƏRKƏZ (overlay) === */
+.empty-light{
+  position: absolute;        /* kartın içində tam yayıl */
+  inset: 0;                  /* bütün sahəni tut */
+  display: grid;
+  place-items: center;       /* şaquli + üfüqi mərkəz */
+  padding: 0;
+  pointer-events: none;      /* kliklər select-lərə getsin */
 }
-.empty-light .card {
+
+.empty-light .card{
   width: min(520px, 100%);
   border-radius: 16px;
   border: 1px solid var(--border);
@@ -311,7 +316,8 @@ html, body, .scrollarea{
   text-align: center;
   padding: 22px 18px;
 }
-.empty-light .icon {
+
+.empty-light .icon{
   width: 44px; height: 44px; border-radius: 9999px;
   display: grid; place-items: center;
   margin: 0 auto 8px auto;
@@ -321,11 +327,12 @@ html, body, .scrollarea{
   border: 1px solid #e9eaf0;
   font-size: 20px;
 }
-.empty-light .title { font-weight: 600; font-size: 15px; }
-.empty-light .desc  { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
-/* Dark rejimdə light-variant görünməsin (öncəki full-bleed kalsın) */
-.dark .empty-light { display: none; }
+.empty-light .title{ font-weight: 600; font-size: 15px; }
+.empty-light .desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* Dark rejimdə light-variant görünməsin (zaten ayrı overlay var) */
+.dark .empty-light{ display: none; }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">

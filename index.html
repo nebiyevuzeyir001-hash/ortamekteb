@@ -228,6 +228,30 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
+/* === Panel ölçüləri (hamısı üçün) === */
+:root{
+  --panel-min-h: 320px;   /* alt limit */
+  --panel-max-h: 460px;   /* üst limit — əvvəlkindən daha az */
+}
+
+/* Üç kartın ortaq sinfi */
+.panel-card{
+  min-height: var(--panel-min-h);
+  max-height: var(--panel-max-h);
+  height: 100%;
+  border-radius: 1rem; /* sənin mövcud radiusunla eyni */
+}
+
+/* Yalnız kalkulyator kartı: içi scroll etsin, özü böyüməsin */
+.panel-scroll{
+  overflow: hidden;                       /* kart böyüməsin */
+}
+.panel-scroll > .scrollarea{
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;                       /* iç scroll */
+}
+
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
@@ -386,9 +410,9 @@ img, svg, video { max-width: 100%; height: auto; }
 
     <section id="panel-tools" class="tab-panel grid-on mt-6">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch auto-rows-fr">
-          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white min-h-[360px] min-h-0 grid grid-rows-[auto_minmax(0,1fr)] h-full max-h-[560px] overflow-hidden">
+          <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
-<div class="p-4 pt-8 space-y-5 overflow-y-auto" id="calc-card">
+<div class="scrollarea p-4 pt-8 space-y-5" id="calc-card">
   <!-- ✔️ İstifadəçi seçimi -->
 <div class="rounded-xl border px-3 py-3 text-sm 
             flex flex-col sm:flex-row gap-3 sm:items-center">

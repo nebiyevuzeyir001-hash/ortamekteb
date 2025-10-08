@@ -281,6 +281,16 @@ html, body, .scrollarea{
 
 /* daxili scrollların layout-u tərpənməsin */
 .scrollarea{ scrollbar-gutter: stable both-edges; }
+.ep-btn-secondary{
+  display:inline-block; width:100%;
+  padding:0.65rem 1rem; border-radius:0.75rem;
+  font-weight:600; font-size:0.9rem; letter-spacing:0.2px;
+  background:transparent; border:1px solid var(--border);
+  color:var(--text);
+  transition:transform .15s ease, box-shadow .25s ease, filter .25s ease, background .25s ease;
+}
+.ep-btn-secondary:hover{ background:rgba(148,163,184,.12); transform:translateY(-1px); }
+.dark .ep-btn-secondary:hover{ background:rgba(148,163,184,.15); }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -450,17 +460,18 @@ html, body, .scrollarea{
 
   <!-- Mobil: 3 bərabər sütun; böyük ekranda da stabil qalır -->
   <div class="grid grid-cols-3 gap-2 w-full">
-    <button type="button"
-      class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
-      data-mode="t1">I yarımil</button>
+<button type="button"
+  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
+  data-mode="t1">I yarımil</button>
 
-    <button type="button"
-      class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
-      data-mode="t2">II yarımil</button>
+<button type="button"
+  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
+  data-mode="t2">II yarımil</button>
 
-    <button type="button"
-      class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs"
-      data-mode="both">Hər ikisi</button>
+<button type="button"
+  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
+  data-mode="both">Hər ikisi</button>
+
   </div>
 </div>
 
@@ -492,9 +503,11 @@ html, body, .scrollarea{
     </div>
     <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
   </fieldset>
-
-  <!-- Hesabla -->
+<!-- Hesabla + Sıfırla -->
+<div class="grid grid-cols-2 gap-2">
   <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
+  <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
+</div>
 
   <!-- Nəticələr -->
   <div id="calc-output" class="hidden rounded-xl border px-4 py-4">
@@ -1202,6 +1215,44 @@ $qsa('[data-mode]').forEach(btn=>{
       window.scrollTo(0, keepY);
     });
   });
+  function clearOutputs(){
+  // I yarımil
+  $id('out-t1').textContent = '—';
+  $id('out-t1-ksq').textContent = '—';
+  $id('out-t1-bsq').textContent = '—';
+  $id('out-t1-grade').textContent = '—';
+  // II yarımil
+  $id('out-t2').textContent = '—';
+  $id('out-t2-ksq').textContent = '—';
+  $id('out-t2-bsq').textContent = '—';
+  $id('out-t2-grade').textContent = '—';
+  // İllik
+  $id('out-year').textContent = '—';
+  $id('out-year-grade').textContent = '—';
+}
+
+function resetCalc(){
+  // bütün inputları təmizlə
+  ['t1','t2'].forEach(p=>{
+    ['1','2','3','4','5','6'].forEach(n=>{
+      const el = $id(`${p}-ksq${n}`);
+      if (el) el.value = '';
+    });
+    const bsq = $id(`${p}-bsq`);
+    if (bsq) bsq.value = '';
+  });
+
+  // xəbərdarlıq/xəta/nəticə
+  err.classList.add('hidden'); err.textContent='';
+  $id('calc-warn').classList.add('hidden');
+  clearOutputs();
+  $id('calc-output').classList.add('hidden');
+
+  // kartın əvvəlinə qayıt
+  $id('calc-card')?.scrollTo({ top: 0, behavior: 'smooth' });
+}
+resetBtn?.addEventListener('click', resetCalc);
+
 });
 
 
@@ -1243,7 +1294,7 @@ card?.classList.add('space-y-5','p-4','pt-8');
   updateModeUI();
 
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn');
-
+  const resetBtn = $id('btn-reset');
   const numOrNull = v => (v===''||v==null)?null:(isFinite(+v)?+v:null);
   // ✅ Düzgün qiymətləndirmə xəritəsi
   const to5 = x => (x>=81)?5 : (x>=61)?4 : (x>=41)?3 : 2;
@@ -1290,7 +1341,6 @@ card?.classList.add('space-y-5','p-4','pt-8');
   });
 
 btn?.addEventListener('click', ()=>{
-  const keepY = window.scrollY; // ⬅️ 1. Mövcud scroll-u saxla
 
   err.classList.add('hidden'); 
   err.textContent = '';
@@ -1299,7 +1349,6 @@ btn?.addEventListener('click', ()=>{
   if(!mode){
     err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
     err.classList.remove('hidden');
-    requestAnimationFrame(()=> window.scrollTo(0, keepY)); // ⬅️ 2. Geri qaytar
     return;
   }
 
@@ -1332,7 +1381,8 @@ btn?.addEventListener('click', ()=>{
   }
 
   out.classList.remove('hidden');
-
+  // nəticə blokunu görünən yerə gətir
+out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   if(mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number'){
     const yearVal = +(((t1 + t2) / 2).toFixed(2));
     $id('out-year').textContent = yearVal.toFixed(2);
@@ -1344,8 +1394,6 @@ btn?.addEventListener('click', ()=>{
     $id('out-year-card').classList.add('hidden');
   }
 
-  // ⬅️ 3. Reflow bitəndən sonra eyni scroll yerinə qaytar
-  requestAnimationFrame(()=> window.scrollTo(0, keepY));
 });
 
 

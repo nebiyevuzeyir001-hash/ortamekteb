@@ -1207,14 +1207,14 @@ function toggleResults(){
 
 $qsa('[data-mode]').forEach(btn=>{
   btn.addEventListener('click', (e)=>{
-    const keepY = window.scrollY;   // mövcud scroll-u yadda saxla
+    const keepY = window.scrollY;
     mode = btn.dataset.mode;        // 't1' | 't2' | 'both'
-    updateModeUI();                 // UI dəyişir (hündürlük artır/azalır)
-    btn.blur();                     // fokusı düymədən götür
-    requestAnimationFrame(()=>{     // layout bitəndən sonra geri qayıt
-      window.scrollTo(0, keepY);
-    });
+    updateModeUI();
+    btn.blur();
+    requestAnimationFrame(()=>{ window.scrollTo(0, keepY); });
   });
+});   // <-- BURADA bitir. İçində başqa funksiya və ya reset listeneri OLMASIN.
+
   function clearOutputs(){
   // I yarımil
   $id('out-t1').textContent = '—';
@@ -1295,6 +1295,40 @@ card?.classList.add('space-y-5','p-4','pt-8');
 
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn');
   const resetBtn = $id('btn-reset');
+    function clearOutputs(){
+  // I yarımil
+  $id('out-t1').textContent = '—';
+  $id('out-t1-ksq').textContent = '—';
+  $id('out-t1-bsq').textContent = '—';
+  $id('out-t1-grade').textContent = '—';
+  // II yarımil
+  $id('out-t2').textContent = '—';
+  $id('out-t2-ksq').textContent = '—';
+  $id('out-t2-bsq').textContent = '—';
+  $id('out-t2-grade').textContent = '—';
+  // İllik
+  $id('out-year').textContent = '—';
+  $id('out-year-grade').textContent = '—';
+}
+
+function resetCalc(){
+  ['t1','t2'].forEach(p=>{
+    ['1','2','3','4','5','6'].forEach(n=>{
+      const el = $id(`${p}-ksq${n}`); if (el) el.value = '';
+    });
+    const bsq = $id(`${p}-bsq`); if (bsq) bsq.value = '';
+  });
+
+  err.classList.add('hidden'); err.textContent='';
+  warn.classList.add('hidden');
+  clearOutputs();
+  out.classList.add('hidden');
+
+  $id('calc-card')?.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+resetBtn?.addEventListener('click', resetCalc);
+
   const numOrNull = v => (v===''||v==null)?null:(isFinite(+v)?+v:null);
   // ✅ Düzgün qiymətləndirmə xəritəsi
   const to5 = x => (x>=81)?5 : (x>=61)?4 : (x>=41)?3 : 2;

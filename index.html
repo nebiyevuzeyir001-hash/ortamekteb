@@ -228,17 +228,10 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
-/* === Panel ölçüləri (hamısı üçün) === */
+/* === Panel ölçüləri (hamısı üçün) — ƏVVƏLKİ KİMİ === */
 :root{
-  --panel-min-h: 360px;   /* əvvəl: 320px */
-  --panel-max-h: 560px;   /* əvvəl: 420px */
-}
-
-/* Daha geniş ekranlarda bir az da rahat olsun */
-@media (min-width: 1024px){
-  :root{
-    --panel-max-h: 600px;
-  }
+  --panel-min-h: 320px;   /* əvvəlki */
+  --panel-max-h: 420px;   /* əvvəlki */
 }
 
 /* Üç kartın ortaq sinfi */
@@ -249,16 +242,13 @@ img, svg, video { max-width: 100%; height: auto; }
   border-radius: 1rem;
 }
 
-/* Yalnız kalkulyator kartı: içi scroll etsin, özü böyüməsin */
-.panel-scroll{
-  overflow: hidden;
-}
+/* Yalnız kalkulyator kartı: özü böyüməsin, içi scroll olsun */
+.panel-scroll{ overflow: hidden; }
 .panel-scroll > .scrollarea{
   height: 100%;
   min-height: 0;
   overflow-y: auto;
-  /* alt hissədə düymələr rahat görünsün */
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  padding-bottom: 24px; /* Hesabla/Sıfırla rahat görünsün */
 }
 /* === Premium scrollbar (global) === */
 /* Firefox */

@@ -300,6 +300,13 @@ html, body, .scrollarea{
 }
 .ep-btn-secondary:hover{ background:rgba(148,163,184,.12); transform:translateY(-1px); }
 .dark .ep-btn-secondary:hover{ background:rgba(148,163,184,.15); }
+/* Yalnız “Alətlər & Testlər” grid-i üçün: sətir hündürlüyünü sabitlə */
+@media (min-width: 768px){
+  .tools-grid{
+    /* bütün sətirlər eyni: min-height → max-height arası */
+    grid-auto-rows: minmax(var(--panel-min-h), var(--panel-max-h));
+  }
+}
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -458,7 +465,7 @@ html, body, .scrollarea{
     </section>
 
     <section id="panel-tools" class="tab-panel grid-on mt-6">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch auto-rows-fr">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch tools-grid">
           <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <div class="scrollarea p-4 pt-8 space-y-5" id="calc-card">

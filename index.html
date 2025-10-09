@@ -363,6 +363,70 @@ html, body, .scrollarea{
 /* Light görünüşü dark-da gizlə */
 .dark .empty-light{ display:none; }
 
+/* PREMIUM SELECT */
+/* bazası */
+.select-premium{
+  -webkit-appearance:none; -moz-appearance:none; appearance:none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 42px 10px 12px;     /* sağda ox üçün yer */
+  line-height: 1.25;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .06s ease;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--border) 35%, transparent),
+    0 1px 0 rgba(0,0,0,.05);
+  cursor: pointer;
+}
+
+/* hover/focus */
+.select-premium:hover{
+  border-color: color-mix(in srgb, var(--border) 55%, transparent);
+}
+.select-premium:focus{
+  outline: 0;
+  border-color: transparent;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent),
+    0 0 0 4px rgba(34,211,238,.25),                /* cyan halo */
+    0 6px 16px rgba(0,0,0,.08);
+  transform: translateY(-1px);
+}
+
+/* sağdakı chevron (SVG) */
+.select-premium{
+  background-image:
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+/* options popup üçün rənglər (dəstəkləyən brauzerlərdə) */
+.select-premium option{
+  background: var(--card);
+  color: var(--text);
+}
+
+/* Dark rejimdə bir az daha dərin görünüş */
+.dark .select-premium{
+  background: #0f172a;
+  box-shadow:
+    inset 0 0 0 1px #223049,
+    0 1px 0 rgba(255,255,255,.04);
+}
+.dark .select-premium:focus{
+  box-shadow:
+    0 0 0 1px #2f405c,
+    0 0 0 4px rgba(167,139,250,.22),              /* violet halo */
+    0 10px 22px rgba(0,0,0,.35);
+}
+
+/* Disabled vizualı */
+.select-premium:disabled{
+  opacity:.6; cursor:not-allowed;
+}
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -469,14 +533,15 @@ html, body, .scrollarea{
         <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
           <div class="space-y-4">
             <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
-              <select id="grade" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+              <select id="grade"     class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
             <div><label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
-              <select id="subject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+              <select id="subject"   class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
             <div><label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
-              <select id="ksqType" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
-                <option>KSQ</option><option>BSQ</option></select></div>
+              <select id="ksqType"   class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
+                  <option>KSQ</option><option>BSQ</option>
+              </select></div>
             <div><label class="text-sm text-slate-700 block" id="lbl-examNo">Nömrə</label>
-              <select id="examIndex" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
+              <select id="examIndex" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
             </div>
           </div>
 <div class="lg:col-span-2 min-w-0">
@@ -502,7 +567,7 @@ html, body, .scrollarea{
           <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
             <div class="space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
             <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
-              <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+              <select id="ppSubject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
           </div>
 <div class="lg:col-span-2 min-w-0">
   <div id="pp-results-card"  class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">

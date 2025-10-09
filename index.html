@@ -320,32 +320,32 @@ html, body, .scrollarea{
 .empty-light .title{ font-weight:600; font-size:15px; }
 .empty-light .desc { font-size:13px; color:var(--muted); margin-top:4px; }
 
-/* DARK overlay — fon yerində qalır, ortada 520px-lik kart görünür */
+/* DARK overlay — ARXAFON YOXDUR, şəffaf qat */
 .empty-overlay{
-  position:absolute; inset:0; display:grid; place-items:center;
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
   pointer-events:none;
+  background: transparent;     /* NEW */
 }
 
+/* Mərkəzdə 520px kart */
 .empty-overlay .inner{
   width:min(520px,100%);
   border-radius:16px;
   text-align:center;
   padding:22px 18px;
 
-  /* qutu görünüşü */
-  background: rgba(255,255,255,.66);
+  background: rgba(2, 6, 23, .55);     /* dark üçün kart özü */
   border: 1px solid rgba(255,255,255,.22);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px rgba(0,0,0,.22);
-}
-
-/* dark rejimdə kartın iç fonunu tündləşdir (arxafonu dəyişmə!) */
-.dark .empty-overlay .inner{
-  background: rgba(2, 6, 23, .55);      /* ~slate-950/55 */
-  border-color: rgba(255,255,255,.22);
   box-shadow: 0 8px 22px rgba(0,0,0,.35);
 }
+
+/* icon/title/desc eyni qalır */
+
 
 .empty-overlay .inner .icon{
   width:44px; height:44px; border-radius:9999px; display:grid; place-items:center;
@@ -1217,19 +1217,16 @@ if (isDark) {
   const overlay = document.createElement('div');
   overlay.className = 'empty-overlay absolute inset-0 z-10';
   overlay.innerHTML = `
-    <div class="w-full h-full rounded-[12px] p-[1px]
-                bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-      <!-- Arxafon olduğu kimi qalır; content mərkəzdə -->
-      <div class="w-full h-full rounded-[11px] grid place-items-center px-6">
-        <div class="inner">
-          <div class="icon text-xl">${icon}</div>
-          <div class="title">${title}</div>
-          <div class="desc">${desc}</div>
-        </div>
+    <div class="w-full h-full grid place-items-center px-6">
+      <div class="inner">
+        <div class="icon text-xl">${icon}</div>
+        <div class="title">${title}</div>
+        <div class="desc">${desc}</div>
       </div>
     </div>`;
   card.appendChild(overlay);
-} 
+}
+ 
 else {
     // LIGHT: kompakt, premium mini-card (tam çərçivəni tutmur)
     const box = document.createElement('div');

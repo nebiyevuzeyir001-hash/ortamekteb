@@ -320,25 +320,45 @@ html, body, .scrollarea{
 .empty-light .title{ font-weight:600; font-size:15px; }
 .empty-light .desc { font-size:13px; color:var(--muted); margin-top:4px; }
 
-/* DARK — arxa fonu saxla; içdə 520px-lik “kart”ı mərkəzlə */
+/* DARK overlay — fon yerində qalır, ortada 520px-lik kart görünür */
 .empty-overlay{
   position:absolute; inset:0; display:grid; place-items:center;
   pointer-events:none;
 }
+
 .empty-overlay .inner{
   width:min(520px,100%);
-  border-radius:16px; text-align:center; padding:22px 18px;
+  border-radius:16px;
+  text-align:center;
+  padding:22px 18px;
+
+  /* qutu görünüşü */
+  background: rgba(255,255,255,.66);
+  border: 1px solid rgba(255,255,255,.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
 }
+
+/* dark rejimdə kartın iç fonunu tündləşdir (arxafonu dəyişmə!) */
+.dark .empty-overlay .inner{
+  background: rgba(2, 6, 23, .55);      /* ~slate-950/55 */
+  border-color: rgba(255,255,255,.22);
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
+}
+
 .empty-overlay .inner .icon{
   width:44px; height:44px; border-radius:9999px; display:grid; place-items:center;
   margin:0 auto 8px;
   background:
     radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%),
     conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);
-  border:1px solid rgba(255,255,255,.22); font-size:20px;
+  border:1px solid rgba(255,255,255,.22);
+  font-size:20px;
 }
 .empty-overlay .inner .title{ font-weight:600; font-size:15px; }
 .empty-overlay .inner .desc { font-size:13px; color:var(--muted); margin-top:4px; }
+
 
 /* Light görünüşü dark-da gizlə */
 .dark .empty-light{ display:none; }
@@ -1199,10 +1219,8 @@ if (isDark) {
   overlay.innerHTML = `
     <div class="w-full h-full rounded-[12px] p-[1px]
                 bg-gradient-to-br from-indigo-500/40 via-fuchsia-500/40 to-amber-500/40">
-      <div class="w-full h-full rounded-[11px] border border-white/20
-                  bg-white/60 dark:bg-slate-900/40 backdrop-blur-md
-                  grid place-items-center px-6">
-        <!-- Mərkəzli kart: ölçü light ilə eyni (520px) -->
+      <!-- Arxafon olduğu kimi qalır; content mərkəzdə -->
+      <div class="w-full h-full rounded-[11px] grid place-items-center px-6">
         <div class="inner">
           <div class="icon text-xl">${icon}</div>
           <div class="title">${title}</div>
@@ -1211,7 +1229,8 @@ if (isDark) {
       </div>
     </div>`;
   card.appendChild(overlay);
-} else {
+} 
+else {
     // LIGHT: kompakt, premium mini-card (tam çərçivəni tutmur)
     const box = document.createElement('div');
     box.className = 'empty-light';

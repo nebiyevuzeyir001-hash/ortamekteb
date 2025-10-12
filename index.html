@@ -823,13 +823,8 @@ html, body, .scrollarea{
   const BAR   = document.getElementById('dlBar');
   const STATUS= document.getElementById('dlStatus');
 
-  const DAILY_CAP_KEY = 'eduplan_dl_interstitial_seen';
-  const DURATION = 15; // saniyə
-  let targetUrl = null, timer = null, t = DURATION, finished = false;
+const DURATION = 15; // saniyə  ← cap məntiqi çıxarıldı
 
-  function todayKey(){ return new Date().toISOString().slice(0,10); }
-  function canShowToday(){ try { return localStorage.getItem(DAILY_CAP_KEY) !== todayKey(); } catch { return true; } }
-  function markShown(){ try { localStorage.setItem(DAILY_CAP_KEY, todayKey()); } catch {} }
 
   function updateRing(){
     const deg = ((DURATION - t) / DURATION) * 360;
@@ -843,17 +838,17 @@ html, body, .scrollarea{
     timer = null;
   }
 
-  function finish(){
-    if (finished) return;
-    finished = true;
-    closeModal();
-    markShown(); // yalnız uğurlu yükləmədə cap
-    if (targetUrl){
-      const a = document.createElement('a');
-      a.href = targetUrl; a.download = '';
-      document.body.appendChild(a); a.click(); a.remove();
-    }
+function finish(){
+  if (finished) return;
+  finished = true;
+  closeModal();
+  if (targetUrl){
+    const a = document.createElement('a');
+    a.href = targetUrl; a.download = '';
+    document.body.appendChild(a); a.click(); a.remove();
   }
+}
+
 
   function openModal(url){
     targetUrl = url;
@@ -896,23 +891,20 @@ html, body, .scrollarea{
   }
 
   // Bütün “Yüklə” düymələri üçün tutucu
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('.download-btn');
-    if (!a) return;
-    const url = a.getAttribute('data-download') || a.getAttribute('href');
-    if (!url) return;
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a.download-btn');
+  if (!a) return;
 
-    // Eyni gün artıq göstərilibsə → birbaşa yüklə
-    if (!canShowToday()) {
-      e.preventDefault();
-      const fake = document.createElement('a');
-      fake.href = url; fake.download = '';
-      document.body.appendChild(fake); fake.click(); fake.remove();
-      return;
-    }
-    e.preventDefault();
-    openModal(url);
-  });
+  // Yalnız sol klik və modifiersiz (Ctrl/⌘/Shift/Alt yox)
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  const url = a.getAttribute('data-download') || a.getAttribute('href');
+  if (!url) return;
+
+  e.preventDefault();
+  openModal(url); // HƏR DƏFƏ modal + 15s taymer
+});
+
 
   // X, overlay və ESC
   BTN_CLOSE.addEventListener('click', closeModal);

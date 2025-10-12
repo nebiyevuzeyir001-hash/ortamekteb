@@ -865,20 +865,11 @@ function finish(){
     MODAL.classList.remove('hidden');
     MODAL.classList.add('flex');
 
-    // 1.2s-ə qədər reklam dolmazsa, house-fallback
-    setTimeout(() => {
-      const ad = MODAL.querySelector('ins.adsbygoogle');
-      if (ad && ad.offsetHeight < 40) {
-        ad.parentElement.innerHTML = `
-          <a href="/newsletter" class="block w-full h-[250px] grid place-items-center bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white">
-            <div class="text-center">
-              <div class="text-xs/none opacity-80 mb-1">EduPlan elanları</div>
-              <div class="text-lg font-semibold mb-1">Müəllim Bülleteni</div>
-              <div class="text-sm opacity-90">KSQ/BSQ/PP üçün həftəlik faydalı resurslar</div>
-            </div>
-          </a>`;
-      }
-    }, 1200);
+// Reklam 1.2s-də dolmasa heç nə göstərmə (fallback YOXDUR)
+setTimeout(() => {
+  /* intentionally empty */
+}, 1200);
+
 
     timer = setInterval(() => {
       t--;

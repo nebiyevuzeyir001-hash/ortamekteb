@@ -1,3 +1,14 @@
-<!doctype html><meta charset="utf-8"><title>Tapılmadı</title>
-<h1>Səhifə tapılmadı (404)</h1>
-<p><a href="/">Ana səhifə</a>-yə qayıdın.</p>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>EduPlan</title>
+  <meta http-equiv="refresh" content="0; URL=/" />
+  <script>
+    // Məs: /pp ilə gəlibsə — saxla, index açılınca bərpa edəcəyik
+    sessionStorage.setItem("eduplan_spa_path", location.pathname);
+    location.replace("/");
+  </script>
+</head>
+<body></body>
+</html>

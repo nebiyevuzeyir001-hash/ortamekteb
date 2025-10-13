@@ -517,13 +517,13 @@ html, body, .scrollarea{
       </div>
       <div class="grid gap-4">
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn" data-route="/ksq-bsq">            
             <div class="p-4">
               <div class="text-base font-semibold">📄 <span id="feat-ksq-title">KSQ/BSQ</span></div>
               <div class="text-sm text-slate-600 mt-1" id="feat-ksq-desc">Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.</div>
             </div>
           </div>
-          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn" data-route="/pp">
             <div class="p-4">
               <div class="text-base font-semibold">📅 <span id="feat-pp-title">Perspektiv plan (PP)</span></div>
               <div class="text-sm text-slate-600 mt-1" id="feat-pp-desc">Fənn üzrə illik plan faylları.</div>
@@ -531,9 +531,9 @@ html, body, .scrollarea{
           </div>
         </div>
         <div class="grid sm:grid-cols-3 gap-4">
-          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">🧮 <span id="mini-calc">Bal kalkulyatoru</span></div>
-          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">📚 <span id="mini-templates">Sual bankı</span></div>
-          <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2">⬇️ <span id="mini-export">İxrac</span></div>
+            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></div>
+            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></div>
+            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/export">⬇️ <span id="mini-export">İxrac</span></div>
         </div>
       </div>
     </div>
@@ -726,7 +726,7 @@ html, body, .scrollarea{
 </div>
 
 <!-- SUAL BANKI — CƏLBEDİCİ "TEZLİKLƏ" BLOKU -->
-<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
+<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]" id="bank-card">
   <div class="p-4 border-b">
     <div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div>
   </div>
@@ -1723,6 +1723,86 @@ function refreshEmptyPlaceholders() {
 
 
   </script>
+<script>
+(() => {
+  // Route → tab & target xəritəsi
+  const ROUTES = {
+    "/":              { tab: "ksq",   target: "#panel-ksq" },
+    "/ksq-bsq":       { tab: "ksq",   target: "#panel-ksq" },
+    "/pp":            { tab: "pp",    target: "#panel-pp" },
+    "/calculator":    { tab: "tools", target: "#calc-card" },
+    "/question-bank": { tab: "tools", target: "#bank-card" },
+    "/export":        { tab: "tools", target: "#panel-tools" }
+  };
+
+  // Kiçik helper: smooth scroll (+ sticky header offset ~90px)
+  function smoothTo(sel) {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+
+  // Mərkəzi naviqasiya funksiyası
+  function goTo(route, { replace = false } = {}) {
+    const r = ROUTES[route] || ROUTES["/"];
+    // Tab-ı dəyiş və panelə scroll et
+    if (typeof setActiveTab === "function" && r.tab) {
+      setActiveTab(r.tab, { scroll: false });
+    }
+    // URL-i yaz
+    if (replace) history.replaceState({ route }, "", route);
+    else if (location.pathname !== route) history.pushState({ route }, "", route);
+
+    // Render bitəndən sonra scroll
+    requestAnimationFrame(() => smoothTo(r.target));
+  }
+
+  // Hero & digər kliklər: [data-route]
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".route-btn[data-route]");
+    if (!btn) return;
+    const route = btn.getAttribute("data-route");
+    e.preventDefault();
+    goTo(route);
+  });
+
+  // Geri/irəli düymələri
+  window.addEventListener("popstate", (e) => {
+    const route = (e.state && e.state.route) || location.pathname;
+    const r = ROUTES[route] ? route : "/";
+    // replace = true, çünki tarixə əlavə etməyək
+    goTo(r, { replace: true });
+  });
+
+  // GitHub Pages SPA fallback-dan gələn path-ı bərpa et
+  const fallbackPath = sessionStorage.getItem("eduplan_spa_path");
+  if (fallbackPath) {
+    sessionStorage.removeItem("eduplan_spa_path");
+    history.replaceState({ route: fallbackPath }, "", fallbackPath);
+  }
+
+  // İlk yüklənmədə auto-scroll (birbaşa /pp və s. açılıbsa)
+  document.addEventListener("DOMContentLoaded", () => {
+    const first = ROUTES[location.pathname] ? location.pathname : "/";
+    // Artıq setActiveTab init-də işləyib → sadəcə yönləndir
+    goTo(first, { replace: true });
+  });
+
+  // Mövcud TAB düymələrinə route qoş (sənin kodunda var idi — bunu əvəz et)
+  const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" }; // tools üçün əsas fokus: kalkulyator
+  ["tab-ksq", "tab-pp", "tab-tools"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const name = el.dataset.tab;
+      const route = TAB_ROUTES[name] || "/";
+      goTo(route);
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

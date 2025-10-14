@@ -7,6 +7,20 @@
   <meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
   <title>EduPlan</title>
   <meta name="description" content="Müəllimlər üçün rəqəmsal resurs platforması">
+  <script type="application/ld+json">
+    {
+     "@context":"https://schema.org",
+     "@type":"WebSite",
+     "name":"EduPlan",
+     "url":"https://www.eduplan.az/",
+     "potentialAction":{
+       "@type":"SearchAction",
+       "target":"https://www.eduplan.az/search?q={query}",
+       "query-input":"required name=query"
+      }
+}
+</script>
+
 <!-- Favicons -->
 <link rel="icon" type="image/png" sizes="48x48" href="assets/ep-favicon-48.png">
 <link rel="icon" type="image/png" sizes="180x180" href="assets/ep-favicon-180.png">
@@ -444,6 +458,10 @@ html, body, .scrollarea{
   opacity:.6; cursor:not-allowed;
 }
 .route-btn { cursor: pointer; }  /* ✨ hover-da pointer */
+/* kliklənən kart/çiplər əl işarəsi olsun */
+.route-btn { cursor: pointer; }
+/* istəsən fokus üçün */
+.route-btn:focus { outline: 2px solid rgba(34,211,238,.35); outline-offset: 2px; }
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -520,23 +538,27 @@ html, body, .scrollarea{
       </div>
       <div class="grid gap-4">
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn" data-route="/ksq-bsq">            
-            <div class="p-4">
-              <div class="text-base font-semibold">📄 <span id="feat-ksq-title">KSQ/BSQ</span></div>
-              <div class="text-sm text-slate-600 mt-1" id="feat-ksq-desc">Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.</div>
-            </div>
-          </div>
-          <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn" data-route="/pp">
-            <div class="p-4">
-              <div class="text-base font-semibold">📅 <span id="feat-pp-title">Perspektiv plan (PP)</span></div>
-              <div class="text-sm text-slate-600 mt-1" id="feat-pp-desc">Fənn üzrə illik plan faylları.</div>
-            </div>
-          </div>
+<a href="/ksq-bsq" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn block" data-route="/ksq-bsq">
+  <div class="p-4">
+    <div class="text-base font-semibold">📄 <span id="feat-ksq-title">KSQ/BSQ</span></div>
+    <div class="text-sm text-slate-600 mt-1" id="feat-ksq-desc">Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.</div>
+  </div>
+</a>
+<a href="/pp" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn block" data-route="/pp">
+  <div class="p-4">
+    <div class="text-base font-semibold">📅 <span id="feat-pp-title">Perspektiv plan (PP)</span></div>
+    <div class="text-sm text-slate-600 mt-1" id="feat-pp-desc">Fənn üzrə illik plan faylları.</div>
+  </div>
+</a>
+
         </div>
         <div class="grid sm:grid-cols-3 gap-4">
-            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></div>
-            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></div>
-            <div class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn" data-route="/export">⬇️ <span id="mini-export">İxrac</span></div>
+<a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
+
+<a href="/question-bank" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></a>
+
+<a href="/export" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/export">⬇️ <span id="mini-export">İxrac</span></a>
+
         </div>
       </div>
     </div>
@@ -1728,6 +1750,66 @@ function refreshEmptyPlaceholders() {
 
 
   </script>
+  <script>
+/* — Route → SEO xəritəsi — */
+const META = {
+  "/":              { title: "EduPlan – Müəllimlər üçün rəqəmsal resurslar",
+                      desc:  "KSQ/BSQ, PP və alətlər – Azərbaycan məktəbləri üçün." },
+  "/ksq-bsq":       { title: "KSQ/BSQ – Summativ fayllar | EduPlan",
+                      desc:  "Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları." },
+  "/pp":            { title: "Perspektiv plan (PP) – İllik planlar | EduPlan",
+                      desc:  "Fənn üzrə illik perspektiv plan faylları." },
+  "/calculator":    { title: "Bal kalkulyatoru (KSQ 40% · BSQ 60%) | EduPlan",
+                      desc:  "I/II yarımil və illik nəticəni hesabla." },
+  "/question-bank": { title: "Sual bankı – Tezliklə | EduPlan",
+                      desc:  "Multiple-choice və qısa cavab sualları hazırlanır." },
+  "/export":        { title: "İxrac | EduPlan",
+                      desc:  "Faylları rahat yüklə və paylaş." }
+};
+
+function setMeta(route){
+  const m = META[route] || META["/"];
+  // title + description
+  document.title = m.title;
+  let d = document.querySelector('meta[name="description"]');
+  if (!d) { d = document.createElement('meta'); d.name = "description"; document.head.appendChild(d); }
+  d.content = m.desc;
+
+  // canonical
+  let c = document.querySelector('link[rel="canonical"]');
+  if (!c) { c = document.createElement('link'); c.rel = "canonical"; document.head.appendChild(c); }
+  c.href = location.origin + route;
+
+  // Breadcrumb JSON-LD (SPA üçün dinamik)
+  const bc = {
+    "/":              [{name:"Ana səhifə", url:"/"}],
+    "/ksq-bsq":       [{name:"Ana səhifə", url:"/"},{name:"KSQ/BSQ", url:"/ksq-bsq"}],
+    "/pp":            [{name:"Ana səhifə", url:"/"},{name:"Perspektiv plan", url:"/pp"}],
+    "/calculator":    [{name:"Ana səhifə", url:"/"},{name:"Bal kalkulyatoru", url:"/calculator"}],
+    "/question-bank": [{name:"Ana səhifə", url:"/"},{name:"Sual bankı", url:"/question-bank"}],
+    "/export":        [{name:"Ana səhifə", url:"/"},{name:"İxrac", url:"/export"}]
+  }[route] || bc["/"];
+
+  // əvvəlkini sil
+  document.querySelector('script[type="application/ld+json"][data-bc]')?.remove();
+  // yenisini yaz
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.setAttribute('data-bc','');
+  s.textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement": bc.map((it,i)=>({
+      "@type":"ListItem",
+      "position": i+1,
+      "name": it.name,
+      "item": location.origin + it.url
+    }))
+  });
+  document.head.appendChild(s);
+}
+</script>
+
 <script>
 (() => {
 const ROUTES = {
@@ -1749,19 +1831,19 @@ const ROUTES = {
   }
 
   // Mərkəzi naviqasiya funksiyası
-  function goTo(route, { replace = false } = {}) {
-    const r = ROUTES[route] || ROUTES["/"];
-    // Tab-ı dəyiş və panelə scroll et
-    if (typeof setActiveTab === "function" && r.tab) {
-      setActiveTab(r.tab, { scroll: false });
-    }
-    // URL-i yaz
-    if (replace) history.replaceState({ route }, "", route);
-    else if (location.pathname !== route) history.pushState({ route }, "", route);
+function goTo(route, { replace = false } = {}) {
+  const r = ROUTES[route] || ROUTES["/"];
+  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
 
-    // Render bitəndən sonra scroll
-    requestAnimationFrame(() => smoothTo(r.target));
-  }
+  if (replace) history.replaceState({ route }, "", route);
+  else if (location.pathname !== route) history.pushState({ route }, "", route);
+
+  // ⇩ SEO meta + canonical + breadcrumbs
+  setMeta(route);
+
+  requestAnimationFrame(() => smoothTo(r.target));
+}
+
 
   // Hero & digər kliklər: [data-route]
   document.addEventListener("click", (e) => {

@@ -443,6 +443,7 @@ html, body, .scrollarea{
 .select-premium:disabled{
   opacity:.6; cursor:not-allowed;
 }
+.route-btn { cursor: pointer; }  /* ✨ hover-da pointer */
 
   </style>
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
@@ -484,8 +485,10 @@ html, body, .scrollarea{
     </div>
   </header>
 
-  <section class="relative">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid lg:grid-cols-2 gap-8 items-center">
+<section id="hero" class="relative">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16
+              grid lg:grid-cols-2 gap-8 items-center
+              min-h-[calc(100svh-64px)]">  <!-- ✨ hero tam ekran - header -->
       <div>
         <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug whitespace-normal text-balance text-pretty max-w-[28ch] sm:max-w-[32ch] lg:max-w-[36ch]">Müəllimlər üçün rəqəmsal resurs platforması</h1>
         <p class="mt-4 text-slate-600 text-lg" id="hero-subtitle">Azərbaycan məktəbləri üçün uyğunlaşdırılıb.</p>
@@ -1139,15 +1142,17 @@ document.getElementById('ppSubject').addEventListener('change', e=>{
 });
 
 
-  ['tab-ksq','tab-pp','tab-tools'].forEach(id => {
-  const btn = document.getElementById(id);
-  if (!btn) return;
-btn.addEventListener('click', (e) => {
-  const name = e.currentTarget.dataset.tab;
-  setActiveTab(name, { scroll: true }); // klikdə scroll et
+const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" };
+["tab-ksq","tab-pp","tab-tools"].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const route = TAB_ROUTES[el.dataset.tab] || "/";
+    goTo(route);
+  });
 });
 
-});
 (function init(){
   document.getElementById('year').textContent = new Date().getFullYear();
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -1725,15 +1730,15 @@ function refreshEmptyPlaceholders() {
   </script>
 <script>
 (() => {
-  // Route → tab & target xəritəsi
-  const ROUTES = {
-    "/":              { tab: "ksq",   target: "#panel-ksq" },
-    "/ksq-bsq":       { tab: "ksq",   target: "#panel-ksq" },
-    "/pp":            { tab: "pp",    target: "#panel-pp" },
-    "/calculator":    { tab: "tools", target: "#calc-card" },
-    "/question-bank": { tab: "tools", target: "#bank-card" },
-    "/export":        { tab: "tools", target: "#panel-tools" }
-  };
+const ROUTES = {
+  "/":              { tab: "ksq",   target: "#hero" },     // ✨
+  "/ksq-bsq":       { tab: "ksq",   target: "#panel-ksq" },
+  "/pp":            { tab: "pp",    target: "#panel-pp" },
+  "/calculator":    { tab: "tools", target: "#calc-card" },
+  "/question-bank": { tab: "tools", target: "#bank-card" },
+  "/export":        { tab: "tools", target: "#panel-tools" }
+};
+
 
   // Kiçik helper: smooth scroll (+ sticky header offset ~90px)
   function smoothTo(sel) {
@@ -1782,12 +1787,15 @@ function refreshEmptyPlaceholders() {
     history.replaceState({ route: fallbackPath }, "", fallbackPath);
   }
 
-  // İlk yüklənmədə auto-scroll (birbaşa /pp və s. açılıbsa)
-  document.addEventListener("DOMContentLoaded", () => {
-    const first = ROUTES[location.pathname] ? location.pathname : "/";
-    // Artıq setActiveTab init-də işləyib → sadəcə yönləndir
-    goTo(first, { replace: true });
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  const p = location.pathname;
+  if (p !== "/" && (p in ROUTES)) {
+    goTo(p, { replace: true });   // ✨ /pp, /ksq-bsq və s. olduqda
+  } else {
+    window.scrollTo(0, 0);        // ✨ / olduqda heç yerə getmə
+  }
+});
+
 
   // Mövcud TAB düymələrinə route qoş (sənin kodunda var idi — bunu əvəz et)
   const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" }; // tools üçün əsas fokus: kalkulyator

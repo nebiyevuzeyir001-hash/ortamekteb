@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://www.eduplan.az/sitemap.xml

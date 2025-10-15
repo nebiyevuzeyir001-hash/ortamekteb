@@ -467,7 +467,7 @@ html, body, .scrollarea{
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
 <!-- Google AdSense (asenkron) -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 
 </head>
 <body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
@@ -795,11 +795,15 @@ html, body, .scrollarea{
     <!-- Reklam konteyneri -->
     <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
       <div class="w-full grid place-items-center" style="min-height:250px">
-        <!-- AdSense slotu (300x250) -->
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:300px;height:250px"
-         data-ad-client="ca-pub-SƏNİN_PUBLISHER_ID"
-         data-ad-slot="SƏNİN_AD_SLOT_ID"></ins>
+<!-- AdSense slotu (modal üçün 300x250) -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-1241199346930032"
+     data-ad-slot="4681795317"></ins>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 
       </div>
     </div>
@@ -848,7 +852,13 @@ html, body, .scrollarea{
   const BAR   = document.getElementById('dlBar');
   const STATUS= document.getElementById('dlStatus');
 
-const DURATION = 15; // saniyə  ← cap məntiqi çıxarıldı
+let t = 0;
+let timer = null;
+let finished = false;
+let targetUrl = null;
+
+// TEST: 5 saniyə. İstəsən 15-ə qaytararsan.
+const DURATION = 5;
 
 
   function updateRing(){
@@ -867,6 +877,7 @@ function finish(){
   if (finished) return;
   finished = true;
   closeModal();
+  sessionStorage.setItem('dl_interstitial_seen', '1'); // ✔ sessiya üzrə 1 dəfə
   if (targetUrl){
     const a = document.createElement('a');
     a.href = targetUrl; a.download = '';
@@ -875,25 +886,36 @@ function finish(){
 }
 
 
-  function openModal(url){
-    targetUrl = url;
-    finished = false;
-    t = DURATION;
+
+function openModal(url){
+  // sessiya cap: artıq göstərilibsə, birbaşa yüklə
+  if (sessionStorage.getItem('dl_interstitial_seen') === '1') {
+    const a = document.createElement('a');
+    a.href = url; a.download = '';
+    document.body.appendChild(a); a.click(); a.remove();
+    return;
+  }
+
+  targetUrl = url;
+  finished = false;
+  t = DURATION;
     COUNT.textContent = t;
     STATUS.textContent = 'Please wait a few moments for the download to begin';
     BAR.style.width = '0%';
     updateRing();
 
-    // AdSense slotunu render et
-    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
+// AdSense slotunu render et
+try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
 
-    MODAL.classList.remove('hidden');
-    MODAL.classList.add('flex');
-
-// Reklam 1.2s-də dolmasa heç nə göstərmə (fallback YOXDUR)
+// 1.2s sonra “ad fill” yoxdursa — gözlətməni ləğv et
 setTimeout(() => {
-  /* intentionally empty */
+  const filled = document.querySelector('#dlCard ins.adsbygoogle iframe');
+  if (!filled) {
+    // reklam gəlməyibsə, dərhal yüklə
+    finish();
+  }
 }, 1200);
+
 
 
     timer = setInterval(() => {
@@ -918,6 +940,14 @@ document.addEventListener('click', (e) => {
   if (!url) return;
 
   e.preventDefault();
+  if (sessionStorage.getItem('dl_interstitial_seen') === '1') {
+  // artıq göstərilib – birbaşa yüklə
+  const a = document.createElement('a');
+  a.href = url; a.download = '';
+  document.body.appendChild(a); a.click(); a.remove();
+  return;
+}
+
   openModal(url); // HƏR DƏFƏ modal + 15s taymer
 });
 
@@ -1780,15 +1810,16 @@ function setMeta(route){
   if (!c) { c = document.createElement('link'); c.rel = "canonical"; document.head.appendChild(c); }
   c.href = location.origin + route;
 
-  // Breadcrumb JSON-LD (SPA üçün dinamik)
-  const bc = {
-    "/":              [{name:"Ana səhifə", url:"/"}],
-    "/ksq-bsq":       [{name:"Ana səhifə", url:"/"},{name:"KSQ/BSQ", url:"/ksq-bsq"}],
-    "/pp":            [{name:"Ana səhifə", url:"/"},{name:"Perspektiv plan", url:"/pp"}],
-    "/calculator":    [{name:"Ana səhifə", url:"/"},{name:"Bal kalkulyatoru", url:"/calculator"}],
-    "/question-bank": [{name:"Ana səhifə", url:"/"},{name:"Sual bankı", url:"/question-bank"}],
-    "/export":        [{name:"Ana səhifə", url:"/"},{name:"İxrac", url:"/export"}]
-  }[route] || bc["/"];
+const bcMap = {
+  "/":              [{name:"Ana səhifə", url:"/"}],
+  "/ksq-bsq":       [{name:"Ana səhifə", url:"/"},{name:"KSQ/BSQ", url:"/ksq-bsq"}],
+  "/pp":            [{name:"Ana səhifə", url:"/"},{name:"Perspektiv plan", url:"/pp"}],
+  "/calculator":    [{name:"Ana səhifə", url:"/"},{name:"Bal kalkulyatoru", url:"/calculator"}],
+  "/question-bank": [{name:"Ana səhifə", url:"/"},{name:"Sual bankı", url:"/question-bank"}],
+  "/export":        [{name:"Ana səhifə", url:"/"},{name:"İxrac", url:"/export"}]
+};
+const bc = bcMap[route] || bcMap["/"];
+
 
   // əvvəlkini sil
   document.querySelector('script[type="application/ld+json"][data-bc]')?.remove();

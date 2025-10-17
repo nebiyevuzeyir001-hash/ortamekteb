@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a0f1a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff"  media="(prefers-color-scheme: light)">
   <link rel="canonical" href="https://www.eduplan.az/" />
   <meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
   <title>EduPlan</title>
@@ -98,9 +100,28 @@ select, input, button { max-width: 100%; }
 }
 /* əsas fond və mətn */
 body { color: var(--text); }
-body.bg-gradient-to-b { 
-  background-image: linear-gradient(to bottom, var(--bg-from), var(--bg-to)) !important;
+/* Body-dən gradienti götürürük */
+body.bg-gradient-to-b { background-image: none !important; }
+
+/* Bütün fonu tutan sabit qat — overscroll zamanı da bu görünəcək */
+html::before{
+  content:"";
+  position: fixed;     /* viewport-a yapışır */
+  inset: 0;
+  z-index: -1;         /* kontentin arxasında */
+  background: linear-gradient(to bottom, var(--bg-from), var(--bg-to));
 }
+
+/* Light/Dark üçün kök fon rəngi — “tam ağ” heç vaxt qalmasın */
+html{ background: var(--bg-to); }
+.dark html{ background: #0a0f1a; }
+
+/* Android/Chrome-da rubber-band-i kəsir */
+html, body{ overscroll-behavior-y: none; }
+
+/* iOS ölçüləri düzgün hesablansın */
+body{ min-height: 100svh; }
+
 /* kartlar və panellər */
 .bg-white { background-color: var(--card) !important; }
 .text-slate-900, .text-slate-800, .text-slate-700 { color: var(--text) !important; }

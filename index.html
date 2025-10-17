@@ -795,14 +795,12 @@ html, body, .scrollarea{
     <!-- Reklam konteyneri -->
     <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
       <div class="w-full grid place-items-center" style="min-height:250px">
-<!-- AdSense slotu (modal üçün 300x250) -->
 <ins class="adsbygoogle"
+     id="modal-ad"
      style="display:inline-block;width:300px;height:250px"
      data-ad-client="ca-pub-1241199346930032"
      data-ad-slot="4681795317"></ins>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+
 
 
       </div>
@@ -814,7 +812,7 @@ html, body, .scrollarea{
         <div class="relative h-10 w-10">
           <div id="ring" class="h-10 w-10 rounded-full" style="background:
             conic-gradient(#8b5cf6 0deg, #8b5cf6 0deg, #333 0deg, #333 360deg);"></div>
-          <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount">15</div>
+          <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
         </div>
         <div class="text-sm text-gray-300" id="dlStatus">Please wait a few moments for the download to begin</div>
       </div>
@@ -857,8 +855,7 @@ let timer = null;
 let finished = false;
 let targetUrl = null;
 
-// TEST: 5 saniyə. İstəsən 15-ə qaytararsan.
-const DURATION = 5;
+const DURATION = 15;
 
 
   function updateRing(){
@@ -877,7 +874,6 @@ function finish(){
   if (finished) return;
   finished = true;
   closeModal();
-  sessionStorage.setItem('dl_interstitial_seen', '1'); // ✔ sessiya üzrə 1 dəfə
   if (targetUrl){
     const a = document.createElement('a');
     a.href = targetUrl; a.download = '';
@@ -887,46 +883,47 @@ function finish(){
 
 
 
-function openModal(url){
-  // sessiya cap: artıq göstərilibsə, birbaşa yüklə
-  if (sessionStorage.getItem('dl_interstitial_seen') === '1') {
-    const a = document.createElement('a');
-    a.href = url; a.download = '';
-    document.body.appendChild(a); a.click(); a.remove();
-    return;
-  }
+// faylın yuxarı hissəsində (scriptdə) flaq əlavə et:
+let modalAdRendered = false;
 
+function openModal(url){
   targetUrl = url;
   finished = false;
+
+  MODAL.classList.remove('hidden');
+  MODAL.classList.add('flex');
+
   t = DURATION;
-    COUNT.textContent = t;
-    STATUS.textContent = 'Please wait a few moments for the download to begin';
-    BAR.style.width = '0%';
+  COUNT.textContent = t;
+  STATUS.textContent = 'Please wait a few moments for the download to begin';
+  BAR.style.width = '0%';
+  updateRing();
+
+  // 🔹 Reklamı yalnız BİR DƏFƏ, modal görünəndən sonra render et
+  if (!modalAdRendered) {
+    modalAdRendered = true;
+    // modal görünüşə düşsün deyə bir frame gözlə
+    requestAnimationFrame(() => {
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.warn('AdSense push error:', e);
+      }
+    });
+  }
+
+  timer = setInterval(() => {
+    t--;
+    COUNT.textContent = t >= 0 ? t : 0;
+    const p = ((DURATION - t) / DURATION) * 100;
+    BAR.style.width = Math.min(100, Math.max(0, p)) + '%';
     updateRing();
-
-// AdSense slotunu render et
-try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch {}
-
-// 1.2s sonra “ad fill” yoxdursa — gözlətməni ləğv et
-setTimeout(() => {
-  const filled = document.querySelector('#dlCard ins.adsbygoogle iframe');
-  if (!filled) {
-    // reklam gəlməyibsə, dərhal yüklə
-    finish();
-  }
-}, 1200);
+    if (t <= 0) finish();
+  }, 1000);
+}
 
 
 
-    timer = setInterval(() => {
-      t--;
-      COUNT.textContent = t >= 0 ? t : 0;
-      const p = ((DURATION - t) / DURATION) * 100;
-      BAR.style.width = Math.min(100, Math.max(0, p)) + '%';
-      updateRing();
-      if (t <= 0) finish();
-    }, 1000);
-  }
 
   // Bütün “Yüklə” düymələri üçün tutucu
 document.addEventListener('click', (e) => {
@@ -940,13 +937,8 @@ document.addEventListener('click', (e) => {
   if (!url) return;
 
   e.preventDefault();
-  if (sessionStorage.getItem('dl_interstitial_seen') === '1') {
-  // artıq göstərilib – birbaşa yüklə
-  const a = document.createElement('a');
-  a.href = url; a.download = '';
-  document.body.appendChild(a); a.click(); a.remove();
-  return;
-}
+
+
 
   openModal(url); // HƏR DƏFƏ modal + 15s taymer
 });

@@ -552,14 +552,16 @@ html, body, .scrollarea{
 </a>
 
         </div>
-        <div class="grid sm:grid-cols-3 gap-4">
-<a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
+<div class="grid sm:grid-cols-3 gap-4">
+  <a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
 
-<a href="/question-bank" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></a>
+  <!-- “İxrac” əvəzinə Çevirici və orta yerə keçir -->
+  <a href="/converter" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/converter">📄 <span id="mini-converter">Çevirici</span></a>
 
-<a href="/export" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/export">⬇️ <span id="mini-export">İxrac</span></a>
+  <!-- “Sual bankı” sağa keçir -->
+  <a href="/question-bank" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></a>
+</div>
 
-        </div>
       </div>
     </div>
   </section>
@@ -737,28 +739,38 @@ html, body, .scrollarea{
 
   <div class="p-6">
     <div class="grid gap-4">
-      <!-- Fayl seçimi -->
-      <div>
-        <label class="block text-sm text-slate-700 mb-1">Fayl</label>
-        <input id="conv-file" type="file" class="w-full rounded-xl border px-3 py-2 text-sm"
-               accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-        <p class="mt-1 text-xs text-slate-500">PDF və ya DOCX yükləyin.</p>
-      </div>
+<!-- Fayl seçimi (YENİ – lokalizə olunmuş və səliqəli) -->
+<div>
+  <label class="block text-sm text-slate-700 mb-1">Fayl</label>
 
-      <!-- İstiqamət -->
-      <div class="grid sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-sm text-slate-700 mb-1">Çevirmə növü</label>
-          <select id="conv-mode" class="select-premium w-full rounded-xl border px-3 py-2 text-sm">
-            <option value="docx2pdf">DOCX → PDF</option>
-            <option value="pdf2docx">PDF → DOCX (beta)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm text-slate-700 mb-1">Fayl adı</label>
-          <input id="conv-name" type="text" class="w-full rounded-xl border px-3 py-2 text-sm" placeholder="çıxış-faylı">
-        </div>
-      </div>
+  <div class="flex items-center gap-3">
+    <!-- native input gizli qalır -->
+    <input id="conv-file" type="file" class="sr-only"
+      accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+
+    <!-- gözəl trigger düyməsi -->
+    <label for="conv-file" class="ep-btn-secondary w-auto px-4 cursor-pointer select-none">
+      Fayl seç
+    </label>
+
+    <!-- seçilmiş faylın adı -->
+    <span id="conv-file-name" class="text-sm text-slate-500">Fayl seçilməyib</span>
+  </div>
+
+  <p class="mt-2 text-xs text-slate-500">PDF və ya DOCX yükləyin.</p>
+</div>
+
+<div class="grid sm:grid-cols-2 gap-3">
+  <div>
+    <label class="block text-sm text-slate-700 mb-1">Çevirmə növü</label>
+    <select id="conv-mode" class="select-premium w-full rounded-xl border px-3 py-2 text-sm">
+      <option value="docx2pdf">DOCX → PDF</option>
+      <option value="pdf2docx">PDF → DOCX</option> <!-- (beta) SİLİNDİ -->
+    </select>
+  </div>
+  <!-- “Fayl adı” sahəsi tamamilə SİLİNDİ -->
+</div>
+
 
       <!-- Düymələr -->
       <div class="grid grid-cols-2 gap-2">
@@ -986,9 +998,10 @@ document.addEventListener('click', (e) => {
 /* ================= PDF / DOCX ÇEVİRİCİ ================= */
 (() => {
   const $ = s => document.querySelector(s);
-  const fileEl = $('#conv-file');
-  const modeEl = $('#conv-mode');
-  const nameEl = $('#conv-name');
+const fileEl = $('#conv-file');
+const modeEl = $('#conv-mode');
+// const nameEl = $('#conv-name');  // ARTIQ YOXDUR
+const nameLabel = $('#conv-file-name');
   const btn    = $('#btn-convert');
   const btnR   = $('#btn-convert-reset');
   const msg    = $('#conv-msg');
@@ -1011,16 +1024,19 @@ document.addEventListener('click', (e) => {
     dlA.removeAttribute('href');
     dlA.removeAttribute('download');
   }
-  btnR?.addEventListener('click', () => {
-    fileEl.value = '';
-    nameEl.value = '';
-    resetUI();
-  });
-
-  function downloadName(suggest, ext){
-    const base = (nameEl.value?.trim() || suggest || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
-    return base.endsWith('.'+ext) ? base : `${base}.${ext}`;
-  }
+btnR?.addEventListener('click', () => {
+  fileEl.value = '';
+  if (nameLabel) nameLabel.textContent = 'Fayl seçilməyib';
+  resetUI();
+});
+fileEl?.addEventListener('change', () => {
+  const f = fileEl.files?.[0];
+  nameLabel.textContent = f ? f.name : 'Fayl seçilməyib';
+});
+function downloadName(suggest, ext){
+  const base = (suggest || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
+  return base.endsWith('.'+ext) ? base : `${base}.${ext}`;
+}
 
   // ---- DOCX → PDF ----
   async function docxToPdf(file){
@@ -1943,8 +1959,8 @@ const META = {
                       desc:  "I/II yarımil və illik nəticəni hesabla." },
   "/question-bank": { title: "Sual bankı – Tezliklə | EduPlan",
                       desc:  "Multiple-choice və qısa cavab sualları hazırlanır." },
-  "/export":        { title: "İxrac | EduPlan",
-                      desc:  "Faylları rahat yüklə və paylaş." }
+  "/converter":     { title: "PDF/DOCX çevirici | EduPlan",
+                      desc:  "PDF ↔ DOCX çevirmə (sürətli və sadə)." }
 };
 
 function setMeta(route){
@@ -1999,7 +2015,7 @@ const ROUTES = {
   "/pp":            { tab: "pp",    target: "#panel-pp" },
   "/calculator":    { tab: "tools", target: "#calc-card" },
   "/question-bank": { tab: "tools", target: "#bank-card" },
-  "/export":        { tab: "tools", target: "#panel-tools" }
+  "/converter":     { tab: "tools", target: "#convert-card" } // yeni hədəf: çevirici kartı
 };
 
 

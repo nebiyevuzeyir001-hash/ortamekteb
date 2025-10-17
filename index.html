@@ -270,13 +270,24 @@ img, svg, video { max-width: 100%; height: auto; }
   --calc-pad-bottom: 14px;
 }
 
-/* Artıq panel pad-ları .panel-card > :nth-child(2) ilə verilir */
-#calc-card { padding-top: 0 !important; }              /* lazım deyil */
-.panel-scroll > .scrollarea { padding-bottom: 0 !important; } /* lazım deyil */
+/* kartların kontenti üçün vahid iç boşluq */
+:root{
+  --panel-pad-top: 16px;
+  --panel-pad-bottom: 16px;
+}
 
-/* convert/bank xüsusi pad-lar da lazım deyil */
-#convert-card > .p-6,
-#bank-card    > .p-6 { padding-top: 0 !important; padding-bottom: 0 !important; }
+/* yalnız content hissəsinə tətbiq olunur (səndə artıq var) */
+.panel-card > :nth-child(2){
+  padding-top:    var(--panel-pad-top) !important;
+  padding-bottom: var(--panel-pad-bottom) !important;
+}
+
+/* iç scroll sahəsində də yan-yana səliqə qalsın */
+.panel-scroll > .scrollarea{
+  padding: 0 16px;                /* üst/altı panel-card qaydası verir */
+  overflow-y: auto;
+}
+
 
 
     
@@ -533,7 +544,17 @@ html, body, .scrollarea{
 
 /* Kalkulyator: düymə sırası həmişə blokun altında qalsın */
 #calc-card{ display:flex; flex-direction:column; gap:16px; }
-#calc-card .grid.grid-cols-2.gap-2{ margin-top:auto; }
+/* düymə sıranı həmişə çox aşağı itələmə – yalnız lazım olanda */
+#calc-card .grid.grid-cols-2.gap-2{
+  margin-top: 0;          /* əvvəlki auto → 0 */
+}
+
+/* “rejim seçilməyib” halında mərkəzləmə qalır, amma padding saxlanır */
+.vcenter{
+  min-height:320px;
+  display:flex; flex-direction:column; justify-content:center; gap:16px;
+  padding: 16px !important;     /* əvvəl 0 idi → boş hissə hiss olunur */
+}
 
 /* Çevirici: şaquli mərkəz */
 #convert-card > .p-6{ display:flex !important; }
@@ -725,7 +746,9 @@ html, body, .scrollarea{
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch tools-grid">
           <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
-<div class="scrollarea p-4 pt-8 space-y-5" id="calc-card">
+<!-- yalnız pt-ni kiçilt -->
+<div class="scrollarea p-4 pt-4 space-y-5" id="calc-card">
+
   <!-- ✔️ İstifadəçi seçimi -->
 <div class="rounded-xl border px-3 py-3 text-sm 
             flex flex-col sm:flex-row gap-3 sm:items-center">

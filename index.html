@@ -509,6 +509,47 @@ html, body, .scrollarea{
 @media (max-width: 420px){
   #conv-inner{ min-height: 300px; }
 }
+/* ====== PANEL HƏLLİ (drop-in override) ====== */
+
+/* Kart skeleti: header (auto) + content (flex 1) */
+.panel-card{
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) !important;
+  height:100% !important;
+  min-height:var(--panel-min-h, 360px) !important;
+}
+
+/* Tools grid: bütün uşaq kartlar eyni hündürlükdə */
+.tools-grid{
+  align-items:stretch !important;
+  grid-auto-rows:minmax(var(--panel-min-h,360px), 1fr) !important;
+}
+
+/* Kart içi pad-lar (yalnız content hissəsi) */
+.panel-card > :nth-child(2){
+  padding-top:var(--panel-pad-top,16px) !important;
+  padding-bottom:var(--panel-pad-bottom,16px) !important;
+}
+
+/* Kalkulyator: düymə sırası həmişə blokun altında qalsın */
+#calc-card{ display:flex; flex-direction:column; gap:16px; }
+#calc-card .grid.grid-cols-2.gap-2{ margin-top:auto; }
+
+/* Çevirici: şaquli mərkəz */
+#convert-card > .p-6{ display:flex !important; }
+#conv-inner{
+  margin:auto;               /* həm üfüqi, həm şaquli mərkəz */
+  width:100%; max-width:28rem;
+  display:flex; flex-direction:column; gap:16px;
+  min-height:0;
+}
+
+/* Sual bankı: tam mərkəz */
+#bank-card > .p-6{ display:grid !important; place-items:center !important; }
+
+/* Düymə & input ritmi (vizual birlik) */
+.ep-btn-primary,.ep-btn-secondary,
+.select-premium,#calc-card input[type=number]{ height:44px; }
 
   </style>
 

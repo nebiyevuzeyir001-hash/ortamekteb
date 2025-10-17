@@ -258,26 +258,13 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
-/* === Panel ölçüləri (hamısı üçün) — YENİ === */
+/* === Panel ölçüləri — SABİT === */
 :root{
-  /* kiçik ekranlarda da bir az böyük olsun */
-  --panel-min-h: 380px;
-  --panel-max-h: 620px;
+  --panel-min-h: 360px;  /* kiçik ekranda minimum */
+  --panel-max-h: 560px;  /* kartların hədəf hündürlüyü */
 }
 
-/* ≥1024px (lg) — kartları daha hündür göstər */
-@media (min-width: 1024px){
-  :root{
-    --panel-max-h: 720px;
-  }
-}
 
-/* ekran hündürlüyü böyük olan cihazlarda əlavə rahatlıq */
-@media (min-height: 900px){
-  :root{
-    --panel-max-h: 780px;
-  }
-}
 
 
 /* Üç kartın ortaq sinfi */
@@ -1111,7 +1098,6 @@ function downloadName(suggest, ext){
     const url = URL.createObjectURL(blob);
     dlA.href = url;
     dlA.download = downloadName(file.name.replace(/\.pdf$/i,''), 'docx');
-    prev.src = 'about:blank'; // PDF preview yerinə DOCX preview göstərmək olmur
     box.classList.remove('hidden');
     showMsg('Hazırdır ✅ (mətn əsaslı konvert)', 'ok');
   }

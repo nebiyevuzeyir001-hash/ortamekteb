@@ -258,11 +258,27 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
-/* === Panel ölçüləri (hamısı üçün) — ƏVVƏLKİ KİMİ === */
+/* === Panel ölçüləri (hamısı üçün) — YENİ === */
 :root{
-  --panel-min-h: 320px;   /* əvvəlki */
-  --panel-max-h: 420px;   /* əvvəlki */
+  /* kiçik ekranlarda da bir az böyük olsun */
+  --panel-min-h: 380px;
+  --panel-max-h: 620px;
 }
+
+/* ≥1024px (lg) — kartları daha hündür göstər */
+@media (min-width: 1024px){
+  :root{
+    --panel-max-h: 720px;
+  }
+}
+
+/* ekran hündürlüyü böyük olan cihazlarda əlavə rahatlıq */
+@media (min-height: 900px){
+  :root{
+    --panel-max-h: 780px;
+  }
+}
+
 
 /* Üç kartın ortaq sinfi */
 .panel-card{

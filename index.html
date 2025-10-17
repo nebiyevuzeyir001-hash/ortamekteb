@@ -258,10 +258,9 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
-/* === Panel ölçüləri — SABİT === */
 :root{
-  --panel-min-h: 360px;  /* kiçik ekranda minimum */
-  --panel-max-h: 560px;  /* kartların hədəf hündürlüyü */
+  --panel-min-h: 320px;
+  --panel-max-h: 520px; 
 }
 
 
@@ -635,7 +634,7 @@ html, body, .scrollarea{
     </section>
 
     <section id="panel-tools" class="tab-panel grid-on mt-6">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch tools-grid">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch tools-grid">
           <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <div class="scrollarea p-4 pt-8 space-y-5" id="calc-card">
@@ -740,8 +739,8 @@ html, body, .scrollarea{
     <div class="text-base font-semibold">📄 PDF / DOCX çevirici</div>
   </div>
 
-  <div class="p-6">
-    <div class="grid gap-4">
+  <div class="p-6 h-full">
+    <div class="h-full grid place-content-center gap-4 max-w-md w-full mx-auto">
 <!-- Fayl seçimi (YENİ – lokalizə olunmuş və səliqəli) -->
 <div>
   <label class="block text-sm text-slate-700 mb-1">Fayl</label>
@@ -766,10 +765,10 @@ html, body, .scrollarea{
 <div class="grid sm:grid-cols-2 gap-3">
   <div>
     <label class="block text-sm text-slate-700 mb-1">Çevirmə növü</label>
-    <select id="conv-mode" class="select-premium w-full rounded-xl border px-3 py-2 text-sm">
-      <option value="docx2pdf">DOCX → PDF</option>
-      <option value="pdf2docx">PDF → DOCX</option> <!-- (beta) SİLİNDİ -->
-    </select>
+<select id="conv-mode" class="select-premium w-full rounded-xl border px-3 py-2 text-sm">
+  <option value="pdf2docx" selected>PDF → DOCX</option>
+  <option value="docx2pdf">DOCX → PDF</option>
+</select>
   </div>
   <!-- “Fayl adı” sahəsi tamamilə SİLİNDİ -->
 </div>

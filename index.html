@@ -780,13 +780,10 @@ html, body, .scrollarea{
 
       <!-- Proqres / nəticə -->
       <div id="conv-msg" class="hidden text-[12px]"></div>
-      <div id="conv-result" class="hidden rounded-xl border p-3">
-        <div class="text-sm mb-2">Nəticə</div>
-        <a id="conv-download" class="ep-btn-primary w-full text-center" download>Faylı yüklə</a>
-        <div class="mt-3">
-          <iframe id="conv-preview" class="w-full h-40 rounded-lg border"></iframe>
-        </div>
-      </div>
+<div id="conv-result" class="hidden rounded-xl border p-3">
+  <a id="conv-download" class="ep-btn-primary w-full text-center" download>Faylı yüklə</a>
+</div>
+
     </div>
   </div>
 </div>
@@ -1007,7 +1004,6 @@ const nameLabel = $('#conv-file-name');
   const msg    = $('#conv-msg');
   const box    = $('#conv-result');
   const dlA    = $('#conv-download');
-  const prev   = $('#conv-preview');
 
   if (!fileEl) return; // panel başqa səhifədə gizlidirsə
 
@@ -1020,7 +1016,6 @@ const nameLabel = $('#conv-file-name');
   function resetUI(){
     hideMsg();
     box.classList.add('hidden');
-    prev.src = 'about:blank';
     dlA.removeAttribute('href');
     dlA.removeAttribute('download');
   }
@@ -1031,7 +1026,7 @@ btnR?.addEventListener('click', () => {
 });
 fileEl?.addEventListener('change', () => {
   const f = fileEl.files?.[0];
-  nameLabel.textContent = f ? f.name : 'Fayl seçilməyib';
+  nameLabel.textContent = f ? `Seçilən fayl: ${f.name}` : 'Fayl seçilməyib';
 });
 function downloadName(suggest, ext){
   const base = (suggest || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
@@ -1061,7 +1056,6 @@ function downloadName(suggest, ext){
     const url = URL.createObjectURL(pdfBlob);
     dlA.href = url;
     dlA.download = downloadName(file.name.replace(/\.docx$/i,''), 'pdf');
-    prev.src = url;
     box.classList.remove('hidden');
     showMsg('Hazırdır ✅', 'ok');
   }
@@ -1070,7 +1064,14 @@ function downloadName(suggest, ext){
   async function pdfToDocx(file){
     showMsg('PDF oxunur...', 'info');
     const data = await file.arrayBuffer();
-    const pdf = await window['pdfjs-dist/build/pdf'].getDocument({ data }).promise;
+    const pdfjs = window.pdfjsLib;
+    if (!pdfjs) throw new Error('PDF işləyicisi tapılmadı (pdfjsLib).');
+    if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+      pdfjs.GlobalWorkerOptions.workerSrc =
+        'https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.js';
+    }
+    const pdf = await pdfjs.getDocument({ data }).promise;
+
 
     const paras = [];
     for (let p=1; p<=pdf.numPages; p++){
@@ -1982,7 +1983,7 @@ const bcMap = {
   "/pp":            [{name:"Ana səhifə", url:"/"},{name:"Perspektiv plan", url:"/pp"}],
   "/calculator":    [{name:"Ana səhifə", url:"/"},{name:"Bal kalkulyatoru", url:"/calculator"}],
   "/question-bank": [{name:"Ana səhifə", url:"/"},{name:"Sual bankı", url:"/question-bank"}],
-  "/export":        [{name:"Ana səhifə", url:"/"},{name:"İxrac", url:"/export"}]
+  "/converter": [{name:"Ana səhifə", url:"/"},{name:"Çevirici", url:"/converter"}]
 };
 const bc = bcMap[route] || bcMap["/"];
 
@@ -2040,6 +2041,7 @@ function goTo(route, { replace = false } = {}) {
 
   requestAnimationFrame(() => smoothTo(r.target));
 }
+window.goTo = goTo; // ✅ qlobal et
 
 
   // Hero & digər kliklər: [data-route]

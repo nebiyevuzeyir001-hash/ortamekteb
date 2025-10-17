@@ -568,9 +568,20 @@ html, body, .scrollarea{
 /* Sual bankı: tam mərkəz */
 #bank-card > .p-6{ display:grid !important; place-items:center !important; }
 
-/* Düymə & input ritmi (vizual birlik) */
-.ep-btn-primary,.ep-btn-secondary,
-.select-premium,#calc-card input[type=number]{ height:44px; }
+/* Butonlar üçün min-height + flex mərkəzləmə */
+.ep-btn-primary,.ep-btn-secondary{
+  min-height:44px;
+  height:auto;                     /* sabit hündürlük YOX */
+  display:flex; align-items:center; justify-content:center;
+  padding-top: 0.65rem; padding-bottom: 0.65rem; /* sənin dizayn qalır */
+}
+
+/* Select və inputlarda 44px saxlamaq istəyirsənsə – ayrıq saxla */
+.select-premium, #calc-card input[type=number]{ height:44px; }
+@media (max-width: 400px){
+  .ep-btn-primary,.ep-btn-secondary{ padding-top:.55rem; padding-bottom:.55rem; }
+}
+
 #convert-card > .p-6{ padding-top: 18px !important; padding-bottom: 18px !important; }
 
   </style>

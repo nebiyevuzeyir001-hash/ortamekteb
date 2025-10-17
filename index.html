@@ -263,8 +263,23 @@ img, svg, video { max-width: 100%; height: auto; }
 #panel-tools, #calc-card {
   overflow-anchor: none;
 }
-#calc-card{ padding-top: var(--calc-pad-top) !important; }
-.panel-scroll > .scrollarea{ padding-bottom: var(--calc-pad-bottom) !important; }
+:root{
+  --panel-min-h: 320px;
+  --panel-max-h: 520px;
+  --calc-pad-top:    14px;  /* istəsən 16/18 edərsən – hamısı birlikdə dəyişər */
+  --calc-pad-bottom: 14px;
+}
+
+/* hamısına eyni boşluq */
+#calc-card { padding-top: var(--calc-pad-top) !important; }
+.panel-scroll > .scrollarea { padding-bottom: var(--calc-pad-bottom) !important; }
+
+#convert-card > .p-6,
+#bank-card    > .p-6{
+  padding-top:    var(--calc-pad-top) !important;
+  padding-bottom: var(--calc-pad-bottom) !important;
+}
+
     
 
 

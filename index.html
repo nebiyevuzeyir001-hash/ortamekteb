@@ -61,9 +61,9 @@
   --pill:#e9edf3;
   --pill-text:#334155;
   --panel-min-h: 320px;
-  --panel-max-h: 520px; 
-  --calc-pad-top:    14px;  /* 32px → 14px = -18px (vizual olaraq kağız kimi oturur) */
-  --calc-pad-bottom: 14px;  /* 24px → 14px = -10px (üst-altar eyni olur) */
+  --panel-max-h: 520px;
+  --panel-pad-top: 14px;
+  --panel-pad-bottom: 14px;
 
 }
 .dark {
@@ -270,35 +270,44 @@ img, svg, video { max-width: 100%; height: auto; }
   --calc-pad-bottom: 14px;
 }
 
-/* hamısına eyni boşluq */
-#calc-card { padding-top: var(--calc-pad-top) !important; }
-.panel-scroll > .scrollarea { padding-bottom: var(--calc-pad-bottom) !important; }
+/* Artıq panel pad-ları .panel-card > :nth-child(2) ilə verilir */
+#calc-card { padding-top: 0 !important; }              /* lazım deyil */
+.panel-scroll > .scrollarea { padding-bottom: 0 !important; } /* lazım deyil */
 
+/* convert/bank xüsusi pad-lar da lazım deyil */
 #convert-card > .p-6,
-#bank-card    > .p-6{
-  padding-top:    var(--calc-pad-top) !important;
-  padding-bottom: var(--calc-pad-bottom) !important;
-}
+#bank-card    > .p-6 { padding-top: 0 !important; padding-bottom: 0 !important; }
+
 
     
 
 
-/* Üç kartın ortaq sinfi */
+/* Bütün panellərə vahid quruluş (başlıq + kontent) */
 .panel-card{
+  display: grid;
+  grid-template-rows: auto minmax(0,1fr);
   min-height: var(--panel-min-h);
   max-height: var(--panel-max-h);
   height: 100%;
   border-radius: 1rem;
 }
 
-/* Yalnız kalkulyator kartı: özü böyüməsin, içi scroll olsun */
+/* Başlıqdan sonrakı (2-ci uşaq) kontent üçün pad-lar */
+.panel-card > :nth-child(2){
+  padding-top:    var(--panel-pad-top) !important;
+  padding-bottom: var(--panel-pad-bottom) !important;
+}
+
+
 .panel-scroll{ overflow: hidden; }
 .panel-scroll > .scrollarea{
   height: 100%;
   min-height: 0;
-  overflow-y: auto;
-  padding-bottom: 24px; /* Hesabla/Sıfırla rahat görünsün */
+  overflow-y: auto;                /* eyni qalır */
+  scrollbar-gutter: stable both-edges; /* bura daşıdıq */
+  /* padding-bottom: panel pad-ları artıq ümumi qaydada verilir */
 }
+
 /* === Premium scrollbar (global) === */
 /* Firefox */
 html, body, .scrollarea{
@@ -483,18 +492,19 @@ html, body, .scrollarea{
 .route-btn:focus { outline: 2px solid rgba(34,211,238,.35); outline-offset: 2px; }
 /* === Converter centering (only #convert-card) === */
 #convert-card > .p-6{
-  display: flex;               /* kartın içi “tam hündürlük” olsun */
+  display: flex;               /* qalır */
 }
 #conv-inner{
-  display: flex;               /* grid deyil – yalnız flex */
+  display: flex;
   flex-direction: column;
-  justify-content: center;     /* ŞAQUli mərkəz */
+  justify-content: center;
   gap: 1rem;
   max-width: 28rem;
   width: 100%;
-  margin-inline: auto;         /* ÜFÜqi mərkəz */
-  min-height: calc(var(--panel-min-h) - 36px); /* başlıq padini çıxırıq */
+  margin-inline: auto;
+  min-height: 0; /* grid hündürlüyü özü balanslayır */
 }
+
 /* kiçik ekranlarda kart çox dartılmasın */
 @media (max-width: 420px){
   #conv-inner{ min-height: 300px; }
@@ -776,8 +786,11 @@ html, body, .scrollarea{
     <div class="text-base font-semibold">📄 PDF / DOCX çevirici</div>
   </div>
 
-  <div class="p-6 h-full">
-    <div id="conv-inner" class="flex flex-col justify-center gap-4 max-w-md w-full mx-auto min-h-[calc(var(--panel-min-h)-36px)]">
+<div class="p-6 h-full">
+  <div id="conv-inner"
+       class="flex flex-col justify-center gap-4 max-w-md w-full mx-auto
+              min-h-0">
+
 <!-- Fayl seçimi (YENİ – lokalizə olunmuş və səliqəli) -->
 <div>
   <label class="block text-sm text-slate-700 mb-1">Fayl</label>

@@ -466,66 +466,7 @@ html, body, .scrollarea{
 .route-btn:focus { outline: 2px solid rgba(34,211,238,.35); outline-offset: 2px; }
 
   </style>
-  <style>
-/* ===== EduPlan “Polish Pack” — yüngül gözəlləşdirmə ===== */
 
-/* Kontrastı yumşalt: kart, bölmə xətti, radius */
-:root { --radius: 14px; }
-.panel-card { border-color:#243048 !important; border-radius:var(--radius) !important; }
-.panel-card > .border-b { border-color:#243048 !important; }
-
-/* Kart içi daha sıx ritm (default Tailwind padləri bir az böyükdür) */
-.panel-card .p-4 { padding: 14px !important; }
-.panel-card .p-6 { padding: 18px !important; }
-
-/* Fieldset-lər: legend incə, daxili boşluq balanslı */
-fieldset { border-color:#2a3a56 !important; }
-fieldset legend { padding-inline:10px; color:#cbd5e1; letter-spacing:.1px; }
-
-/* Input/select ölçü birliyi (40px), radius, fokus halqası */
-.select-premium, input[type="number"], #conv-mode {
-  height: 40px; border-radius: 12px !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-}
-.select-premium:focus, input[type="number"]:focus {
-  box-shadow:
-    0 0 0 1px #2f405c,
-    0 0 0 4px rgba(167,139,250,.20) !important;
-}
-
-/* Kiçik label–input aralığı (default bir az çoxdur) */
-label + .select-premium, label + input { margin-top: 6px !important; }
-
-/* “Hesabla / Sıfırla” və “Çevir / Sıfırla” düymələrini eyni hündürlükdə tut */
-.ep-btn-primary, .ep-btn-secondary { height: 42px; border-radius: 12px; }
-
-/* Dark rejimdə kölgələr ağarırsa, bir az səssizləşdir */
-.bg-white:hover { box-shadow: 0 6px 14px rgba(255,255,255,.06) !important; }
-
-/* Kalkulyator: boş görkəmdə kart çox “hava” almasın */
-#calc-card.vcenter { max-width: 520px !important; }
-
-/* Çevirici: real mərkəzləşmə və səliqə */
-#convert-card > .p-6 { display:flex; }
-#convert-card > .p-6 > .min-h-full,
-#convert-card .max-w-md {
-  min-height: calc(var(--panel-min-h) - 36px);
-  display:flex; flex-direction:column; justify-content:center;
-}
-
-/* Çevirici “Yüklə” düyməsi qaranlıqda daha dolğun görünsün */
-#conv-result a#conv-download {
-  border: 0 !important;
-  background: linear-gradient(90deg,#4338ca,#7e22ce) !important;
-  box-shadow: 0 6px 18px rgba(126,34,206,.28) !important;
-}
-
-/* Sağdakı “Sual bankı” kartının gradient konturu daha incə olsun */
-#bank-card { box-shadow: inset 0 0 0 1px rgba(255,255,255,.06) !important; }
-
-/* Ümumi: çoxlu sərhəd xətti hissini azalt */
-.border { border-color:#253046 !important; }
-</style>
 
 <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
 <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>

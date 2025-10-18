@@ -289,16 +289,6 @@ img, svg, video { max-width: 100%; height: auto; }
   padding-bottom: var(--panel-pad-bottom) !important;
 }
 
-/* iç scroll sahəsində də yan-yana səliqə qalsın */
-.panel-scroll > .scrollarea{
-  padding: 0 16px;                /* üst/altı panel-card qaydası verir */
-  overflow-y: auto;
-}
-
-
-
-    
-
 
 /* Bütün panellərə vahid quruluş (başlıq + kontent) */
 .panel-card{
@@ -322,18 +312,15 @@ img, svg, video { max-width: 100%; height: auto; }
   overflow: visible; /* və ya Safari köhnədirsə: overflow: clip; */
 }
 
-/* Alt hissəyə nəfəs ver, sərhədə yapışmasın */
-.panel-scroll > .scrollarea {
+.panel-scroll > .scrollarea{
   height: 100%;
   min-height: 0;
   overflow-y: auto;
-  padding-bottom: 20px; /* yeni əlavə */
+  /* üst – sağ/sol – alt: hamısı dəyişənlərlə eyni */
+  padding: var(--panel-pad-top) 16px var(--panel-pad-bottom);
 }
 
-/* Kalkulyator üçün bir az əlavə alt pad */
-#calc-card {
-  padding-bottom: 20px !important;
-}
+/* #calc-card üçün xüsusi padding artıq lazım deyil – silinir */
 
 
 /* Scroll lentası görünmür, amma refresh qalır */
@@ -774,7 +761,7 @@ html, body {
           <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
           <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
 <!-- yalnız pt-ni kiçilt -->
-<div class="scrollarea p-4 pt-4 space-y-5" id="calc-card">
+<div class="scrollarea p-4 pt-4 pb-4 space-y-5" id="calc-card">
 
   <!-- ✔️ İstifadəçi seçimi -->
 <div class="rounded-xl border px-3 py-3 text-sm 
@@ -1926,8 +1913,9 @@ function refreshEmptyPlaceholders() {
       return;
     }
 
-    card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
-    card?.classList.add('space-y-5','p-4','pt-8');
+card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
+card?.classList.add('space-y-5','p-4','pt-4','pb-4');
+
 
     document.getElementById('fs-t1').classList.toggle('hidden', mode === 't2');
     document.getElementById('fs-t2').classList.toggle('hidden', mode === 't1');

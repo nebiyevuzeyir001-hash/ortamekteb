@@ -316,9 +316,10 @@ img, svg, video { max-width: 100%; height: auto; }
   height: 100%;
   min-height: 0;
   overflow-y: auto;
-  /* üst – sağ/sol – alt: hamısı dəyişənlərlə eyni */
-  padding: var(--panel-pad-top) 16px var(--panel-pad-bottom);
+  /* alt hissəyə +24px sabit buffer əlavə et */
+  padding: var(--panel-pad-top) 16px calc(var(--panel-pad-bottom) + 24px);
 }
+
 
 /* #calc-card üçün xüsusi padding artıq lazım deyil – silinir */
 
@@ -613,6 +614,7 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
+#calc-actions{ margin-bottom: 4px; }
 
   </style>
 

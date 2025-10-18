@@ -329,14 +329,24 @@ img, svg, video { max-width: 100%; height: auto; }
 }
 
 
-.panel-scroll{ overflow: hidden; }
-.panel-scroll > .scrollarea{
+/* Alt düymə kəsilməsin, kart tam görünsün */
+.panel-scroll {
+  overflow: visible; /* və ya Safari köhnədirsə: overflow: clip; */
+}
+
+/* Alt hissəyə nəfəs ver, sərhədə yapışmasın */
+.panel-scroll > .scrollarea {
   height: 100%;
   min-height: 0;
-  overflow-y: auto;                /* eyni qalır */
-  scrollbar-gutter: stable both-edges; /* bura daşıdıq */
-  /* padding-bottom: panel pad-ları artıq ümumi qaydada verilir */
+  overflow-y: auto;
+  padding-bottom: 20px; /* yeni əlavə */
 }
+
+/* Kalkulyator üçün bir az əlavə alt pad */
+#calc-card {
+  padding-bottom: 20px !important;
+}
+
 
 /* === Premium scrollbar (global) === */
 /* Firefox */

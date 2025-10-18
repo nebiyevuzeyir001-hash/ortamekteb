@@ -585,6 +585,34 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
+/* Kalkulyatorun iç scroll konteyneri alt tərəfdə rahat nəfəs alsın */
+#calc-card .scrollarea{
+  position: relative;
+  padding-bottom: calc(var(--panel-pad-bottom,16px) + 20px + env(safe-area-inset-bottom));
+}
+
+/* Düymələr daim görünən (sticky) alt panel kimi dursun */
+#calc-actions{
+  position: sticky;
+  bottom: 0;                    /* scrollarea dibinə yapışır */
+  margin: 8px -4px -4px;        /* kartın iç kənarlarını doldurur */
+  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--card) 96%, transparent) 0%,
+                           color-mix(in srgb, var(--card) 70%, transparent) 60%,
+                           transparent 100%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-top: 1px solid var(--border);
+  z-index: 5;                   /* üst qat */
+}
+
+/* Mobil-də mətnin qırpılmaması üçün – sizdə artıq var, saxlayırıq */
+.ep-btn-primary, .ep-btn-secondary{
+  line-height: 1.15 !important;
+  white-space: nowrap;
+  overflow: visible;
+}
 
   </style>
 
@@ -814,7 +842,7 @@ html, body {
     <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
   </fieldset>
 <!-- Hesabla + Sıfırla -->
-<div class="grid grid-cols-2 gap-2">
+<div class="grid grid-cols-2 gap-2" id="calc-actions">
   <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
   <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
 </div>

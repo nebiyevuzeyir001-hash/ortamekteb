@@ -348,31 +348,18 @@ img, svg, video { max-width: 100%; height: auto; }
 }
 
 
-/* === Premium scrollbar (global) === */
-/* Firefox */
-html, body, .scrollarea{
-  scrollbar-width: thin;
-  scrollbar-color: #7c88a2 transparent;
+/* Scroll lentasını TAMAMİLƏ SİL */
+html, body, .scrollarea {
+  -ms-overflow-style: none;  /* Köhnə Edge üçün */
+  scrollbar-width: none;     /* Firefox üçün */
+  overflow: -moz-scrollbars-none;
 }
-.dark html, .dark body, .dark .scrollarea{
-  scrollbar-color: #8794aa #0b1220;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.scrollarea::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Edge üçün */
 }
 
-/* WebKit (Chrome/Edge/Safari) */
-*::-webkit-scrollbar{
-  width: 10px;
-  height: 10px;
-}
-*::-webkit-scrollbar-track{
-  background: transparent;
-  border-radius: 9999px;
-}
-*::-webkit-scrollbar-thumb{
-  border-radius: 9999px;
-  background: linear-gradient(180deg,#22d3ee,#a78bfa);
-  border: 2px solid transparent;         /* “gap” effekti */
-  background-clip: padding-box;
-}
 *::-webkit-scrollbar-thumb:hover{ filter: brightness(1.08); }
 *::-webkit-scrollbar-corner{ background: transparent; }
 

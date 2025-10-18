@@ -24,7 +24,7 @@
 <!-- Favicons -->
 <link rel="icon" type="image/png" sizes="48x48" href="assets/ep-favicon-48.png">
 <link rel="icon" type="image/png" sizes="180x180" href="assets/ep-favicon-180.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/ep-favicon-180.png">
+<link id="apple-icon" rel="apple-touch-icon" sizes="180x180" href="assets/ep-favicon-180.png">
 
 <!-- Schema.org -->
 <script type="application/ld+json">
@@ -38,11 +38,7 @@
 }
 </script>
 
-<script>
-  window.__catalogPromise = fetch("https://drive.usercontent.google.com/uc?export=download&id=YOUR_CATALOG_JSON_ID")
-    .then(r => r.json())
-    .catch(()=>[]);
-</script>
+
   <!-- Tailwind (no install) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -115,7 +111,6 @@ html{ background: var(--bg-to); }
 html.dark{ background:#0a0f1a; }
 
 /* Android/Chrome-da rubber-band-i kəsir */
-html, body{ overscroll-behavior-y: none; }
 
 /* iOS ölçüləri düzgün hesablansın */
 body{ min-height: 100svh; }
@@ -263,9 +258,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
 *, *::before, *::after { box-sizing: border-box; }
 img, svg, video { max-width: 100%; height: auto; }
 
-html, body { max-width: 100%; overflow-x: hidden; }
-*, *::before, *::after { box-sizing: border-box; }
-img, svg, video { max-width: 100%; height: auto; }
 
 /* Flex/Grid uşaq bloklar default genişlənməsin */
 .min-w-0 { min-width: 0 !important; }
@@ -287,10 +279,6 @@ img, svg, video { max-width: 100%; height: auto; }
   --panel-max-h: 520px;
   --calc-pad-top:    14px;  /* istəsən 16/18 edərsən – hamısı birlikdə dəyişər */
   --calc-pad-bottom: 14px;
-}
-
-/* kartların kontenti üçün vahid iç boşluq */
-:root{
   --panel-pad-top: 16px;
   --panel-pad-bottom: 16px;
 }
@@ -365,8 +353,7 @@ html, body {
 }
 
 
-*::-webkit-scrollbar-thumb:hover{ filter: brightness(1.08); }
-*::-webkit-scrollbar-corner{ background: transparent; }
+
 
 /* daxili scrollların layout-u tərpənməsin */
 .scrollarea{ scrollbar-gutter: stable both-edges; }
@@ -1516,16 +1503,7 @@ document.getElementById('ppSubject').addEventListener('change', e=>{
 });
 
 
-const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" };
-["tab-ksq","tab-pp","tab-tools"].forEach(id => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.addEventListener("click", (ev) => {
-    ev.preventDefault();
-    const route = TAB_ROUTES[el.dataset.tab] || "/";
-    goTo(route);
-  });
-});
+
 
 (function init(){
   document.getElementById('year').textContent = new Date().getFullYear();

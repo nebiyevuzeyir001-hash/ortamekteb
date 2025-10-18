@@ -348,17 +348,22 @@ img, svg, video { max-width: 100%; height: auto; }
 }
 
 
-/* Scroll lentasını TAMAMİLƏ SİL */
+/* Scroll lentası görünmür, amma refresh qalır */
 html, body, .scrollarea {
-  -ms-overflow-style: none;  /* Köhnə Edge üçün */
-  scrollbar-width: none;     /* Firefox üçün */
-  overflow: -moz-scrollbars-none;
+  scrollbar-width: none;             /* Firefox üçün */
+  -ms-overflow-style: none;          /* Edge üçün */
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
 .scrollarea::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Edge üçün */
+  width: 0; height: 0;               /* Chrome/Safari üçün görünməz */
 }
+
+/* Əlavə: səhifə yeniləməsi (pull-to-refresh) işləsin */
+html, body {
+  overscroll-behavior-y: auto;       /* artıq bloklanmır */
+}
+
 
 *::-webkit-scrollbar-thumb:hover{ filter: brightness(1.08); }
 *::-webkit-scrollbar-corner{ background: transparent; }

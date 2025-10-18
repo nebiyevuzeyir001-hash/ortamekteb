@@ -112,7 +112,7 @@ html::before{
 
 /* Light/Dark üçün kök fon rəngi — “tam ağ” heç vaxt qalmasın */
 html{ background: var(--bg-to); }
-.dark html{ background: #0a0f1a; }
+html.dark{ background:#0a0f1a; }
 
 /* Android/Chrome-da rubber-band-i kəsir */
 html, body{ overscroll-behavior-y: none; }
@@ -602,6 +602,13 @@ html, body, .scrollarea{
 }
 
 #convert-card > .p-6{ padding-top: 18px !important; padding-bottom: 18px !important; }
+/* Mobil-də "Hesabla" yazısı kəsilməsin */
+.ep-btn-primary,
+.ep-btn-secondary{
+  line-height: 1.15 !important;
+  white-space: nowrap;
+  overflow: visible;
+}
 
   </style>
 

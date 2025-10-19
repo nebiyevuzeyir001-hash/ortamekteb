@@ -2244,6 +2244,150 @@ if (!res.ok) {
   });
 })();
 </script>
+<!-- === Helper + Çevirici üçün düzəlişlər (drop-in) === -->
+<script>
+// Kiçik köməkçilər
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function ping(base = window.API_BASE || '') {
+  const url = `${base}/health`;
+  try {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 6000);
+    const r = await fetch(url, { method: 'GET', cache: 'no-store', signal: ctl.signal });
+    clearTimeout(t);
+    return r.ok;
+  } catch { return false; }
+}
+
+async function postWithRetry(url, opts = {}, tries = 3, backoff = 700) {
+  let lastErr;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const res = await fetch(url, opts);
+      // 5xx → retry
+      if (res.status >= 500 && res.status <= 599) {
+        lastErr = new Error(`HTTP ${res.status}`);
+        await sleep(backoff * Math.pow(2, i));
+        continue;
+      }
+      return res;
+    } catch (e) {
+      lastErr = e;
+      await sleep(backoff * Math.pow(2, i));
+    }
+  }
+  throw lastErr || new Error('Şəbəkə xətası');
+}
+</script>
+
+<script>
+// Çevirici skriptinin DAXİLİNDƏ balaca fix: 'signal' → 'controller.signal'
+// və fayl limiti + serverin fayl adı tərcihi
+(() => {
+  const $ = s => document.querySelector(s);
+  const fileEl = $('#conv-file');
+  const modeEl = $('#conv-mode');
+  const nameLabel = $('#conv-file-name');
+  const btn    = $('#btn-convert');
+  const btnR   = $('#btn-convert-reset');
+  const msg    = $('#conv-msg');
+  const box    = $('#conv-result');
+  const dlA    = $('#conv-download');
+
+  const API_BASE = window.API_BASE || 'https://ortamekteb.onrender.com';
+  const MAX_SIZE = 20 * 1024 * 1024; // 20 MB
+
+  function showMsg(text, type='info'){
+    msg.textContent = text;
+    msg.classList.remove('hidden','text-rose-500','text-emerald-600','text-slate-500');
+    msg.classList.add(type==='error'?'text-rose-500':type==='ok'?'text-emerald-600':'text-slate-500');
+  }
+  function hideMsg(){ msg.classList.add('hidden'); }
+  function resetUI(){
+    hideMsg(); box.classList.add('hidden');
+    dlA.removeAttribute('href'); dlA.removeAttribute('download');
+  }
+  btnR?.addEventListener('click', () => {
+    fileEl.value = ''; nameLabel.textContent = 'Fayl seçilməyib'; resetUI();
+  });
+  fileEl?.addEventListener('change', () => {
+    const f = fileEl.files?.[0];
+    nameLabel.textContent = f ? `Seçilən fayl: ${f.name}` : 'Fayl seçilməyib';
+  });
+
+  const sanitize = s => (s || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
+
+  btn?.addEventListener('click', async () => {
+    try{
+      resetUI();
+      const f = fileEl.files?.[0];
+      if(!f){ showMsg('Zəhmət olmasa fayl seçin.', 'error'); return; }
+      if(f.size > MAX_SIZE){ showMsg('Fayl çox böyükdür (max 20 MB).', 'error'); return; }
+
+      const mode = modeEl.value; // pdf2docx | docx2pdf
+      const isDocx = /\.docx$/i.test(f.name) || f.type.includes('officedocument');
+      const isPdf  = /\.pdf$/i.test(f.name)  || f.type === 'application/pdf';
+      if (mode==='docx2pdf' && !isDocx){ showMsg('Bu rejim üçün DOCX faylı seçin.', 'error'); return; }
+      if (mode==='pdf2docx' && !isPdf){  showMsg('Bu rejim üçün PDF faylı seçin.',  'error'); return; }
+
+      const fd = new FormData(); fd.append('file', f);
+
+      btn.disabled = true; btn.classList.add('opacity-60','pointer-events-none');
+      showMsg('Yüklənir və konvert olunur...', 'info');
+
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 1000*60*2); // 2 dəq
+
+      await ping(API_BASE);
+      const res = await postWithRetry(
+        `${API_BASE}/api/convert?mode=${encodeURIComponent(mode)}`,
+        { method:'POST', body: fd, signal: controller.signal }, // <<< DÜZƏLİŞ
+        3
+      );
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        if (res.status === 413) throw new Error('Fayl çox böyükdür (413).');
+        if (res.status === 415) throw new Error('Dəstəklənməyən fayl növü (415).');
+        if (res.status === 400) throw new Error('Sorğu yalnışdır (400).');
+        if ([500,502,503,504,522,524].includes(res.status)) {
+          throw new Error('Server hazır deyil və ya yüklənib (5xx). Zəhmət olmasa yenidən cəhd edin.');
+        }
+        throw new Error((await res.text()) || res.statusText || 'Naməlum server xətası');
+      }
+
+      // Serverdən fayl adı gəlirsə onu götür
+      let suggested = null;
+      const cd = res.headers.get('content-disposition');
+      if (cd) {
+        const m = /filename\*=UTF-8''([^;]+)|filename="?([^"]+)"?/i.exec(cd);
+        if (m) suggested = decodeURIComponent(m[1] || m[2] || '');
+      }
+
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const ext  = mode === 'pdf2docx' ? '.docx' : '.pdf';
+
+      const baseFromFile = sanitize(f.name.replace(/\.[^.]+$/, ''));
+      const baseFromHdr  = suggested ? sanitize(suggested.replace(/\.[^.]+$/, '')) : null;
+      const finalName    = (baseFromHdr || baseFromFile) + ext;
+
+      dlA.href = url;
+      dlA.download = finalName;
+
+      box.classList.remove('hidden');
+      showMsg('Hazırdır ✅', 'ok');
+      // İstəsən 15s modalını aktivləşdir: // openModal(dlA.href);
+    } catch(err){
+      console.error(err);
+      showMsg('Xəta baş verdi: ' + (err?.message || err), 'error');
+    } finally {
+      btn.disabled = false; btn.classList.remove('opacity-60','pointer-events-none');
+    }
+  });
+})();
+</script>
 
 
 </body>

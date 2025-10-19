@@ -1995,11 +1995,6 @@ card?.classList.add('space-y-1','p-4','pt-3','pb-3');
   });
 })();
 
-<script>
-  const API_BASE = "https://ortamekteb.onrender.com";
-</script>
-
-  </script>
   <script>
 /* — Route → SEO xəritəsi — */
 const META = {
@@ -2159,8 +2154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dlA    = $('#conv-download');
 
   // API kökü (eyni hostda işləyirsə boş saxla; yoxsa tam URL ver)
-  const API_BASE = ''; // məsələn: 'https://api.eduplan.az' (Nginx ilə proxy də edə bilərsən)
-
+const API_BASE = window.API_BASE || 'https://ortamekteb.onrender.com';
   function showMsg(text, type='info'){
     msg.textContent = text;
     msg.classList.remove('hidden','text-rose-500','text-emerald-600','text-slate-500');

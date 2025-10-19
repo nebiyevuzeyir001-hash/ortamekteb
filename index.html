@@ -614,6 +614,48 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
+/* ==== PREMIUM SCROLLBAR (Hər iki tema üçün uyğun) ==== */
+
+/* Ümumi (Firefox) */
+html, body, .scrollarea {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+/* Tema əsaslı rənglər */
+:root {
+  --scroll-thumb: rgba(100, 100, 100, 0.4);
+  --scroll-thumb-hover: rgba(100, 100, 100, 0.6);
+}
+.dark {
+  --scroll-thumb: rgba(180, 180, 255, 0.25);
+  --scroll-thumb-hover: rgba(180, 180, 255, 0.5);
+}
+
+/* Webkit (Chrome, Edge, Opera, Safari) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 
   </style>
 
@@ -1207,8 +1249,9 @@ function downloadName(suggest, ext){
 
     showMsg('PDF yaradılır...', 'info');
     const opt = { margin: 10, filename: 'out.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-    const worker = window.html2pdf().from(temp).set(opt);
-    const pdfBlob = await worker.outputPdf('blob');
+  const worker = window.html2pdf().from(temp).set(opt).toPdf();
+  const pdf = await worker.get('pdf');
+  const pdfBlob = await pdf.output('blob');
     temp.remove();
 
     const url = URL.createObjectURL(pdfBlob);

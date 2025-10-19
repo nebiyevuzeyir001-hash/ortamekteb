@@ -11,109 +11,124 @@ const exec = promisify(cbExec);
 const app = express();
 
 const PORT = process.env.PORT || 8080;
-// Live saytının domenini bura yaz (məs: https://www.eduplan.az)
-// hazırda test üçün * qoymuşam, sonra mütləq domeninlə əvəz et!
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*"; // isteğe bağlı məhdudlaşdır
 
 app.use(cors({ origin: ALLOWED_ORIGIN }));
-app.use(express.json());
+app.disable("x-powered-by");
 
-const upload = multer({ dest: "/tmp/uploads" });
-const workRoot = "/tmp/work";
+// Multer: müvəqqəti faylları server/tmp-ə saxla
+const TMP_DIR = path.join(process.cwd(), "tmp_server");
+if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
 
-fs.mkdirSync("/tmp/uploads", { recursive: true });
-fs.mkdirSync(workRoot, { recursive: true });
-
-app.get("/health", (_, res) => res.json({ ok: true }));
-
-/**
- * LibreOffice komanda köməkçisi
- * inPath: yüklənən faylın yolu
- * outExt: çıxış uzantısı (pdf | docx)
- */
-async function convertWithLibreOffice(inPath, outExt) {
-  const jobDir = fs.mkdtempSync(path.join(workRoot, "job-"));
-  const outDir = jobDir;
-
-  // headless çevirmə
-  // DOCX->PDF: pdf:writer_pdf_Export
-  // PDF->DOCX: docx:"MS Word 2007 XML"
-  // LibreOffice PDF-i Draw kimi açır; DOCX-ə export mətni bəzən şəkil kimi ola bilər (PDF strukturu asılıdır).
-  const isPDF = /\.pdf$/i.test(inPath);
-  const filter = isPDF ? `docx:"MS Word 2007 XML"` : `pdf:writer_pdf_Export`;
-
-  const cmd = `soffice --headless --convert-to ${filter} --outdir ${outDir} "${inPath}"`;
-  await exec(cmd);
-
-  // çıxış faylını tap
-  const base = path.basename(inPath, path.extname(inPath));
-  const outPath = path.join(outDir, `${base}.${outExt}`);
-
-  if (!fs.existsSync(outPath)) {
-    // Bəzən LO çıxış adını fərqli yaza bilər – oxşar uzantını axtaraq
-    const files = fs.readdirSync(outDir);
-    const found = files.find(f => f.startsWith(base + ".") && f.endsWith("." + outExt));
-    if (!found) throw new Error("Çıxış faylı tapılmadı");
-    return path.join(outDir, found);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, TMP_DIR),
+  filename: (req, file, cb) => {
+    // timestamp + original name safe
+    const safe = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+    cb(null, `${Date.now()}-${safe}`);
   }
-  return outPath;
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit - lazım olsa artır
+});
+
+// Helper cleanup
+async function safeUnlink(p) {
+  try { await fs.promises.unlink(p); } catch (e) { /* ignore */ }
 }
 
-async function handleConvert(req, res, mode) {
+// Convert with LibreOffice in headless mode
+// docx -> pdf : soffice --headless --convert-to pdf --outdir <outdir> <file>
+// pdf  -> docx : soffice --headless --convert-to docx:"MS Word 2007 XML" --outdir <outdir> <file>
+// Note: PDF->DOCX quality depends on the PDF; LibreOffice may not perfectly reconstruct complex PDFs.
+async function libreConvert(inPath, outDir, toExt) {
+  // toExt: 'pdf' or 'docx'
+  // build soffice command
+  // use timeout (optional) and run in shell
+  const cmd = `soffice --headless --convert-to ${toExt} --outdir "${outDir}" "${inPath}"`;
+  // exec
+  await exec(cmd, { maxBuffer: 1024 * 1024 * 50 }); // 50MB buffer
+  // soffice writes file into outDir with same base name & new extension
+  const base = path.basename(inPath, path.extname(inPath));
+  // find matching file (some libreoffice variants append extension differently)
+  const candidates = await fs.promises.readdir(outDir);
+  const match = candidates.find(f => f.startsWith(base) && (f.endsWith("." + toExt)));
+  if (!match) throw new Error("Converted file not found");
+  return path.join(outDir, match);
+}
+
+app.get("/", (req, res) => {
+  res.json({ ok: true, info: "Converter server. POST /convert with form-data file+mode" });
+});
+
+/*
+  POST /convert
+  form-data:
+    - file: file to convert
+    - mode: 'docx2pdf' | 'pdf2docx'
+*/
+app.post("/convert", upload.single("file"), async (req, res) => {
+  const file = req.file;
+  const mode = req.body.mode || req.query.mode;
+
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded (field name must be 'file')" });
+  }
+  if (!mode || !["docx2pdf", "pdf2docx"].includes(mode)) {
+    await safeUnlink(file.path);
+    return res.status(400).json({ error: "Missing or invalid mode. Use mode=docx2pdf or mode=pdf2docx" });
+  }
+
+  // Basic extension check
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (mode === "docx2pdf" && ext !== ".docx") {
+    await safeUnlink(file.path);
+    return res.status(400).json({ error: "docx2pdf requires a .docx file" });
+  }
+  if (mode === "pdf2docx" && ext !== ".pdf") {
+    await safeUnlink(file.path);
+    return res.status(400).json({ error: "pdf2docx requires a .pdf file" });
+  }
+
+  const outDir = TMP_DIR; // convert to same tmp dir
   try {
-    if (!req.file) return res.status(400).json({ error: "Fayl göndərilməyib" });
+    const toExt = mode === "docx2pdf" ? "pdf" : "docx";
+    // run libreoffice conversion
+    const outPath = await libreConvert(file.path, outDir, toExt);
 
-    const inPath = req.file.path;
-    let outExt, expectedMime;
-
-    if (mode === "docx2pdf") {
-      // daxil DOCX olmalıdır
-      if (!/\.docx$/i.test(req.file.originalname) &&
-          !String(req.file.mimetype).includes("officedocument")) {
-        return res.status(400).json({ error: "Bu rejim üçün DOCX faylı seçin." });
-      }
-      outExt = "pdf";
-      expectedMime = "application/pdf";
-    } else {
-      // pdf2docx
-      if (!/\.pdf$/i.test(req.file.originalname) &&
-          req.file.mimetype !== "application/pdf") {
-        return res.status(400).json({ error: "Bu rejim üçün PDF faylı seçin." });
-      }
-      outExt = "docx";
-      expectedMime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    }
-
-    const outPath = await convertWithLibreOffice(inPath, outExt);
-
-    // Faylı cavab kimi yolla
-    const downloadName =
-      path.basename(req.file.originalname, path.extname(req.file.originalname)) + "." + outExt;
-
-    res.setHeader("Content-Type", expectedMime || mime.lookup(outPath) || "application/octet-stream");
-    res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(downloadName)}"`);
+    // stream file back
+    const stat = await fs.promises.stat(outPath);
+    res.setHeader("Content-Length", stat.size);
+    const mimeType = mime.lookup(outPath) || "application/octet-stream";
+    res.setHeader("Content-Type", mimeType);
+    // suggest filename
+    const suggested = path.basename(file.originalname, path.extname(file.originalname)) + "." + toExt;
+    res.setHeader("Content-Disposition", `attachment; filename="${suggested}"`);
 
     const stream = fs.createReadStream(outPath);
-    stream.on("close", () => {
-      // təmizlik
-      fs.rmSync(outPath, { force: true });
-      fs.rmSync(inPath, { force: true });
-    });
     stream.pipe(res);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: e.message || "Server xətası" });
+
+    // cleanup after stream finishes
+    stream.on("close", async () => {
+      await safeUnlink(file.path);
+      await safeUnlink(outPath);
+    });
+    // on error, try cleanup
+    stream.on("error", async () => {
+      await safeUnlink(file.path);
+      await safeUnlink(outPath);
+    });
+  } catch (err) {
+    console.error("Conversion error:", err);
+    await safeUnlink(file.path);
+    return res.status(500).json({ error: "Conversion failed", detail: String(err.message || err) });
   }
-}
+});
 
-app.post("/convert/docx2pdf", upload.single("file"), (req, res) =>
-  handleConvert(req, res, "docx2pdf")
-);
-
-app.post("/convert/pdf2docx", upload.single("file"), (req, res) =>
-  handleConvert(req, res, "pdf2docx")
-);
+// small health endpoint
+app.get("/health", (req, res) => res.json({ ok: true }));
 
 app.listen(PORT, () => {
-  console.log("Converter server is running on port", PORT);
+  console.log(`Converter server listening on port ${PORT}`);
 });

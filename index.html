@@ -972,6 +972,7 @@ html, body, .scrollarea {
       <div id="conv-msg" class="hidden text-[12px]"></div>
 <div id="conv-result" class="hidden rounded-xl border p-3">
   <a id="conv-download" class="ep-btn-primary w-full text-center" download>Faylı yüklə</a>
+  
 </div>
 
     </div>
@@ -1178,142 +1179,6 @@ document.addEventListener('click', (e) => {
   MODAL.addEventListener('click', (e) => { if (!CARD.contains(e.target)) closeModal(); });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !MODAL.classList.contains('hidden')) closeModal();
-  });
-})();
-</script>
-<script>
-/* ================= PDF / DOCX ÇEVİRİCİ ================= */
-(() => {
-  const $ = s => document.querySelector(s);
-const fileEl = $('#conv-file');
-const modeEl = $('#conv-mode');
-// const nameEl = $('#conv-name');  // ARTIQ YOXDUR
-const nameLabel = $('#conv-file-name');
-  const btn    = $('#btn-convert');
-  const btnR   = $('#btn-convert-reset');
-  const msg    = $('#conv-msg');
-  const box    = $('#conv-result');
-  const dlA    = $('#conv-download');
-
-  if (!fileEl) return; // panel başqa səhifədə gizlidirsə
-
-  function showMsg(text, type='info'){
-    msg.textContent = text;
-    msg.classList.remove('hidden','text-rose-500','text-emerald-600','text-slate-500');
-    msg.classList.add(type==='error'?'text-rose-500':type==='ok'?'text-emerald-600':'text-slate-500');
-  }
-  function hideMsg(){ msg.classList.add('hidden'); }
-  function resetUI(){
-    hideMsg();
-    box.classList.add('hidden');
-    dlA.removeAttribute('href');
-    dlA.removeAttribute('download');
-  }
-btnR?.addEventListener('click', () => {
-  fileEl.value = '';
-  if (nameLabel) nameLabel.textContent = 'Fayl seçilməyib';
-  resetUI();
-});
-fileEl?.addEventListener('change', () => {
-  const f = fileEl.files?.[0];
-  nameLabel.textContent = f ? `Seçilən fayl: ${f.name}` : 'Fayl seçilməyib';
-});
-function downloadName(suggest, ext){
-  const base = (suggest || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
-  return base.endsWith('.'+ext) ? base : `${base}.${ext}`;
-}
-
-  // ---- DOCX → PDF ----
-  async function docxToPdf(file){
-    showMsg('DOCX faylı oxunur...', 'info');
-    const arrayBuffer = await file.arrayBuffer();
-    const result = await window.mammoth.convertToHtml({ arrayBuffer });
-    const html = result.value || '<div></div>';
-
-    // HTML-i görünməz konteynerdə PDF-ə çevirək
-    const temp = document.createElement('div');
-    temp.style.position='fixed'; temp.style.left='-99999px';
-    temp.style.top='0'; temp.style.width='800px';
-    temp.innerHTML = html;
-    document.body.appendChild(temp);
-
-    showMsg('PDF yaradılır...', 'info');
-    const opt = { margin: 10, filename: 'out.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-  const worker = window.html2pdf().from(temp).set(opt).toPdf();
-  const pdf = await worker.get('pdf');
-  const pdfBlob = await pdf.output('blob');
-    temp.remove();
-
-    const url = URL.createObjectURL(pdfBlob);
-    dlA.href = url;
-    dlA.download = downloadName(file.name.replace(/\.docx$/i,''), 'pdf');
-    box.classList.remove('hidden');
-    showMsg('Hazırdır ✅', 'ok');
-  }
-
-  // ---- PDF → DOCX (sadə mətn, beta) ----
-  async function pdfToDocx(file){
-    showMsg('PDF oxunur...', 'info');
-    const data = await file.arrayBuffer();
-    const pdfjs = window.pdfjsLib;
-    if (!pdfjs) throw new Error('PDF işləyicisi tapılmadı (pdfjsLib).');
-    if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-      pdfjs.GlobalWorkerOptions.workerSrc =
-        'https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.js';
-    }
-    const pdf = await pdfjs.getDocument({ data }).promise;
-
-
-    const paras = [];
-    for (let p=1; p<=pdf.numPages; p++){
-      const page = await pdf.getPage(p);
-      const text = await page.getTextContent();
-      const line = text.items.map(it => it.str).join(' ').replace(/\s+/g,' ').trim();
-      if (line) paras.push(line);
-    }
-
-    // DOCX qur
-    const { Document, Packer, Paragraph, TextRun } = window.docx;
-    const doc = new Document({
-      sections: [{
-        properties: {},
-        children: paras.length ? paras.map(t => new Paragraph({ children:[ new TextRun({ text:t }) ] })) : [ new Paragraph(" ") ],
-      }]
-    });
-
-    showMsg('DOCX yaradılır...', 'info');
-    const blob = await Packer.toBlob(doc);
-    const url = URL.createObjectURL(blob);
-    dlA.href = url;
-    dlA.download = downloadName(file.name.replace(/\.pdf$/i,''), 'docx');
-    box.classList.remove('hidden');
-    showMsg('Hazırdır ✅ (mətn əsaslı konvert)', 'ok');
-  }
-
-  btn?.addEventListener('click', async () => {
-    try{
-      resetUI();
-      const f = fileEl.files?.[0];
-      if(!f){ showMsg('Zəhmət olmasa fayl seçin.', 'error'); return; }
-
-      const mode = modeEl.value;
-      const isDocx = /\.docx$/i.test(f.name) || f.type.includes('officedocument');
-      const isPdf  = /\.pdf$/i.test(f.name) || f.type === 'application/pdf';
-
-      if (mode==='docx2pdf' && !isDocx){ showMsg('Bu rejim üçün DOCX faylı seçin.', 'error'); return; }
-      if (mode==='pdf2docx' && !isPdf){ showMsg('Bu rejim üçün PDF faylı seçin.', 'error'); return; }
-
-      btn.disabled = true; btn.classList.add('opacity-60','pointer-events-none');
-
-      if (mode==='docx2pdf') await docxToPdf(f);
-      else await pdfToDocx(f);
-
-    } catch(err){
-      console.error(err);
-      showMsg('Xəta baş verdi: ' + (err?.message || err), 'error');
-    } finally {
-      btn.disabled = false; btn.classList.remove('opacity-60','pointer-events-none');
-    }
   });
 })();
 </script>
@@ -2274,14 +2139,108 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 </script>
-<!-- DOCX → HTML üçün -->
-<script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
-<!-- HTML → PDF üçün -->
-<script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-<!-- PDF oxumaq üçün -->
-<script src="https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.min.js"></script>
-<!-- DOCX yaratmaq üçün -->
-<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+<script>
+/* ================= SERVER-BAZALI PDF / DOCX ÇEVİRİCİ (PRO) ================= */
+(() => {
+  const $ = s => document.querySelector(s);
+  const fileEl = $('#conv-file');
+  const modeEl = $('#conv-mode');
+  const nameLabel = $('#conv-file-name');
+  const btn    = $('#btn-convert');
+  const btnR   = $('#btn-convert-reset');
+  const msg    = $('#conv-msg');
+  const box    = $('#conv-result');
+  const dlA    = $('#conv-download');
+
+  // API kökü (eyni hostda işləyirsə boş saxla; yoxsa tam URL ver)
+  const API_BASE = ''; // məsələn: 'https://api.eduplan.az' (Nginx ilə proxy də edə bilərsən)
+
+  function showMsg(text, type='info'){
+    msg.textContent = text;
+    msg.classList.remove('hidden','text-rose-500','text-emerald-600','text-slate-500');
+    msg.classList.add(type==='error'?'text-rose-500':type==='ok'?'text-emerald-600':'text-slate-500');
+  }
+  function hideMsg(){ msg.classList.add('hidden'); }
+  function resetUI(){
+    hideMsg();
+    box.classList.add('hidden');
+    dlA.removeAttribute('href');
+    dlA.removeAttribute('download');
+  }
+  btnR?.addEventListener('click', () => {
+    fileEl.value = '';
+    if (nameLabel) nameLabel.textContent = 'Fayl seçilməyib';
+    resetUI();
+  });
+  fileEl?.addEventListener('change', () => {
+    const f = fileEl.files?.[0];
+    nameLabel.textContent = f ? `Seçilən fayl: ${f.name}` : 'Fayl seçilməyib';
+  });
+
+  function downloadName(suggest){
+    return (suggest || 'output').replace(/[\/\\:?*"<>|]+/g,'-');
+  }
+
+  btn?.addEventListener('click', async () => {
+    try{
+      resetUI();
+      const f = fileEl.files?.[0];
+      if(!f){ showMsg('Zəhmət olmasa fayl seçin.', 'error'); return; }
+
+      const mode = modeEl.value; // pdf2docx | docx2pdf
+      const isDocx = /\.docx$/i.test(f.name) || f.type.includes('officedocument');
+      const isPdf  = /\.pdf$/i.test(f.name) || f.type === 'application/pdf';
+      if (mode==='docx2pdf' && !isDocx){ showMsg('Bu rejim üçün DOCX faylı seçin.', 'error'); return; }
+      if (mode==='pdf2docx' && !isPdf){ showMsg('Bu rejim üçün PDF faylı seçin.', 'error'); return; }
+
+      // Şifrəli PDF üçün parol istəyəcəksənsə, burada input əlavə edə bilərsən:
+      const password = ''; // istəsən modal/input ilə doldur
+
+      const fd = new FormData();
+      fd.append('file', f);
+      if (password) fd.append('password', password);
+
+      btn.disabled = true; btn.classList.add('opacity-60','pointer-events-none');
+      showMsg('Yüklənir və konvert olunur...', 'info');
+
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 1000*60*2); // 2 dəq timeout
+
+      const res = await fetch(`${API_BASE}/api/convert?mode=${encodeURIComponent(mode)}`, {
+        method: 'POST',
+        body: fd,
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        const err = await res.json().catch(()=>({error: res.statusText}));
+        throw new Error(err?.error || 'Server xətası');
+      }
+
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const ext  = mode === 'pdf2docx' ? '.docx' : '.pdf';
+      const base = downloadName(f.name.replace(/\.[^.]+$/,''));
+      dlA.href = url;
+      dlA.download = base + ext;
+
+      box.classList.remove('hidden');
+      showMsg('Hazırdır ✅', 'ok');
+
+      // İstəsən sənin 15s modalını da burada çağır:
+      // openModal(dlA.href);
+
+    } catch(err){
+      console.error(err);
+      showMsg('Xəta baş verdi: ' + (err?.message || err), 'error');
+    } finally {
+      btn.disabled = false; btn.classList.remove('opacity-60','pointer-events-none');
+    }
+  });
+})();
+</script>
+
 
 </body>
 </html>

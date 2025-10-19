@@ -587,25 +587,25 @@ html, body {
   overflow: visible;
 }
 /* Kalkulyatorun iç scroll konteyneri alt tərəfdə rahat nəfəs alsın */
+/* Sticky lazım deyil → adi padding */
 #calc-card .scrollarea{
   position: relative;
-  padding-bottom: calc(var(--panel-pad-bottom,16px) + 20px + env(safe-area-inset-bottom));
+  padding: var(--panel-pad-top) 16px var(--panel-pad-bottom);
 }
 
+
 /* Düymələr daim görünən (sticky) alt panel kimi dursun */
+/* Sticky YOXDUR – düymələr kartın sonunda normal görünür */
 #calc-actions{
-  position: sticky;
-  bottom: 0;                    /* scrollarea dibinə yapışır */
-  margin: 8px -4px -4px;        /* kartın iç kənarlarını doldurur */
-  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-  background:
-    linear-gradient(to top, color-mix(in srgb, var(--card) 96%, transparent) 0%,
-                           color-mix(in srgb, var(--card) 70%, transparent) 60%,
-                           transparent 100%);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border-top: 1px solid var(--border);
-  z-index: 5;                   /* üst qat */
+  position: static;     /* sticky → static */
+  bottom: auto;
+  margin: 8px 0 0;      /* normal üst boşluq */
+  padding: 0;           /* əlavə padding lazım deyil */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: none;
+  z-index: auto;
 }
 
 /* Mobil-də mətnin qırpılmaması üçün – sizdə artıq var, saxlayırıq */
@@ -614,7 +614,6 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
-#calc-actions{ margin-bottom: 4px; }
 
   </style>
 

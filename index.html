@@ -94,8 +94,7 @@ select, input, button { max-width: 100%; }
 }
 /* əsas fond və mətn */
 body { color: var(--text); }
-/* Body-dən gradienti götürürük */
-body.bg-gradient-to-b { background-image: none !important; }
+
 
 /* Bütün fonu tutan sabit qat — overscroll zamanı da bu görünəcək */
 html::before{
@@ -254,7 +253,6 @@ select:invalid { color:#9aa4b2; }
   padding:0 !important;
 }
 
-html, body { max-width: 100%; overflow-x: hidden; }
 *, *::before, *::after { box-sizing: border-box; }
 img, svg, video { max-width: 100%; height: auto; }
 
@@ -658,7 +656,7 @@ html, body, .scrollarea {
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 
 </head>
-<body class="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900 relative">
+<body class="min-h-screen text-slate-900 relative">
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>

@@ -1,122 +1,119 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
-import { fileURLToPath } from "url";
-import { dirname, join, extname, basename } from "path";
-import { spawn } from "child_process";
-import { file as tmpFile, dir as tmpDir } from "tmp-promise";
-import fs from "fs/promises";
+import { exec as cbExec } from "child_process";
+import { promisify } from "util";
+import fs from "fs";
+import path from "path";
 import mime from "mime-types";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+const exec = promisify(cbExec);
 const app = express();
-app.use(cors());
+
+const PORT = process.env.PORT || 8080;
+// Live saytının domenini bura yaz (məs: https://www.eduplan.az)
+// hazırda test üçün * qoymuşam, sonra mütləq domeninlə əvəz et!
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
+
+app.use(cors({ origin: ALLOWED_ORIGIN }));
 app.use(express.json());
 
-// Yükləmə (RAM-a yox, diskə yaz)
-const upload = multer({ dest: join(__dirname, "uploads") });
+const upload = multer({ dest: "/tmp/uploads" });
+const workRoot = "/tmp/work";
 
-// LibreOffice köməkçisi
-function runSoffice(args, cwd) {
-  return new Promise((resolve, reject) => {
-    const proc = spawn("soffice", ["--headless", "--nologo", "--nofirststartwizard", ...args], { cwd });
-    let stderr = "";
-    proc.stderr.on("data", (d) => (stderr += d.toString()));
-    proc.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(stderr || `LibreOffice exited ${code}`));
-    });
-  });
-}
+fs.mkdirSync("/tmp/uploads", { recursive: true });
+fs.mkdirSync(workRoot, { recursive: true });
 
-// QPDF (şifrəli PDF-lər üçün – opsional)
-function runQpdf(args, cwd) {
-  return new Promise((resolve, reject) => {
-    const proc = spawn("qpdf", args, { cwd });
-    let stderr = "";
-    proc.stderr.on("data", (d) => (stderr += d.toString()));
-    proc.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(stderr || `qpdf exited ${code}`));
-    });
-  });
-}
+app.get("/health", (_, res) => res.json({ ok: true }));
 
 /**
- * POST /api/convert?mode=pdf2docx|docx2pdf
- * Body: form-data -> file (binary), password (optional)
+ * LibreOffice komanda köməkçisi
+ * inPath: yüklənən faylın yolu
+ * outExt: çıxış uzantısı (pdf | docx)
  */
-app.post("/api/convert", upload.single("file"), async (req, res) => {
-  const mode = (req.query.mode || "").toLowerCase();
-  if (!req.file) return res.status(400).json({ error: "Fayl göndərilməyib." });
-  if (!["pdf2docx", "docx2pdf"].includes(mode)) {
-    return res.status(400).json({ error: "Yanlış mode. pdf2docx və ya docx2pdf olmalıdır." });
+async function convertWithLibreOffice(inPath, outExt) {
+  const jobDir = fs.mkdtempSync(path.join(workRoot, "job-"));
+  const outDir = jobDir;
+
+  // headless çevirmə
+  // DOCX->PDF: pdf:writer_pdf_Export
+  // PDF->DOCX: docx:"MS Word 2007 XML"
+  // LibreOffice PDF-i Draw kimi açır; DOCX-ə export mətni bəzən şəkil kimi ola bilər (PDF strukturu asılıdır).
+  const isPDF = /\.pdf$/i.test(inPath);
+  const filter = isPDF ? `docx:"MS Word 2007 XML"` : `pdf:writer_pdf_Export`;
+
+  const cmd = `soffice --headless --convert-to ${filter} --outdir ${outDir} "${inPath}"`;
+  await exec(cmd);
+
+  // çıxış faylını tap
+  const base = path.basename(inPath, path.extname(inPath));
+  const outPath = path.join(outDir, `${base}.${outExt}`);
+
+  if (!fs.existsSync(outPath)) {
+    // Bəzən LO çıxış adını fərqli yaza bilər – oxşar uzantını axtaraq
+    const files = fs.readdirSync(outDir);
+    const found = files.find(f => f.startsWith(base + ".") && f.endsWith("." + outExt));
+    if (!found) throw new Error("Çıxış faylı tapılmadı");
+    return path.join(outDir, found);
   }
+  return outPath;
+}
 
-  const original = req.file.path;
-  const originalName = req.file.originalname || "input";
-  const originalExt = (extname(originalName) || "").toLowerCase();
-  const tmp = await tmpDir({ unsafeCleanup: true });
-
+async function handleConvert(req, res, mode) {
   try {
-    let inputPath = original;
+    if (!req.file) return res.status(400).json({ error: "Fayl göndərilməyib" });
 
-    // Şifrəli PDF üçün parol gəlirsə, qpdf ilə deşifrə et
-    if (mode === "pdf2docx" && req.body?.password) {
-      const decrypted = join(tmp.path, "decrypted.pdf");
-      await runQpdf(["--password=" + req.body.password, "--decrypt", inputPath, decrypted], tmp.path);
-      inputPath = decrypted;
-    }
+    const inPath = req.file.path;
+    let outExt, expectedMime;
 
-    // Çevir
-    // (LibreOffice çıxışı --outdir ilə tmp qovluğa yazır)
-    if (mode === "pdf2docx") {
-      // PDF → DOCX
-      await runSoffice(["--convert-to", "docx", "--outdir", tmp.path, inputPath], tmp.path);
+    if (mode === "docx2pdf") {
+      // daxil DOCX olmalıdır
+      if (!/\.docx$/i.test(req.file.originalname) &&
+          !String(req.file.mimetype).includes("officedocument")) {
+        return res.status(400).json({ error: "Bu rejim üçün DOCX faylı seçin." });
+      }
+      outExt = "pdf";
+      expectedMime = "application/pdf";
     } else {
-      // DOCX → PDF (writer_pdf_Export profili ilə)
-      await runSoffice(["--convert-to", "pdf:writer_pdf_Export", "--outdir", tmp.path, inputPath], tmp.path);
+      // pdf2docx
+      if (!/\.pdf$/i.test(req.file.originalname) &&
+          req.file.mimetype !== "application/pdf") {
+        return res.status(400).json({ error: "Bu rejim üçün PDF faylı seçin." });
+      }
+      outExt = "docx";
+      expectedMime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     }
 
-    // Çıxış faylını tap
-    const targetExt = mode === "pdf2docx" ? ".docx" : ".pdf";
-    const base = basename(originalName, originalExt) || "output";
-    const outPath = join(tmp.path, base + targetExt);
+    const outPath = await convertWithLibreOffice(inPath, outExt);
 
-    // Bəzən LibreOffice base adı dəyişə bilər; fallback kimi qovluqdakı uyğun faylı tap
-    let finalPath = outPath;
-    try {
-      await fs.access(finalPath);
-    } catch {
-      const files = await fs.readdir(tmp.path);
-      const found = files.find((f) => f.toLowerCase().endsWith(targetExt));
-      if (!found) throw new Error("Çıxış faylı tapılmadı.");
-      finalPath = join(tmp.path, found);
-    }
+    // Faylı cavab kimi yolla
+    const downloadName =
+      path.basename(req.file.originalname, path.extname(req.file.originalname)) + "." + outExt;
 
-    const filename = base.replace(/[\/\\:?*"<>|]+/g, "-") + targetExt;
-    res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(filename)}"`);
-    res.setHeader("Content-Type", mime.lookup(finalPath) || "application/octet-stream");
+    res.setHeader("Content-Type", expectedMime || mime.lookup(outPath) || "application/octet-stream");
+    res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(downloadName)}"`);
 
-    // Faylı strimlə göndər və təmizlə
-    const stream = (await fs.open(finalPath)).createReadStream();
-    stream.on("close", async () => {
-      await fs.unlink(req.file.path).catch(() => {});
-      await fs.rm(tmp.path, { recursive: true, force: true }).catch(() => {});
+    const stream = fs.createReadStream(outPath);
+    stream.on("close", () => {
+      // təmizlik
+      fs.rmSync(outPath, { force: true });
+      fs.rmSync(inPath, { force: true });
     });
     stream.pipe(res);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: e.message || "Konvert xətası baş verdi." });
-    await fs.unlink(req.file.path).catch(() => {});
-    await fs.rm(tmp.path, { recursive: true, force: true }).catch(() => {});
+    res.status(500).json({ error: e.message || "Server xətası" });
   }
+}
+
+app.post("/convert/docx2pdf", upload.single("file"), (req, res) =>
+  handleConvert(req, res, "docx2pdf")
+);
+
+app.post("/convert/pdf2docx", upload.single("file"), (req, res) =>
+  handleConvert(req, res, "pdf2docx")
+);
+
+app.listen(PORT, () => {
+  console.log("Converter server is running on port", PORT);
 });
-
-// Statik (frontend) – istəsən kökdən servis et
-app.use(express.static(join(__dirname, ".."))); // index.html yuxarı qovluqdadırsa
-
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log("Converter API listening on " + PORT));

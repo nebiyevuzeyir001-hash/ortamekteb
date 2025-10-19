@@ -2207,17 +2207,20 @@ const API_BASE = window.API_BASE || 'https://ortamekteb.onrender.com';
       const controller = new AbortController();
       const timeout = setTimeout(()=>controller.abort(), 1000*60*2); // 2 dəq timeout
 
-      const res = await fetch(`${API_BASE}/api/convert?mode=${encodeURIComponent(mode)}`, {
-        method: 'POST',
-        body: fd,
-        signal: controller.signal
-      });
-      clearTimeout(timeout);
+await ping();
+const res = await postWithRetry(`${API_BASE}/api/convert?mode=${encodeURIComponent(mode)}`,
+  { method:'POST', body: fd, signal }, 3);
 
-      if (!res.ok) {
-        const err = await res.json().catch(()=>({error: res.statusText}));
-        throw new Error(err?.error || 'Server xətası');
-      }
+if (!res.ok) {
+  if (res.status === 413) throw new Error('Fayl çox böyükdür (413).');
+  if (res.status === 415) throw new Error('Dəstəklənməyən fayl növü (415).');
+  if (res.status === 400) throw new Error('Sorğu yalnışdır (400).');
+  if ([500,502,503,504,522,524].includes(res.status)) {
+    throw new Error('Server hazır deyil və ya yüklənib (5xx). Zəhmət olmasa yenidən cəhd edin.');
+  }
+  throw new Error(await res.text() || res.statusText || 'Naməlum server xətası');
+}
+
 
       const blob = await res.blob();
       const url  = URL.createObjectURL(blob);

@@ -4,6 +4,10 @@
   <url><loc>https://www.eduplan.az/ksq-bsq</loc></url>
   <url><loc>https://www.eduplan.az/pp</loc></url>
   <url><loc>https://www.eduplan.az/calculator</loc></url>
+  <url>
+  <loc>https://www.eduplan.az/timetable.html</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.90</priority>
+</url>
   <url><loc>https://www.eduplan.az/question-bank</loc></url>
-  <url><loc>https://www.eduplan.az/export</loc></url>
 </urlset>

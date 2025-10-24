@@ -623,6 +623,9 @@ html, body, .scrollarea {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+<style>
+  .is-disabled{ opacity:.6; pointer-events:none; cursor:not-allowed; }
+</style>
 
   </style>
 
@@ -690,7 +693,7 @@ html, body, .scrollarea {
 
   <li class="flex items-center gap-2">
     <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
-    <span>Cədvəl qurucusu</span>
+    <span>Cədvəl qurucusu (hazırlanır)</span>
   </li>
 </ul>
 
@@ -718,10 +721,13 @@ html, body, .scrollarea {
 <div class="grid sm:grid-cols-3 gap-4">
   <a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
 <!--orta blok--->
-<a href="/timetable.html" target="_blank" rel="noopener"
-   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+<div class="rounded-2xl bg-white border p-4 shadow-sm transition flex items-center gap-2 opacity-70 cursor-not-allowed">
   📅 <span>Online dərs cədvəli</span>
-</a>
+  <span class="ml-auto inline-flex items-center gap-1 text-xs rounded-full border px-2 py-0.5 bg-slate-100">
+    ⏳ Hazırlanır
+  </span>
+</div>
+
 
   <!-- “Sual bankı” sağa keçir -->
   <a href="/question-bank" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></a>
@@ -909,6 +915,7 @@ html, body, .scrollarea {
     <p class="text-sm text-white/60">
       Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və məhdudiyyətləri
       asanlıqla idarə edin.
+      <strong class="text-white/80">Hazırlanır.</strong>
     </p>
 
     <div class="mt-4">

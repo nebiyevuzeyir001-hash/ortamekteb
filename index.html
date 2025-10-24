@@ -922,65 +922,28 @@ html, body, .scrollarea {
 
         </div>
 
-<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]" id="convert-card">
-  <div class="p-4 border-b">
-    <div class="text-base font-semibold">📄 PDF / DOCX çevirici</div>
+<!-- Online dərs cədvəli hazırlama -->
+<div class="rounded-2xl bg-[#12141b] border border-white/5 shadow-lg">
+  <div class="px-6 py-4 flex items-center gap-2">
+    <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-600/20">📅</span>
+    <h3 class="text-white/90 font-semibold">Online dərs cədvəli hazırlama</h3>
   </div>
 
-<div class="p-6 h-full">
-  <div id="conv-inner"
-       class="flex flex-col justify-center gap-4 max-w-md w-full mx-auto
-              min-h-0">
+  <div class="px-6 pb-6">
+    <p class="text-sm text-white/60">
+      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və məhdudiyyətləri
+      asanlıqla idarə edin.
+    </p>
 
-<!-- Fayl seçimi (YENİ – lokalizə olunmuş və səliqəli) -->
-<div>
-  <label class="block text-sm text-slate-700 mb-1">Fayl</label>
-
-  <div class="flex items-center gap-3">
-    <!-- native input gizli qalır -->
-    <input id="conv-file" type="file" class="sr-only"
-      accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-
-    <!-- gözəl trigger düyməsi -->
-    <label for="conv-file" class="ep-btn-secondary w-auto px-4 cursor-pointer select-none">
-      Fayl seç
-    </label>
-
-    <!-- seçilmiş faylın adı -->
-    <span id="conv-file-name" class="text-sm text-slate-500">Fayl seçilməyib</span>
-  </div>
-
-  <p class="mt-2 text-xs text-slate-500">PDF və ya DOCX yükləyin.</p>
-</div>
-
-<div class="grid sm:grid-cols-2 gap-3">
-  <div>
-    <label class="block text-sm text-slate-700 mb-1">Çevirmə növü</label>
-<select id="conv-mode" class="select-premium w-full rounded-xl border px-3 py-2 text-sm">
-  <option value="pdf2docx" selected>PDF → DOCX</option>
-  <option value="docx2pdf">DOCX → PDF</option>
-</select>
-  </div>
-  <!-- “Fayl adı” sahəsi tamamilə SİLİNDİ -->
-</div>
-
-
-      <!-- Düymələr -->
-      <div class="grid grid-cols-2 gap-2">
-        <button id="btn-convert" class="ep-btn-primary">Çevir</button>
-        <button id="btn-convert-reset" type="button" class="ep-btn-secondary">Sıfırla</button>
-      </div>
-
-      <!-- Proqres / nəticə -->
-      <div id="conv-msg" class="hidden text-[12px]"></div>
-<div id="conv-result" class="hidden rounded-xl border p-3">
-  <a id="conv-download" class="ep-btn-primary w-full text-center" download>Faylı yüklə</a>
-  
-</div>
-
+    <div class="mt-4">
+      <a href="/timetable.html" target="_blank" rel="noopener"
+         class="inline-flex items-center justify-center rounded-xl px-5 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition">
+        Aç (yeni səhifədə)
+      </a>
     </div>
   </div>
 </div>
+
 
 
 <!-- SUAL BANKI — CƏLBEDİCİ "TEZLİKLƏ" BLOKU -->

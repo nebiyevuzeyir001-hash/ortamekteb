@@ -912,10 +912,16 @@ html, body, .scrollarea {
     </p>
 
     <div class="mt-4">
-      <a href="/timetable.html" target="_blank" rel="noopener"
-         class="inline-flex items-center justify-center rounded-xl px-5 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition">
-        Aç (yeni səhifədə)
-      </a>
+<div class="flex items-center gap-2">
+  <button disabled
+    class="inline-flex items-center justify-center rounded-xl px-5 py-2 text-sm font-medium bg-indigo-600/50 text-white/80 cursor-not-allowed">
+    Aç
+  </button>
+  <span class="inline-flex items-center gap-1 text-xs rounded-full border border-white/10 px-2 py-0.5 text-white/80">
+    ⏳ Hazırlanır
+  </span>
+</div>
+
     </div>
   </div>
 </div>

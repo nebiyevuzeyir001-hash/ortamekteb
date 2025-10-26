@@ -619,6 +619,22 @@ html, body, .scrollarea {
   background: transparent;
 }
   .is-disabled{ opacity:.6; pointer-events:none; cursor:not-allowed; }
+/* 📱 Mobil (≤640px): panel kartlarında hündürlük məhdudiyyəti olmasın */
+@media (max-width: 640px){
+  .panel-card{
+    max-height: none !important;
+    min-height: 0 !important;      /* kontent qədər uzana bilsin */
+    height: auto !important;
+  }
+  /* Daxili scrollu da söndürək ki, alt hissə qırpılmasın */
+  .panel-scroll > .scrollarea{
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-bottom: var(--panel-pad-bottom); /* alt nəfəs qalır */
+  }
+}
+
   </style>
 
 
@@ -2043,23 +2059,34 @@ const bc = bcMap[route] || bcMap["/"];
 (() => {
 const ROUTES = {
   "/":              { tab: "ksq",   target: "#hero" },
-  "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },      // << dəyişdi
-  "/pp":            { tab: "pp",    target: "#tabs" },      // << dəyişdi
-  "/calculator":    { tab: "tools", target: "#tabs" },      // << dəyişdi
-  "/question-bank": { tab: "tools", target: "#tabs" },      // << dəyişdi
-  "/timetable":     { tab: "tools", target: "#tabs" }       // << dəyişdi
+  "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },
+  "/pp":            { tab: "pp",    target: "#tabs" },
+  // Alətlər panelində konkret kartlara düşək:
+  "/calculator":    { tab: "tools", target: "#calc-card" },
+  "/timetable":     { tab: "tools", target: "#tt-card" },
+  "/question-bank": { tab: "tools", target: "#bank-card" }
 };
 
 
 
 
+
   // Kiçik helper: smooth scroll (+ sticky header offset ~90px)
-  function smoothTo(sel) {
-    const el = document.querySelector(sel);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.pageYOffset - 90;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
+function smoothTo(sel) {
+  const el = document.querySelector(sel);
+  if (!el) return;
+
+  const header = document.querySelector('header');
+  const sticky = (header?.offsetHeight ?? 64) + 10; // 64px header + 10px nəfəs
+  // Layout tam otursun (panel aktivləşdikdən sonra)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const y = el.getBoundingClientRect().top + window.pageYOffset - sticky;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    });
+  });
+}
+
 
   // Mərkəzi naviqasiya funksiyası
 function goTo(route, { replace = false } = {}) {

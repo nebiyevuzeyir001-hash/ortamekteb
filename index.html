@@ -2043,12 +2043,13 @@ const bc = bcMap[route] || bcMap["/"];
 (() => {
 const ROUTES = {
   "/":              { tab: "ksq",   target: "#hero" },
-  "/ksq-bsq":       { tab: "ksq",   target: "#panel-ksq" },
-  "/pp":            { tab: "pp",    target: "#panel-pp" },
-  "/calculator":    { tab: "tools", target: "#calc-card" },
-  "/question-bank": { tab: "tools", target: "#bank-card" },
-  "/timetable":     { tab: "tools", target: "#tt-card" }
+  "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },      // << dəyişdi
+  "/pp":            { tab: "pp",    target: "#tabs" },      // << dəyişdi
+  "/calculator":    { tab: "tools", target: "#tabs" },      // << dəyişdi
+  "/question-bank": { tab: "tools", target: "#tabs" },      // << dəyişdi
+  "/timetable":     { tab: "tools", target: "#tabs" }       // << dəyişdi
 };
+
 
 
 

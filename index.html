@@ -733,11 +733,12 @@ html, body, .scrollarea {
   </section>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-    <div id="tabs" class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner overflow-hidden">
-      <button data-tab="ksq" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-ksq">KSQ / BSQ</button>
-      <button data-tab="pp"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-pp">Perspektiv plan</button>
-      <button data-tab="tools" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" id="tab-tools">Alətlər & Testlər</button>
-    </div>
+<div id="tabs" role="tablist" aria-label="Bölmələr"
+     class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner overflow-hidden">
+  <button id="tab-ksq"   data-tab="ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">KSQ / BSQ</button>
+  <button id="tab-pp"    data-tab="pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Perspektiv plan</button>
+  <button id="tab-tools" data-tab="tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Alətlər & Testlər</button>
+</div>
 
     <section id="panel-ksq" class="tab-panel is-active mt-6">
       <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
@@ -1242,6 +1243,25 @@ function setActiveTab(name, opts = { scroll: false }) {
   document.getElementById('ksq-results')?.scrollTo?.(0,0);
   document.getElementById('pp-results')?.scrollTo?.(0,0);
 }
+
+  // URL → aktiv tab xəritəsi
+  const TAB_FROM_PATH = (p => {
+    if (p.startsWith('/pp'))          return 'pp';
+    if (p.startsWith('/calculator') ||
+        p.startsWith('/question-bank')||
+        p.startsWith('/timetable'))   return 'tools';
+    // default və ya /ksq-bsq, / :
+    return 'ksq';
+  });
+
+  // İlk yükdə doğru tabı dərhal yandır (routerdən də əvvəl)
+  (function primeActiveTabOnLoad(){
+    const current = TAB_FROM_PATH(location.pathname);
+    if (typeof setActiveTab === 'function') {
+      setActiveTab(current, { scroll:false });
+    }
+  })();
+
 
   function option(el, val, text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o);}  
 
@@ -2022,14 +2042,14 @@ const bc = bcMap[route] || bcMap["/"];
 <script>
 (() => {
 const ROUTES = {
-  "/":              { tab: "ksq",   target: "#hero" },     // ✨
+  "/":              { tab: "ksq",   target: "#hero" },
   "/ksq-bsq":       { tab: "ksq",   target: "#panel-ksq" },
   "/pp":            { tab: "pp",    target: "#panel-pp" },
   "/calculator":    { tab: "tools", target: "#calc-card" },
   "/question-bank": { tab: "tools", target: "#bank-card" },
-  "/timetable":     { tab: "tools", target: "#tt-card" }  
-
+  "/timetable":     { tab: "tools", target: "#tt-card" }
 };
+
 
 
   // Kiçik helper: smooth scroll (+ sticky header offset ~90px)
@@ -2106,17 +2126,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // Mövcud TAB düymələrinə route qoş (sənin kodunda var idi — bunu əvəz et)
-  const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" }; // tools üçün əsas fokus: kalkulyator
-  ["tab-ksq", "tab-pp", "tab-tools"].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const name = el.dataset.tab;
-      const route = TAB_ROUTES[name] || "/";
-      goTo(route);
-    });
+const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" };
+["tab-ksq","tab-pp","tab-tools"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener("click",(ev)=>{
+    ev.preventDefault();
+    const name = el.dataset.tab;
+    const route = TAB_ROUTES[name] || "/";
+    goTo(route);
   });
+});
 })();
 </script>
 

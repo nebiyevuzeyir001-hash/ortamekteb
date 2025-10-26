@@ -715,11 +715,13 @@ html, body, .scrollarea {
         </div>
 <div class="grid sm:grid-cols-3 gap-4">
   <a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
-<!--orta blok--->
-<a href="/timetable.html"
-   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+<!-- orta blok (DƏYİŞDİR) -->
+<a href="/timetable"
+   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block"
+   data-route="/timetable">
   📅 <span>Online dərs cədvəli</span>
 </a>
+
 
 
 
@@ -900,30 +902,28 @@ html, body, .scrollarea {
 
         </div>
 
-<!-- Online dərs cədvəli hazırlama -->
-<div id="tt-card" class="rounded-2xl bg-[#12141b] border border-white/5 shadow-lg">
-  <div class="px-6 py-4 flex items-center gap-2">
-    <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-600/20">📅</span>
-    <h3 class="text-white/90 font-semibold">Online dərs cədvəli hazırlama</h3>
+<!-- Online dərs cədvəli hazırlama — panel-card formatında (YENİ) -->
+<div id="tt-card" class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+  <!-- Başlıq -->
+  <div class="p-4 border-b">
+    <div class="text-base font-semibold">📅 Online dərs cədvəli hazırlama</div>
   </div>
 
-  <div class="px-6 pb-6">
-    <p class="text-sm text-white/60">
-      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və məhdudiyyətləri
-      asanlıqla idarə edin.
+  <!-- Məzmun -->
+  <div class="p-4 flex flex-col justify-between">
+    <p class="text-sm text-slate-600">
+      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və məhdudiyyətləri asanlıqla idarə edin.
     </p>
-
     <div class="mt-4">
-<div class="flex items-center gap-2">
-<a href="/timetable.html"
-   class="inline-flex items-center justify-center rounded-xl px-5 py-2 text-sm font-medium bg-indigo-600 text-white">
-  Aç
-</a>
-</div>
-
+      <a href="/timetable"
+         data-route="/timetable"
+         class="ep-btn-primary route-btn inline-flex items-center justify-center">
+        Aç
+      </a>
     </div>
   </div>
 </div>
+
 
 
 

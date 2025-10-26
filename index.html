@@ -634,6 +634,30 @@ html, body, .scrollarea {
     padding-bottom: var(--panel-pad-bottom); /* alt nəfəs qalır */
   }
 }
+/* === TOOLS paneli üçün yekun sabitləmə === */
+
+/* 3 kartın olduğu grid: bütün sətir hündürlüyü eyni (ən hündür karta bərabər) */
+.tools-grid{
+  align-items: stretch !important;
+  grid-auto-rows: 1fr !important;    /* sətirdə hamı eyni hündürlükdə */
+}
+
+/* Kartların hündürlüyünü məzmun müəyyən etsin — kəsmə olmasın */
+.tools-grid .panel-card{
+  height: 100% !important;
+  min-height: var(--panel-min-h, 320px) !important;
+  max-height: none !important;        /* DESKTOP + MOBİL: limit YOX */
+}
+
+/* Daxili scroll-u tam söndür — kontent normal axsın */
+.panel-scroll > .scrollarea{
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+  padding-bottom: var(--panel-pad-bottom) !important;
+}
+
+/* Mobil üçün əvvəlki media qaydan qalır; amma artıq desktopda da kəsilmə olmayacaq */
 
   </style>
 
@@ -917,7 +941,7 @@ html, body, .scrollarea {
         </div>
 
 <!-- Online dərs cədvəli hazırlama — panel-card formatında (YENİ) -->
-<div id="tt-card" class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+<div id="tt-card" class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
   <!-- Başlıq -->
   <div class="p-4 border-b">
     <div class="text-base font-semibold">📅 Online dərs cədvəli hazırlama</div>
@@ -955,7 +979,7 @@ html, body, .scrollarea {
 
 
 <!-- SUAL BANKI — CƏLBEDİCİ "TEZLİKLƏ" BLOKU -->
-<div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]" id="bank-card">
+<div id="bank-card" class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
   <div class="p-4 border-b">
     <div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div>
   </div>

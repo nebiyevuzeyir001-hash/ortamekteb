@@ -636,11 +636,7 @@ html, body, .scrollarea {
 }
 /* === TOOLS paneli üçün yekun sabitləmə === */
 
-/* 3 kartın olduğu grid: bütün sətir hündürlüyü eyni (ən hündür karta bərabər) */
-.tools-grid{
-  align-items: stretch !important;
-  grid-auto-rows: 1fr !important;    /* sətirdə hamı eyni hündürlükdə */
-}
+
 
 /* Kartların hündürlüyünü məzmun müəyyən etsin — kəsmə olmasın */
 .tools-grid .panel-card{
@@ -657,7 +653,18 @@ html, body, .scrollarea {
   padding-bottom: var(--panel-pad-bottom) !important;
 }
 
-/* Mobil üçün əvvəlki media qaydan qalır; amma artıq desktopda da kəsilmə olmayacaq */
+/* === Scroll hədəfləri üçün ehtiyat ofset === */
+#tabs,
+#panel-tools .panel-card {
+  scroll-margin-top: 140px;
+}
+
+@media (min-width: 768px){
+  #tabs,
+  #panel-tools .panel-card {
+    scroll-margin-top: 90px;
+  }
+}
 
   </style>
 
@@ -2085,31 +2092,53 @@ const ROUTES = {
   "/":              { tab: "ksq",   target: "#hero" },
   "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },
   "/pp":            { tab: "pp",    target: "#tabs" },
-  // Alətlər panelində konkret kartlara düşək:
-  "/calculator":    { tab: "tools", target: "#calc-card" },
-  "/timetable":     { tab: "tools", target: "#tt-card" },
-  "/question-bank": { tab: "tools", target: "#bank-card" }
+  "/calculator":    { tab: "tools", target: "#panel-tools", focus: "#calc-card" },
+  "/timetable":     { tab: "tools", target: "#panel-tools", focus: "#tt-card" },
+  "/question-bank": { tab: "tools", target: "#panel-tools", focus: "#bank-card" }
 };
 
+function goTo(route, { replace = false } = {}) {
+  const r = ROUTES[route] || ROUTES["/"];
+  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
+
+  if (replace) history.replaceState({ route }, "", route);
+  else if (location.pathname !== route) history.pushState({ route }, "", route);
+
+  setMeta(route);
+
+  // əvvəl panelin özünə düş
+  smoothTo(r.target);
+  // sonra cüzi gecikmə ilə konkret karta dəqiqliklə fokuslan
+  if (r.focus) setTimeout(() => smoothTo(r.focus), 80);
+}
 
 
 
 
-  // Kiçik helper: smooth scroll (+ sticky header offset ~90px)
-function smoothTo(sel) {
+
+// Kiçik köməkçi: hədəf element üçün düzgün ofset
+function offsetFor(el){
+  const headerH = document.querySelector('header')?.offsetHeight ?? 64;
+  const tabsH   = document.getElementById('tabs')?.offsetHeight ?? 0;
+
+  // Hədəf #panel-tools daxilindədirmi? → tabs da nəzərə alınsın
+  const insideTools = !!el.closest?.('#panel-tools');
+  // + kiçik nəfəs
+  return headerH + (insideTools ? (tabsH + 16) : 10);
+}
+
+// DƏYİŞDİR: əvvəlki smoothTo-nu bununla əvəzlə
+function smoothTo(sel){
   const el = document.querySelector(sel);
   if (!el) return;
-
-  const header = document.querySelector('header');
-  const sticky = (header?.offsetHeight ?? 64) + 10; // 64px header + 10px nəfəs
-  // Layout tam otursun (panel aktivləşdikdən sonra)
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - sticky;
-      window.scrollTo({ top: y, behavior: "smooth" });
+      const y = el.getBoundingClientRect().top + window.pageYOffset - offsetFor(el);
+      window.scrollTo({ top: y, behavior: 'smooth' });
     });
   });
 }
+
 
 
   // Mərkəzi naviqasiya funksiyası

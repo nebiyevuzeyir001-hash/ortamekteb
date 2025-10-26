@@ -2,13 +2,17 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>EduPlan</title>
-  <meta http-equiv="refresh" content="0; URL=/" />
+  <meta http-equiv="refresh" content="0; url=/" />
+  <title>Yönləndirilir…</title>
   <script>
-    // Məs: /pp ilə gəlibsə — saxla, index açılınca bərpa edəcəyik
-    sessionStorage.setItem("eduplan_spa_path", location.pathname);
-    location.replace("/");
+    (function () {
+      // Yazılan path-i yadda saxla ki, index açılınca JS bərpa etsin
+      sessionStorage.setItem('eduplan_spa_path', location.pathname);
+      // Təhlükəsiz: həmişə HTTPS-ə yönləndir
+      var target = location.origin.replace('http://','https://') + '/';
+      location.replace(target);
+    })();
   </script>
 </head>
-<body></body>
+<body>Yönləndirilir…</body>
 </html>

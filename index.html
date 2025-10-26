@@ -431,6 +431,62 @@ html, body {
     0 1px 0 rgba(0,0,0,.05);
   cursor: pointer;
 }
+/* === Premium Fancy Select (custom dropdown) === */
+.fs-wrap{position:relative; display:block; width:100%;}
+.fs-native{position:absolute; inset:0; width:100%; height:100%; opacity:0; pointer-events:none;}
+.fs-btn{
+  -webkit-appearance:none; appearance:none; width:100%;
+  background: var(--card); color: var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  padding:10px 42px 10px 12px; line-height:1.25; text-align:left;
+  font-size:0.875rem; cursor:pointer;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 35%, transparent), 0 1px 0 rgba(0,0,0,.05);
+  transition:border-color .18s, box-shadow .18s, transform .06s;
+}
+.fs-btn:hover{ border-color: color-mix(in srgb, var(--border) 55%, transparent); }
+.fs-btn:focus-visible{
+  outline:0;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent),
+              0 0 0 4px rgba(34,211,238,.25), 0 6px 16px rgba(0,0,0,.08);
+  transform: translateY(-1px);
+}
+/* sağdakı ox */
+.fs-btn::after{
+  content:""; position:absolute; right:12px; top:50%; translate:0 -50%;
+  width:16px; height:16px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat; background-size:16px 16px;
+  opacity:.9; pointer-events:none;
+}
+
+/* açılan menyu */
+.fs-menu{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:60;
+  background:var(--card); color:var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
+  max-height:260px; overflow:auto; padding:6px; display:none;
+}
+.fs-wrap[aria-expanded="true"] .fs-menu{ display:block; }
+
+.fs-opt{
+  padding:9px 10px; border-radius:10px; cursor:pointer; font-size:0.875rem;
+  display:flex; align-items:center; gap:8px;
+}
+.fs-opt[aria-selected="true"]{ font-weight:600; }
+.fs-opt:hover{ background:rgba(148,163,184,.12); }
+.fs-opt.is-placeholder{ color:#9aa4b2; font-style:italic; }
+
+/* Dark tonlar */
+.dark .fs-btn{ background:#0f172a; box-shadow: inset 0 0 0 1px #223049, 0 1px 0 rgba(255,255,255,.04);}
+.dark .fs-btn:focus-visible{
+  box-shadow: 0 0 0 1px #2f405c, 0 0 0 4px rgba(167,139,250,.22), 0 10px 22px rgba(0,0,0,.35);
+}
+.dark .fs-btn::after{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+}
+.dark .fs-menu{ background:#0f172a; border-color:#253046; box-shadow:0 16px 32px rgba(0,0,0,.45); }
+.dark .fs-opt:hover{ background:rgba(148,163,184,.15); }
 
 /* hover/focus */
 .select-premium:hover{
@@ -1432,6 +1488,9 @@ idxEl.disabled = !state.ksqType; // növ seçilməyibsə passiv
   setText('#ft-terms',   t.footer.terms);
   setText('#ft-privacy', t.footer.privacy);
   setText('[data-i18n="nav.settings"]', t.nav.settings);
+    // renderSelects() SONU
+  enhanceAllFancySelects();        // ✅ custom select-ləri qur
+
 }
 
 document.getElementById('grade').addEventListener('change', e=>{
@@ -2039,6 +2098,77 @@ card?.classList.add('space-y-1','p-4','pt-3','pb-3');
     }
   });
 })();
+    /* ===== Fancy Select qurucusu (bütün <select class="select-premium"> üçün) ===== */
+function enhanceFancySelect(select){
+  // artıq qurulubsa əvvəlkini sil
+  if (select.dataset.fancyMounted === '1') {
+    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
+    if (old) old.replaceWith(select);
+    select.dataset.fancyMounted = '0';
+  }
+
+  // wrapper
+  const wrap = document.createElement('div');
+  wrap.className = 'fs-wrap';
+  wrap.setAttribute('aria-expanded','false');
+
+  // düymə (göstərilən hissə)
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'fs-btn';
+  btn.textContent = select.options[select.selectedIndex]?.text || select.getAttribute('placeholder') || 'Seçin';
+
+  // menyu
+  const menu = document.createElement('div');
+  menu.className = 'fs-menu';
+  // option-ları yığ
+  Array.from(select.options).forEach((o,i)=>{
+    const item = document.createElement('div');
+    item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
+    item.setAttribute('role','option');
+    item.setAttribute('data-value', o.value);
+    item.setAttribute('aria-selected', String(o.selected));
+    item.textContent = o.text;
+    item.addEventListener('click', ()=>{
+      // seç
+      Array.from(select.options).forEach(op => op.selected = (op === o));
+      select.value = o.value;
+      select.dispatchEvent(new Event('change', {bubbles:true}));
+      btn.textContent = o.text;
+      wrap.setAttribute('aria-expanded','false');
+    });
+    menu.appendChild(item);
+  });
+
+  // native select-i gizli saxla (form üçün)
+  select.classList.add('fs-native');
+
+  // DOM-a yerləşdir
+  select.parentNode.insertBefore(wrap, select);
+  wrap.appendChild(btn);
+  wrap.appendChild(select);
+  wrap.appendChild(menu);
+  select.dataset.fancyMounted = '1';
+
+  // aç/bağla
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const open = wrap.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));
+    wrap.setAttribute('aria-expanded', String(!open));
+  });
+  document.addEventListener('click', ()=> wrap.setAttribute('aria-expanded','false'));
+
+  // klaviatura dəstəyi (basic)
+  wrap.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') wrap.setAttribute('aria-expanded','false');
+  });
+}
+
+function enhanceAllFancySelects(){
+  document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect);
+}
+
   </script>
   
   <script>

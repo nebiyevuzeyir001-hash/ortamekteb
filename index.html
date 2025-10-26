@@ -907,47 +907,23 @@ html, body, .scrollarea {
     <div class="text-base font-semibold">📅 Online dərs cədvəli hazırlama</div>
   </div>
 
-<!-- MƏZMUN — dolu görünüş -->
+<!-- MƏZMUN — sadə, ikinci şəklə uyğun -->
 <div class="p-4">
-  <div class="grid lg:grid-cols-2 gap-4 items-start">
-    <!-- Sol: mətn + çiplər + düymə -->
-    <div class="space-y-3">
-      <p class="text-sm text-slate-600">
-        Məktəb üçün peşəkar cədvəl qurucusu: <b>sinif</b>, <b>müəllim</b>, <b>fənn</b>, <b>kabinet</b> və
-        <b>məhdudiyyətlər</b> (məs: paralel dərs, eyni müəllim/kabinet üst-üstə düşməsin) – hamısı bir yerdə.
-      </p>
+  <div class="min-h-[240px] grid place-items-center text-center gap-3">
+    <p class="text-sm text-slate-600 max-w-[62ch]">
+      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və
+      məhdudiyyətləri asanlıqla idarə edin.
+    </p>
 
-      <!-- Çiplər -->
-      <div class="flex flex-wrap gap-2">
-        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs bg-slate-100 text-slate-600">Siniflər</span>
-        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs bg-slate-100 text-slate-600">Müəllimlər</span>
-        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs bg-slate-100 text-slate-600">Fənlər</span>
-        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs bg-slate-100 text-slate-600">Kabinetlər</span>
-        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs bg-slate-100 text-slate-600">Məhdudiyyətlər</span>
-      </div>
-
-      <!-- Tam en “Aç” -->
-      <a href="/timetable"
-         data-route="/timetable"
-         class="ep-btn-primary route-btn w-full inline-flex items-center justify-center">
-        Aç
-      </a>
-    </div>
-
-    <!-- Sağ: vizual “preview” (şəkilsiz, shimmer) -->
-    <div class="rounded-xl border p-4 bg-slate-50 dark:bg-slate-900/40">
-      <div class="h-28 rounded-lg shimmer mb-3"></div>
-      <div class="grid grid-cols-3 gap-2">
-        <div class="h-6 rounded shimmer"></div>
-        <div class="h-6 rounded shimmer"></div>
-        <div class="h-6 rounded shimmer"></div>
-        <div class="h-6 rounded shimmer"></div>
-        <div class="h-6 rounded shimmer"></div>
-        <div class="h-6 rounded shimmer"></div>
-      </div>
-    </div>
+    <!-- “Aç” – 1-ci şəkildəki kimi yığcam forma, ancaq yeri 2-ci şəkil kimidir -->
+    <a href="/timetable"
+       data-route="/timetable"
+       class="ep-btn-primary ep-btn-compact route-btn inline-flex items-center justify-center w-auto">
+      Aç
+    </a>
   </div>
 </div>
+
 
 
 </div>

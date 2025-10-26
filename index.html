@@ -918,11 +918,12 @@ html, body, .scrollarea {
     </p>
 
     <!-- DÜYMƏ — “Hesabla” ilə eyni stil və ölçü -->
-    <a href="/timetable"
-       data-route="/timetable"
-       class="ep-btn-primary w-full route-btn">
-      Aç
-    </a>
+<a href="/timetable"
+   data-route="/timetable"
+   data-hard="true"
+   class="ep-btn-primary w-full route-btn">
+  Aç
+</a>
   </div>
 </div>
 
@@ -2056,13 +2057,28 @@ window.goTo = goTo; // ✅ qlobal et
 
 
   // Hero & digər kliklər: [data-route]
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest(".route-btn[data-route]");
-    if (!btn) return;
-    const route = btn.getAttribute("data-route");
-    e.preventDefault();
-    goTo(route);
-  });
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".route-btn[data-route]");
+  if (!btn) return;
+
+  // yalnız sol klik və modifiersiz
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  const route = btn.getAttribute("data-route");
+  const hard  = btn.hasAttribute("data-hard");
+
+  if (hard) {
+    // Tam səhifə keçidi — prevent etmə
+    const href = btn.getAttribute("href") || route;
+    if (href) window.location.href = href;
+    return;
+  }
+
+  // Yumşaq naviqasiya (scroll/tab)
+  e.preventDefault();
+  goTo(route);
+});
+
 
   // Geri/irəli düymələri
   window.addEventListener("popstate", (e) => {

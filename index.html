@@ -665,6 +665,15 @@ html, body, .scrollarea {
     scroll-margin-top: 90px;
   }
 }
+/* >=768px: panel kartları daxilində yenə səliqəli daxili scroll olsun */
+@media (min-width: 768px){
+  .panel-scroll > .scrollarea{
+    height: 100% !important;
+    max-height: var(--panel-max-h, 520px) !important;
+    overflow-y: auto !important;
+    padding-bottom: calc(var(--panel-pad-bottom) + 24px) !important; /* alt nəfəs */
+  }
+}
 
   </style>
 
@@ -968,7 +977,6 @@ html, body, .scrollarea {
     <!-- DÜYMƏ — “Hesabla” ilə eyni stil və ölçü -->
 <a href="/timetable"
    data-route="/timetable"
-   data-hard="true"
    class="ep-btn-primary w-full route-btn">
   Aç
 </a>
@@ -1111,17 +1119,33 @@ function finish(){
   if (finished) return;
   finished = true;
   closeModal();
-  if (targetUrl){
-    const a = document.createElement('a');
-    a.href = targetUrl; a.download = '';
-    document.body.appendChild(a); a.click(); a.remove();
-  }
+  if (!targetUrl) return;
+
+  // 1) cəhd: anchor + click
+  const a = document.createElement('a');
+  a.href = targetUrl;
+  a.rel = 'noopener';
+  a.target = '_self';
+  a.download = '';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  // 2) fallback: bir frame sonra location.assign
+  requestAnimationFrame(() => {
+    if (document.visibilityState !== 'hidden') {
+      try { window.location.assign(targetUrl); } catch {}
+    }
+  });
 }
+
 
 
 
 // faylın yuxarı hissəsində (scriptdə) flaq əlavə et:
 let modalAdRendered = false;
+let adsReady = false;
+window.addEventListener('load', () => { adsReady = true; });
 
 function openModal(url){
   targetUrl = url;
@@ -1136,18 +1160,20 @@ function openModal(url){
   BAR.style.width = '0%';
   updateRing();
 
-  // 🔹 Reklamı yalnız BİR DƏFƏ, modal görünəndən sonra render et
-  if (!modalAdRendered) {
-    modalAdRendered = true;
-    // modal görünüşə düşsün deyə bir frame gözlə
-    requestAnimationFrame(() => {
-      try {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.warn('AdSense push error:', e);
-      }
-    });
-  }
+if (!modalAdRendered) {
+  modalAdRendered = true;
+  const tryRender = () => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch(e) {
+      // yüklənməyibsə bir azdan yenidən yoxla
+      setTimeout(() => tryRender(), 400);
+    }
+  };
+  // script hazırdırsa dərhal, deyilsə yüngül gecikmə ilə
+  if (adsReady) tryRender(); else setTimeout(() => tryRender(), 500);
+}
+
 
   timer = setInterval(() => {
     t--;
@@ -1853,19 +1879,15 @@ function refreshEmptyPlaceholders() {
       b.setAttribute('aria-pressed', act ? 'true' : 'false');
     });
 
-    if (!mode) {
-      card?.classList.add('vcenter','max-w-xl','mx-auto','h-full','w-full');
-      card?.classList.remove('space-y-5','p-4','pt-8');
-      document.getElementById('fs-t1').classList.add('hidden');
-      document.getElementById('fs-t2').classList.add('hidden');
-      document.getElementById('out-t1-card')?.classList.add('hidden');
-      document.getElementById('out-t2-card')?.classList.add('hidden');
-      document.getElementById('out-year-card')?.classList.add('hidden');
-      document.getElementById('calc-output')?.classList.add('hidden');
-      return;
-    }
-
-card?.classList.remove('vcenter','max-w-xl','mx-auto','h-full','w-full');
+if (!mode) {
+  card?.classList.add('vcenter');
+  card?.classList.remove('space-y-1','p-4','pt-3','pb-3');
+  // sahələri gizlə
+  ['fs-t1','fs-t2','calc-output'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+  ['out-t1-card','out-t2-card','out-year-card'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+  return;
+}
+card?.classList.remove('vcenter');
 card?.classList.add('space-y-1','p-4','pt-3','pb-3');
 
 
@@ -2098,62 +2120,40 @@ const ROUTES = {
 };
 
 function goTo(route, { replace = false } = {}) {
+  const ROUTES = {
+    "/":              { tab: "ksq",   target: "#hero" },
+    "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },
+    "/pp":            { tab: "pp",    target: "#tabs" },
+    "/calculator":    { tab: "tools", target: "#panel-tools", focus: "#calc-card" },
+    "/timetable":     { tab: "tools", target: "#panel-tools", focus: "#tt-card" },
+    "/question-bank": { tab: "tools", target: "#panel-tools", focus: "#bank-card" }
+  };
   const r = ROUTES[route] || ROUTES["/"];
-  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
 
+  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
   if (replace) history.replaceState({ route }, "", route);
   else if (location.pathname !== route) history.pushState({ route }, "", route);
 
   setMeta(route);
 
-  // əvvəl panelin özünə düş
-  smoothTo(r.target);
-  // sonra cüzi gecikmə ilə konkret karta dəqiqliklə fokuslan
-  if (r.focus) setTimeout(() => smoothTo(r.focus), 80);
-}
-
-
-
-
-
-// Kiçik köməkçi: hədəf element üçün düzgün ofset
-function offsetFor(el){
   const headerH = document.querySelector('header')?.offsetHeight ?? 64;
   const tabsH   = document.getElementById('tabs')?.offsetHeight ?? 0;
-
-  // Hədəf #panel-tools daxilindədirmi? → tabs da nəzərə alınsın
-  const insideTools = !!el.closest?.('#panel-tools');
-  // + kiçik nəfəs
-  return headerH + (insideTools ? (tabsH + 16) : 10);
+  const targetEl = document.querySelector(r.target);
+  if (targetEl) {
+    const insideTools = !!targetEl.closest?.('#panel-tools');
+    const y = targetEl.getBoundingClientRect().top + window.pageYOffset - (headerH + (insideTools ? tabsH + 16 : 10));
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  if (r.focus) {
+    setTimeout(() => {
+      const focusEl = document.querySelector(r.focus);
+      if (!focusEl) return;
+      const y2 = focusEl.getBoundingClientRect().top + window.pageYOffset - (headerH + tabsH + 16);
+      window.scrollTo({ top: y2, behavior: 'smooth' });
+    }, 80);
+  }
 }
 
-// DƏYİŞDİR: əvvəlki smoothTo-nu bununla əvəzlə
-function smoothTo(sel){
-  const el = document.querySelector(sel);
-  if (!el) return;
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - offsetFor(el);
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    });
-  });
-}
-
-
-
-  // Mərkəzi naviqasiya funksiyası
-function goTo(route, { replace = false } = {}) {
-  const r = ROUTES[route] || ROUTES["/"];
-  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
-
-  if (replace) history.replaceState({ route }, "", route);
-  else if (location.pathname !== route) history.pushState({ route }, "", route);
-
-  // ⇩ SEO meta + canonical + breadcrumbs
-  setMeta(route);
-
-  requestAnimationFrame(() => smoothTo(r.target));
-}
 window.goTo = goTo; // ✅ qlobal et
 
 

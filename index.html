@@ -619,6 +619,16 @@ html, body, .scrollarea {
   background: transparent;
 }
   .is-disabled{ opacity:.6; pointer-events:none; cursor:not-allowed; }
+/* “Aç” üçün yığcam (1-ci şəkil stili) */
+.ep-btn-compact{
+  min-height: 40px;
+  padding: .5rem .9rem;   /* daha yığcam */
+  font-size: .9rem;
+  border-radius: .75rem;  /* yumru künclər */
+}
+
+/* Kartın içinin mərkəzlənməsi (2-ci şəkil) */
+#tt-card > .p-4 { display: block; }
 
   </style>
 
@@ -907,22 +917,20 @@ html, body, .scrollarea {
     <div class="text-base font-semibold">📅 Online dərs cədvəli hazırlama</div>
   </div>
 
-<!-- MƏZMUN — sadə, ikinci şəklə uyğun -->
-<div class="p-4">
-  <div class="min-h-[240px] grid place-items-center text-center gap-3">
-    <p class="text-sm text-slate-600 max-w-[62ch]">
-      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və
-      məhdudiyyətləri asanlıqla idarə edin.
+<!-- MƏZMU N (mərkəzli, səliqəli) -->
+<div class="p-6 grid place-items-center text-center min-h-[240px]">
+  <div class="max-w-[36ch] space-y-3">
+    <p class="text-sm text-slate-600">
+      Məktəb üçün peşəkar cədvəl qurucusu: sinif, müəllim, fənn, kabinet və məhdudiyyətləri asanlıqla idarə edin.
     </p>
-
-    <!-- “Aç” – 1-ci şəkildəki kimi yığcam forma, ancaq yeri 2-ci şəkil kimidir -->
     <a href="/timetable"
        data-route="/timetable"
-       class="ep-btn-primary ep-btn-compact route-btn inline-flex items-center justify-center w-auto">
+       class="ep-btn-primary route-btn inline-flex items-center justify-center w-full sm:w-auto">
       Aç
     </a>
   </div>
 </div>
+
 
 
 

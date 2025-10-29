@@ -823,21 +823,19 @@ html, body, .scrollarea {
 
         </div>
 <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-<a href="/calculator.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
-<!-- orta blok (DƏYİŞDİR) -->
-<a href="/timetable.html"
-   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
-  📅 <span>Dərs cədvəli hazırlayıcı</span>
-</a>
+  <a href="/calculator.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+    🧮 <span>Bal kalkulyatoru</span>
+  </a>
 
+  <a href="/timetable.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+    📅 <span>Dərs cədvəli hazırlayıcı</span>
+  </a>
 
-
-
-
-
-  <!-- “Sual bankı” sağa keçir -->
-<a href="/question-bank.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+  <a href="/question-bank.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
+    📚 <span>Sual bankı</span>
+  </a>
 </div>
+
 
       </div>
     </div>
@@ -846,9 +844,9 @@ html, body, .scrollarea {
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
 <div id="tabs" role="tablist" aria-label="Bölmələr"
      class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner overflow-hidden">
-<button id="tab-ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/ksq-bsq.html'">KSQ / BSQ</button>
-<button id="tab-pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/pp.html'">Perspektiv plan</button>
-<button id="tab-tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/calculator.html'">Alətlər & Testlər</button>
+<button id="tab-ksq"   data-tab="ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">KSQ / BSQ</button>
+<button id="tab-pp"    data-tab="pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Perspektiv plan</button>
+<button id="tab-tools" data-tab="tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Alətlər & Testlər</button>
 </div>
 
     <section id="panel-ksq" class="tab-panel is-active mt-6">
@@ -2191,6 +2189,15 @@ function enhanceAllFancySelects(){
 
   </script>
 
+<script>
+  // Tabs: SPA click handler
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const name = btn.dataset.tab;
+      if (typeof setActiveTab === 'function') setActiveTab(name, {scroll:true});
+    });
+  });
+</script>
 
 
 

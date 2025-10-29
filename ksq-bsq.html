@@ -30,6 +30,18 @@
   /* panel/card ölçü və animasiyalar — index-lə eyni */
   .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:320px;border-radius:1rem;}
   .tab-panel{display:block}
+  /* Premium select görünüşü */
+.select-premium{
+  appearance:none; outline:0;
+  transition:box-shadow .2s, border-color .2s, background-color .2s;
+}
+.select-premium:focus{
+  box-shadow:0 0 0 3px rgba(59,130,246,.25); /* soft focus ring */
+  border-color:#60a5fa !important;
+}
+/* Sağ panel minimum sahə */
+#ksq-results-card{ min-height: 280px; }
+
 </style>
 
 </head>
@@ -49,36 +61,71 @@
   </header>
 
   <main>
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
+  <div class="flex items-center gap-3">
+    <div class="w-9 h-9 rounded-xl grid place-items-center border border-white/20 bg-white/10">📝</div>
+    <div>
+      <h1 class="text-lg font-semibold tracking-tight">KSQ/BSQ – Summativ fayllar</h1>
+      <p class="text-sm text-slate-300 mt-0.5">
+        Sinif, fənn, növ və nömrəni seç — uyğun faylları dərhal yüklə. Bütün materiallar Azərbaycan məktəblərinə uyğundur.
+      </p>
+    </div>
+  </div>
+</section>
     <h1 class="sr-only">KSQ/BSQ – Summativ fayllar | EduPlan</h1>
-    <section class="mt-6">
-  <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
-    <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
-    <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
-      <div class="space-y-4">
-        <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
-          <select id="grade" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
-        <div><label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
-          <select id="subject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
-        <div><label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
-          <select id="ksqType" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
-            <option>KSQ</option><option>BSQ</option>
-          </select></div>
-        <div><label class="text-sm text-slate-700 block" id="lbl-examNo">Nömrə</label>
-          <select id="examIndex" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
+<section class="mt-6">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+      <div class="p-4 border-b">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold" id="ksq-title">KSQ/BSQ</h2>
+          <div class="hidden sm:flex items-center gap-2 text-xs text-slate-300">
+            <span class="opacity-80">Nəticə sayı:</span>
+            <span id="ksq-count-top" class="inline-flex items-center rounded-full bg-slate-100/10 px-2 py-0.5 border border-white/20">0</span>
+          </div>
         </div>
       </div>
 
-      <div class="lg:col-span-2 min-w-0">
-        <div id="ksq-results-card" class="relative w-full rounded-xl border bg-white text-sm overflow-clip">
-          <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-            <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
+      <div class="p-4 grid lg:grid-cols-3 gap-6 items-start">
+        <!-- SOL: Filtrlər -->
+        <div class="space-y-4">
+          <div>
+            <label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
+            <select id="grade" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
           </div>
-          <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
+          <div>
+            <label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
+            <select id="subject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
+          </div>
+          <div>
+            <label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
+            <select id="ksqType" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
+              <option>KSQ</option><option>BSQ</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm text-slate-700 block" id="lbl-examNo">Nömrə</label>
+            <select id="examIndex" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
+          </div>
+          <p class="text-xs text-slate-400 pt-2">
+            Qeyd: BSQ üçün yalnız <strong>1</strong> və <strong>2</strong> nömrələr mövcuddur.
+          </p>
+        </div>
+
+        <!-- SAĞ: Nəticələr -->
+        <div class="lg:col-span-2 min-w-0">
+          <div id="ksq-results-card" class="relative w-full rounded-xl border bg-white text-sm overflow-clip">
+            <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
+              <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
+            </div>
+            <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
   </main>
 
@@ -122,40 +169,64 @@
   function allChosenKSQ(){return !!(state.grade&&state.subject&&state.ksqType&&state.examIndex);}
   function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return it.type==='PP'?`${it.subject} · PP · ${f}`:`${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${f}`;}
 
-  function showEmpty(){
-    const card=document.getElementById('ksq-results-card');
-    const box=document.createElement('div'); box.className='empty-overlay absolute inset-0 grid place-items-center';
-    box.innerHTML=`<div class="inner w-[min(520px,100%)] rounded-2xl border border-white/20 bg-slate-900/60 backdrop-blur p-6 text-center">
-      <div class="icon w-11 h-11 rounded-full mx-auto mb-2 grid place-items-center border border-white/25">🗂️</div>
-      <div class="title font-semibold">Zəhmət olmasa seçim edin</div>
-      <div class="desc text-sm text-slate-300 mt-1">Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.</div>
-    </div>`; card.appendChild(box);
-  }
+function showEmpty(){
+  const card=document.getElementById('ksq-results-card');
+  hideEmpty(); // ← əvvəlkini sil, YIĞILMASIN
+  const box=document.createElement('div'); 
+  box.className='empty-overlay absolute inset-0 grid place-items-center';
+  box.innerHTML=`<div class="inner w-[min(520px,100%)] rounded-2xl border border-white/20 bg-slate-900/60 backdrop-blur p-6 text-center">
+    <div class="icon w-11 h-11 rounded-full mx-auto mb-2 grid place-items-center border border-white/25">🗂️</div>
+    <div class="title font-semibold">Zəhmət olmasa seçim edin</div>
+    <div class="desc text-sm text-slate-300 mt-1">
+      Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.
+    </div>
+  </div>`;
+  card.appendChild(box);
+}
+
   function hideEmpty(){document.querySelector('#ksq-results-card .empty-overlay')?.remove();}
 
-  function renderKSQ(){
-    const wrap=document.getElementById('ksq-results'); wrap.innerHTML='';
-    const list=state.catalog.filter(it=>it.type===state.ksqType&&it.grade===state.grade&&it.subject===state.subject&&it.index===state.examIndex);
-  const countRow = document.getElementById('ksq-count-row');
-  document.getElementById('ksq-count').textContent = list.length;
-  countRow.classList.toggle('hidden', list.length === 0);    if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-400">Fayl yoxdur</div>';return;}
-    list.forEach(it=>{
-      const el=document.createElement('div'); el.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-700/30 to-slate-600/10';
-      el.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-        <div class="flex items-start gap-3">
-          <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-          <div class="flex-1">
-            <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-            <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
-            <div class="mt-3">
-              <a href="${it.dl}" target="_self" rel="noopener" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
-            </div>
+function renderKSQ(){
+  const wrap=document.getElementById('ksq-results'); 
+  wrap.innerHTML='';
+
+  const list=state.catalog.filter(it =>
+    it.type===state.ksqType &&
+    it.grade===state.grade &&
+    it.subject===state.subject &&
+    it.index===state.examIndex
+  );
+
+  // ——— sayğacları yenilə
+  const count = list.length;
+  document.getElementById('ksq-count').textContent = count;
+  document.getElementById('ksq-count-top').textContent = count;
+  document.getElementById('ksq-count-row').classList.toggle('hidden', count === 0);
+
+  if(count===0){
+    wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-400">Fayl yoxdur</div>';
+    return;
+  }
+
+  list.forEach(it=>{
+    const el=document.createElement('div'); 
+    el.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-700/30 to-slate-600/10';
+    el.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+      <div class="flex items-start gap-3">
+        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+        <div class="flex-1">
+          <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
+          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
+          <div class="mt-3">
+            <a href="${it.dl}" target="_self" rel="noopener" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
           </div>
         </div>
-      </div>`;
-      wrap.appendChild(el);
-    });
-  }
+      </div>
+    </div>`;
+    wrap.appendChild(el);
+  });
+}
+
 
   async function loadFeed(){
     try{const r=await fetch(FEED_URL,{cache:'no-store'}); state.catalog=await r.json(); if(allChosenKSQ()){hideEmpty(); renderKSQ();} else {showEmpty();}}
@@ -164,10 +235,26 @@
 
   document.addEventListener('DOMContentLoaded',()=>{
     renderSelects(); showEmpty(); loadFeed();
-    document.getElementById('grade').addEventListener('change',e=>{state.grade=e.target.value||null; state.subject=null; renderSelects(); showEmpty();});
-    document.getElementById('subject').addEventListener('change',e=>{state.subject=e.target.value||null; showEmpty();});
-    document.getElementById('ksqType').addEventListener('change',e=>{state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); showEmpty();});
-    document.getElementById('examIndex').addEventListener('change',e=>{state.examIndex=e.target.value||null; if(allChosenKSQ()){hideEmpty(); renderKSQ();} else showEmpty();});
+document.getElementById('grade').addEventListener('change',e=>{
+  state.grade=e.target.value||null; 
+  state.subject=null; 
+  renderSelects(); 
+  hideEmpty(); 
+  showEmpty();
+});
+document.getElementById('subject').addEventListener('change',e=>{
+  state.subject=e.target.value||null; 
+  hideEmpty(); 
+  showEmpty();
+});
+document.getElementById('ksqType').addEventListener('change',e=>{
+  state.ksqType=e.target.value||null; 
+  state.examIndex=null; 
+  renderSelects(); 
+  hideEmpty(); 
+  showEmpty();
+});
+  document.getElementById('examIndex').addEventListener('change',e=>{state.examIndex=e.target.value||null; if(allChosenKSQ()){hideEmpty(); renderKSQ();} else showEmpty();});
   });
 </script>
 

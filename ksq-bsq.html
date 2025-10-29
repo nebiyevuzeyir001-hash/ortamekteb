@@ -50,65 +50,37 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl font-bold tracking-tight">KSQ/BSQ</h1>
-    <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
-      Bu səhifə vasitəsilə sinif, fənn, növ və nömrə üzrə <strong>KSQ/BSQ</strong> fayllarını seçə bilərsiniz.
-      Materiallar Azərbaycan tədris proqramına uyğunlaşdırılır və mütəmadi yenilənir.
-    </p>
-
-    <section class="mt-8 grid md:grid-cols-3 gap-6 items-start">
+  <main>
+    <section class="mt-6">
+  <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+    <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
+    <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
       <div class="space-y-4">
-        <div>
-          <label class="text-sm block">Sinif</label>
-          <select id="grade" class="w-full rounded-xl border px-3 py-2 text-sm">
-            <option value="">Sinfi seçin</option>
-            <option>I</option><option>II</option><option>III</option><option>IV</option>
-            <option>V</option><option>VI</option><option>VII</option><option>VIII</option>
-            <option>IX</option><option>X</option><option>XI</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-sm block">Fənn</label>
-          <select id="subject" class="w-full rounded-xl border px-3 py-2 text-sm">
-            <option value="">Fənni seçin</option>
-            <option>Azərbaycan dili</option><option>Ədəbiyyat</option><option>İngilis dili</option><option>Rus dili</option>
-            <option>Riyaziyyat</option><option>Fizika</option><option>Kimya</option><option>Biologiya</option>
-            <option>Azərbaycan tarixi</option><option>Ümumi tarix</option><option>Coğrafiya</option><option>İnformatika</option>
-            <option>Həyat bilgisi</option><option>Təsviri incəsənət</option><option>Musiqi</option><option>Fiziki tərbiyə</option>
-            <option>Texnologiya</option><option>Çağırışaqədərki hazırlıq</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-sm block">Növ</label>
-          <select id="ksqType" class="w-full rounded-xl border px-3 py-2 text-sm">
-            <option value="">Növü seçin</option>
+        <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
+          <select id="grade" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+        <div><label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
+          <select id="subject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
+        <div><label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
+          <select id="ksqType" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
             <option>KSQ</option><option>BSQ</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-sm block">Nömrə</label>
-          <select id="examIndex" class="w-full rounded-xl border px-3 py-2 text-sm">
-            <option value="">Nömrəni seçin</option>
-          </select>
+          </select></div>
+        <div><label class="text-sm text-slate-700 block" id="lbl-examNo">Nömrə</label>
+          <select id="examIndex" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
         </div>
       </div>
 
-      <div class="md:col-span-2 min-w-0">
-        <div id="results" class="rounded-xl border bg-white dark:bg-slate-900 p-4">
-          <div class="text-sm text-slate-500">Seçim etdikdən sonra fayllar burada görünəcək.</div>
+      <div class="lg:col-span-2 min-w-0">
+        <div id="ksq-results-card" class="relative w-full rounded-xl border bg-white text-sm overflow-clip">
+          <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
+            <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
+          </div>
+          <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="mt-10">
-      <h2 class="text-xl font-semibold">İstifadə qaydası</h2>
-      <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
-        KSQ/BSQ sənədləri nümunə məqsədi daşıyır. Mövzuya uyğun düzəlişlər tələb oluna bilər.
-        İstifadə <a class="underline" href="/terms.html">Şərtlər</a> və
-        <a class="underline" href="/privacy.html">Məxfilik</a> sənədlərinə əsasən həyata keçirilir.
-      </p>
-    </section>
   </main>
 
   <footer class="border-t border-slate-200 py-10 text-sm">
@@ -132,5 +104,78 @@
       if (typeEl.value === 'BSQ') { ['1','2'].forEach(n => idxEl.innerHTML += `<option>${n}</option>`); }
     });
   </script>
+  <script>
+  const translations = { az:{ subjects:{ az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat', physics:'Fizika', chemistry:'Kimya', biology:'Biologiya', az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya', it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət', music:'Musiqi', pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq' } } };
+  const subjectKeysByGrade={I:['az','life','math','eng','rus','art','music','pe','tech','it'],II:['az','life','math','eng','rus','art','music','pe','tech','it'],III:['az','life','math','eng','rus','art','music','pe','tech','it'],IV:['az','life','math','eng','rus','art','music','pe','tech','it'],V:['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],VI:['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary']};
+  const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
+  const state={lang:'az',grade:null,subject:null,ksqType:null,examIndex:null,catalog:[]};
+  const $=s=>document.querySelector(s);
+
+  function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o);}
+  function addPlaceholder(select,label){const o=document.createElement('option');o.value="";o.textContent=label;o.disabled=true;o.selected=true;o.hidden=true;select.appendChild(o);select.required=true;}
+  function subjectsFor(g){const keys=subjectKeysByGrade[g]||Object.keys(translations.az.subjects);return keys.map(k=>translations.az.subjects[k]).filter(Boolean);}
+
+  function renderSelects(){
+    const grades=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+    const gradeEl=$('#grade'); gradeEl.innerHTML=''; addPlaceholder(gradeEl,'Sinfi seçin'); grades.forEach(g=>option(gradeEl,g,g)); gradeEl.value=state.grade??"";
+    const subjEl=$('#subject'); subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin'); if(state.grade){subjectsFor(state.grade).forEach(s=>option(subjEl,s,s));} subjEl.value=state.subject??"";
+    const typeEl=$('#ksqType'); typeEl.innerHTML=''; addPlaceholder(typeEl,'Növü seçin'); option(typeEl,'KSQ','KSQ'); option(typeEl,'BSQ','BSQ'); typeEl.value=state.ksqType??"";
+    const idxEl=$('#examIndex'); idxEl.innerHTML=''; addPlaceholder(idxEl,'Nömrəni seçin');
+    if(state.ksqType==='KSQ'){for(let i=1;i<=10;i++) option(idxEl,String(i),String(i));}
+    else if(state.ksqType==='BSQ'){['1','2'].forEach(i=>option(idxEl,i,i));}
+    idxEl.value=state.examIndex??""; idxEl.disabled=!state.ksqType;
+  }
+
+  function allChosenKSQ(){return !!(state.grade&&state.subject&&state.ksqType&&state.examIndex);}
+  function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return it.type==='PP'?`${it.subject} · PP · ${f}`:`${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${f}`;}
+
+  function showEmpty(){
+    const card=document.getElementById('ksq-results-card');
+    const box=document.createElement('div'); box.className='empty-overlay absolute inset-0 grid place-items-center';
+    box.innerHTML=`<div class="inner w-[min(520px,100%)] rounded-2xl border border-white/20 bg-slate-900/60 backdrop-blur p-6 text-center">
+      <div class="icon w-11 h-11 rounded-full mx-auto mb-2 grid place-items-center border border-white/25">🗂️</div>
+      <div class="title font-semibold">Zəhmət olmasa seçim edin</div>
+      <div class="desc text-sm text-slate-300 mt-1">Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.</div>
+    </div>`; card.appendChild(box);
+  }
+  function hideEmpty(){document.querySelector('#ksq-results-card .empty-overlay')?.remove();}
+
+  function renderKSQ(){
+    const wrap=document.getElementById('ksq-results'); wrap.innerHTML='';
+    const list=state.catalog.filter(it=>it.type===state.ksqType&&it.grade===state.grade&&it.subject===state.subject&&it.index===state.examIndex);
+    document.getElementById('ksq-count').textContent=list.length;
+    if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-400">Fayl yoxdur</div>';return;}
+    list.forEach(it=>{
+      const el=document.createElement('div'); el.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-700/30 to-slate-600/10';
+      el.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+        <div class="flex items-start gap-3">
+          <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+          <div class="flex-1">
+            <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
+            <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
+            <div class="mt-3">
+              <a href="${it.dl}" target="_self" rel="noopener" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      wrap.appendChild(el);
+    });
+  }
+
+  async function loadFeed(){
+    try{const r=await fetch(FEED_URL,{cache:'no-store'}); state.catalog=await r.json(); if(allChosenKSQ()){hideEmpty(); renderKSQ();} else {showEmpty();}}
+    catch(e){document.getElementById('ksq-results').innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-rose-300">Xəta: '+e.message+'</div>'; }
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    renderSelects(); showEmpty(); loadFeed();
+    document.getElementById('grade').addEventListener('change',e=>{state.grade=e.target.value||null; state.subject=null; renderSelects(); showEmpty();});
+    document.getElementById('subject').addEventListener('change',e=>{state.subject=e.target.value||null; showEmpty();});
+    document.getElementById('ksqType').addEventListener('change',e=>{state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); showEmpty();});
+    document.getElementById('examIndex').addEventListener('change',e=>{state.examIndex=e.target.value||null; if(allChosenKSQ()){hideEmpty(); renderKSQ();} else showEmpty();});
+  });
+</script>
+
 </body>
 </html>

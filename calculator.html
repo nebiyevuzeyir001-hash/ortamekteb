@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://www.eduplan.az/calculator.html" />
+  <title>Bal kalkulyatoru (KSQ 40% · BSQ 60%) | EduPlan</title>
+  <meta name="description" content="I/II yarımil və illik balı dəqiq hesabla. KSQ orta və BSQ çəkisi avtomatik tətbiq olunur.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Bal kalkulyatoru | EduPlan">
+  <meta property="og:description" content="KSQ 40% · BSQ 60% çəkisi ilə yekun bal hesablaması.">
+  <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
+  <meta property="og:url" content="https://www.eduplan.az/calculator.html">
+  <link rel="icon" type="image/png" sizes="180x180" href="/assets/ep-favicon-180.png">
+  <meta name="theme-color" content="#0a0b10">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen text-slate-900 dark:text-slate-200">
+  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/70 border-b">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl" alt="EduPlan">
+        <span class="font-semibold tracking-tight">EduPlan AZ</span>
+      </a>
+      <nav class="text-sm flex items-center gap-4">
+        <a class="hover:underline" href="/ksq-bsq.html">KSQ/BSQ</a>
+        <a class="hover:underline" href="/pp.html">PP</a>
+        <a class="hover:underline" href="/about.html">Haqqımızda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-3xl font-bold tracking-tight">Bal kalkulyatoru</h1>
+    <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
+      Çəkilər standart olaraq <strong>KSQ 40%</strong> və <strong>BSQ 60%</strong> götürülür. Yarımilliklər üzrə ayrıca və ya hər ikisinin ortası hesablana bilər.
+    </p>
+
+    <section class="mt-8 grid md:grid-cols-2 gap-6 items-start">
+      <div class="rounded-2xl border p-4">
+        <div class="text-sm text-slate-600 mb-2">Hesablama rejimi</div>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="border rounded-lg py-2 text-xs" data-mode="t1">I yarımil</button>
+          <button class="border rounded-lg py-2 text-xs" data-mode="t2">II yarımil</button>
+          <button class="border rounded-lg py-2 text-xs" data-mode="both">Hər ikisi</button>
+        </div>
+
+        <fieldset id="fs-t1" class="rounded-xl border px-3 py-2 mt-3">
+          <legend class="px-2 text-sm font-medium">I yarımil</legend>
+          <div class="grid grid-cols-2 gap-2 mt-1">
+            <input type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
+          </div>
+          <input type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
+        </fieldset>
+
+        <fieldset id="fs-t2" class="rounded-xl border px-3 py-2 mt-3">
+          <legend class="px-2 text-sm font-medium">II yarımil</legend>
+          <div class="grid grid-cols-2 gap-2 mt-1">
+            <input type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
+            <input type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
+          </div>
+          <input type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
+        </fieldset>
+
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button class="rounded-lg px-3 py-2 text-sm text-white bg-indigo-600">Hesabla</button>
+          <button class="rounded-lg px-3 py-2 text-sm border">Sıfırla</button>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border p-4">
+        <div class="text-sm text-slate-600">Nəticələr</div>
+        <div class="mt-3 grid sm:grid-cols-3 gap-3">
+          <div class="rounded-lg border px-3 py-2"><div class="text-slate-500 text-sm mb-1">I yarımil</div><div class="text-lg font-semibold">—</div></div>
+          <div class="rounded-lg border px-3 py-2"><div class="text-slate-500 text-sm mb-1">II yarımil</div><div class="text-lg font-semibold">—</div></div>
+          <div class="rounded-lg border px-3 py-2"><div class="text-slate-500 text-sm mb-1">İllik</div><div class="text-lg font-semibold">—</div></div>
+        </div>
+        <p class="mt-4 text-xs text-slate-500">Qeyd: Boş buraxılan KSQ-lar hesablamaya qatılmır.</p>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold">Dəqiqlik qeydi</h2>
+      <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
+        Kalkulyator referens məqsədli hesablanma təqdim edir. Məktəbin lokal təlimatları fərqlənə bilər.
+      </p>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 py-10 text-sm">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur</p>
+      <div class="flex items-center gap-4 text-slate-600">
+        <a class="hover:underline" href="/terms.html">Şərtlər</a>
+        <a class="hover:underline" href="/privacy.html">Məxfilik</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

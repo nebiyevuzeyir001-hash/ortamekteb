@@ -25,4 +25,56 @@
       <nav class="text-sm flex items-center gap-4">
         <a class="hover:underline" href="/ksq-bsq.html">KSQ/BSQ</a>
         <a class="hover:underline" href="/calculator.html">Kalkulyator</a>
-        <a class="hover:underline" href="/about.html">Haqqımız
+        <a class="hover:underline" href="/about.html">Haqqımızda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-3xl font-bold tracking-tight">Perspektiv plan (PP)</h1>
+    <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
+      Burada fənlər üzrə <strong>illik plan</strong> faylları təqdim olunur. Planlar mövzuların tədris
+      ilinə bərabər və məntiqi paylanmasını təmin edir, müəllimin işini sistemləşdirir.
+    </p>
+
+    <section class="mt-8 grid md:grid-cols-3 gap-6 items-start">
+      <div>
+        <label class="text-sm block">Fənn</label>
+        <select id="ppSubject" class="w-full rounded-xl border px-3 py-2 text-sm">
+          <option value="">Fənni seçin</option>
+          <option>Azərbaycan dili</option><option>Ədəbiyyat</option><option>İngilis dili</option><option>Rus dili</option>
+          <option>Riyaziyyat</option><option>Fizika</option><option>Kimya</option><option>Biologiya</option>
+          <option>Azərbaycan tarixi</option><option>Ümumi tarix</option><option>Coğrafiya</option><option>İnformatika</option>
+          <option>Həyat bilgisi</option><option>Təsviri incəsənət</option><option>Musiqi</option><option>Fiziki tərbiyə</option>
+          <option>Texnologiya</option><option>Çağırışaqədərki hazırlıq</option>
+        </select>
+      </div>
+      <div class="md:col-span-2 min-w-0">
+        <div id="ppResults" class="rounded-xl border bg-white dark:bg-slate-900 p-4">
+          <div class="text-sm text-slate-500">Fənni seçdikdən sonra uyğun planlar göstəriləcək.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold">Metodik qeydlər</h2>
+      <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
+        Planların tətbiqində məktəbin tədris qrafiki, tədbirlər planı və fənlərarası inteqrasiya nəzərə alınmalıdır.
+        Fayllar nümunə xarakterlidir; yerli tələblərə uyğun adaptasiya oluna bilər.
+      </p>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 py-10 text-sm">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur</p>
+      <div class="flex items-center gap-4 text-slate-600">
+        <a class="hover:underline" href="/terms.html">Şərtlər</a>
+        <a class="hover:underline" href="/privacy.html">Məxfilik</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -14,6 +14,26 @@
   <link rel="icon" type="image/png" sizes="180x180" href="/assets/ep-favicon-180.png">
   <meta name="theme-color" content="#0a0b10">
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a;
+    --muted:#cbd5e1; --border:#334155;
+  }
+  html,body{min-height:100svh;}
+  html::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:linear-gradient(to bottom,var(--bg-from),var(--bg-to));}
+  body{color:var(--text);}
+  .bg-white{background-color:var(--card)!important;}
+  .text-slate-600,.text-slate-700{color:var(--muted)!important;}
+  .border-slate-200{border-color:var(--border)!important;}
+  /* panel/card ölçü və animasiyalar — index-lə eyni */
+  .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:320px;border-radius:1rem;}
+  .tab-panel{display:block}
+</style>
+
 </head>
 <body class="min-h-screen text-slate-900 dark:text-slate-200">
   <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/70 border-b border-slate-200">

@@ -6,63 +6,44 @@
   <link rel="canonical" href="https://www.eduplan.az/calculator.html" />
   <meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
   <title>Bal kalkulyatoru — EduPlan</title>
-  <meta name="description" content="KSQ 40% / BSQ 60% çəkili hesablamalar: I yarımil, II yarımil və illik nəticə." />
-  <meta name="keywords" content="bal kalkulyatoru, KSQ, BSQ, Azərbaycan məktəb" />
+  <meta name="description" content="KSQ 40% / BSQ 60% çəkili bal kalkulyatoru — EduPlan.az">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="EduPlan.az">
+  <meta property="og:type" content="website">
   <meta property="og:title" content="Bal kalkulyatoru — EduPlan">
-  <meta property="og:description" content="KSQ/BSQ çəkili hesablamalar: I/II yarımil və illik.">
+  <meta property="og:description" content="I/II yarımil və illik hesablamalar.">
   <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
   <meta property="og:url" content="https://www.eduplan.az/calculator.html">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="EduPlan">
-  <link rel="icon" type="image/png" sizes="180x180" href="https://www.eduplan.az/assets/ep-favicon-180.png">
   <meta name="theme-color" content="#0a0b10">
   <meta name="language" content="az">
   <meta name="google-adsense-account" content="ca-pub-1241199346930032">
-
+  <link rel="icon" type="image/png" sizes="180x180" href="https://www.eduplan.az/assets/ep-favicon-180.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root{--bg-from:#f8fafc;--bg-to:#fff;--text:#0f172a;--card:#fff;--muted:#475569;--border:#e2e8f0;--panel-min-h:320px}
-    .dark{--bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155}
-    html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
-    body{color:var(--text)}
-    .bg-white{background-color:var(--card)!important}
-    .text-slate-600{color:var(--muted)!important}
-    .border-slate-200{border-color:var(--border)!important}
-    .panel-card{display:flex;flex-direction:column;min-height:var(--panel-min-h)}
-    .vcenter{min-height:320px;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0!important}
-    input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-    input[type=number]{-moz-appearance:textfield}
-    .ep-btn-primary{display:inline-block;width:100%;padding:.65rem 1rem;border-radius:.75rem;font-weight:600;font-size:.9rem;color:#fff;background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%);border:0;box-shadow:0 4px 12px rgba(79,70,229,.35)}
-    .ep-btn-secondary{display:inline-block;width:100%;padding:.65rem 1rem;border-radius:.75rem;font-weight:600;font-size:.9rem;background:transparent;border:1px solid var(--border);color:var(--text)}
+    /* Ksq-bsq.html-dəki eyni style blokunu buraya da kopyalayın (panel-card, select, dark, btn və s.) */
   </style>
-
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 </head>
-<body class="min-h-screen relative">
+<body class="min-h-screen text-slate-900 relative">
+  <!-- Glowlar -->
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
   </div>
 
+  <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3">
-        <img id="site-logo" src="assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl shadow-sm" alt="">
+      <div class="flex items-center gap-3">
+        <img id="site-logo" src="assets/ep-favicon-light.svg" alt="EduPlan loqo" class="h-9 w-9 rounded-2xl shadow-sm">
         <span class="font-semibold tracking-tight">EduPlan AZ</span>
-      </a>
-      <nav class="hidden sm:flex items-center gap-4 text-sm">
-        <a href="/ksq-bsq.html">KSQ/BSQ</a>
-        <a href="/pp.html">PP</a>
-        <a href="/calculator.html" class="underline">Kalkulyator</a>
-        <a href="/timetable.html">Cədvəl</a>
-      </nav>
+      </div>
       <div class="relative flex items-center gap-3">
-        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span>Tənzimləmələr</span></button>
+        <a href="/" class="rounded-2xl border px-3 py-2 text-sm">← Ana səhifə</a>
+        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">🌙 Tənzimləmələr</button>
         <div id="settings-panel" class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
           <div class="flex items-center justify-between">
-            <div class="text-sm">🌙 Qaranlıq rejim</div>
+            <div class="text-sm">Qaranlıq rejim</div>
             <label class="inline-flex items-center cursor-pointer">
               <input id="dark-toggle" type="checkbox" class="sr-only">
               <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
@@ -75,23 +56,26 @@
     </div>
   </header>
 
-  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
-    <p class="mt-2 text-slate-600">KSQ 40% / BSQ 60% — I, II və illik qiymətləndirmə.</p>
+  <!-- Hero -->
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
+      <p class="mt-2 text-slate-600">KSQ 40% / BSQ 60% — I/II yarımil və illik.</p>
+    </div>
   </section>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-    <div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
+    <div class="panel-card rounded-2xl shadow-sm hover:shadow-md transition border bg-white" id="calc-card">
       <div class="p-4 border-b"><div class="text-base font-semibold">🧮 Bal kalkulyatoru</div></div>
 
-      <div class="p-4 space-y-3" id="calc-card">
+      <div class="scrollarea p-4 pt-4 pb-4 space-y-3">
         <!-- Rejim seçimi -->
         <div class="rounded-xl border px-3 py-2 text-sm flex flex-col sm:flex-row gap-2 sm:items-center">
-          <span class="text-slate-600">Hesablama rejimi</span>
+          <span class="text-slate-600 dark:text-slate-300">Hesablama rejimi</span>
           <div class="grid grid-cols-3 gap-2 w-full">
-            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs" data-mode="t1">I yarımil</button>
-            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs" data-mode="t2">II yarımil</button>
-            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs" data-mode="both">Hər ikisi</button>
+            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none" data-mode="t1">I yarımil</button>
+            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none" data-mode="t2">II yarımil</button>
+            <button type="button" class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none" data-mode="both">Hər ikisi</button>
           </div>
         </div>
 
@@ -126,27 +110,27 @@
         <!-- Actions -->
         <div class="grid grid-cols-2 gap-2" id="calc-actions">
           <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
-          <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
+          <button class="ep-btn-secondary w-full" type="button" id="btn-reset" style="border:1px solid var(--border);border-radius:.75rem;padding:.65rem 1rem;">Sıfırla</button>
         </div>
 
-        <!-- Output -->
+        <!-- Nəticələr -->
         <div id="calc-output" class="hidden rounded-xl border px-4 py-4">
-          <div class="text-sm text-slate-500">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
+          <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
           <div class="mt-3 grid sm:grid-cols-3 gap-3">
             <div id="out-t1-card" class="rounded-lg border px-3 py-2">
-              <div class="text-slate-500 text-sm mb-1">I yarımil</div>
+              <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">I yarımil</div>
               <div class="text-lg font-semibold" id="out-t1">—</div>
               <div class="text-xs mt-1">KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span></div>
               <div class="text-xs">Qiymət: <span id="out-t1-grade">—</span></div>
             </div>
             <div id="out-t2-card" class="rounded-lg border px-3 py-2">
-              <div class="text-slate-500 text-sm mb-1">II yarımil</div>
+              <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">II yarımil</div>
               <div class="text-lg font-semibold" id="out-t2">—</div>
               <div class="text-xs mt-1">KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span></div>
               <div class="text-xs">Qiymət: <span id="out-t2-grade">—</span></div>
             </div>
             <div id="out-year-card" class="rounded-lg border px-3 py-2">
-              <div class="text-slate-500 text-sm mb-1">İllik</div>
+              <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">İllik</div>
               <div class="text-lg font-semibold" id="out-year">—</div>
               <div class="text-xs mt-1">Hesab: (I + II) / 2</div>
               <div class="text-xs">Qiymət: <span id="out-year-grade">—</span></div>
@@ -158,50 +142,53 @@
         <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
       </div>
     </div>
-
-    <div class="mt-8 grid place-items-center">
-      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1241199346930032" data-ad-slot="3531763843" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    </div>
   </main>
 
+  <!-- Footer -->
   <footer class="border-t border-slate-200 py-10 text-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur</p>
-      <div class="flex items-center gap-4 text-slate-600">
-        <a class="hover:underline" href="/about.html">Haqqımızda</a>
-        <a class="hover:underline" href="/terms.html">Şərtlər</a>
-        <a class="hover:underline" href="/privacy.html">Məxfilik</a>
+      <div class="flex items-center gap-4 text-slate-600 text-sm">
+        <a class="hover:underline" href="about.html">Haqqımızda</a>
+        <a class="hover:underline" href="terms.html">Şərtlər</a>
+        <a class="hover:underline" href="privacy.html">Məxfilik</a>
       </div>
     </div>
   </footer>
 
   <script>
-    const $id=(x)=>document.getElementById(x); const $q=(s)=>document.querySelector(s); const $qa=(s)=>Array.from(document.querySelectorAll(s));
-    document.addEventListener('DOMContentLoaded', ()=>{ $q('#year').textContent=new Date().getFullYear(); });
+    // Dark mode (eyni)
+    const settingsBtn=document.getElementById('btn-settings');
+    const panel=document.getElementById('settings-panel');
+    const darkToggle=document.getElementById('dark-toggle');
+    const mq=window.matchMedia('(prefers-color-scheme: dark)');
+    const saved=localStorage.getItem('theme');
+    const initialTheme=saved ? saved : (mq.matches ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', initialTheme==='dark');
+    if(darkToggle) darkToggle.checked=(initialTheme==='dark');
+    function applyThemeAssets(theme){ const logoEl=document.getElementById('site-logo'); if(logoEl){ logoEl.src=(theme==='dark')?'assets/ep-favicon-dark.svg':'assets/ep-favicon-light.svg'; } }
+    applyThemeAssets(initialTheme);
+    settingsBtn?.addEventListener('click',(e)=>{e.stopPropagation();panel.classList.toggle('hidden')});
+    document.addEventListener('click',(e)=>{ if(!panel.contains(e.target)&&!settingsBtn.contains(e.target)) panel.classList.add('hidden')});
+    darkToggle?.addEventListener('change',(e)=>{ const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); localStorage.setItem('theme',theme); applyThemeAssets(theme); });
+    mq.addEventListener?.('change',(e)=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); if(darkToggle) darkToggle.checked=(theme==='dark'); applyThemeAssets(theme); }});
+    document.getElementById('year').textContent=new Date().getFullYear();
 
-    // Theme
-    (function(){
-      const settingsBtn=$id('btn-settings'), panel=$id('settings-panel'), darkToggle=$id('dark-toggle');
-      const mq=window.matchMedia('(prefers-color-scheme: dark)'); const saved=localStorage.getItem('theme');
-      const initial=saved? saved : (mq.matches?'dark':'light');
-      document.documentElement.classList.toggle('dark', initial==='dark');
-      if(darkToggle) darkToggle.checked=(initial==='dark');
-      const logo=$id('site-logo'); if(logo) logo.src = (initial==='dark')?'assets/ep-favicon-dark.svg':'assets/ep-favicon-light.svg';
-      settingsBtn.addEventListener('click',(e)=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
-      document.addEventListener('click',(e)=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-      darkToggle?.addEventListener('change', e=>{
-        const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); localStorage.setItem('theme',theme);
-        if(logo) logo.src = (theme==='dark')?'assets/ep-favicon-dark.svg':'assets/ep-favicon-light.svg';
-      });
-      mq.addEventListener?.('change', e=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); if(darkToggle) darkToggle.checked=(theme==='dark'); if(logo) logo.src=(theme==='dark')?'assets/ep-favicon-dark.svg':'assets/ep-favicon-light.svg'; }});
-    })();
+    // Kalkulyator (index-dəki EYNİ)
+    (function initCalculator(){
+      const W_KSQ=0.40, W_BSQ=0.60;
+      const $id=(x)=>document.getElementById(x);
+      const $qsa=(s)=>Array.from(document.querySelectorAll(s));
+      let mode=null;
 
-    // Calculator
-    (function(){
-      const W_KSQ=0.40, W_BSQ=0.60; let mode=null;
       function updateModeUI(){
-        const card=$id('calc-card');
-        $qa('[data-mode]').forEach(b=>{ const act=(b.dataset.mode===mode); b.classList.toggle('bg-white/10',act); b.setAttribute('aria-pressed', act?'true':'false'); });
+        const card=document.getElementById('calc-card');
+        document.querySelectorAll('[data-mode]').forEach(b=>{
+          const act=(b.dataset.mode===mode);
+          b.classList.toggle('bg-white/10',act);
+          b.classList.toggle('border-slate-300',act);
+          b.setAttribute('aria-pressed', act?'true':'false');
+        });
         if(!mode){
           card?.classList.add('vcenter');
           ['fs-t1','fs-t2','calc-output'].forEach(id=>$id(id)?.classList.add('hidden'));
@@ -215,29 +202,43 @@
         $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
         $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
       }
-      $qa('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{ const keepY=window.scrollY; mode=btn.dataset.mode; updateModeUI(); btn.blur(); requestAnimationFrame(()=>window.scrollTo(0,keepY)); }));
+
+      $qsa('[data-mode]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const keepY=window.scrollY;
+          mode=btn.dataset.mode;
+          updateModeUI();
+          btn.blur();
+          requestAnimationFrame(()=>{ window.scrollTo(0,keepY); });
+        });
+      });
       updateModeUI();
 
       const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
-      const numOrNull=v=>(v===''||v==null)?null:(isFinite(+v)?+v:null);
-      const to5=x=>(x>=81)?5:(x>=61)?4:(x>=41)?3:2;
-      const idsFor=p=>['1','2','3','4','5','6'].map(n=>`${p}-ksq${n}`);
-      const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
-
-      function clearOutputs(){ ['t1','t2','year'].forEach(k=>{ const P=k==='year'?'out-year':'out-'+k; $id(P)?.textContent='—'; if(k!=='year'){ $id(P+'-ksq')?.textContent='—'; $id(P+'-bsq')?.textContent='—'; $id(P+'-grade')?.textContent='—'; } else { $id(P+'-grade')?.textContent='—'; } }); }
-      function resetCalc(){
-        ['t1','t2'].forEach(p=>{ ['1','2','3','4','5','6'].forEach(n=>{ const el=$id(`${p}-ksq${n}`); if(el) el.value=''; }); const bsq=$id(`${p}-bsq`); if(bsq) bsq.value=''; });
-        err.classList.add('hidden'); err.textContent=''; warn.classList.add('hidden'); clearOutputs(); out.classList.add('hidden'); $id('calc-card')?.scrollTo({top:0,behavior:'smooth'});
-      }
+      function clearOutputs(){ ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade','out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id=>{ $id(id).textContent='—'; }); }
+      function resetCalc(){ ['t1','t2'].forEach(p=>{ ['1','2','3','4','5','6'].forEach(n=>{ const el=$id(`${p}-ksq${n}`); if(el) el.value=''; }); const bsq=$id(`${p}-bsq`); if(bsq) bsq.value=''; }); err.classList.add('hidden'); err.textContent=''; warn.classList.add('hidden'); clearOutputs(); out.classList.add('hidden'); $id('calc-card')?.scrollTo({top:0,behavior:'smooth'}); }
       resetBtn?.addEventListener('click', resetCalc);
 
+      const numOrNull=v=>(v===''||v==null)?null:(isFinite(+v)?+v:null);
+      const to5=x=>(x>=81)?5:(x>=61)?4:(x>=41)?3:2;
+      const idsFor=prefix=>['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`);
+      const avg=arr=>arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+
+      function readTerm(prefix){
+        const ksq=idsFor(prefix).map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
+        const bsq=numOrNull($id(`${prefix}-bsq`).value);
+        return {ksq,bsq};
+      }
       function computeTerm(prefix,outIds){
-        const ksq = idsFor(prefix).map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
-        const bsq = numOrNull($id(`${prefix}-bsq`).value);
+        const {ksq,bsq}=readTerm(prefix);
         if(ksq.length===0 && bsq===null) return null;
-        if(bsq===null || bsq<0 || bsq>100){ err.textContent=(prefix==='t1'?'I':'II')+' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.'; err.classList.remove('hidden'); return {error:true}; }
-        const kAvg = ksq.length? avg(ksq):0; warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
-        const total = +(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
+        if(bsq===null || bsq<0 || bsq>100){
+          err.textContent=(prefix==='t1'?'I':'II')+' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
+          err.classList.remove('hidden'); return {error:true};
+        }
+        const kAvg=ksq.length? avg(ksq) : 0;
+        warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
+        const total=+(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
         $id(outIds.total).textContent=total.toFixed(2);
         $id(outIds.ksq).textContent=kAvg.toFixed(2);
         $id(outIds.bsq).textContent=bsq.toFixed(2);
@@ -245,22 +246,31 @@
         return total;
       }
 
-      [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id=>{ $id(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } }); });
+      [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id=>{
+        const el=$id(id); el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
+      });
 
-      btn?.addEventListener('click', ()=>{
+      btn?.addEventListener('click',()=>{
         err.classList.add('hidden'); err.textContent=''; updateModeUI();
-        if(!mode){ err.textContent='Zəhmət olmasa rejimi seçin (I, II və ya Hər ikisi).'; err.classList.remove('hidden'); return; }
-        let t1=null, t2=null;
-        if(mode!=='t2'){ const r1=computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'}); if(r1 && r1.error) return; t1=typeof r1==='number'? r1:null; }
-        else { $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—'; }
-        if(mode!=='t1'){ const r2=computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'}); if(r2 && r2.error) return; t2=typeof r2==='number'? r2:null; }
-        else { $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—'; }
+        if(!mode){ err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).'; err.classList.remove('hidden'); return; }
+        let t1=null,t2=null;
+        if(mode!=='t2'){ const r1=computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'}); if(r1 && r1.error) return; t1=(typeof r1==='number')?r1:null; }
+        else{ $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—'; }
+        if(mode!=='t1'){ const r2=computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'}); if(r2 && r2.error) return; t2=(typeof r2==='number')?r2:null; }
+        else{ $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—'; }
         out.classList.remove('hidden'); out.scrollIntoView({behavior:'smooth',block:'start'});
         if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
-          const yearVal = +(((t1+t2)/2).toFixed(2)); $id('out-year').textContent=yearVal.toFixed(2); $id('out-year-grade').textContent=(yearVal>=81?5:yearVal>=61?4:yearVal>=41?3:2);
-        } else { $id('out-year').textContent='—'; $id('out-year-grade').textContent='—'; }
+          const yearVal=+(((t1+t2)/2).toFixed(2));
+          $id('out-year').textContent=yearVal.toFixed(2);
+          $id('out-year-grade').textContent=to5(yearVal);
+          $id('out-year-card').classList.remove('hidden');
+        }else{
+          $id('out-year').textContent='—'; $id('out-year-grade').textContent='—'; $id('out-year-card').classList.add('hidden');
+        }
       });
     })();
+
+    (function init(){ if('scrollRestoration' in history) history.scrollRestoration='manual'; window.scrollTo(0,0); })();
   </script>
 </body>
 </html>

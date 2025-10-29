@@ -220,4 +220,168 @@
     darkToggle?.addEventListener('change',(e)=>{ const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); localStorage.setItem('theme',theme); applyThemeAssets(theme); refreshEmptyPlaceholders(); });
     mq.addEventListener?.('change',(e)=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); if(darkToggle) darkToggle.checked=(theme==='dark'); applyThemeAssets(theme); refreshEmptyPlaceholders(); }});
     function applyThemeAssets(theme){
-      const logoEl=do
+      const logoEl=document.getElementById('site-logo');
+      if(logoEl){ logoEl.src = (theme==='dark') ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
+    }
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    // ---- Premium Fancy Select qurucusu ----
+    function addPlaceholder(selectEl,label){ const o=document.createElement('option'); o.value=""; o.textContent=label; o.disabled=true; o.selected=true; o.hidden=true; selectEl.appendChild(o); selectEl.required=true; }
+    function enhanceFancySelect(select){
+      if(select.dataset.fancyMounted==='1'){ const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null; if(old) old.replaceWith(select); select.dataset.fancyMounted='0'; }
+      const wrap=document.createElement('div'); wrap.className='fs-wrap'; wrap.setAttribute('aria-expanded','false');
+      const btn=document.createElement('button'); btn.type='button'; btn.className='fs-btn'; btn.textContent=select.options[select.selectedIndex]?.text || select.getAttribute('placeholder') || 'Seçin';
+      const menu=document.createElement('div'); menu.className='fs-menu';
+      Array.from(select.options).forEach(o=>{
+        const item=document.createElement('div'); item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':''); item.setAttribute('role','option'); item.setAttribute('data-value',o.value); item.setAttribute('aria-selected',String(o.selected)); item.textContent=o.text;
+        item.addEventListener('click',()=>{ Array.from(select.options).forEach(op=>op.selected=(op===o)); select.value=o.value; select.dispatchEvent(new Event('change',{bubbles:true})); btn.textContent=o.text; wrap.setAttribute('aria-expanded','false'); });
+        menu.appendChild(item);
+      });
+      select.classList.add('fs-native');
+      select.parentNode.insertBefore(wrap,select);
+      wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu);
+      select.dataset.fancyMounted='1';
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); const open=wrap.getAttribute('aria-expanded')==='true'; document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false')); wrap.setAttribute('aria-expanded', String(!open)); });
+      document.addEventListener('click', ()=> wrap.setAttribute('aria-expanded','false'));
+      wrap.addEventListener('keydown', (e)=>{ if(e.key==='Escape') wrap.setAttribute('aria-expanded','false'); });
+    }
+    function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
+
+    // ---- Data / FEED ----
+    const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
+    const translations={ az:{ subjects:{ az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat', physics:'Fizika', chemistry:'Kimya', biology:'Biologiya', az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya', it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət', music:'Musiqi', pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq' } } };
+    const subjectKeysByGrade={ I:['az','life','math','eng','rus','art','music','pe','tech','it'], II:['az','life','math','eng','rus','art','music','pe','tech','it'], III:['az','life','math','eng','rus','art','music','pe','tech','it'], IV:['az','life','math','eng','rus','art','music','pe','tech','it'], V:['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'], VI:['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'], VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'], VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'], IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'], X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'], XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'] };
+    const state={ lang:'az', grade:null, subject:null, ksqType:null, examIndex:null, catalog:[] };
+
+    const $=sel=>document.querySelector(sel);
+
+    function subjectsFor(grade){ const keys=subjectKeysByGrade[grade]||Object.keys(translations.az.subjects); return keys.map(k=>translations.az.subjects[k]).filter(Boolean); }
+    function option(el,val,text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o); }
+
+    function renderSelects(){
+      const grades=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+      const gradeEl=$('#grade'); gradeEl.innerHTML=''; addPlaceholder(gradeEl,'Sinfi seçin'); grades.forEach(g=>option(gradeEl,g,g)); gradeEl.value=state.grade??"";
+      const subjEl=$('#subject'); subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin'); if(state.grade){ subjectsFor(state.grade).forEach(s=>option(subjEl,s,s)); } subjEl.value=state.subject??"";
+      const typeEl=$('#ksqType'); typeEl.innerHTML=''; addPlaceholder(typeEl,'Növü seçin'); option(typeEl,'KSQ','KSQ'); option(typeEl,'BSQ','BSQ'); typeEl.value=state.ksqType??"";
+      const idxEl=$('#examIndex'); idxEl.innerHTML=''; addPlaceholder(idxEl,'Nömrəni seçin');
+      if(state.ksqType==='KSQ'){ for(let i=1;i<=10;i++) option(idxEl,String(i),String(i)); }
+      else if(state.ksqType==='BSQ'){ ['1','2'].forEach(i=>option(idxEl,i,i)); }
+      idxEl.value=state.examIndex??""; idxEl.disabled=!state.ksqType;
+      enhanceAllFancySelects();
+    }
+
+    function allChosenKSQ(){ return !!(state.grade && state.subject && state.ksqType && state.examIndex); }
+    function showEmpty(cardId,{icon='🗂️',title='',desc:''}) {
+      const card=document.getElementById(cardId);
+      if(!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
+      const isDark=document.documentElement.classList.contains('dark');
+      card.classList.add('min-h-[320px]','md:min-h-[340px]');
+      if(isDark){
+        const overlay=document.createElement('div'); overlay.className='empty-overlay absolute inset-0 z-10';
+        overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon text-xl">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;
+        card.appendChild(overlay);
+      }else{
+        const box=document.createElement('div'); box.className='empty-light';
+        box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;
+        card.appendChild(box);
+      }
+    }
+    function hideEmpty(cardId){ const card=document.getElementById(cardId); card?.querySelector('.empty-overlay')?.remove(); card?.querySelector('.empty-light')?.remove(); card?.classList.remove('min-h-[320px]','md:min-h-[340px]'); }
+    function refreshEmptyPlaceholders(){
+      if(!allChosenKSQ()){ hideEmpty('ksq-results-card'); showEmpty('ksq-results-card',{icon:'🗂️',title:'Zəhmət olmasa seçim edin',desc:'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'}); }
+    }
+
+    function buildTitle(it){ const format=(it.ext||'FILE').toUpperCase(); return `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`; }
+
+    function renderKSQ(){
+      const wrap=document.getElementById('ksq-results'); wrap.innerHTML='';
+      const list=state.catalog.filter(it=>it.type===state.ksqType && it.grade===state.grade && it.subject===state.subject && it.index===state.examIndex);
+      document.getElementById('ksq-count').textContent=list.length;
+      const gridEl=document.getElementById('ksq-results');
+      const center=(list.length>0 && list.length<=2);
+      gridEl.classList.toggle('min-h-[240px]',center);
+      gridEl.classList.toggle('place-content-center',center);
+      gridEl.classList.toggle('justify-items-center',center);
+      if(list.length===0){ wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>'; return; }
+      list.forEach(it=>{
+        const card=document.createElement('div'); card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+        card.innerHTML=`
+          <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+            <div class="flex items-start gap-3">
+              <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+              <div class="flex-1">
+                <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
+                <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
+                <div class="mt-3">
+                  <a href="${it.dl}" target="_self" rel="noopener" data-download="${it.dl}"
+                     class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        wrap.appendChild(card);
+      });
+    }
+
+    function toggleResults(){
+      const gridKSQ=document.getElementById('ksq-results');
+      const countRow=document.getElementById('ksq-count-row');
+      if(allChosenKSQ()){ hideEmpty('ksq-results-card'); countRow?.classList.remove('hidden'); renderKSQ(); }
+      else { countRow?.classList.add('hidden'); gridKSQ.innerHTML=''; showEmpty('ksq-results-card',{icon:'🗂️',title:'Zəhmət olmasa seçim edin',desc:'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'}); }
+    }
+
+    async function loadAllFromMaterials(){
+      try{
+        const res=await fetch(FEED_URL,{cache:'no-store'});
+        const catalog=await res.json();
+        state.catalog=Array.isArray(catalog)?catalog:[];
+        renderSelects();
+        toggleResults();
+      }catch(e){
+        console.error(e);
+        if(allChosenKSQ()){
+          document.getElementById('ksq-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
+        }
+      }
+    }
+
+    // ---- Eventlər ----
+    document.getElementById('grade').addEventListener('change', e=>{ state.grade=e.target.value||null; state.subject=null; renderSelects(); toggleResults(); });
+    document.getElementById('subject').addEventListener('change', e=>{ state.subject=e.target.value||null; toggleResults(); });
+    document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); toggleResults(); });
+    document.getElementById('examIndex').addEventListener('change', e=>{ state.examIndex=e.target.value||null; toggleResults(); });
+
+    // ---- Download modal (eyni) ----
+    (() => {
+      const MODAL=$('#dlModal'), CARD=$('#dlCard'), BTN_CLOSE=$('#dlClose'), COUNT=$('#dlCount'), RING=$('#ring'), BAR=$('#dlBar'), STATUS=$('#dlStatus');
+      let t=0,timer=null,finished=false,targetUrl=null; const DURATION=15; let modalAdRendered=false; let adsReady=false; window.addEventListener('load',()=>{adsReady=true;});
+      function updateRing(){ const deg=((DURATION - t)/DURATION)*360; RING.style.background=`conic-gradient(#8b5cf6 ${deg}deg,#333 ${deg}deg 360deg)`; }
+      function closeModal(){ MODAL.classList.add('hidden'); MODAL.classList.remove('flex'); if(timer) clearInterval(timer); timer=null; }
+      function finish(){ if(finished) return; finished=true; closeModal(); if(!targetUrl) return; const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove(); requestAnimationFrame(()=>{ if(document.visibilityState!=='hidden'){ try{ window.location.assign(targetUrl);}catch{} } }); }
+      function openModal(url){
+        targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex'); t=DURATION; COUNT.textContent=t; STATUS.textContent='Please wait a few moments for the download to begin'; BAR.style.width='0%'; updateRing();
+        if(!modalAdRendered){ modalAdRendered=true; const tryRender=()=>{ try{ (window.adsbygoogle=window.adsbygoogle||[]).push({}); }catch(e){ setTimeout(()=>tryRender(),400);} }; if(adsReady) tryRender(); else setTimeout(()=>tryRender(),500); }
+        timer=setInterval(()=>{ t--; COUNT.textContent=t>=0?t:0; const p=((DURATION - t)/DURATION)*100; BAR.style.width=Math.min(100,Math.max(0,p))+'%'; updateRing(); if(t<=0) finish(); },1000);
+      }
+      document.addEventListener('click',(e)=>{
+        const a=e.target.closest('a.download-btn'); if(!a) return;
+        if(e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const url=a.getAttribute('data-download') || a.getAttribute('href'); if(!url) return;
+        e.preventDefault(); openModal(url);
+      });
+      BTN_CLOSE?.addEventListener('click',closeModal);
+      MODAL?.addEventListener('click',(e)=>{ if(!CARD.contains(e.target)) closeModal(); });
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && !MODAL.classList.contains('hidden')) closeModal(); });
+    })();
+
+    // ---- Init ----
+    (function init(){
+      if('scrollRestoration' in history) history.scrollRestoration='manual';
+      window.scrollTo(0,0);
+      renderSelects();
+      loadAllFromMaterials();
+      refreshEmptyPlaceholders();
+    })();
+  </script>
+</body>
+</html>

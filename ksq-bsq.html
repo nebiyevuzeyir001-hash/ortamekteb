@@ -6,54 +6,88 @@
   <link rel="canonical" href="https://www.eduplan.az/ksq-bsq.html" />
   <meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
   <title>KSQ/BSQ — EduPlan</title>
-  <meta name="description" content="Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları. Yüklə və istifadə et." />
-  <meta name="keywords" content="KSQ, BSQ, summativ qiymətləndirmə, EduPlan" />
+
+  <!-- SEO / OG -->
+  <meta name="description" content="Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları — EduPlan.az">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="EduPlan.az">
+  <meta property="og:type" content="website">
   <meta property="og:title" content="KSQ/BSQ — EduPlan">
-  <meta property="og:description" content="Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.">
+  <meta property="og:description" content="Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları.">
   <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
   <meta property="og:url" content="https://www.eduplan.az/ksq-bsq.html">
-  <meta property="og:type" content="website">
   <meta property="og:site_name" content="EduPlan">
-  <link rel="icon" type="image/png" sizes="180x180" href="https://www.eduplan.az/assets/ep-favicon-180.png">
   <meta name="theme-color" content="#0a0b10">
   <meta name="language" content="az">
   <meta name="google-adsense-account" content="ca-pub-1241199346930032">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="180x180" href="https://www.eduplan.az/assets/ep-favicon-180.png">
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    /* ——— index-dən lazım olan ümumi dəyişənlər və UI düzəlişləri ——— */
+    /* === COPY: index.css-dən ehtiyac olan bütün custom dəyişənlər və UI qaydaları === */
     :root{
       --bg-from:#f8fafc;--bg-to:#fff;--text:#0f172a;--card:#fff;--muted:#475569;--border:#e2e8f0;
-      --panel-min-h:320px;--panel-max-h:520px;--panel-pad-top:16px;--panel-pad-bottom:16px;
       --tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;
+      --panel-min-h:320px;--panel-max-h:520px;--panel-pad-top:16px;--panel-pad-bottom:16px;
+      --scroll-thumb:rgba(100,100,100,.4);--scroll-thumb-hover:rgba(100,100,100,.6)
     }
-    .dark{
-      --bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;
-      --tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1;
-    }
+    .dark{--bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;
+      --tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1;--scroll-thumb:rgba(180,180,255,.25);--scroll-thumb-hover:rgba(180,180,255,.5)}
     html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
-    body{color:var(--text)}
+    html{background:var(--bg-to)}html.dark{background:#0a0f1a}
+    body{color:var(--text);min-height:100svh}
     .bg-white{background-color:var(--card)!important}
-    .text-slate-600{color:var(--muted)!important}
+    .text-slate-900,.text-slate-800,.text-slate-700{color:var(--text)!important}
+    .text-slate-600,.text-slate-500{color:var(--muted)!important}
     .border-slate-200{border-color:var(--border)!important}
-    .select-premium{-webkit-appearance:none;appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--border) 35%, transparent),0 1px 0 rgba(0,0,0,.05)}
+    .backdrop-blur.bg-white\/70{background-color:color-mix(in srgb,var(--card) 70%,transparent)!important}
+    select,input{background-color:var(--card)!important;color:var(--text)!important}
+    .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
+    .panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
+    .panel-scroll>.scrollarea{height:auto;max-height:none;overflow-y:visible;padding-bottom:var(--panel-pad-bottom)!important}
+    .tab-panel{display:block}
+    .select-premium{-webkit-appearance:none;appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;transition:border-color .18s,box-shadow .18s,transform .06s;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05)}
+    .select-premium:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+    .select-premium:focus{outline:0;border-color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
     .select-premium{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
-    .empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
-    .empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+    .dark .select-premium{background:#0f172a;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)}
+    .dark .select-premium:focus{box-shadow:0 0 0 1px #2f405c,0 0 0 4px rgba(167,139,250,.22),0 10px 22px rgba(0,0,0,.35)}
+    .fs-wrap{position:relative;display:block;width:100%}.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+    .fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
+    .fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+    .fs-btn:focus-visible{outline:0;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+    .fs-btn::after{content:"";position:absolute;right:12px;top:50%;translate:0 -50%;width:16px;height:16px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-size:16px;opacity:.9;pointer-events:none}
+    .dark .fs-btn{background:#0f172a;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)}
+    .dark .fs-btn:focus-visible{box-shadow:0 0 0 1px #2f405c,0 0 0 4px rgba(167,139,250,.22),0 10px 22px rgba(0,0,0,.35)}
+    .dark .fs-btn::after{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")}
+    .fs-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-height:260px;overflow:auto;padding:6px;display:none}
+    .fs-wrap[aria-expanded="true"] .fs-menu{display:block}
+    .fs-opt{padding:9px 10px;border-radius:10px;cursor:pointer;font-size:.875rem;display:flex;align-items:center;gap:8px}
+    .fs-opt[aria-selected="true"]{font-weight:600}.fs-opt:hover{background:rgba(148,163,184,.12)}.fs-opt.is-placeholder{color:#9aa4b2;font-style:italic}
     .empty-light{position:absolute;inset:0;display:grid;place-items:center;padding:0;pointer-events:none}
     .empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
-    .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h)}
-    .panel-scroll>.scrollarea{height:100%;max-height:var(--panel-max-h);overflow:auto;padding:var(--panel-pad-top) 16px calc(var(--panel-pad-bottom) + 24px)}
-    .download-btn{display:inline-flex;align-items:center;gap:8px;border-radius:0.75rem;background:#0b1220;color:#fff;padding:.6rem .8rem;font-weight:600}
+    .empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
+    .empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+    .empty-overlay .inner .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
+    html,body,.scrollarea{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+    ::-webkit-scrollbar{width:12px;height:12px}
+    ::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;transition:background .3s}
+    ::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
+    .ep-btn-primary{display:inline-block;width:100%;padding:.65rem 1rem;border-radius:.75rem;font-weight:600;font-size:.9rem;letter-spacing:.2px;color:#fff;background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%);border:0;box-shadow:0 4px 12px rgba(79,70,229,.35);transition:transform .15s,box-shadow .25s,filter .25s}
+    .ep-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 6px 18px rgba(147,51,234,.45)}
+    .dark .ep-btn-primary{background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%);box-shadow:0 4px 10px rgba(255,255,255,.1)}
   </style>
 
   <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
   <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
+
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 </head>
-<body class="min-h-screen relative">
+<body class="min-h-screen text-slate-900 relative">
   <!-- Glowlar -->
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
@@ -63,21 +97,16 @@
   <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3">
-        <img id="site-logo" src="assets/ep-favicon-light.svg" alt="EduPlan loqo" class="h-9 w-9 rounded-2xl shadow-sm">
+      <div class="flex items-center gap-3">
+        <img id="site-logo" src="assets/ep-favicon-light.svg" alt="EduPlan loqo" class="h-9 w-9 rounded-2xl shadow-sm" loading="eager" decoding="async">
         <span class="font-semibold tracking-tight">EduPlan AZ</span>
-      </a>
-      <nav class="hidden sm:flex items-center gap-4 text-sm">
-        <a href="/ksq-bsq.html" class="underline">KSQ/BSQ</a>
-        <a href="/pp.html">PP</a>
-        <a href="/calculator.html">Kalkulyator</a>
-        <a href="/timetable.html">Cədvəl</a>
-      </nav>
+      </div>
       <div class="relative flex items-center gap-3">
-        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span>Tənzimləmələr</span></button>
+        <a href="/" class="rounded-2xl border px-3 py-2 text-sm">← Ana səhifə</a>
+        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">🌙 Tənzimləmələr</button>
         <div id="settings-panel" class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
           <div class="flex items-center justify-between">
-            <div class="text-sm">🌙 Qaranlıq rejim</div>
+            <div class="text-sm">Qaranlıq rejim</div>
             <label class="inline-flex items-center cursor-pointer">
               <input id="dark-toggle" type="checkbox" class="sr-only">
               <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
@@ -91,49 +120,44 @@
   </header>
 
   <!-- Hero -->
-  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">KSQ / BSQ</h1>
-    <p class="mt-2 text-slate-600">Sinif, fənn, növ və nömrəni seç, faylları yüklə.</p>
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">KSQ/BSQ</h1>
+      <p class="mt-2 text-slate-600">Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.</p>
+    </div>
   </section>
 
-  <!-- Main -->
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-    <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+    <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
       <div class="p-4 border-b"><h3 class="font-semibold">KSQ/BSQ</h3></div>
-      <div class="grid lg:grid-cols-3 gap-6 p-4">
-        <!-- Sol filterlər -->
+      <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
+        <!-- Filtrlər -->
         <div class="space-y-4">
           <div>
-            <label class="text-sm block">Sinif</label>
+            <label class="text-sm text-slate-700 block">Sinif</label>
             <select id="grade" class="select-premium w-full mt-1"></select>
           </div>
           <div>
-            <label class="text-sm block">Fənn</label>
+            <label class="text-sm text-slate-700 block">Fənn</label>
             <select id="subject" class="select-premium w-full mt-1"></select>
           </div>
           <div>
-            <label class="text-sm block">Növ</label>
-            <select id="ksqType" class="select-premium w-full mt-1">
-              <option>KSQ</option><option>BSQ</option>
-            </select>
+            <label class="text-sm text-slate-700 block">Növ</label>
+            <select id="ksqType" class="select-premium w-full mt-1"></select>
           </div>
           <div>
-            <label class="text-sm block">Nömrə</label>
+            <label class="text-sm text-slate-700 block">Nömrə</label>
             <select id="examIndex" class="select-premium w-full mt-1"></select>
           </div>
         </div>
 
         <!-- Nəticələr -->
         <div class="lg:col-span-2 min-w-0">
-          <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden panel-scroll">
-            <div class="flex items-center justify-end px-4 pt-4">
+          <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
+            <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
               <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
             </div>
             <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
-          </div>
-          <!-- Reklam bloku (ixtiyari) -->
-          <div class="mt-6 grid place-items-center">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1241199346930032" data-ad-slot="3531763843" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
         </div>
       </div>
@@ -147,15 +171,19 @@
       <div class="mb-3 text-sm text-gray-300">Preparing your download</div>
       <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
         <div class="w-full grid place-items-center" style="min-height:250px">
-          <ins class="adsbygoogle" id="modal-ad" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-1241199346930032" data-ad-slot="4681795317"></ins>
+          <ins class="adsbygoogle" id="modal-ad" style="display:inline-block;width:300px;height:250px"
+               data-ad-client="ca-pub-1241199346930032" data-ad-slot="4681795317"></ins>
         </div>
       </div>
-      <div class="mt-4 flex items-center gap-3">
-        <div class="relative h-10 w-10">
-          <div id="ring" class="h-10 w-10 rounded-full" style="background:conic-gradient(#8b5cf6 0deg,#333 0deg 360deg);"></div>
-          <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
+      <div class="mt-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="relative h-10 w-10">
+            <div id="ring" class="h-10 w-10 rounded-full" style="background:
+              conic-gradient(#8b5cf6 0deg,#8b5cf6 0deg,#333 0deg,#333 360deg);"></div>
+            <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
+          </div>
+          <div class="text-sm text-gray-300" id="dlStatus">Please wait a few moments for the download to begin</div>
         </div>
-        <div class="text-sm text-gray-300" id="dlStatus">Please wait a few moments for the download to begin</div>
       </div>
       <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
         <div id="dlBar" class="h-1 bg-violet-500 w-0"></div>
@@ -167,193 +195,29 @@
   <footer class="border-t border-slate-200 py-10 text-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur</p>
-      <div class="flex items-center gap-4 text-slate-600">
-        <a class="hover:underline" href="/about.html">Haqqımızda</a>
-        <a class="hover:underline" href="/terms.html">Şərtlər</a>
-        <a class="hover:underline" href="/privacy.html">Məxfilik</a>
+      <div class="flex items-center gap-4 text-slate-600 text-sm">
+        <a class="hover:underline" href="about.html">Haqqımızda</a>
+        <a class="hover:underline" href="terms.html">Şərtlər</a>
+        <a class="hover:underline" href="privacy.html">Məxfilik</a>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- CORE JS (index-dən seçilmiş eyni loqika) -->
   <script>
-    const FEED_URL = "https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
-    const subjectKeysByGrade = {
-      I:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      II:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      III:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      IV:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      V:['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
-      VI:['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
-      VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-      XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-    };
-    const subjectsDict = {
-      az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat',
-      physics:'Fizika', chemistry:'Kimya', biology:'Biologiya',
-      az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya',
-      it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət', music:'Musiqi', pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq'
-    };
-
-    const $ = s=>document.querySelector(s);
-    const state = { grade:null, subject:null, ksqType:null, examIndex:null, catalog:[] };
-
-    function addPlaceholder(selectEl,label){ const o=document.createElement('option'); o.value=""; o.textContent=label; o.disabled=true;o.selected=true;o.hidden=true; selectEl.appendChild(o); selectEl.required=true; }
-    function option(el,val,text){ const o=document.createElement('option'); o.value=val; o.textContent=text; el.appendChild(o); }
-    function subjectsFor(grade){ const keys = subjectKeysByGrade[grade] || Object.keys(subjectsDict); return keys.map(k=>subjectsDict[k]).filter(Boolean); }
-    function buildTitle(it){
-      const format = (it.ext||'FILE').toUpperCase();
-      return it.type==='PP' ? `${it.subject} · PP · ${format}` : `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
-    }
-
-    function renderSelects(){
-      const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
-
-      const gradeEl = $('#grade'); gradeEl.innerHTML=''; addPlaceholder(gradeEl,'Sinfi seçin');
-      grades.forEach(g=>option(gradeEl,g,g)); gradeEl.value = state.grade ?? "";
-
-      const subjEl = $('#subject'); subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin');
-      if(state.grade){ subjectsFor(state.grade).forEach(s=>option(subjEl,s,s)); }
-      subjEl.value = state.subject ?? "";
-
-      const typeEl = $('#ksqType'); typeEl.innerHTML=''; addPlaceholder(typeEl,'Növü seçin'); ['KSQ','BSQ'].forEach(v=>option(typeEl,v,v)); typeEl.value = state.ksqType ?? "";
-
-      const idxEl = $('#examIndex'); idxEl.innerHTML=''; addPlaceholder(idxEl,'Nömrəni seçin');
-      if(state.ksqType==='KSQ'){ for(let i=1;i<=10;i++) option(idxEl,String(i),String(i)); }
-      else if(state.ksqType==='BSQ'){ ['1','2'].forEach(i=>option(idxEl,i,i)); }
-      idxEl.value = state.examIndex ?? "";
-      idxEl.disabled = !state.ksqType;
-    }
-
-    function allChosen(){ return !!(state.grade && state.subject && state.ksqType && state.examIndex); }
-
-    function showEmpty(){
-      const card = $('#ksq-results-card');
-      $('#ksq-results').innerHTML='';
-      card.querySelector('.empty-overlay')?.remove();
-      card.querySelector('.empty-light')?.remove();
-      const isDark = document.documentElement.classList.contains('dark');
-      if(isDark){
-        const overlay = document.createElement('div');
-        overlay.className='empty-overlay';
-        overlay.innerHTML = `<div class="inner"><div class="icon text-xl">🗂️</div><div class="title font-semibold">Zəhmət olmasa seçim edin</div><div class="desc text-sm text-slate-300">Sinif, fənn, növ və nömrəni seçin.</div></div>`;
-        card.appendChild(overlay);
-      } else {
-        const box = document.createElement('div');
-        box.className='empty-light';
-        box.innerHTML = `<div class="card"><div class="icon">🗂️</div><div class="title font-semibold">Zəhmət olmasa seçim edin</div><div class="desc text-sm text-slate-600">Sinif, fənn, növ və nömrəni seçin.</div></div>`;
-        card.appendChild(box);
-      }
-    }
-
-    function renderKSQ(){
-      const wrap = $('#ksq-results'); wrap.innerHTML='';
-      const list = state.catalog.filter(it=>{
-        if(it.type!==state.ksqType) return false;
-        if(it.grade!==state.grade) return false;
-        if(it.subject!==state.subject) return false;
-        if(it.index!==state.examIndex) return false;
-        return true;
-      });
-
-      $('#ksq-count').textContent = list.length;
-
-      if(list.length===0){ showEmpty(); return; }
-
-      list.forEach(it=>{
-        const card = document.createElement('div');
-        card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
-        card.innerHTML = `
-          <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-            <div class="flex items-start gap-3">
-              <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-              <div class="flex-1">
-                <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-                <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
-                <div class="mt-3">
-                  <a href="${it.dl}" data-download="${it.dl}" class="download-btn">⬇️ Yüklə</a>
-                </div>
-              </div>
-            </div>
-          </div>`;
-        wrap.appendChild(card);
-      });
-    }
-
-    async function loadCatalog(){
-      try{
-        const res = await fetch(FEED_URL, {cache:'no-store'});
-        const catalog = await res.json();
-        state.catalog = Array.isArray(catalog)? catalog : [];
-        if(allChosen()) renderKSQ(); else showEmpty();
-      }catch(e){
-        $('#ksq-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`;
-      }
-    }
-
-    // Events
-    document.addEventListener('DOMContentLoaded', ()=>{
-      $('#year').textContent = new Date().getFullYear();
-      renderSelects(); loadCatalog(); showEmpty();
-
-      $('#grade').addEventListener('change', e=>{ state.grade=e.target.value||null; state.subject=null; renderSelects(); if(allChosen()) renderKSQ(); else showEmpty(); });
-      $('#subject').addEventListener('change', e=>{ state.subject=e.target.value||null; if(allChosen()) renderKSQ(); else showEmpty(); });
-      $('#ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); if(allChosen()) renderKSQ(); else showEmpty(); });
-      $('#examIndex').addEventListener('change', e=>{ state.examIndex=e.target.value||null; if(allChosen()) renderKSQ(); else showEmpty(); });
-    });
-
-    // Theme controls
-    const settingsBtn = document.getElementById('btn-settings');
-    const panel = document.getElementById('settings-panel');
-    const darkToggle = document.getElementById('dark-toggle');
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const saved = localStorage.getItem('theme');
-    const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
+    // ---- Dark mode & header settings (index ilə eyni) ----
+    const settingsBtn=document.getElementById('btn-settings');
+    const panel=document.getElementById('settings-panel');
+    const darkToggle=document.getElementById('dark-toggle');
+    const mq=window.matchMedia('(prefers-color-scheme: dark)');
+    const saved=localStorage.getItem('theme');
+    const initialTheme=saved ? saved : (mq.matches ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', initialTheme==='dark');
-    darkToggle.checked = (initialTheme==='dark');
+    if(darkToggle) darkToggle.checked=(initialTheme==='dark');
     applyThemeAssets(initialTheme);
-    settingsBtn.addEventListener('click', (e)=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
-    document.addEventListener('click', (e)=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-    darkToggle.addEventListener('change', e=>{ const theme = e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); localStorage.setItem('theme',theme); applyThemeAssets(theme); showEmpty(); });
-    mq.addEventListener?.('change', e=>{ if(!localStorage.getItem('theme')){ const theme = e.matches?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); darkToggle.checked=(theme==='dark'); applyThemeAssets(theme); showEmpty(); }});
+    settingsBtn?.addEventListener('click',(e)=>{e.stopPropagation();panel.classList.toggle('hidden')});
+    document.addEventListener('click',(e)=>{ if(!panel.contains(e.target)&&!settingsBtn.contains(e.target)) panel.classList.add('hidden')});
+    darkToggle?.addEventListener('change',(e)=>{ const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); localStorage.setItem('theme',theme); applyThemeAssets(theme); refreshEmptyPlaceholders(); });
+    mq.addEventListener?.('change',(e)=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark',theme==='dark'); if(darkToggle) darkToggle.checked=(theme==='dark'); applyThemeAssets(theme); refreshEmptyPlaceholders(); }});
     function applyThemeAssets(theme){
-      const isDark = theme==='dark';
-      const logoEl = document.getElementById('site-logo');
-      if(logoEl) logoEl.src = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-    }
-
-    // AdSense modal + 15s taymer (sənin məntiq)
-    (function(){
-      const MODAL = document.getElementById('dlModal'), CARD=document.getElementById('dlCard'), BTN_CLOSE=document.getElementById('dlClose');
-      const COUNT=document.getElementById('dlCount'), RING=document.getElementById('ring'), BAR=document.getElementById('dlBar'), STATUS=document.getElementById('dlStatus');
-      const DURATION=15; let t=0, timer=null, finished=false, targetUrl=null; let modalAdRendered=false, adsReady=false;
-      window.addEventListener('load', ()=>{ adsReady=true; });
-      function updateRing(){ const deg=((DURATION - t)/DURATION)*360; RING.style.background=`conic-gradient(#8b5cf6 ${deg}deg, #333 ${deg}deg 360deg)`; }
-      function closeModal(){ MODAL.classList.add('hidden'); MODAL.classList.remove('flex'); if(timer) clearInterval(timer); timer=null; }
-      function finish(){ if(finished) return; finished=true; closeModal(); if(!targetUrl) return;
-        const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove();
-        requestAnimationFrame(()=>{ if(document.visibilityState!=='hidden'){ try{ location.assign(targetUrl); }catch{} }});
-      }
-      function tryRenderAd(){ try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){ setTimeout(()=>tryRenderAd(), 400); } }
-      function openModal(url){
-        targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex'); t=DURATION;
-        COUNT.textContent=t; STATUS.textContent='Please wait a few moments for the download to begin'; BAR.style.width='0%'; updateRing();
-        if(!modalAdRendered){ modalAdRendered=true; if(adsReady) tryRenderAd(); else setTimeout(()=>tryRenderAd(),500); }
-        timer=setInterval(()=>{ t--; COUNT.textContent = t>=0?t:0; BAR.style.width = Math.min(100,Math.max(0, ((DURATION - t)/DURATION)*100)) + '%'; updateRing(); if(t<=0) finish(); },1000);
-      }
-      document.addEventListener('click',(e)=>{
-        const a=e.target.closest('a.download-btn'); if(!a) return;
-        if(e.button!==0 || e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return;
-        const url=a.getAttribute('data-download')||a.getAttribute('href'); if(!url) return;
-        e.preventDefault(); openModal(url);
-      });
-      BTN_CLOSE.addEventListener('click', closeModal);
-      MODAL.addEventListener('click', (e)=>{ if(!CARD.contains(e.target)) closeModal(); });
-      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && !MODAL.classList.contains('hidden')) closeModal(); });
-    })();
-  </script>
-</body>
-</html>
+      const logoEl=do

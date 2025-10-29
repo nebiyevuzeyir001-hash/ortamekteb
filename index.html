@@ -775,15 +775,15 @@ html, body, .scrollarea {
 
 <section id="hero" class="relative">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16
-              grid lg:grid-cols-2 gap-8 items-center
-              min-h-[calc(100svh-64px)]">  <!-- ✨ hero tam ekran - header -->
+              grid md:grid-cols-2 gap-8 items-center
+              min-h-[calc(100svh-64px)]">
       <div>
         <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug whitespace-normal text-balance text-pretty max-w-[28ch] sm:max-w-[32ch] lg:max-w-[36ch]">Müəllimlər üçün rəqəmsal resurs platforması</h1>
         <p class="mt-4 text-slate-600 text-lg" id="hero-subtitle">Azərbaycan məktəbləri üçün uyğunlaşdırılıb.</p>
 <!-- Legend row -->
 <ul class="mt-6 flex w-full items-center 
            justify-center md:justify-start 
-           gap-x-4 text-[clamp(12px,3.5vw,16px)] overflow-x-hidden">
+           gap-x-4 gap-y-2 flex-wrap text-[clamp(12px,3.5vw,16px)]">
   
   <li class="flex items-center gap-2">
     <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
@@ -808,13 +808,13 @@ html, body, .scrollarea {
       </div>
       <div class="grid gap-4">
         <div class="grid sm:grid-cols-2 gap-4">
-<a href="/ksq-bsq" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn block" data-route="/ksq-bsq">
+<a href="/ksq-bsq.html" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white block">
   <div class="p-4">
     <div class="text-base font-semibold">📄 <span id="feat-ksq-title">KSQ/BSQ</span></div>
     <div class="text-sm text-slate-600 mt-1" id="feat-ksq-desc">Sinif, fənn, növ və nömrə üzrə summativ qiymətləndirmə faylları.</div>
   </div>
 </a>
-<a href="/pp" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white route-btn block" data-route="/pp">
+<a href="/pp.html" class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white block">
   <div class="p-4">
     <div class="text-base font-semibold">📅 <span id="feat-pp-title">Perspektiv plan (PP)</span></div>
     <div class="text-sm text-slate-600 mt-1" id="feat-pp-desc">Fənn üzrə illik plan faylları.</div>
@@ -822,12 +822,11 @@ html, body, .scrollarea {
 </a>
 
         </div>
-<div class="grid sm:grid-cols-3 gap-4">
-  <a href="/calculator" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/calculator">🧮 <span id="mini-calc">Bal kalkulyatoru</span></a>
+<div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+<a href="/calculator.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
 <!-- orta blok (DƏYİŞDİR) -->
-<a href="/timetable"
-   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block"
-   data-route="/timetable">
+<a href="/timetable.html"
+   class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
   📅 <span>Dərs cədvəli hazırlayıcı</span>
 </a>
 
@@ -837,7 +836,7 @@ html, body, .scrollarea {
 
 
   <!-- “Sual bankı” sağa keçir -->
-  <a href="/question-bank" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 route-btn block" data-route="/question-bank">📚 <span id="mini-templates">Sual bankı</span></a>
+<a href="/question-bank.html" class="rounded-2xl bg-white border p-4 shadow-sm hover:shadow-md transition flex items-center gap-2 block">
 </div>
 
       </div>
@@ -847,9 +846,9 @@ html, body, .scrollarea {
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
 <div id="tabs" role="tablist" aria-label="Bölmələr"
      class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner overflow-hidden">
-  <button id="tab-ksq"   data-tab="ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">KSQ / BSQ</button>
-  <button id="tab-pp"    data-tab="pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Perspektiv plan</button>
-  <button id="tab-tools" data-tab="tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Alətlər & Testlər</button>
+<button id="tab-ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/ksq-bsq.html'">KSQ / BSQ</button>
+<button id="tab-pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/pp.html'">Perspektiv plan</button>
+<button id="tab-tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600" onclick="location.href='/calculator.html'">Alətlər & Testlər</button>
 </div>
 
     <section id="panel-ksq" class="tab-panel is-active mt-6">
@@ -1031,11 +1030,8 @@ html, body, .scrollarea {
     </p>
 
     <!-- DÜYMƏ — “Hesabla” ilə eyni stil və ölçü -->
-<a href="/timetable"
-   data-route="/timetable"
-   class="ep-btn-primary w-full route-btn">
-  Aç
-</a>
+<a href="/timetable.html" class="ep-btn-primary w-full">Aç</a>
+
   </div>
 </div>
 
@@ -1081,7 +1077,31 @@ html, body, .scrollarea {
         
       </div>
     </section>
-    
+    <section id="about-site" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+  <div class="rounded-2xl border bg-white dark:bg-slate-900 shadow-sm">
+    <div class="p-6 sm:p-8">
+      <h2 class="text-2xl font-bold tracking-tight">EduPlan.az haqqında</h2>
+      <p class="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
+        EduPlan.az müəllimlər üçün rəqəmsal resurs platformasıdır. Məqsəd – dərs planlaşdırma və
+        qiymətləndirmə prosesini sadələşdirmək, materiallara operativ çıxış və səhvsiz hesablamalar təqdim etməkdir.
+      </p>
+      <h3 class="mt-6 text-lg font-semibold">Nə təqdim edirik?</h3>
+      <ul class="mt-2 list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-300">
+        <li><strong>KSQ/BSQ:</strong> sinif, fənn, növ və nömrə üzrə filtrlənən fayllar.</li>
+        <li><strong>Perspektiv plan (PP):</strong> fənlər üzrə illik planlar.</li>
+        <li><strong>Bal kalkulyatoru:</strong> KSQ 40% / BSQ 60% çəkili hesablamalar.</li>
+        <li><strong>Online dərs cədvəli:</strong> sinif, müəllim və kabinet məhdudiyyətləri ilə.</li>
+      </ul>
+      <h3 class="mt-6 text-lg font-semibold">Keyfiyyət və hüquqi qeydlər</h3>
+      <p class="mt-2 text-slate-600 dark:text-slate-300">
+        Materiallar Azərbaycan tədris proqramına uyğun seçilir və mütəmadi yenilənir.
+        İstifadə <a class="underline" href="/terms.html">Şərtlər</a> və <a class="underline" href="/privacy.html">Məxfilik</a>
+        sənədlərində göstərilən qaydalar çərçivəsindədir.
+      </p>
+    </div>
+  </div>
+</section>
+
   </main>
 <!-- Zedge-tərz Download Modal (15s, skip yoxdur, X var) -->
 <div id="dlModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60">
@@ -2170,188 +2190,6 @@ function enhanceAllFancySelects(){
 }
 
   </script>
-  
-  <script>
-/* — Route → SEO xəritəsi — */
-const META = {
-  "/":              { title: "EduPlan – Müəllimlər üçün rəqəmsal resurslar",
-                      desc:  "KSQ/BSQ, PP və alətlər – Azərbaycan məktəbləri üçün." },
-  "/ksq-bsq":       { title: "KSQ/BSQ – Summativ fayllar | EduPlan",
-                      desc:  "Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları." },
-  "/pp":            { title: "Perspektiv plan (PP) – İllik planlar | EduPlan",
-                      desc:  "Fənn üzrə illik perspektiv plan faylları." },
-  "/calculator":    { title: "Bal kalkulyatoru (KSQ 40% · BSQ 60%) | EduPlan",
-                      desc:  "I/II yarımil və illik nəticəni hesabla." },
-  "/question-bank": { title: "Sual bankı – Tezliklə | EduPlan",
-                      desc:  "Multiple-choice və qısa cavab sualları hazırlanır." },
-  "/timetable":     { title: "Online dərs cədvəli hazırlama | EduPlan",
-                      desc:  "Sinif, müəllim, fənn və kabinetlər üçün peşəkar dərs cədvəli qurucusu." }
-};
-
-
-
-function setMeta(route){
-  const m = META[route] || META["/"];
-  // title + description
-  document.title = m.title;
-  let d = document.querySelector('meta[name="description"]');
-  if (!d) { d = document.createElement('meta'); d.name = "description"; document.head.appendChild(d); }
-  d.content = m.desc;
-
-  // canonical
-  let c = document.querySelector('link[rel="canonical"]');
-  if (!c) { c = document.createElement('link'); c.rel = "canonical"; document.head.appendChild(c); }
-  c.href = location.origin + route;
-
-const bcMap = {
-  "/":              [{name:"Ana səhifə", url:"/"}],
-  "/ksq-bsq":       [{name:"Ana səhifə", url:"/"},{name:"KSQ/BSQ", url:"/ksq-bsq"}],
-  "/pp":            [{name:"Ana səhifə", url:"/"},{name:"Perspektiv plan", url:"/pp"}],
-  "/calculator":    [{name:"Ana səhifə", url:"/"},{name:"Bal kalkulyatoru", url:"/calculator"}],
-  "/question-bank": [{name:"Ana səhifə", url:"/"},{name:"Sual bankı", url:"/question-bank"}],
-};
-const bc = bcMap[route] || bcMap["/"];
-
-
-  // əvvəlkini sil
-  document.querySelector('script[type="application/ld+json"][data-bc]')?.remove();
-  // yenisini yaz
-  const s = document.createElement('script');
-  s.type = 'application/ld+json';
-  s.setAttribute('data-bc','');
-  s.textContent = JSON.stringify({
-    "@context":"https://schema.org",
-    "@type":"BreadcrumbList",
-    "itemListElement": bc.map((it,i)=>({
-      "@type":"ListItem",
-      "position": i+1,
-      "name": it.name,
-      "item": location.origin + it.url
-    }))
-  });
-  document.head.appendChild(s);
-}
-</script>
-<script>
-  if (location.pathname === '/timetable.html') {
-    location.replace('/timetable' + location.search + location.hash);
-  }
-</script>
-
-<script>
-(() => {
-const ROUTES = {
-  "/":              { tab: "ksq",   target: "#hero" },
-  "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },
-  "/pp":            { tab: "pp",    target: "#tabs" },
-  "/calculator":    { tab: "tools", target: "#panel-tools", focus: "#calc-card" },
-  "/timetable":     { tab: "tools", target: "#panel-tools", focus: "#tt-card" },
-  "/question-bank": { tab: "tools", target: "#panel-tools", focus: "#bank-card" }
-};
-
-function goTo(route, { replace = false } = {}) {
-  const ROUTES = {
-    "/":              { tab: "ksq",   target: "#hero" },
-    "/ksq-bsq":       { tab: "ksq",   target: "#tabs" },
-    "/pp":            { tab: "pp",    target: "#tabs" },
-    "/calculator":    { tab: "tools", target: "#panel-tools", focus: "#calc-card" },
-    "/timetable":     { tab: "tools", target: "#panel-tools", focus: "#tt-card" },
-    "/question-bank": { tab: "tools", target: "#panel-tools", focus: "#bank-card" }
-  };
-  const r = ROUTES[route] || ROUTES["/"];
-
-  if (typeof setActiveTab === "function" && r.tab) setActiveTab(r.tab, { scroll: false });
-  if (replace) history.replaceState({ route }, "", route);
-  else if (location.pathname !== route) history.pushState({ route }, "", route);
-
-  setMeta(route);
-
-  const headerH = document.querySelector('header')?.offsetHeight ?? 64;
-  const tabsH   = document.getElementById('tabs')?.offsetHeight ?? 0;
-  const targetEl = document.querySelector(r.target);
-  if (targetEl) {
-    const insideTools = !!targetEl.closest?.('#panel-tools');
-    const y = targetEl.getBoundingClientRect().top + window.pageYOffset - (headerH + (insideTools ? tabsH + 16 : 10));
-    window.scrollTo({ top: y, behavior: 'smooth' });
-  }
-  if (r.focus) {
-    setTimeout(() => {
-      const focusEl = document.querySelector(r.focus);
-      if (!focusEl) return;
-      const y2 = focusEl.getBoundingClientRect().top + window.pageYOffset - (headerH + tabsH + 16);
-      window.scrollTo({ top: y2, behavior: 'smooth' });
-    }, 80);
-  }
-}
-
-window.goTo = goTo; // ✅ qlobal et
-
-
-  // Hero & digər kliklər: [data-route]
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".route-btn[data-route]");
-  if (!btn) return;
-
-  // yalnız sol klik və modifiersiz
-  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-  const route = btn.getAttribute("data-route");
-  const hard  = btn.hasAttribute("data-hard");
-
-  if (hard) {
-    // Tam səhifə keçidi — prevent etmə
-    const href = btn.getAttribute("href") || route;
-    if (href) window.location.href = href;
-    return;
-  }
-
-  // Yumşaq naviqasiya (scroll/tab)
-  e.preventDefault();
-  goTo(route);
-});
-
-
-  // Geri/irəli düymələri
-  window.addEventListener("popstate", (e) => {
-    const route = (e.state && e.state.route) || location.pathname;
-    const r = ROUTES[route] ? route : "/";
-    // replace = true, çünki tarixə əlavə etməyək
-    goTo(r, { replace: true });
-  });
-
-  // GitHub Pages SPA fallback-dan gələn path-ı bərpa et
-  const fallbackPath = sessionStorage.getItem("eduplan_spa_path");
-  if (fallbackPath) {
-    sessionStorage.removeItem("eduplan_spa_path");
-    history.replaceState({ route: fallbackPath }, "", fallbackPath);
-  }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const p = location.pathname;
-  if (p !== "/" && (p in ROUTES)) {
-    goTo(p, { replace: true });   // ✨ /pp, /ksq-bsq və s. olduqda
-  } else {
-    window.scrollTo(0, 0);        // ✨ / olduqda heç yerə getmə
-  }
-});
-
-
-  // Mövcud TAB düymələrinə route qoş (sənin kodunda var idi — bunu əvəz et)
-const TAB_ROUTES = { ksq: "/ksq-bsq", pp: "/pp", tools: "/calculator" };
-["tab-ksq","tab-pp","tab-tools"].forEach(id=>{
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.addEventListener("click",(ev)=>{
-    ev.preventDefault();
-    const name = el.dataset.tab;
-    const route = TAB_ROUTES[name] || "/";
-    goTo(route);
-  });
-});
-})();
-</script>
-
-
 
 
 

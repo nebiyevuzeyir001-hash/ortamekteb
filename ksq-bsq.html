@@ -14,8 +14,6 @@
   <link rel="icon" type="image/png" sizes="180x180" href="/assets/ep-favicon-180.png">
   <meta name="theme-color" content="#0a0b10">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
   :root{
@@ -35,7 +33,7 @@
 </style>
 
 </head>
-<body class="min-h-screen text-slate-900 dark:text-slate-200">
+<body class="min-h-screen">
   <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/70 border-b border-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="/" class="flex items-center gap-3">
@@ -51,6 +49,7 @@
   </header>
 
   <main>
+    <h1 class="sr-only">KSQ/BSQ – Summativ fayllar | EduPlan</h1>
     <section class="mt-6">
   <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
     <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
@@ -94,16 +93,10 @@
     </div>
   </footer>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const typeEl = document.getElementById('ksqType');
-    const idxEl  = document.getElementById('examIndex');
-    typeEl.addEventListener('change', () => {
-      idxEl.innerHTML = '<option value="">Nömrəni seçin</option>';
-      if (typeEl.value === 'KSQ') { for (let i=1;i<=10;i++) idxEl.innerHTML += `<option>${i}</option>`; }
-      if (typeEl.value === 'BSQ') { ['1','2'].forEach(n => idxEl.innerHTML += `<option>${n}</option>`); }
-    });
-  </script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
   <script>
   const translations = { az:{ subjects:{ az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat', physics:'Fizika', chemistry:'Kimya', biology:'Biologiya', az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya', it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət', music:'Musiqi', pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq' } } };
   const subjectKeysByGrade={I:['az','life','math','eng','rus','art','music','pe','tech','it'],II:['az','life','math','eng','rus','art','music','pe','tech','it'],III:['az','life','math','eng','rus','art','music','pe','tech','it'],IV:['az','life','math','eng','rus','art','music','pe','tech','it'],V:['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],VI:['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary']};
@@ -143,8 +136,9 @@
   function renderKSQ(){
     const wrap=document.getElementById('ksq-results'); wrap.innerHTML='';
     const list=state.catalog.filter(it=>it.type===state.ksqType&&it.grade===state.grade&&it.subject===state.subject&&it.index===state.examIndex);
-    document.getElementById('ksq-count').textContent=list.length;
-    if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-400">Fayl yoxdur</div>';return;}
+  const countRow = document.getElementById('ksq-count-row');
+  document.getElementById('ksq-count').textContent = list.length;
+  countRow.classList.toggle('hidden', list.length === 0);    if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-400">Fayl yoxdur</div>';return;}
     list.forEach(it=>{
       const el=document.createElement('div'); el.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-700/30 to-slate-600/10';
       el.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">

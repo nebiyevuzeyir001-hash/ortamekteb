@@ -41,22 +41,65 @@
 }
 /* Sağ panel minimum sahə */
 #ksq-results-card{ min-height: 280px; }
+/* Dark-a uyğun chip & ikon fonu */
+.chip{
+  @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] border;
+}
+.chip--muted{
+  /* light */
+  @apply bg-slate-100 text-slate-600 border-slate-300;
+}
+.dark .chip--muted{
+  /* dark */
+  background: rgba(255,255,255,.08);
+  color: #e5e7eb;
+  border-color: rgba(255,255,255,.15);
+}
+.icon-tile{
+  @apply h-8 w-8 rounded-lg grid place-items-center;
+  background: rgba(15,23,42,.06);
+}
+.dark .icon-tile{
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+}
+.count-badge{
+  @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs border;
+  background: rgba(15,23,42,.06);
+  color:#475569;
+  border-color:#e2e8f0;
+}
+.dark .count-badge{
+  background: rgba(255,255,255,.08);
+  color:#e2e8f0;
+  border-color: rgba(255,255,255,.15);
+}
 
 </style>
 
 </head>
 <body class="min-h-screen">
-  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/70 border-b border-slate-200">
+  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/60 border-b border-slate-200/60 dark:border-white/10">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="/" class="flex items-center gap-3">
         <img src="/assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl" alt="EduPlan">
         <span class="font-semibold tracking-tight">EduPlan AZ</span>
       </a>
-      <nav class="text-sm flex items-center gap-4">
-        <a class="hover:underline" href="/pp.html">PP</a>
-        <a class="hover:underline" href="/calculator.html">Kalkulyator</a>
-        <a class="hover:underline" href="/about.html">Haqqımızda</a>
-      </nav>
+<!-- Tənzimləmələr (Ana səhifədəki kimi) -->
+<div class="relative">
+  <button id="btn-settings" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15">
+    ⚙️ <span>Tənzimləmələr</span>
+  </button>
+  <!-- Panel -->
+  <div id="settings-panel" class="hidden absolute right-0 mt-2 w-64 rounded-2xl border border-white/15 bg-slate-900/90 backdrop-blur p-3 shadow-xl">
+    <div class="text-sm font-medium mb-2">Görünüş</div>
+    <button id="btn-toggle-theme" class="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm hover:bg-white/15 flex items-center justify-between">
+      <span>Qaranlıq rejim</span>
+      <span id="theme-ind" class="text-xs opacity-80">auto</span>
+    </button>
+  </div>
+</div>
+
     </div>
   </header>
 
@@ -81,7 +124,7 @@
           <h2 class="font-semibold" id="ksq-title">KSQ/BSQ</h2>
           <div class="hidden sm:flex items-center gap-2 text-xs text-slate-300">
             <span class="opacity-80">Nəticə sayı:</span>
-            <span id="ksq-count-top" class="inline-flex items-center rounded-full bg-slate-100/10 px-2 py-0.5 border border-white/20">0</span>
+            <span id="ksq-count-top" class="count-badge">0</span>
           </div>
         </div>
       </div>
@@ -116,7 +159,7 @@
         <div class="lg:col-span-2 min-w-0">
           <div id="ksq-results-card" class="relative w-full rounded-xl border bg-white text-sm overflow-clip">
             <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-              <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
+              <span id="ksq-count" class="count-badge">0</span>
             </div>
             <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
           </div>
@@ -142,6 +185,39 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script>
+// —— Tema: localStorage('theme') = 'dark' | 'light' | 'auto'
+(function initTheme(){
+  const saved = localStorage.getItem('theme') || 'auto';
+  applyTheme(saved);
+  document.getElementById('theme-ind')?.textContent = saved;
+})();
+function applyTheme(mode){
+  const root = document.documentElement;
+  if(mode === 'dark'){ root.classList.add('dark'); }
+  else if(mode === 'light'){ root.classList.remove('dark'); }
+  else { // auto
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.classList.toggle('dark', prefersDark);
+  }
+  localStorage.setItem('theme', mode);
+  const ind = document.getElementById('theme-ind'); if(ind) ind.textContent = mode;
+}
+// —— Settings aç/qapa
+document.addEventListener('click', (e)=>{
+  const btn = document.getElementById('btn-settings');
+  const panel = document.getElementById('settings-panel');
+  if(btn && btn.contains(e.target)){ panel.classList.toggle('hidden'); return; }
+  if(panel && !panel.contains(e.target)) panel.classList.add('hidden');
+});
+// —— Toggle cycle: auto -> dark -> light -> auto
+document.getElementById('btn-toggle-theme')?.addEventListener('click', ()=>{
+  const cur = localStorage.getItem('theme') || 'auto';
+  const order = ['auto','dark','light'];
+  const next = order[(order.indexOf(cur)+1)%order.length];
+  applyTheme(next);
+});
 </script>
 
   <script>
@@ -174,13 +250,13 @@ function showEmpty(){
   hideEmpty(); // ← əvvəlkini sil, YIĞILMASIN
   const box=document.createElement('div'); 
   box.className='empty-overlay absolute inset-0 grid place-items-center';
-  box.innerHTML=`<div class="inner w-[min(520px,100%)] rounded-2xl border border-white/20 bg-slate-900/60 backdrop-blur p-6 text-center">
-    <div class="icon w-11 h-11 rounded-full mx-auto mb-2 grid place-items-center border border-white/25">🗂️</div>
+box.innerHTML = `
+  <div class="inner w-[min(520px,100%)] rounded-2xl border border-white/15 bg-slate-900/80 backdrop-blur p-6 text-center">
+    <div class="icon w-11 h-11 rounded-full mx-auto mb-2 grid place-items-center border border-white/20 bg-white/10">🗂️</div>
     <div class="title font-semibold">Zəhmət olmasa seçim edin</div>
-    <div class="desc text-sm text-slate-300 mt-1">
-      Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.
-    </div>
+    <div class="desc text-sm text-slate-300 mt-1">Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.</div>
   </div>`;
+
   card.appendChild(box);
 }
 
@@ -213,10 +289,10 @@ function renderKSQ(){
     el.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-700/30 to-slate-600/10';
     el.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
       <div class="flex items-start gap-3">
-        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+        <div class="icon-tile">📄</div>
         <div class="flex-1">
           <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
+          <div class="mt-1"><span class="chip chip--muted">${(it.ext||'FILE').toUpperCase()}</span>${(it.ext||'FILE').toUpperCase()}</span></div>
           <div class="mt-3">
             <a href="${it.dl}" target="_self" rel="noopener" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
           </div>

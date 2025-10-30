@@ -101,6 +101,56 @@ select:invalid,
 ::-webkit-scrollbar{ width:12px; height:12px;} ::-webkit-scrollbar-thumb{ border-radius:10px; background:rgba(100,100,100,.4);}
 ::-webkit-scrollbar-thumb:hover{ background:rgba(100,100,100,.6);} ::-webkit-scrollbar-track{ background:transparent; }
 /* Settings popover ekrana sabitlensin və həmişə üst qatda qalsın */
+/* === Premium Fancy Select (index kimi) === */
+.fs-wrap{position:relative; display:block; width:100%;}
+select.select-premium.fs-native{
+  position:absolute; inset:0; width:100%; height:100%;
+  opacity:0; pointer-events:none;           /* native açılmasın */
+}
+.fs-btn{
+  -webkit-appearance:none; appearance:none; width:100%;
+  background: var(--card); color: var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  padding:10px 42px 10px 12px; line-height:1.25; text-align:left;
+  font-size:0.875rem; cursor:pointer;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 35%, transparent), 0 1px 0 rgba(0,0,0,.05);
+  transition:border-color .18s, box-shadow .18s, transform .06s;
+}
+.fs-btn:hover{ border-color: color-mix(in srgb, var(--border) 55%, transparent); }
+.fs-btn:focus-visible{
+  outline:0; transform: translateY(-1px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent),
+              0 0 0 4px rgba(34,211,238,.25), 0 6px 16px rgba(0,0,0,.08);
+}
+/* sağdakı ox */
+.fs-btn::after{
+  content:""; position:absolute; right:12px; top:50%; translate:0 -50%;
+  width:16px; height:16px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat; background-size:16px 16px; opacity:.9; pointer-events:none;
+}
+.fs-menu{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70;
+  background:var(--card); color:var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
+  max-height:260px; overflow:auto; padding:6px; display:none;
+}
+.fs-wrap[aria-expanded="true"] .fs-menu{ display:block; }
+.fs-opt{ padding:9px 10px; border-radius:10px; cursor:pointer; font-size:0.875rem; }
+.fs-opt.is-placeholder{ color:#9aa4b2; font-style:italic; }
+.fs-opt:hover{ background:rgba(148,163,184,.12); }
+
+/* Dark tonları */
+.dark .fs-btn{ background:#0f172a; box-shadow: inset 0 0 0 1px #223049, 0 1px 0 rgba(255,255,255,.04); }
+.dark .fs-btn:focus-visible{
+  box-shadow: 0 0 0 1px #2f405c, 0 0 0 4px rgba(167,139,250,.22), 0 10px 22px rgba(0,0,0,.35);
+}
+.dark .fs-btn::after{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+}
+.dark .fs-menu{ background:#0f172a; border-color:#253046; box-shadow:0 16px 32px rgba(0,0,0,.45); }
+.dark .fs-opt:hover{ background:rgba(148,163,184,.15); }
 
 
 </style>
@@ -369,34 +419,66 @@ async function loadAllFromMaterials(){
   }
 }
 
-/* ------------------ Fancy select (native qalır, üstündə UI) ------------------ */
 function enhanceFancySelect(select){
-  if(select.dataset.fancyMounted==='1'){ const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null; if(old) old.replaceWith(select); select.dataset.fancyMounted='0'; }
-  const wrap=document.createElement('div'); wrap.className='fs-wrap'; wrap.setAttribute('aria-expanded','false');
-  const btn=document.createElement('button'); btn.type='button'; btn.className='fs-btn select-premium'; btn.style.paddingRight='42px';
+  // əvvəl qurulubsa təmizlə
+  if (select.dataset.fancyMounted === '1') {
+    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
+    if (old) old.replaceWith(select);
+    select.dataset.fancyMounted = '0';
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'fs-wrap';
+  wrap.setAttribute('aria-expanded','false');
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'fs-btn';                // ✅ index kimi
   btn.textContent = select.options[select.selectedIndex]?.text || select.getAttribute('placeholder') || 'Seçin';
-  const menu=document.createElement('div'); menu.className='fs-menu hidden';
-  Array.from(select.options).forEach(o=>{
-    const item=document.createElement('div'); item.className='fs-opt px-3 py-2 text-sm'; item.textContent=o.text;
-    if(o.disabled&&o.hidden) item.classList.add('text-slate-400','italic');
-    item.addEventListener('click',()=>{ Array.from(select.options).forEach(op=>op.selected=(op===o)); select.value=o.value; select.dispatchEvent(new Event('change',{bubbles:true})); btn.textContent=o.text; menu.classList.add('hidden'); wrap.setAttribute('aria-expanded','false'); });
+
+  const menu = document.createElement('div');
+  menu.className = 'fs-menu';
+
+  Array.from(select.options).forEach((o)=>{
+    const item = document.createElement('div');
+    item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
+    item.setAttribute('role','option');
+    item.textContent = o.text;
+    item.addEventListener('click', ()=>{
+      Array.from(select.options).forEach(op => op.selected = (op === o));
+      select.value = o.value;
+      select.dispatchEvent(new Event('change', {bubbles:true}));
+      btn.textContent = o.text;
+      wrap.setAttribute('aria-expanded','false');
+    });
     menu.appendChild(item);
   });
-// native select formda qalsın, amma klik/fokus almasın
-select.classList.add('fs-native');   // <-- sr-only YOX
-  select.parentNode.insertBefore(wrap,select);
-  wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu);
-  select.dataset.fancyMounted='1';
-btn.addEventListener('click',(e)=>{
-  e.preventDefault();          // <-- əlavə et
-  e.stopPropagation();
-  const open = !menu.classList.contains('hidden');
-  document.querySelectorAll('.fs-menu').forEach(m=>m.classList.add('hidden'));
-  menu.classList.toggle('hidden', open);
-  wrap.setAttribute('aria-expanded', String(!open));
-});
-  document.addEventListener('click',()=>{ menu.classList.add('hidden'); wrap.setAttribute('aria-expanded','false'); });
+
+  // native select formda qalsın, amma İNTERAKTİV olmasın
+  select.classList.add('fs-native');
+  select.tabIndex = -1;
+  select.setAttribute('aria-hidden','true');
+
+  // DOM
+  select.parentNode.insertBefore(wrap, select);
+  wrap.appendChild(btn);
+  wrap.appendChild(select);
+  wrap.appendChild(menu);
+  select.dataset.fancyMounted = '1';
+
+  // aç/bağla (mousedown + click — Safari/Win fix)
+  const toggle = (open) => wrap.setAttribute('aria-expanded', open ? 'true' : 'false');
+  btn.addEventListener('mousedown', (e)=>{ e.preventDefault(); }); // native fokusun qarşısını al
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const open = wrap.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));
+    toggle(!open);
+  });
+  document.addEventListener('click', ()=> toggle(false));
+  wrap.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggle(false); });
 }
+
 function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
 
 /* ------------------ Download modal (15s) ------------------ */

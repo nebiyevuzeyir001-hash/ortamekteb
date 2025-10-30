@@ -149,7 +149,7 @@ html, body, .scrollarea{ scrollbar-width:thin; scrollbar-color:rgba(100,100,100,
 
         <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
           <!-- Sol filtr sütunu -->
-          <div class="space-y-4">
+          <div class="space-y-4 overflow-visible">
             <div>
               <label class="text-sm text-slate-700 block">Sinif</label>
               <select id="grade" class="select-premium w-full mt-1"></select>
@@ -412,11 +412,19 @@ function enhanceFancySelect(select){
     item.addEventListener('click',()=>{ Array.from(select.options).forEach(op=>op.selected=(op===o)); select.value=o.value; select.dispatchEvent(new Event('change',{bubbles:true})); btn.textContent=o.text; menu.classList.add('hidden'); wrap.setAttribute('aria-expanded','false'); });
     menu.appendChild(item);
   });
-  select.classList.add('sr-only'); // form üçün qalır
+// native select formda qalsın, amma klik/fokus almasın
+select.classList.add('fs-native');   // <-- sr-only YOX
   select.parentNode.insertBefore(wrap,select);
   wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu);
   select.dataset.fancyMounted='1';
-  btn.addEventListener('click',e=>{ e.stopPropagation(); const open=!menu.classList.contains('hidden'); document.querySelectorAll('.fs-menu').forEach(m=>m.classList.add('hidden')); menu.classList.toggle('hidden',open); wrap.setAttribute('aria-expanded', String(!open)); });
+btn.addEventListener('click',(e)=>{
+  e.preventDefault();          // <-- əlavə et
+  e.stopPropagation();
+  const open = !menu.classList.contains('hidden');
+  document.querySelectorAll('.fs-menu').forEach(m=>m.classList.add('hidden'));
+  menu.classList.toggle('hidden', open);
+  wrap.setAttribute('aria-expanded', String(!open));
+});
   document.addEventListener('click',()=>{ menu.classList.add('hidden'); wrap.setAttribute('aria-expanded','false'); });
 }
 function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }

@@ -1,156 +1,81 @@
 <!doctype html>
 <html lang="az">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perspektiv (illik) plan — EduPlan</title>
+  <meta name="description" content="Fənn üzrə illik perspektiv plan (PP) faylları. Seç və yüklə.">
+  <link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<title>Perspektiv plan (PP) — EduPlan</title>
-<meta name="description" content="Fənn və sinif üzrə illik perspektiv plan faylları (I/II yarımil, həftə seçimi ilə).">
-<link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-/* ---------- Tema dəyişənləri ---------- */
+  <style>
+/* === index-dəki tema və komponentlərə tam uyğun === */
 :root{
   --bg-from:#f8fafc; --bg-to:#ffffff; --text:#0f172a; --card:#ffffff; --muted:#475569; --border:#e2e8f0;
   --tab-track:#eef2f6; --pill:#e9edf3; --pill-text:#334155;
-  --panel-min-h:320px; --panel-max-h:520px; --panel-pad-top:8px; --panel-pad-bottom:8px;
+  --panel-min-h:320px; --panel-max-h:520px; --panel-pad-top:16px; --panel-pad-bottom:16px;
 }
 .dark{
   --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a; --muted:#cbd5e1; --border:#334155;
   --tab-track:#111827; --pill:#0f172a; --pill-text:#cbd5e1;
 }
+:where(html,body,main,header,footer,section){overflow-x:clip;min-width:0}
+html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
+html{background:var(--bg-to)} html.dark{background:#0a0f1a}
+body{min-height:100svh;color:var(--text)}
+.bg-white{background-color:var(--card)!important}
+.text-slate-900,.text-slate-800,.text-slate-700{color:var(--text)!important}
+.text-slate-600,.text-slate-500{color:var(--muted)!important}
+.border-slate-200{border-color:var(--border)!important}
+.backdrop-blur.bg-white\/70{background-color:color-mix(in srgb,var(--card) 70%,transparent)!important}
+select,input{background-color:var(--card)!important;color:var(--text)!important}
+.bg-white{transition:box-shadow .2s ease}
+.bg-white:hover{box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.dark .bg-white:hover{box-shadow:0 6px 16px rgba(255,255,255,.15)}
+#dark-toggle:checked+span{background:#334155}
+#dark-toggle:checked+span .dot{transform:translateX(16px)}
+/* Panel skeleti */
+.panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
+.panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
+/* Placeholder (index-dəki kimi) */
+.empty-light{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
+.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid #e9eaf0;font-size:20px}
+.empty-light .title{font-weight:600;font-size:15px}
+.empty-light .desc{font-size:13px;color:var(--muted);margin-top:4px}
+.empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
+.empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
+.dark .empty-light{display:none}
+/* Premium fancy select (index ilə eyni) */
+.select-premium{appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;transition:border-color .18s,box-shadow .18s,transform .06s;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
+.select-premium:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+.select-premium:focus{outline:0;border-color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+select:invalid{color:#9aa4b2}
+/* Fancy overlay (custom dropdown) */
+.fs-wrap{position:relative;display:block;width:100%}
+select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+.fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
+.fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+.fs-btn:focus-visible{outline:0;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+.fs-btn::after{content:"";position:absolute;right:12px;top:50%;translate:0 -50%;width:16px;height:16px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-size:16px;opacity:.9;pointer-events:none}
+.fs-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:70;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-height:260px;overflow:auto;padding:6px;display:none}
+.fs-wrap[aria-expanded="true"] .fs-menu{display:block}
+.fs-opt{padding:9px 10px;border-radius:10px;cursor:pointer;font-size:.875rem}
+.fs-opt.is-placeholder{color:#9aa4b2;font-style:italic}
+.fs-opt:hover{background:rgba(148,163,184,.12)}
+.dark .fs-btn{background:#0f172a;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)}
+.dark .fs-btn::after{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")}
+.dark .fs-menu{background:#0f172a;border-color:#253046;box-shadow:0 16px 32px rgba(0,0,0,.45)}
+.dark .fs-opt:hover{background:rgba(148,163,184,.15)}
+/* PP nəticə kartında dark badge/pill fixləri (index üslubu) */
+.dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
+.dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
+.dark #pp-results span.rounded-full.bg-slate-100{background:rgba(148,163,184,.16)!important;border-color:rgba(148,163,184,.38)!important;color:#e5e7eb!important}
+  </style>
 
-/* ---------- Layout qoruyucular ---------- */
-:where(html, body, main, header, footer, section){ overflow-x:clip; min-width:0; }
-select, input, button{ max-width:100%; }
-html::before{ content:""; position:fixed; inset:0; z-index:-1; background:linear-gradient(to bottom,var(--bg-from),var(--bg-to)); }
-html{ background:var(--bg-to); } html.dark{ background:#0a0f1a; }
-body{ min-height:100svh; color:var(--text); }
-.bg-white{ background-color:var(--card)!important; }
-.text-slate-600,.text-slate-500{ color:var(--muted)!important; }
-.text-slate-900{ color:var(--text)!important; }
-.border-slate-200{ border-color:var(--border)!important; }
-.backdrop-blur.bg-white\/70{ background-color:color-mix(in srgb,var(--card) 70%,transparent)!important; }
-
-/* ---------- Premium select / Fancy select ---------- */
-.select-premium{
-  -webkit-appearance:none; appearance:none; background:var(--card); color:var(--text);
-  border:1px solid var(--border); border-radius:12px; padding:10px 42px 10px 12px;
-  line-height:1.25; box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent);
-  transition:border-color .18s, box-shadow .18s, transform .06s; cursor:pointer;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat:no-repeat; background-position:right 12px center; background-size:16px;
-}
-.select-premium:hover{ border-color:color-mix(in srgb,var(--border) 55%,transparent); }
-.select-premium:focus{ outline:0; border-color:transparent; transform:translateY(-1px);
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent), 0 0 0 4px rgba(34,211,238,.25); }
-.dark .select-premium{ background:#0f172a; box-shadow:inset 0 0 0 1px #223049, 0 1px 0 rgba(255,255,255,.04); }
-.dark .select-premium:focus{ box-shadow:0 0 0 1px #2f405c, 0 0 0 4px rgba(167,139,250,.22); }
-select:invalid{ color:#9aa4b2; }
-
-/* Fancy Select overlay */
-.fs-wrap{position:relative; display:block; width:100%;}
-select.select-premium.fs-native{ position:absolute; inset:0; opacity:0; pointer-events:none; }
-.fs-btn{
-  -webkit-appearance:none; appearance:none; width:100%;
-  background: var(--card); color: var(--text);
-  border:1px solid var(--border); border-radius:12px;
-  padding:10px 42px 10px 12px; line-height:1.25; text-align:left; font-size:.875rem; cursor:pointer;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 35%, transparent), 0 1px 0 rgba(0,0,0,.05);
-  transition:border-color .18s, box-shadow .18s, transform .06s;
-}
-.fs-btn:hover{ border-color: color-mix(in srgb, var(--border) 55%, transparent); }
-.fs-btn:focus-visible{ outline:0; transform: translateY(-1px);
-  box-shadow:0 0 0 1px color-mix(in srgb, var(--border) 45%, transparent), 0 0 0 4px rgba(34,211,238,.25), 0 6px 16px rgba(0,0,0,.08);
-}
-.fs-btn::after{
-  content:""; position:absolute; right:12px; top:50%; translate:0 -50%;
-  width:16px; height:16px;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat:no-repeat; background-size:16px 16px; opacity:.9; pointer-events:none;
-}
-.fs-menu{
-  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70;
-  background:var(--card); color:var(--text);
-  border:1px solid var(--border); border-radius:12px;
-  box-shadow:0 12px 28px rgba(0,0,0,.12);
-  max-height:260px; overflow:auto; padding:6px; display:none;
-}
-.fs-wrap[aria-expanded="true"] .fs-menu{ display:block; }
-.fs-opt{ padding:9px 10px; border-radius:10px; cursor:pointer; font-size:.875rem; }
-.fs-opt.is-placeholder{ color:#9aa4b2; font-style:italic; }
-.fs-opt:hover{ background:rgba(148,163,184,.12); }
-.dark .fs-btn{ background:#0f172a; box-shadow: inset 0 0 0 1px #223049, 0 1px 0 rgba(255,255,255,.04); }
-.dark .fs-btn::after{ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>"); }
-.dark .fs-menu{ background:#0f172a; border-color:#253046; box-shadow:0 16px 32px rgba(0,0,0,.45); }
-.dark .fs-opt:hover{ background:rgba(148,163,184,.15); }
-
-/* ---------- Label, panel, boş hal ---------- */
-.filter-label{ display:block; font-size:.875rem; line-height:1.25rem; font-weight:500; color:var(--muted); margin-bottom:4px; }
-.dark .filter-label{ color:#cbd5e1; }
-.panel-card{ display:grid; grid-template-rows:auto minmax(0,1fr); min-height:var(--panel-min-h); border-radius:1rem; }
-.panel-card > :nth-child(2){ padding-top:var(--panel-pad-top)!important; padding-bottom:var(--panel-pad-bottom)!important; }
-.empty-light{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
-.empty-light .card{ width:min(520px,100%); border:1px solid var(--border); background:var(--card); border-radius:16px; text-align:center; padding:22px 18px; box-shadow:0 6px 16px rgba(0,0,0,.06);}
-.empty-light .icon{ width:44px; height:44px; border-radius:9999px; display:grid; place-items:center; margin:0 auto 8px;
-  background:radial-gradient(closest-side, rgba(147,51,234,.12), transparent 70%), conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);
-  border:1px solid #e9eaf0; font-size:20px; }
-.empty-light .title{ font-weight:600; font-size:15px; }
-.empty-light .desc{ font-size:13px; color:var(--muted); margin-top:4px; }
-.empty-overlay{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; background:transparent; }
-.empty-overlay .inner{ width:min(520px,100%); border:1px solid rgba(255,255,255,.22); background:rgba(2,6,23,.55);
-  border-radius:16px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:22px 18px; text-align:center; box-shadow:0 8px 22px rgba(0,0,0,.35); }
-.empty-overlay .icon{ width:44px; height:44px; border-radius:9999px; display:grid; place-items:center; margin:0 auto 8px;
-  background:radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%), conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33); border:1px solid rgba(255,255,255,.22); font-size:20px; }
-.dark .empty-light{ display:none; }
-
-/* ---------- Buttons, scrollbar ---------- */
-.ep-btn-primary{ display:inline-block; width:100%; padding:.65rem 1rem; border-radius:.75rem; font-weight:600; font-size:.9rem; color:#fff;
-  background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); box-shadow:0 4px 12px rgba(79,70,229,.35);
-  transition:transform .15s, box-shadow .25s, filter .25s; }
-.ep-btn-primary:hover{ transform:translateY(-2px); filter:brightness(1.08); box-shadow:0 6px 18px rgba(147,51,234,.45); }
-.dark .ep-btn-primary{ background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); box-shadow:0 4px 10px rgba(255,255,255,.1); }
-
-#dark-toggle:checked + span { background:#334155; }
-#dark-toggle:checked + span .dot { transform: translateX(16px); }
-
-.dark html, .dark body, .dark .scrollarea{ scrollbar-color:rgba(180,180,255,.25) transparent; }
-::-webkit-scrollbar{ width:12px; height:12px;} ::-webkit-scrollbar-thumb{ border-radius:10px; background:rgba(100,100,100,.4);}
-::-webkit-scrollbar-thumb:hover{ background:rgba(100,100,100,.6);} ::-webkit-scrollbar-track{ background:transparent; }
-
-/* --- Dark rejim kontrast fixləri (yalnız PP nəticə kartında) --- */
-.dark #pp-count{
-  background: rgba(148,163,184,.18) !important;
-  border-color: rgba(148,163,184,.35) !important;
-  color: #e5e7eb !important;
-}
-.dark #pp-results .h-8.w-8.rounded-lg{
-  background: linear-gradient(180deg, rgba(148,163,184,.20), rgba(148,163,184,.10)) !important;
-  border: 1px solid rgba(148,163,184,.30) !important;
-  color:#e5e7eb !important;
-}
-.dark #pp-results span.rounded-full.bg-slate-100{
-  background: rgba(148,163,184,.16) !important;
-  border-color: rgba(148,163,184,.38) !important;
-  color: #e5e7eb !important;
-}
-.dark #pp-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
-  background: rgba(239,68,68,.18) !important; border-color: rgba(239,68,68,.40) !important;
-}
-.dark #pp-results span.rounded-full.bg-slate-100[data-ext="DOCX"]{
-  background: rgba(59,130,246,.18) !important; border-color: rgba(59,130,246,.40) !important;
-}
-
-/* Məlumat bölməsi sərt rəng (çərçivəsiz) */
-.info-section { background: transparent !important; }
-.info-section, .info-section p, .info-section h2, .info-section a { color: var(--text) !important; }
-.add-shadow .bg-white:hover{ box-shadow:0 6px 16px rgba(0,0,0,.12);}
-.dark .add-shadow .bg-white:hover{ box-shadow:0 6px 16px rgba(255,255,255,.15);}
-</style>
-
-<!-- Adsense (modal üçün) -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
+  <!-- Adsense (modal üçün) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen text-slate-900 relative">
   <!-- dekor -->
@@ -183,44 +108,27 @@ select.select-premium.fs-native{ position:absolute; inset:0; opacity:0; pointer-
     </div>
   </header>
 
-  <!-- Main (PP) -->
+  <!-- Main: İndexdəki PP paneli ilə eyni -->
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Qısa başlıq və açıqlama -->
     <section class="mb-6 sm:mb-8">
-      <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">
-        Perspektiv plan (PP)
-      </h1>
-      <p class="mt-2 text-slate-600 dark:text-slate-300">
-        Sinif, fənn, yarımil və həftəyə görə PP fayllarını seçin və birbaşa yükləyin.
-      </p>
+      <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">Perspektiv (illik) plan</h1>
+      <p class="mt-2 text-slate-600 dark:text-slate-300">Fənni seçin və illik PP fayllarını yükləyin.</p>
     </section>
 
     <section class="add-shadow">
-      <div class="rounded-2xl shadow-sm transition border bg-white panel-card">
-        <div class="p-4 border-b"><h3 class="font-semibold">PP</h3></div>
+      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+        <div class="p-4 border-b"><h3 class="font-semibold">Perspektiv (illik) plan</h3></div>
 
-        <div class="px-4 pt-2 pb-4 grid lg:grid-cols-3 gap-6 items-stretch">
-          <!-- Sol filtr sütunu -->
-          <div class="space-y-4 overflow-visible">
+        <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
+          <!-- Sol sütun: yalnız FƏNN (index kimi) -->
+          <div class="space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
             <div>
-              <label class="filter-label">Sinif</label>
-              <select id="pp-grade" class="select-premium w-full mt-1"></select>
-            </div>
-            <div>
-              <label class="filter-label">Fənn</label>
-              <select id="pp-subject" class="select-premium w-full mt-1"></select>
-            </div>
-            <div>
-              <label class="filter-label">Yarımil</label>
-              <select id="pp-term" class="select-premium w-full mt-1"></select>
-            </div>
-            <div>
-              <label class="filter-label">Həftə</label>
-              <select id="pp-week" class="select-premium w-full mt-1"></select>
+              <label class="text-sm text-slate-700 block">Fənn</label>
+              <select id="ppSubject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
             </div>
           </div>
 
-          <!-- Sağ nəticə kartı -->
+          <!-- Sağ: nəticələr -->
           <div class="lg:col-span-2 min-w-0">
             <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
               <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
@@ -233,31 +141,12 @@ select.select-premium.fs-native{ position:absolute; inset:0; opacity:0; pointer-
       </div>
     </section>
 
-    <!-- PP haqqında məlumat (full-width, çərçivəsiz) -->
-    <section class="mt-10 px-4 sm:px-6 lg:px-8 info-section relative z-[1]">
-      <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Məlumat</h2>
-      <div class="space-y-3 text-base leading-7">
-        <p>
-          Perspektiv plan — fənn üzrə illik tədris planıdır. Mövzuların yarımillərə və həftələrə bölünməsi,
-          məqsəd və gözlənilən nəticələr, resurslar və qiymətləndirmə meyarları bu planda strukturlu şəkildə verilir.
-        </p>
-        <p>
-          EduPlan.az PP fayllarını sinif, fənn, yarımil (I/II) və həftə üzrə təsnifləşdirir. Seçim etdikdən sonra
-          müvafiq həftənin faylını PDF/DOCX formatında yükləyə bilərsiniz.
-        </p>
-        <p>
-          Hər hansı uyğunsuzluq aşkar etsəniz, <a href="mailto:eduplan.az@gmail.com" class="underline">eduplan.az@gmail.com</a> ünvanına yazın.
-        </p>
-        <p class="mb-0">Platforma pulsuzdur və yalnız tədris məqsədi daşıyır.</p>
-      </div>
-    </section>
-
     <footer class="mt-10 text-sm text-slate-600">
       © <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur
     </footer>
   </main>
 
-  <!-- 15s interstitial download modal (eyni struktur) -->
+  <!-- 15s download modal (indexlə eyni) -->
   <div id="dlModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60">
     <div class="relative w-[92%] max-w-[440px] rounded-3xl bg-[#121212] text-white p-5 shadow-2xl" id="dlCard">
       <button id="dlClose" class="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-800 shadow">✕</button>
@@ -285,13 +174,10 @@ select.select-premium.fs-native{ position:absolute; inset:0; opacity:0; pointer-
   </div>
 
 <script>
-/* ------------------ STATE & DATA ------------------ */
-/* Eyni feed-i istifadə edirsənsə burada tipə görə süzgəc edirik.
-   İstəsən ayrıca PP feed URL qoy: const FEED_URL = '...'; */
+/* ====== Eyni JS davranışı: yalnız PP seçimi ====== */
 const FEED_URL = "https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
-
 const translations = {
-  subjects: {
+  subjects:{
     az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat',
     physics:'Fizika', chemistry:'Kimya', biology:'Biologiya',
     az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya',
@@ -299,24 +185,10 @@ const translations = {
     pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq'
   }
 };
-const subjectKeysByGrade = {
-  I:['az','life','math','eng','rus','art','music','pe','tech','it'],
-  II:['az','life','math','eng','rus','art','music','pe','tech','it'],
-  III:['az','life','math','eng','rus','art','music','pe','tech','it'],
-  IV:['az','life','math','eng','rus','art','music','pe','tech','it'],
-  V:['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
-  VI:['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
-  VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-  VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-  IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-  X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-  XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-};
-
-const state = { grade:null, subject:null, term:null, week:null, catalog:[] };
+const state = { ppSubject:null, catalog:[] };
 const $ = s => document.querySelector(s);
 
-/* ------------------ THEME (settings) ------------------ */
+/* Theme toggle (indexdəki ilə eyni məntiq) */
 const settingsBtn = $('#btn-settings'), panel = $('#settings-panel'), darkToggle = $('#dark-toggle');
 const mq = window.matchMedia('(prefers-color-scheme: dark)');
 const saved = localStorage.getItem('theme');
@@ -325,94 +197,38 @@ document.documentElement.classList.toggle('dark', initialTheme === 'dark');
 darkToggle.checked = (initialTheme === 'dark');
 applyThemeAssets(initialTheme);
 document.addEventListener('click', e=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); panel.classList.toggle('hidden'); });
+settingsBtn.addEventListener('click', (e)=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
+darkToggle.addEventListener('change', e=>{ const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark', theme==='dark'); localStorage.setItem('theme', theme); applyThemeAssets(theme); refreshEmptyPlaceholders(); });
+mq.addEventListener?.('change', e=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark', theme==='dark'); darkToggle.checked=(theme==='dark'); applyThemeAssets(theme); refreshEmptyPlaceholders(); }});
+function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg':'assets/ep-favicon-light.svg'; }
 
-darkToggle.addEventListener('change', e=>{
-  const theme = e.target.checked ? 'dark' : 'light';
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  localStorage.setItem('theme', theme);
-  applyThemeAssets(theme); refreshEmptyPlaceholders();
-});
-mq.addEventListener?.('change', e=>{
-  if(!localStorage.getItem('theme')){
-    const theme = e.matches ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    darkToggle.checked = (theme === 'dark');
-    applyThemeAssets(theme); refreshEmptyPlaceholders();
-  }
-});
-function applyThemeAssets(theme){
-  $('#site-logo').src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-}
-
-/* ------------------ HELPERS ------------------ */
+/* Helpers */
 function option(el,v,t){ const o=document.createElement('option'); o.value=v; o.textContent=t; el.appendChild(o); }
-function addPlaceholder(selectEl, label){
-  const o=document.createElement('option'); o.value=""; o.textContent=label; o.disabled=true; o.selected=true; o.hidden=true;
-  selectEl.appendChild(o); selectEl.required = true;
+function addPlaceholder(selectEl,label){ const o=document.createElement('option'); o.value=""; o.textContent=label; o.disabled=true; o.selected=true; o.hidden=true; selectEl.appendChild(o); selectEl.required=true; }
+function buildTitle(it){ const format=(it.ext||'FILE').toUpperCase(); return `${it.subject} · PP · ${format}`; }
+
+/* Fancy Select */
+function enhanceFancySelect(select){
+  if(select.dataset.fancyMounted==='1'){ const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null; if(old) old.replaceWith(select); select.dataset.fancyMounted='0'; }
+  const wrap=document.createElement('div'); wrap.className='fs-wrap'; wrap.setAttribute('aria-expanded','false');
+  const btn=document.createElement('button'); btn.type='button'; btn.className='fs-btn'; btn.textContent=select.options[select.selectedIndex]?.text||select.getAttribute('placeholder')||'Seçin';
+  const menu=document.createElement('div'); menu.className='fs-menu';
+  Array.from(select.options).forEach(o=>{ const item=document.createElement('div'); item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':''); item.textContent=o.text; item.addEventListener('click',()=>{ Array.from(select.options).forEach(op=>op.selected=(op===o)); select.value=o.value; select.dispatchEvent(new Event('change',{bubbles:true})); btn.textContent=o.text; wrap.setAttribute('aria-expanded','false'); }); menu.appendChild(item); });
+  select.classList.add('fs-native'); select.tabIndex=-1; select.setAttribute('aria-hidden','true');
+  select.parentNode.insertBefore(wrap, select); wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu); select.dataset.fancyMounted='1';
+  btn.addEventListener('mousedown',e=>e.preventDefault()); btn.addEventListener('click',e=>{ e.stopPropagation(); const open=wrap.getAttribute('aria-expanded')==='true'; document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false')); wrap.setAttribute('aria-expanded', String(!open)); }); document.addEventListener('click', ()=>wrap.setAttribute('aria-expanded','false')); wrap.addEventListener('keydown', e=>{ if(e.key==='Escape') wrap.setAttribute('aria-expanded','false'); });
 }
-function subjectsFor(grade){ const keys = subjectKeysByGrade[grade] || Object.keys(translations.subjects); return keys.map(k=>translations.subjects[k]).filter(Boolean); }
-function allChosenPP(){ return !!(state.grade && state.subject && state.term && state.week); }
+function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
 
-/* ------------------ RENDER SELECTS ------------------ */
-function renderSelects(){
-  const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
-
-  const gradeEl = $('#pp-grade'); gradeEl.innerHTML=''; addPlaceholder(gradeEl,'Sinfi seçin'); grades.forEach(g=>option(gradeEl,g,g)); gradeEl.value = state.grade ?? "";
-
-  const subjEl = $('#pp-subject'); subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin');
-  if(state.grade){ subjectsFor(state.grade).forEach(s=>option(subjEl,s,s)); }
-  subjEl.value = state.subject ?? "";
-
-  const termEl = $('#pp-term'); termEl.innerHTML=''; addPlaceholder(termEl,'Yarımili seçin');
-  option(termEl,'I yarımil','I yarımil'); option(termEl,'II yarımil','II yarımil');
-  termEl.value = state.term ?? "";
-
-  const weekEl = $('#pp-week'); weekEl.innerHTML=''; addPlaceholder(weekEl,'Həftəni seçin');
-  if(state.term){ for(let i=1;i<=18;i++) option(weekEl,String(i),'Həftə '+i); }
-  weekEl.value = state.week ?? "";
-  weekEl.disabled = !state.term;
-
-  enhanceAllFancySelects();
-}
-
-/* ------------------ PLACEHOLDER ------------------ */
-function showEmpty(cardId,{icon='🗂️',title='',desc:''}) {
-  const card = document.getElementById(cardId);
-  if(!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
-  const isDark = document.documentElement.classList.contains('dark');
-  card.classList.add('min-h-[320px]','md:min-h-[340px]');
-  if(isDark){
-    const overlay = document.createElement('div');
-    overlay.className='empty-overlay';
-    overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6">
-      <div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;
-    card.appendChild(overlay);
-  }else{
-    const box=document.createElement('div');
-    box.className='empty-light';
-    box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;
-    card.appendChild(box);
-  }
-}
+/* Placeholder */
+function showEmpty(cardId,{icon='🗂️',title='',desc:''}){ const card=document.getElementById(cardId); if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light')) return; const isDark=document.documentElement.classList.contains('dark'); card.classList.add('min-h-[320px]','md:min-h-[340px]'); if(isDark){ const overlay=document.createElement('div'); overlay.className='empty-overlay'; overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`; card.appendChild(overlay);} else{ const box=document.createElement('div'); box.className='empty-light'; box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`; card.appendChild(box);} }
 function hideEmpty(cardId){ const c=document.getElementById(cardId); c?.querySelector('.empty-overlay')?.remove(); c?.querySelector('.empty-light')?.remove(); c?.classList.remove('min-h-[320px]','md:min-h-[340px]'); }
-function refreshEmptyPlaceholders(){
-  if(!allChosenPP()){ hideEmpty('pp-results-card'); showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa seçim edin',desc:'Sinif, fənn, yarımil və həftəni seçdikdən sonra nəticələr burada görünəcək.'}); }
-}
+function refreshEmptyPlaceholders(){ if(!state.ppSubject){ hideEmpty('pp-results-card'); showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'}); }}
 
-/* ------------------ RESULTS ------------------ */
-function buildTitle(it){
-  const format=(it.ext||'FILE').toUpperCase();
-  return `${it.grade} · ${it.subject} · ${it.term} · həftə ${it.week} · ${format}`;
-}
+/* PP render */
 function renderPP(){
-  const wrap = $('#pp-results'); wrap.innerHTML = '';
-  const list = state.catalog.filter(it =>
-    (it.kind==='PP' || it.type==='PP') &&
-    it.grade===state.grade && it.subject===state.subject &&
-    it.term===state.term && String(it.week)===String(state.week)
-  );
-
+  const wrap = $('#pp-results'); wrap.innerHTML='';
+  const list = state.catalog.filter(it => it.type==='PP' && it.subject===state.ppSubject);
   $('#pp-count').textContent = list.length;
 
   const gridEl = $('#pp-results');
@@ -420,21 +236,17 @@ function renderPP(){
   gridEl.classList.toggle('min-h-[240px]',center);
   gridEl.classList.toggle('place-content-center',center);
   gridEl.classList.toggle('justify-items-center',center);
-
-  if(list.length===0){
-    wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
-    return;
-  }
+  if(list.length===0){ wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>'; return; }
 
   list.forEach(it=>{
     const card=document.createElement('div');
     card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
     card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
       <div class="flex items-start gap-3">
-        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📘</div>
+        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
         <div class="flex-1">
           <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border" data-ext="${(it.ext||'FILE').toUpperCase()}">${(it.ext||'FILE').toUpperCase()}</span></div>
+          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
           <div class="mt-3">
             <a href="${it.dl}" data-download="${it.dl}" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
           </div>
@@ -444,77 +256,26 @@ function renderPP(){
   });
 }
 function toggleResults(){
-  const grid = $('#pp-results'); const countRow = $('#pp-count-row');
-  if(allChosenPP()){ hideEmpty('pp-results-card'); countRow?.classList.remove('hidden'); renderPP(); }
-  else{ countRow?.classList.add('hidden'); grid.innerHTML=''; showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa seçim edin',desc:'Sinif, fənn, yarımil və həftəni seçdikdən sonra nəticələr burada görünəcək.'}); }
+  const gridPP = $('#pp-results'); const countRow = $('#pp-count-row');
+  if(state.ppSubject){ hideEmpty('pp-results-card'); countRow?.classList.remove('hidden'); renderPP(); }
+  else{ countRow?.classList.add('hidden'); gridPP.innerHTML=''; showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'}); }
 }
 
-/* ------------------ FEED ------------------ */
+/* Feed yüklə */
 async function loadAllFromMaterials(){
   try{
-    const res = await fetch(FEED_URL,{cache:'no-store'});
-    const catalog = await res.json();
-    /* Gözlənilən PP obyekt formatı (nümunə):
-       { kind:'PP', grade:'V', subject:'Riyaziyyat', term:'I yarımil', week:'3', dl:'...', ext:'PDF' } */
+    const res = await fetch(FEED_URL,{cache:'no-store'}); const catalog = await res.json();
     state.catalog = Array.isArray(catalog)? catalog : [];
     toggleResults();
   }catch(e){
-    if(allChosenPP()){ $('#pp-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`; }
+    if(state.ppSubject){ $('#pp-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`; }
   }
 }
 
-/* ------------------ Fancy Select init ------------------ */
-function enhanceFancySelect(select){
-  if (select.dataset.fancyMounted === '1') {
-    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
-    if (old) old.replaceWith(select);
-    select.dataset.fancyMounted = '0';
-  }
-  const wrap = document.createElement('div');
-  wrap.className = 'fs-wrap';
-  wrap.setAttribute('aria-expanded','false');
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'fs-btn';
-  btn.textContent = select.options[select.selectedIndex]?.text || select.getAttribute('placeholder') || 'Seçin';
-
-  const menu = document.createElement('div');
-  menu.className = 'fs-menu';
-
-  Array.from(select.options).forEach((o)=>{
-    const item = document.createElement('div');
-    item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
-    item.setAttribute('role','option');
-    item.textContent = o.text;
-    item.addEventListener('click', ()=>{
-      Array.from(select.options).forEach(op => op.selected = (op === o));
-      select.value = o.value;
-      select.dispatchEvent(new Event('change', {bubbles:true}));
-      btn.textContent = o.text;
-      wrap.setAttribute('aria-expanded','false');
-    });
-    menu.appendChild(item);
-  });
-
-  select.classList.add('fs-native'); select.tabIndex = -1; select.setAttribute('aria-hidden','true');
-  select.parentNode.insertBefore(wrap, select);
-  wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu);
-  select.dataset.fancyMounted = '1';
-
-  const toggle = (open) => wrap.setAttribute('aria-expanded', open ? 'true' : 'false');
-  btn.addEventListener('mousedown', (e)=>{ e.preventDefault(); });
-  btn.addEventListener('click', (e)=>{ e.stopPropagation();
-    const open = wrap.getAttribute('aria-expanded') === 'true';
-    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));
-    toggle(!open);
-  });
-  document.addEventListener('click', ()=> toggle(false));
-  wrap.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggle(false); });
-}
+/* Fancy Select init */
 function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
 
-/* ------------------ Download modal (15s) ------------------ */
+/* Download modal (indexdən) */
 (()=> {
   const MODAL=$('#dlModal'), CARD=$('#dlCard'), BTN_CLOSE=$('#dlClose'), COUNT=$('#dlCount'), RING=$('#ring'), BAR=$('#dlBar'), STATUS=$('#dlStatus');
   let t=0,timer=null,finished=false,targetUrl=null,modalAdRendered=false,adsReady=false; const DURATION=15;
@@ -542,14 +303,19 @@ function enhanceAllFancySelects(){ document.querySelectorAll('select.select-prem
   document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !MODAL.classList.contains('hidden')) closeModal(); });
 })();
 
-/* ------------------ Events & init ------------------ */
+/* Init */
 document.getElementById('year').textContent = new Date().getFullYear();
-renderSelects(); refreshEmptyPlaceholders(); loadAllFromMaterials();
+(function renderSelects(){
+  const subjEl = document.getElementById('ppSubject');
+  subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin');
+  Object.values(translations.subjects).forEach(s=>option(subjEl,s,s));
+  subjEl.value = state.ppSubject ?? "";
+  enhanceAllFancySelects();
+})();
+refreshEmptyPlaceholders();
+loadAllFromMaterials();
 
-document.getElementById('pp-grade').addEventListener('change', e=>{ state.grade=e.target.value||null; state.subject=null; renderSelects(); toggleResults(); });
-document.getElementById('pp-subject').addEventListener('change', e=>{ state.subject=e.target.value||null; toggleResults(); });
-document.getElementById('pp-term').addEventListener('change', e=>{ state.term=e.target.value||null; state.week=null; renderSelects(); toggleResults(); });
-document.getElementById('pp-week').addEventListener('change', e=>{ state.week=e.target.value||null; toggleResults(); });
+document.getElementById('ppSubject').addEventListener('change', e=>{ state.ppSubject=e.target.value||null; toggleResults(); });
 </script>
 </body>
 </html>

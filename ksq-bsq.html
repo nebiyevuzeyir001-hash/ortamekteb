@@ -12,7 +12,7 @@
 :root{
   --bg-from:#f8fafc; --bg-to:#ffffff; --text:#0f172a; --card:#ffffff; --muted:#475569; --border:#e2e8f0;
   --tab-track:#eef2f6; --pill:#e9edf3; --pill-text:#334155;
-  --panel-min-h:320px; --panel-max-h:520px; --panel-pad-top:16px; --panel-pad-bottom:16px;
+  --panel-min-h:320px; --panel-max-h:520px; --panel-pad-top:8px; --panel-pad-bottom:8px;
 }
 .dark{
   --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a; --muted:#cbd5e1; --border:#334155;
@@ -151,6 +151,19 @@ select.select-premium.fs-native{
 }
 .dark .fs-menu{ background:#0f172a; border-color:#253046; box-shadow:0 16px 32px rgba(0,0,0,.45); }
 .dark .fs-opt:hover{ background:rgba(148,163,184,.15); }
+/* CSS: ikinci şəklə bənzər, daha incə və yuxarıya yaxın görünüş */
+.filter-label{
+  display:block;
+  font-size:0.875rem;          /* text-sm */
+  line-height:1.25rem;
+  font-weight:500;
+  color:var(--muted);          /* açıq tonda boz */
+  margin-bottom:4px;           /* select-ə məsafə */
+}
+.dark .filter-label{ color:#cbd5e1; }  /* dark üçün */
+/* kartın ilk label-i üçün üst boşluğu sıxlaşdır */
+.panel-card .p-4 .filter-label:first-of-type,
+.panel-card .pt-2 .filter-label:first-of-type{ margin-top:2px; }
 
 
 </style>
@@ -195,23 +208,23 @@ select.select-premium.fs-native{
       <div class="rounded-2xl shadow-sm transition border bg-white panel-card">
         <div class="p-4 border-b"><h3 class="font-semibold">KSQ/BSQ</h3></div>
 
-        <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
+        <div class="px-4 pt-2 pb-4 grid lg:grid-cols-3 gap-6 items-stretch">
           <!-- Sol filtr sütunu -->
           <div class="space-y-4 overflow-visible">
             <div>
-              <label class="text-sm text-slate-700 block">Sinif</label>
+              <label class="filter-label">Sinif</label>
               <select id="grade" class="select-premium w-full mt-1"></select>
             </div>
             <div>
-              <label class="text-sm text-slate-700 block">Fənn</label>
+              <label class="filter-label">Fənn</label>
               <select id="subject" class="select-premium w-full mt-1"></select>
             </div>
             <div>
-              <label class="text-sm text-slate-700 block">Növ</label>
+              <label class="filter-label">Növ</label>
               <select id="ksqType" class="select-premium w-full mt-1"></select>
             </div>
             <div>
-              <label class="text-sm text-slate-700 block">Nömrə</label>
+              <label class="filter-label">Nömrə</label>
               <select id="examIndex" class="select-premium w-full mt-1"></select>
             </div>
           </div>

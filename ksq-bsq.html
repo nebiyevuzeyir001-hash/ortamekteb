@@ -49,6 +49,26 @@ body{ min-height:100svh; color:var(--text); }
 select:invalid{ color:#9aa4b2; }
 .add-shadow .bg-white:hover{ box-shadow:0 6px 16px rgba(0,0,0,.12);}
 .dark .add-shadow .bg-white:hover{ box-shadow:0 6px 16px rgba(255,255,255,.15);}
+/* Fancy Select üstünə native select görünməsin */
+select.select-premium.fs-native{
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+}
+
+/* Dark rejimdə kontrast və border düzəldilməsi */
+.dark .select-premium,
+.dark .fs-btn{
+  background:#0f172a !important;
+  color:#e5e7eb !important;
+  border-color:#253046 !important;
+  box-shadow: inset 0 0 0 1px #223049, 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+/* Placeholder mətninin rəngi (Sinfi seçin və s.) */
+select:invalid,
+.fs-opt.is-placeholder{ color:#9aa4b2 !important; }
+
+/* Fancy select menyusu həmişə üst qatda olsun, kəsilməsin */
+.fs-menu{ z-index:70 !important; }
 
 /* ---------- Panel & boş hal ---------- */
 .panel-card{ display:grid; grid-template-rows:auto minmax(0,1fr); min-height:var(--panel-min-h); border-radius:1rem; }
@@ -79,6 +99,13 @@ html, body, .scrollarea{ scrollbar-width:thin; scrollbar-color:rgba(100,100,100,
 .dark html, .dark body, .dark .scrollarea{ scrollbar-color:rgba(180,180,255,.25) transparent; }
 ::-webkit-scrollbar{ width:12px; height:12px;} ::-webkit-scrollbar-thumb{ border-radius:10px; background:rgba(100,100,100,.4);}
 ::-webkit-scrollbar-thumb:hover{ background:rgba(100,100,100,.6);} ::-webkit-scrollbar-track{ background:transparent; }
+/* Settings popover ekrana sabitlensin və həmişə üst qatda qalsın */
+#settings-panel{
+  position: fixed !important;
+  z-index: 1000 !important;
+  inset: auto auto auto auto; /* koordinatı JS verəcək */
+}
+
 </style>
 <!-- Adsense (modal üçün) -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
@@ -99,7 +126,7 @@ html, body, .scrollarea{ scrollbar-width:thin; scrollbar-color:rgba(100,100,100,
       </div>
       <div class="relative">
         <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ Tənzimləmələr</button>
-        <div id="settings-panel" class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+        <div id="settings-panel" class="hidden w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div class="text-sm">🌙 Qaranlıq rejim</div>
             <label class="inline-flex items-center cursor-pointer">
@@ -224,7 +251,16 @@ document.documentElement.classList.toggle('dark', initialTheme === 'dark');
 darkToggle.checked = (initialTheme === 'dark');
 applyThemeAssets(initialTheme);
 document.addEventListener('click', e=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
+settingsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  panel.classList.toggle('hidden');
+  if (!panel.classList.contains('hidden')) {
+    placeSettingsPanel();   // açılan kimi düymənin yanına yerləşdir
+  }
+});
+  window.addEventListener('resize', placeSettingsPanel);
+window.addEventListener('scroll', placeSettingsPanel, { passive: true });
+
 darkToggle.addEventListener('change', e=>{
   const theme = e.target.checked ? 'dark' : 'light';
   document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -242,6 +278,32 @@ mq.addEventListener?.('change', e=>{
 });
 function applyThemeAssets(theme){
   $('#site-logo').src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
+}
+function placeSettingsPanel(){
+  const btn  = document.getElementById('btn-settings');
+  const pop  = document.getElementById('settings-panel');
+  if(!btn || !pop || pop.classList.contains('hidden')) return;
+
+  // Düymənin ekran koordinatları
+  const r  = btn.getBoundingClientRect();
+  const gap = 8; // düymə ilə panel arasında kiçik boşluq
+
+  // İlkin mövqe: düymənin sağ-altı
+  let left = r.right - pop.offsetWidth;
+  let top  = r.bottom + gap;
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // Sağdan/soldan/kənardan daşarsa tənzimlə
+  if (left < 8) left = 8;
+  if (left + pop.offsetWidth > vw - 8) left = vw - pop.offsetWidth - 8;
+
+  // Aşağı sığmırsa yuxarıya “flip”
+  if (top + pop.offsetHeight > vh - 8) top = r.top - pop.offsetHeight - gap;
+
+  pop.style.left = Math.round(left) + 'px';
+  pop.style.top  = Math.round(top)  + 'px';
 }
 
 /* ------------------ HELPERS ------------------ */

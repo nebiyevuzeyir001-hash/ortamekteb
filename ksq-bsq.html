@@ -94,8 +94,20 @@ select:invalid,
 .ep-btn-primary:hover{ transform:translateY(-2px); filter:brightness(1.08); box-shadow:0 6px 18px rgba(147,51,234,.45); }
 .dark .ep-btn-primary{ background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); box-shadow:0 4px 10px rgba(255,255,255,.1); }
 
-/* ---------- Scrollbar ---------- */
-html, body, .scrollarea{ scrollbar-width:thin; scrollbar-color:rgba(100,100,100,.4) transparent; }
+/* ---------- Toggle (settings) ---------- */
+#settings-panel .dot{
+  transition: transform .2s ease, background-color .2s ease;
+}
+#settings-panel input:checked + span{
+  background: #0ea5e9;            /* light track rəngi */
+}
+.dark #settings-panel input:checked + span{
+  background: #4f46e5;            /* dark track rəngi */
+}
+#settings-panel input:checked + span .dot{
+  transform: translateX(16px);    /* düyməni sağa sürüşdür */
+}
+
 .dark html, .dark body, .dark .scrollarea{ scrollbar-color:rgba(180,180,255,.25) transparent; }
 ::-webkit-scrollbar{ width:12px; height:12px;} ::-webkit-scrollbar-thumb{ border-radius:10px; background:rgba(100,100,100,.4);}
 ::-webkit-scrollbar-thumb:hover{ background:rgba(100,100,100,.6);} ::-webkit-scrollbar-track{ background:transparent; }

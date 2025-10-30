@@ -197,6 +197,11 @@ select.select-premium.fs-native{
   background: rgba(59,130,246,.18) !important;
   border-color: rgba(59,130,246,.40) !important;
 }
+/* Məlumat bölməsi üçün sərt rəng məcburiyyəti (çərçivə yoxdur) */
+.info-section { background: transparent !important; }
+.info-section, .info-section p, .info-section h2, .info-section a {
+  color: var(--text) !important;      /* light: #0f172a, dark: #e2e8f0 */
+}
 
 </style>
 <!-- Adsense (modal üçün) -->
@@ -283,48 +288,41 @@ select.select-premium.fs-native{
         </div>
       </div>
     </section>
-<!-- KSQ və BSQ haqqında geniş məlumat (tam en, yüksək kontrast) -->
-<section class="mt-10 rounded-2xl border bg-white p-6 sm:p-8 text-slate-800 dark:text-slate-100 leading-7">
-  <h2 class="text-xl sm:text-2xl font-semibold mb-4">Məlumat</h2>
+<!-- KSQ/BSQ haqqında məlumat (full-width, çərçivəsiz, yüksək kontrast) -->
+<section class="mt-10 px-4 sm:px-6 lg:px-8 info-section relative z-[1]">
+  <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Məlumat</h2>
 
-  <p class="mb-3">
-    KSQ (Kiçik Summativ Qiymətləndirmə) və BSQ (Böyük Summativ Qiymətləndirmə) Azərbaycan Respublikasının ümumi
-    təhsil sistemində tətbiq olunan qiymətləndirmə formalarıdır. Bu qiymətləndirmələr dövlət ümumi təhsil
-    standartlarına uyğun olaraq şagirdlərin bilik, bacarıq və kompetensiyalarının obyektiv şəkildə müəyyən
-    edilməsini təmin edir.
-  </p>
-
-  <p class="mb-3">
-    KSQ adətən hər yarımildə bir neçə dəfə keçirilir və müəyyən mövzu və ya fəsilləri əhatə edir. Hər bir KSQ test
-    və ya yazılı iş formasında ola bilər. Bu qiymətləndirmə növü şagirdlərin cari mövzular üzrə anlayış səviyyəsini
-    ölçmək üçün istifadə olunur.
-  </p>
-
-  <p class="mb-3">
-    BSQ isə hər yarımilin sonunda keçirilən yekun qiymətləndirmə formasıdır. O, daha geniş mövzu dairəsini əhatə edir
-    və şagirdin yarımil ərzində əldə etdiyi ümumi bilik və bacarıqları müəyyənləşdirməyə xidmət edir.
-  </p>
-
-  <p class="mb-3">
-    EduPlan.az bu prosesi sadələşdirmək üçün faylları sinif, fənn, növ və nömrə üzrə təsnifləşdirir. Uyğun seçimləri
-    etdikdən sonra materialı birbaşa yükləyə bilərsiniz.
-  </p>
-
-  <p class="mb-3">
-    Fayllar əsasən PDF və DOCX formatındadır və qeydiyyat tələb etmir. Materiallar müəllimlər, şagirdlər və təhsil
-    işçiləri üçün açıqdır.
-  </p>
-
-  <p class="mb-3">
-    Hər hansı texniki uyğunsuzluq aşkar etsəniz, zəhmət olmasa
-    <a href="mailto:eduplan.az@gmail.com" class="underline text-indigo-600 dark:text-indigo-400">eduplan.az@gmail.com</a>
-    ünvanına bildirin. Müraciətlər nəzərdən keçirilir və fayllar yenilənir.
-  </p>
-
-  <p class="mb-1">
-    Platforma pulsuzdur və yalnız tədris məqsədi daşıyır. Gələcəkdə funksionallıq genişləndirilə bilər.
-  </p>
+  <div class="space-y-3 text-base leading-7">
+    <p>
+      KSQ (Kiçik Summativ Qiymətləndirmə) və BSQ (Böyük Summativ Qiymətləndirmə) ümumi təhsil sistemində tətbiq olunan
+      qiymətləndirmə formalarıdır. Qiymətləndirmələr dövlət standartlarına uyğun olaraq şagirdlərin bilik, bacarıq və
+      kompetensiyalarını obyektiv ölçməyi hədəfləyir.
+    </p>
+    <p>
+      KSQ adətən yarımildə bir neçə dəfə keçirilir və konkret mövzuları əhatə edir. Test və ya yazılı iş formatında ola bilər
+      və cari mövzular üzrə anlayış səviyyəsini ölçür.
+    </p>
+    <p>
+      BSQ yarımilin sonunda keçirilən yekun qiymətləndirmədir. Geniş mövzu dairəsini əhatə edir və yarımil boyu əldə edilən
+      bilik və bacarıqları ümumi şəkildə yoxlayır.
+    </p>
+    <p>
+      EduPlan.az faylları sinif, fənn, növ (KSQ/BSQ) və nömrə üzrə təsnifləşdirir. Seçim etdikdən sonra materialları birbaşa
+      yükləyə bilərsiniz.
+    </p>
+    <p>
+      Fayllar əsasən PDF və DOCX formatındadır, qeydiyyat tələb etmir və müəllimlər, şagirdlər, təhsil işçiləri üçün açıqdır.
+    </p>
+    <p>
+      Hər hansı uyğunsuzluq aşkar etsəniz, <a href="mailto:eduplan.az@gmail.com" class="underline">eduplan.az@gmail.com</a>
+      ünvanına yazın. Müraciətlər nəzərdən keçirilir və fayllar yenilənir.
+    </p>
+    <p class="mb-0">
+      Platforma pulsuzdur və yalnız tədris məqsədi daşıyır. Gələcəkdə funksiyalar genişləndirilə bilər.
+    </p>
+  </div>
 </section>
+
 
     <footer class="mt-10 text-sm text-slate-600">
       © <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur

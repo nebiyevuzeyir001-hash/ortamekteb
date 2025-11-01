@@ -97,39 +97,46 @@ select:invalid,
 #dark-toggle:checked + span { background:#334155; }
 #dark-toggle:checked + span .dot { transform: translateX(16px); }
 
-/* --- Compact scrollbars --- */
+/* --- Scrollbar (orta qalınlıq) --- */
+:root { --sb-size: 12px; }        /* 10–14px arası rahatdır */
+@media (min-width: 1024px){
+  :root { --sb-size: 12px; }      /* istəsən 14px də edə bilərsən */
+}
+
 html, body{
   /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(100,100,100,.45) transparent;
+  scrollbar-width: auto;          /* thin deyil */
+  scrollbar-color: rgba(110,110,120,.45) transparent;
 }
 
 /* WebKit (Chrome/Edge/Safari) */
 ::-webkit-scrollbar{
-  width:8px;           /* istəsən 6px edə bilərsən */
-  height:8px;
+  width: var(--sb-size);
+  height: var(--sb-size);
 }
 ::-webkit-scrollbar-thumb{
-  background:rgba(100,100,100,.45);
-  border-radius:9999px;
-  border:2px solid transparent; /* daha zərif görünüş */
-  background-clip:content-box;
+  background: rgba(110,110,120,.50);
+  border-radius: 9999px;
+  border: 3px solid transparent;      /* içini bir az “boş” göstərir */
+  background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover{
-  background:rgba(100,100,100,.65);
+  background: rgba(110,110,120,.70);
 }
-::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-track{ background: transparent; }
 
-/* Dark üçün bir az açıq rəng */
+/* Dark ton */
 .dark html, .dark body{
-  scrollbar-color: rgba(180,180,255,.30) transparent;
+  scrollbar-color: rgba(185,195,255,.35) transparent;
 }
 .dark ::-webkit-scrollbar-thumb{
-  background: rgba(180,180,255,.30);
+  background: rgba(185,195,255,.35);
+  border: 3px solid transparent;
 }
 .dark ::-webkit-scrollbar-thumb:hover{
-  background: rgba(180,180,255,.45);
+  background: rgba(185,195,255,.55);
 }
+
 
 /* Settings popover ekrana sabitlensin və həmişə üst qatda qalsın */
 /* === Premium Fancy Select (index kimi) === */

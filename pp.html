@@ -4,341 +4,188 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Perspektiv (illik) plan — EduPlan</title>
-<meta name="description" content="Fənn seçin və illik PP fayllarını yükləyin.">
+<meta name="description" content="Fənn üzrə illik perspektiv plan (PP) faylları. Seç və yüklə.">
 <link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Dizayn: KSQ səhifəsindəki üslubların eynisi, PP üçün lazım olan hissələr -->
 <style>
-:root{
-  --bg-from:#f8fafc; --bg-to:#ffffff; --text:#0f172a; --card:#ffffff; --muted:#475569; --border:#e2e8f0;
-  --panel-min-h:320px; --panel-pad-top:12px; --panel-pad-bottom:12px;
-}
-.dark{ --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a; --muted:#cbd5e1; --border:#334155; }
-:where(html,body){overflow-x:clip; min-width:0} html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
+/* === index.css-dən götürülənlər (PP paneli ilə 1:1) === */
+:root{--bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;--panel-min-h:320px;--panel-max-h:520px;--panel-pad-top:16px;--panel-pad-bottom:16px}
+.dark{--bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;--tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1}
+:where(html,body,main,header,footer,section){overflow-x:clip;min-width:0}
+html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
 html{background:var(--bg-to)} html.dark{background:#0a0f1a}
 body{min-height:100svh;color:var(--text)}
-.bg-white{background:var(--card)!important} .text-slate-600,.text-slate-500{color:var(--muted)!important} .text-slate-900{color:var(--text)!important}
+.bg-white{background-color:var(--card)!important;transition:box-shadow .2s}
+.bg-white:hover{box-shadow:0 6px 16px rgba(0,0,0,.12)} .dark .bg-white:hover{box-shadow:0 6px 16px rgba(255,255,255,.15)}
+.text-slate-900,.text-slate-800,.text-slate-700{color:var(--text)!important}
+.text-slate-600,.text-slate-500{color:var(--muted)!important}
 .border-slate-200{border-color:var(--border)!important}
 .backdrop-blur.bg-white\/70{background-color:color-mix(in srgb,var(--card) 70%,transparent)!important}
+select,input{background-color:var(--card)!important;color:var(--text)!important}
+#dark-toggle:checked+span{background:#334155} #dark-toggle:checked+span .dot{transform:translateX(16px)}
+.panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
+.panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
 
-/* Premium Select + Fancy Select (KSQ-dəki ilə eyni) */
-.select-premium{-webkit-appearance:none;appearance:none;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%, transparent);transition:border-color .18s,box-shadow .18s,transform .06s;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
-.select-premium:hover{border-color:color-mix(in srgb,var(--border) 55%, transparent)}
-.select-premium:focus{outline:0;border-color:transparent;transform:translateY(-1px);box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%, transparent),0 0 0 4px rgba(34,211,238,.25)}
+/* Premium select + fancy menu (indexdəki ilə eyni) */
+.select-premium{appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
+.select-premium:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+.select-premium:focus{outline:0;border-color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
 select:invalid{color:#9aa4b2}
 .fs-wrap{position:relative;display:block;width:100%}
 select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
-.fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%, transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
-.fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%, transparent)}
-.fs-btn:focus-visible{outline:0;transform:translateY(-1px);box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%, transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08)}
-.fs-btn::after{content:"";position:absolute;right:12px;top:50%;translate:0 -50%;width:16px;height:16px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")}
+.fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
+.fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
+.fs-btn:focus-visible{outline:0;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+.fs-btn::after{content:"";position:absolute;right:12px;top:50%;translate:0 -50%;width:16px;height:16px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-size:16px;opacity:.9;pointer-events:none}
 .fs-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:70;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-height:260px;overflow:auto;padding:6px;display:none}
 .fs-wrap[aria-expanded="true"] .fs-menu{display:block}
 .fs-opt{padding:9px 10px;border-radius:10px;cursor:pointer;font-size:.875rem}
 .fs-opt.is-placeholder{color:#9aa4b2;font-style:italic}
 .fs-opt:hover{background:rgba(148,163,184,.12)}
-.dark .select-premium,.dark .fs-btn{background:#0f172a!important;color:#e5e7eb!important;border-color:#253046!important;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)!important}
+.dark .fs-btn{background:#0f172a;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)}
 .dark .fs-btn::after{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")}
 .dark .fs-menu{background:#0f172a;border-color:#253046;box-shadow:0 16px 32px rgba(0,0,0,.45)}
-/* Panel & boş hal */
-.panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
-.panel-card>:nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
+.dark .fs-opt:hover{background:rgba(148,163,184,.15)}
+
+/* Boş hal — indexdəki kimi (mini card light, blur overlay dark) */
 .empty-light{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.empty-light .card{width:min(520px,100%);border:1px solid var(--border);background:var(--card);border-radius:16px;text-align:center;padding:22px 18px;box-shadow:0 6px 16px rgba(0,0,0,.06)}
-.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side, rgba(147,51,234,.12), transparent 70%),conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);border:1px solid #e9eaf0;font-size:20px}
+.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
+.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid #e9eaf0;font-size:20px}
 .empty-light .title{font-weight:600;font-size:15px}
 .empty-light .desc{font-size:13px;color:var(--muted);margin-top:4px}
 .empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
-.empty-overlay .inner{width:min(520px,100%);border:1px solid rgba(255,255,255,.22);background:rgba(2,6,23,.55);border-radius:16px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:22px 18px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.35)}
-.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%),conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
+.empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
 .dark .empty-light{display:none}
-
-/* Düymə */
-.ep-btn-primary{display:inline-block;width:100%;padding:.65rem 1rem;border-radius:.75rem;font-weight:600;font-size:.9rem;color:#fff;background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%);box-shadow:0 4px 12px rgba(79,70,229,.35);transition:transform .15s,box-shadow .25s,filter .25s}
-.ep-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 6px 18px rgba(147,51,234,.45)}
+/* Dark kontrast fixləri (pill/badge) */
+.dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
+.dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
+.dark #pp-results span.rounded-full.bg-slate-100{background:rgba(148,163,184,.16)!important;border-color:rgba(148,163,184,.38)!important;color:#e5e7eb!important}
 </style>
-
-<!-- Adsense (modal üçün) -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen text-slate-900 relative">
-  <!-- dekor -->
-  <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
-    <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
-  </div>
+<!-- dekor -->
+<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+  <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
+  <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
+</div>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img id="site-logo" src="assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl shadow-sm" alt="EduPlan" />
-        <span class="font-semibold tracking-tight">EduPlan AZ</span>
+<header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img id="site-logo" src="assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl shadow-sm" alt="EduPlan" />
+      <span class="font-semibold tracking-tight">EduPlan AZ</span>
+    </div>
+    <div class="relative flex items-center gap-3" id="header-controls">
+      <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ Tənzimləmələr</button>
+      <div id="settings-panel" class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="text-sm">🌙 Qaranlıq rejim</div>
+          <label class="inline-flex items-center cursor-pointer">
+            <input id="dark-toggle" type="checkbox" class="sr-only">
+            <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
+              <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
+            </span>
+          </label>
+        </div>
       </div>
+    </div>
+  </div>
+</header>
 
-      <div class="relative flex items-center gap-3">
-        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ Tənzimləmələr</button>
-        <div id="settings-panel" class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-          <div class="flex items-center justify-between">
-            <div class="text-sm">🌙 Qaranlıq rejim</div>
-            <label class="inline-flex items-center cursor-pointer">
-              <input id="dark-toggle" type="checkbox" class="sr-only">
-              <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
-                <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
-              </span>
-            </label>
+<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+  <section class="mb-6 sm:mb-8">
+    <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">Perspektiv (illik) plan</h1>
+    <p class="mt-2 text-slate-600 dark:text-slate-300">Fənni seçin və illik PP fayllarını yükləyin.</p>
+  </section>
+
+  <section class="add-shadow">
+    <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+      <div class="p-4 border-b"><h3 class="font-semibold">Perspektiv (illik) plan</h3></div>
+
+      <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
+        <!-- Sol filtr sütunu (indexdəki ilə eyni) -->
+        <div class="space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
+          <div>
+            <label class="text-sm text-slate-700 block">Fənn</label>
+            <select id="ppSubject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
+          </div>
+        </div>
+
+        <!-- Sağ nəticə kartı -->
+        <div class="lg:col-span-2 min-w-0">
+          <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
+            <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
+              <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
+            </div>
+            <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
           </div>
         </div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <!-- Main -->
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-    <section class="mb-6 sm:mb-8">
-      <h1 class="text-2xl sm:text-3xl font-semibold">Perspektiv (illik) plan</h1>
-      <p class="mt-2 text-slate-600 dark:text-slate-300">Fənni seçin və illik PP fayllarını yükləyin.</p>
-    </section>
+  <footer class="mt-10 text-sm text-slate-600">
+    © <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur
+  </footer>
+</main>
 
-    <section>
-      <div class="rounded-2xl shadow-sm transition border bg-white panel-card">
-        <div class="p-4 border-b"><h3 class="font-semibold">Perspektiv (illik) plan</h3></div>
+<!-- (modal kodu qaldıra bilərsən; lazım olsa indexdəki ilə eynidir) -->
 
-        <div class="px-4 pt-2 pb-4 grid lg:grid-cols-3 gap-6 items-stretch">
-          <!-- Sol filtr -->
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-slate-600 mb-1">Fənn</label>
-              <select id="ppSubject" class="select-premium w-full mt-1"></select>
-            </div>
-          </div>
-
-          <!-- Sağ nəticələr -->
-          <div class="lg:col-span-2 min-w-0">
-            <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
-              <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-                <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
-              </div>
-              <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="mt-10 text-sm text-slate-600">
-      © <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur
-    </footer>
-  </main>
-
-  <!-- 15s interstitial download modal (KSQ ilə eyni) -->
-  <div id="dlModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60">
-    <div class="relative w-[92%] max-w-[440px] rounded-3xl bg-[#121212] text-white p-5 shadow-2xl" id="dlCard">
-      <button id="dlClose" class="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-800 shadow">✕</button>
-      <div class="mb-3 text-sm text-gray-300">Preparing your download</div>
-      <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
-        <div class="w-full grid place-items-center" style="min-height:250px">
-          <ins class="adsbygoogle" id="modal-ad" style="display:inline-block;width:300px;height:250px"
-               data-ad-client="ca-pub-1241199346930032" data-ad-slot="4681795317"></ins>
-        </div>
-      </div>
-      <div class="mt-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="relative h-10 w-10">
-            <div id="ring" class="h-10 w-10 rounded-full" style="background:
-              conic-gradient(#8b5cf6 0deg, #8b5cf6 0deg, #333 0deg, #333 360deg);"></div>
-            <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
-          </div>
-          <div class="text-sm text-gray-300" id="dlStatus">Please wait a few moments for the download to begin</div>
-        </div>
-      </div>
-      <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
-        <div id="dlBar" class="h-1 bg-violet-500 w-0"></div>
-      </div>
-    </div>
-  </div>
-
-<!-- JS -->
 <script>
-const FEED_URL = "https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
-const translations = {
-  subjects: {
-    az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat',
-    physics:'Fizika', chemistry:'Kimya', biology:'Biologiya', az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix',
-    geography:'Coğrafiya', it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət',
-    music:'Musiqi', pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq'
-  }
-};
-// PP üçün bütün fənlər siyahıdan (sinifdən asılı deyil)
-const allSubjects = Object.values(translations.subjects);
-
-const state = { ppSubject:null, catalog:[] };
-const $ = s => document.querySelector(s);
-
-document.getElementById('year').textContent = new Date().getFullYear();
-
-/* Tema */
-const saved = localStorage.getItem('theme');
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
-const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
-document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-document.getElementById('dark-toggle').checked = (initialTheme === 'dark');
+/* === Theme (indexdəki kimi) === */
+const $=s=>document.querySelector(s);
+const settingsBtn=$('#btn-settings'),panel=$('#settings-panel'),darkToggle=$('#dark-toggle');
+const mq=window.matchMedia('(prefers-color-scheme: dark)');
+const saved=localStorage.getItem('theme');
+const initialTheme=saved?saved:(mq.matches?'dark':'light');
+document.documentElement.classList.toggle('dark', initialTheme==='dark');
+darkToggle.checked=(initialTheme==='dark');
 applyThemeAssets(initialTheme);
-document.getElementById('btn-settings').addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('settings-panel').classList.toggle('hidden'); });
-document.addEventListener('click',(e)=>{ const p=document.getElementById('settings-panel'); const b=document.getElementById('btn-settings'); if(!p.contains(e.target)&&!b.contains(e.target)) p.classList.add('hidden'); });
-document.getElementById('dark-toggle').addEventListener('change', e=>{ const theme=e.target.checked?'dark':'light'; document.documentElement.classList.toggle('dark', theme==='dark'); localStorage.setItem('theme', theme); applyThemeAssets(theme); refreshEmpty(); });
-mq.addEventListener?.('change', e=>{ if(!localStorage.getItem('theme')){ const theme=e.matches?'dark':'light'; document.documentElement.classList.toggle('dark', theme==='dark'); document.getElementById('dark-toggle').checked=(theme==='dark'); applyThemeAssets(theme); refreshEmpty(); }});
-function applyThemeAssets(theme){ document.getElementById('site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
+document.addEventListener('click',e=>{if(!panel.contains(e.target)&&!settingsBtn.contains(e.target))panel.classList.add('hidden')});
+settingsBtn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('hidden')});
+darkToggle.addEventListener('change',e=>{const t=e.target.checked?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');localStorage.setItem('theme',t);applyThemeAssets(t);refreshEmptyPlaceholders()});
+mq.addEventListener?.('change',e=>{if(!localStorage.getItem('theme')){const t=e.matches?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');darkToggle.checked=(t==='dark');applyThemeAssets(t);refreshEmptyPlaceholders()}})
+function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
 
-/* Helpers */
-function option(el,v,t){ const o=document.createElement('option'); o.value=v; o.textContent=t; el.appendChild(o); }
-function addPlaceholder(selectEl,label){ const o=document.createElement('option'); o.value=""; o.textContent=label; o.disabled=true; o.selected=true; o.hidden=true; selectEl.appendChild(o); selectEl.required=true; }
+/* === DATA === */
+const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
+const translations={subjects:{az:'Azərbaycan dili',lit:'Ədəbiyyat',science:'Təbiət',eng:'İngilis dili',rus:'Rus dili',math:'Riyaziyyat',physics:'Fizika',chemistry:'Kimya',biology:'Biologiya',az_history:'Azərbaycan tarixi',world_history:'Ümumi tarix',geography:'Coğrafiya',it:'İnformatika',life:'Həyat bilgisi',tech:'Texnologiya',art:'Təsviri incəsənət',music:'Musiqi',pe:'Fiziki tərbiyə',premilitary:'Çağırışaqədərki hazırlıq'}};
+const state={ppSubject:null,catalog:[]};
 
-/* Fancy Select */
+/* === Select qurulması (index stili) === */
+function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)}
+function addPlaceholder(selectEl,label){const o=document.createElement('option');o.value="";o.textContent=label;o.disabled=true;o.selected=true;o.hidden=true;selectEl.appendChild(o);selectEl.required=true}
 function enhanceFancySelect(select){
-  if (select.dataset.fancyMounted === '1') {
-    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
-    if (old) old.replaceWith(select);
-    select.dataset.fancyMounted = '0';
-  }
-  const wrap=document.createElement('div'); wrap.className='fs-wrap'; wrap.setAttribute('aria-expanded','false');
-  const btn=document.createElement('button'); btn.type='button'; btn.className='fs-btn';
-  btn.textContent = select.options[select.selectedIndex]?.text || 'Seçin';
-  const menu=document.createElement('div'); menu.className='fs-menu';
-
-  Array.from(select.options).forEach((o)=>{
-    const item=document.createElement('div'); item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':''); item.textContent=o.text;
-    item.addEventListener('click',()=>{ Array.from(select.options).forEach(op=>op.selected=(op===o)); select.value=o.value; select.dispatchEvent(new Event('change',{bubbles:true})); btn.textContent=o.text; wrap.setAttribute('aria-expanded','false'); });
-    menu.appendChild(item);
-  });
-
-  select.classList.add('fs-native'); select.tabIndex=-1; select.setAttribute('aria-hidden','true');
-  select.parentNode.insertBefore(wrap, select); wrap.appendChild(btn); wrap.appendChild(select); wrap.appendChild(menu); select.dataset.fancyMounted='1';
-
-  const toggle = (open)=>wrap.setAttribute('aria-expanded', open?'true':'false');
-  btn.addEventListener('mousedown',(e)=>e.preventDefault());
-  btn.addEventListener('click',(e)=>{ e.stopPropagation(); const open=wrap.getAttribute('aria-expanded')==='true'; document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false')); toggle(!open);});
-  document.addEventListener('click',()=>toggle(false));
-  wrap.addEventListener('keydown',(e)=>{ if(e.key==='Escape') toggle(false); });
+  if(select.dataset.fancyMounted==='1'){const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null;if(old)old.replaceWith(select);select.dataset.fancyMounted='0'}
+  const wrap=document.createElement('div');wrap.className='fs-wrap';wrap.setAttribute('aria-expanded','false');
+  const btn=document.createElement('button');btn.type='button';btn.className='fs-btn';btn.textContent=select.options[select.selectedIndex]?.text||select.getAttribute('placeholder')||'Seçin';
+  const menu=document.createElement('div');menu.className='fs-menu';
+  Array.from(select.options).forEach(o=>{const item=document.createElement('div');item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':'');item.textContent=o.text;item.addEventListener('click',()=>{Array.from(select.options).forEach(op=>op.selected=(op===o));select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));btn.textContent=o.text;wrap.setAttribute('aria-expanded','false')});menu.appendChild(item)});
+  select.classList.add('fs-native');select.tabIndex=-1;select.setAttribute('aria-hidden','true');
+  select.parentNode.insertBefore(wrap,select);wrap.appendChild(btn);wrap.appendChild(select);wrap.appendChild(menu);select.dataset.fancyMounted='1';
+  btn.addEventListener('mousedown',e=>e.preventDefault());btn.addEventListener('click',e=>{e.stopPropagation();const open=wrap.getAttribute('aria-expanded')==='true';document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));wrap.setAttribute('aria-expanded', String(!open))});document.addEventListener('click',()=>wrap.setAttribute('aria-expanded','false'));
 }
-function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
+function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
+(function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
 
-/* Render select */
-function renderSelect(){
-  const el = document.getElementById('ppSubject');
-  el.innerHTML=''; addPlaceholder(el,'Fənni seçin'); allSubjects.forEach(s=>option(el,s,s));
-  el.value = state.ppSubject ?? "";
-  enhanceAllFancySelects();
-}
+/* === Placeholder (indexdəki showEmpty/hideEmpty) === */
+function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
+function hideEmpty(cardId){const c=document.getElementById(cardId);c?.querySelector('.empty-overlay')?.remove();c?.querySelector('.empty-light')?.remove();c?.classList.remove('min-h-[320px]','md:min-h-[340px]')}
+function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
-/* Empty state */
-function showEmpty(){
-  const card = document.getElementById('pp-results-card');
-  const isDark = document.documentElement.classList.contains('dark');
-  card.querySelector('.empty-overlay')?.remove(); card.querySelector('.empty-light')?.remove();
-  card.classList.add('min-h-[320px]');
+/* === PP render === */
+function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
+function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" data-download="${it.dl}" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div></div></div></div>`;wrap.appendChild(card)})}
+function toggleResults(){const grid=$('#pp-results');const count=$('#pp-count-row');if(state.ppSubject){hideEmpty('pp-results-card');count?.classList.remove('hidden');renderPP()}else{count?.classList.add('hidden');grid.innerHTML='';showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
-  if (isDark) {
-    const overlay=document.createElement('div'); overlay.className='empty-overlay';
-    overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6">
-      <div class="inner">
-        <div class="icon">🗂️</div>
-        <div class="title">Zəhmət olmasa fənni seçin</div>
-        <div class="desc">Fənni seçdikdən sonra nəticələr burada görünəcək.</div>
-      </div></div>`;
-    card.appendChild(overlay);
-  } else {
-    const box=document.createElement('div'); box.className='empty-light';
-    box.innerHTML=`<div class="card"><div class="icon">🗂️</div><div class="title">Zəhmət olmasa fənni seçin</div><div class="desc">Fənni seçdikdən sonra nəticələr burada görünəcək.</div></div>`;
-    card.appendChild(box);
-  }
-}
-function hideEmpty(){
-  const c=document.getElementById('pp-results-card');
-  c?.querySelector('.empty-overlay')?.remove(); c?.querySelector('.empty-light')?.remove(); c?.classList.remove('min-h-[320px]');
-}
-function refreshEmpty(){ if(!state.ppSubject){ document.getElementById('pp-count-row').classList.add('hidden'); document.getElementById('pp-results').innerHTML=''; showEmpty(); }}
+/* === Feed === */
+async function loadAllFromMaterials(){try{const res=await fetch(FEED_URL,{cache:'no-store'});const catalog=await res.json();state.catalog=Array.isArray(catalog)?catalog:[];toggleResults()}catch(e){if(state.ppSubject){$('#pp-results').innerHTML=`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`}}}
 
-/* Feed */
-async function loadAllFromMaterials(){
-  try{
-    const res = await fetch(FEED_URL,{cache:'no-store'}); const catalog = await res.json();
-    state.catalog = Array.isArray(catalog)? catalog : [];
-    refreshList();
-  }catch(e){
-    if(state.ppSubject){ document.getElementById('pp-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`; }
-  }
-}
-
-/* Render results */
-function buildTitle(it){ const format=(it.ext||'FILE').toUpperCase(); return `PP · ${it.subject} · ${format}`; }
-function refreshList(){
-  const wrap = document.getElementById('pp-results');
-  if(!state.ppSubject){ refreshEmpty(); return; }
-
-  hideEmpty();
-  const list = state.catalog.filter(it => it.type==='PP' && it.subject===state.ppSubject);
-  document.getElementById('pp-count').textContent = list.length;
-  document.getElementById('pp-count-row').classList.remove('hidden');
-
-  wrap.innerHTML = list.length ? '' : '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
-
-  list.forEach(it=>{
-    const card=document.createElement('div');
-    card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
-    card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-      <div class="flex items-start gap-3">
-        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-        <div class="flex-1">
-          <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
-          <div class="mt-3">
-            <a href="${it.dl}" data-download="${it.dl}" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a>
-          </div>
-        </div>
-      </div></div>`;
-    wrap.appendChild(card);
-  });
-}
-
-/* 15s download modal — KSQ-dəki kodun eynisi */
-(()=> {
-  const MODAL=$('#dlModal'), CARD=$('#dlCard'), BTN_CLOSE=$('#dlClose'), COUNT=$('#dlCount'), RING=$('#ring'), BAR=$('#dlBar'), STATUS=$('#dlStatus');
-  let t=0,timer=null,finished=false,targetUrl=null,modalAdRendered=false,adsReady=false; const DURATION=15;
-  window.addEventListener('load',()=>{ adsReady=true; });
-  function updateRing(){ const deg=((DURATION - t)/DURATION)*360; RING.style.background=`conic-gradient(#8b5cf6 ${deg}deg, #333 ${deg}deg 360deg)`; }
-  function closeModal(){ MODAL.classList.add('hidden'); MODAL.classList.remove('flex'); if(timer) clearInterval(timer); timer=null; }
-  function finish(){ if(finished) return; finished=true; closeModal(); if(!targetUrl) return;
-    const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove();
-    requestAnimationFrame(()=>{ if(document.visibilityState!=='hidden'){ try{ window.location.assign(targetUrl); }catch{} }});
-  }
-  function openModal(url){
-    targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex');
-    t=DURATION; COUNT.textContent=t; STATUS.textContent='Please wait a few moments for the download to begin'; BAR.style.width='0%'; updateRing();
-    if(!modalAdRendered){ modalAdRendered=true; const tryRender=()=>{ try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch{ setTimeout(()=>tryRender(),400);} }; adsReady?tryRender():setTimeout(()=>tryRender(),500); }
-    timer=setInterval(()=>{ t--; COUNT.textContent=t>=0?t:0; const p=((DURATION - t)/DURATION)*100; BAR.style.width=Math.min(100,Math.max(0,p))+'%'; updateRing(); if(t<=0) finish(); },1000);
-  }
-  document.addEventListener('click', e=>{
-    const a=e.target.closest('a.download-btn'); if(!a) return;
-    if(e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const url=a.getAttribute('data-download') || a.getAttribute('href'); if(!url) return;
-    e.preventDefault(); openModal(url);
-  });
-  BTN_CLOSE.addEventListener('click', closeModal);
-  MODAL.addEventListener('click', e=>{ if(!CARD.contains(e.target)) closeModal(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !MODAL.classList.contains('hidden')) closeModal(); });
-})();
-
-/* Init */
-function renderSelect(){
-  const el = document.getElementById('ppSubject');
-  el.innerHTML=''; addPlaceholder(el,'Fənni seçin'); allSubjects.forEach(s=>option(el,s,s));
-  el.value = state.ppSubject ?? "";
-  enhanceAllFancySelects();
-}
-renderSelect(); showEmpty(); loadAllFromMaterials();
-document.getElementById('ppSubject').addEventListener('change', e=>{ state.ppSubject=e.target.value||null; refreshList(); });
+/* init */
+document.getElementById('year').textContent=new Date().getFullYear();
+refreshEmptyPlaceholders(); loadAllFromMaterials();
+document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubject=e.target.value||null;toggleResults()});
 </script>
 </body>
 </html>

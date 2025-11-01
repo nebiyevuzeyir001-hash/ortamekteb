@@ -97,11 +97,11 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 .dark ::-webkit-scrollbar-thumb:hover{ background: rgba(185,195,255,.55); }
 
 /* Kiçik util */
-.scrollarea{ max-height: max(420px, 48vh); overflow:auto; }
+.scrollarea{ max-height:none; overflow:visible; }
   /* Panel daxili kolonka (index kartlarındakı kimi) */
 .calc-inner{
-  width: min(520px, 100%);
-  margin-inline: auto;             /* ortala */
+  width:min(720px,100%);   /* 520 → 720 */
+  margin-inline:auto;
 }
 .mode-row{
   display:flex; align-items:center; gap:.75rem;
@@ -186,12 +186,6 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
       </div>
     </div>
 
-    <!-- Düymələr -->
-    <div class="actions-row">
-      <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
-      <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
-    </div>
-
     <!-- I yarımil -->
     <fieldset id="fs-t1" class="rounded-xl border border-slate-200 px-3 py-2 mt-4">
       <legend class="px-2 text-sm font-medium">I yarımil</legend>
@@ -219,7 +213,11 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
       </div>
       <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="mt-3" />
     </fieldset>
-
+    
+    <div class="actions-row mt-4">
+      <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
+      <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
+    </div>
     <!-- Nəticələr -->
     <div id="calc-output" class="hidden rounded-xl border border-slate-200 px-4 py-4 mt-4">
       <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
@@ -249,33 +247,6 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
     <div id="calc-error" class="hidden text-[12px] text-rose-500 mt-2"></div>
   </div>
 </div>
-
-
-          <!-- Nəticələr -->
-          <div id="calc-output" class="hidden rounded-xl border border-slate-200 px-4 py-4">
-            <div class="text-sm text-slate-500">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
-            <div class="mt-3 grid sm:grid-cols-3 gap-3">
-              <div id="out-t1-card" class="rounded-lg border border-slate-200 px-3 py-2">
-                <div class="text-slate-500 text-sm mb-1">I yarımil</div>
-                <div class="text-lg font-semibold" id="out-t1">—</div>
-                <div class="text-xs mt-1">KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span></div>
-                <div class="text-xs">Qiymət: <span id="out-t1-grade">—</span></div>
-              </div>
-              <div id="out-t2-card" class="rounded-lg border border-slate-200 px-3 py-2">
-                <div class="text-slate-500 text-sm mb-1">II yarımil</div>
-                <div class="text-lg font-semibold" id="out-t2">—</div>
-                <div class="text-xs mt-1">KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span></div>
-                <div class="text-xs">Qiymət: <span id="out-t2-grade">—</span></div>
-              </div>
-              <div id="out-year-card" class="rounded-lg border border-slate-200 px-3 py-2">
-                <div class="text-slate-500 text-sm mb-1">İllik</div>
-                <div class="text-lg font-semibold" id="out-year">—</div>
-                <div class="text-xs mt-1">Hesab: (I + II) / 2</div>
-                <div class="text-xs">Qiymət: <span id="out-year-grade">—</span></div>
-              </div>
-            </div>
-            <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">* Boş buraxılan KSQ-lar hesablanmaya qatılmadı.</div>
-          </div>
 
           <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
         </div>
@@ -375,7 +346,6 @@ document.getElementById('year').textContent = new Date().getFullYear();
     err.classList.add('hidden'); err.textContent='';
     warn.classList.add('hidden'); clearOutputs();
     out.classList.add('hidden');
-    $id('calc-card')?.scrollTo({top:0,behavior:'smooth'});
   }
   resetBtn?.addEventListener('click', resetCalc);
 
@@ -431,7 +401,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
       $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
     }
     const out=$id('calc-output');
-    out.classList.remove('hidden'); out.scrollIntoView({behavior:'smooth',block:'start'});
+    out.scrollIntoView({behavior:'smooth',block:'start'});
 
     if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
       const yearVal=+(((t1+t2)/2).toFixed(2));

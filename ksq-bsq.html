@@ -97,9 +97,40 @@ select:invalid,
 #dark-toggle:checked + span { background:#334155; }
 #dark-toggle:checked + span .dot { transform: translateX(16px); }
 
-.dark html, .dark body, .dark .scrollarea{ scrollbar-color:rgba(180,180,255,.25) transparent; }
-::-webkit-scrollbar{ width:12px; height:12px;} ::-webkit-scrollbar-thumb{ border-radius:10px; background:rgba(100,100,100,.4);}
-::-webkit-scrollbar-thumb:hover{ background:rgba(100,100,100,.6);} ::-webkit-scrollbar-track{ background:transparent; }
+/* --- Compact scrollbars --- */
+html, body{
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100,100,100,.45) transparent;
+}
+
+/* WebKit (Chrome/Edge/Safari) */
+::-webkit-scrollbar{
+  width:8px;           /* istəsən 6px edə bilərsən */
+  height:8px;
+}
+::-webkit-scrollbar-thumb{
+  background:rgba(100,100,100,.45);
+  border-radius:9999px;
+  border:2px solid transparent; /* daha zərif görünüş */
+  background-clip:content-box;
+}
+::-webkit-scrollbar-thumb:hover{
+  background:rgba(100,100,100,.65);
+}
+::-webkit-scrollbar-track{ background:transparent; }
+
+/* Dark üçün bir az açıq rəng */
+.dark html, .dark body{
+  scrollbar-color: rgba(180,180,255,.30) transparent;
+}
+.dark ::-webkit-scrollbar-thumb{
+  background: rgba(180,180,255,.30);
+}
+.dark ::-webkit-scrollbar-thumb:hover{
+  background: rgba(180,180,255,.45);
+}
+
 /* Settings popover ekrana sabitlensin və həmişə üst qatda qalsın */
 /* === Premium Fancy Select (index kimi) === */
 .fs-wrap{position:relative; display:block; width:100%;}

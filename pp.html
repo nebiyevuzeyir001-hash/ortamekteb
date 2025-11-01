@@ -3,9 +3,45 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Perspektiv (illik) plan — EduPlan</title>
-<meta name="description" content="Fənn üzrə illik perspektiv plan (PP) faylları. Seç və yüklə.">
+<title>Perspektiv (illik) plan (PP) — Fənn üzrə illik planlar | EduPlan</title>
+<meta name="description" content="Fənn üzrə illik perspektiv plan (PP) faylları.">
 <link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
+<link rel="canonical" href="https://www.eduplan.az/pp.html" />
+<meta name="keywords" content="Perspektiv plan, PP, illik plan, müəllim resursları, EduPlan, Azərbaycan məktəbləri" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="EduPlan.az" />
+<meta name="language" content="az" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Perspektiv (illik) plan — EduPlan" />
+<meta property="og:description" content="Fənni seçin və illik PP fayllarını PDF/DOCX formatında yükləyin." />
+<meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg" />
+<meta property="og:url" content="https://www.eduplan.az/pp.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="EduPlan" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Perspektiv (illik) plan — EduPlan" />
+<meta name="twitter:description" content="Fənni seçin və illik PP fayllarını yükləyin." />
+<meta name="twitter:image" content="https://www.eduplan.az/assets/og-image.jpg" />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"Perspektiv (illik) plan",
+  "url":"https://www.eduplan.az/pp.html",
+  "description":"Fənn üzrə illik Perspektiv plan (PP) faylları.",
+  "isPartOf":{"@type":"Website","name":"EduPlan","url":"https://www.eduplan.az/"},
+  "breadcrumb":{"@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://www.eduplan.az/"},
+    {"@type":"ListItem","position":2,"name":"Perspektiv (illik) plan","item":"https://www.eduplan.az/pp.html"}
+  ]}
+}
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- (İstəyə görə) AdSense — indexdəki kimi -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
@@ -97,8 +133,12 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 
 <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
   <section class="mb-6 sm:mb-8">
-    <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">Perspektiv (illik) plan</h1>
-    <p class="mt-2 text-slate-600 dark:text-slate-300">Fənni seçin və illik PP fayllarını yükləyin.</p>
+<h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">
+  Perspektiv (illik) plan — PP faylları
+</h1>
+<p class="mt-2 text-slate-600 dark:text-slate-300">
+  Fənni seçin və tədris ili üzrə perspektiv plan (PP) fayllarını PDF / DOCX formatında yükləyin.
+</p>
   </section>
 
   <section class="add-shadow">
@@ -120,7 +160,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
             <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
               <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
             </div>
-            <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
+            <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4" aria-live="polite"></div>
           </div>
         </div>
       </div>
@@ -135,8 +175,8 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 <!-- 15s interstitial download modal (indexlə eyni) -->
 <div id="dlModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60">
   <div class="relative w-[92%] max-w-[440px] rounded-3xl bg-[#121212] text-white p-4 sm:p-5 shadow-2xl" id="dlCard">
-    <button id="dlClose" class="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-800 shadow">✕</button>
-    <div class="mb-3 text-sm text-gray-300">Preparing your download</div>
+    <button id="dlClose" aria-label="Pencərəni bağla" class="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-800 shadow">✕</button>
+    <div class="mb-3 text-sm text-gray-300">Yüklənməniz hazırlanır</div>
     <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
       <div class="w-full grid place-items-center" style="min-height:250px">
         <ins class="adsbygoogle" id="modal-ad" style="display:inline-block;width:300px;height:250px"
@@ -150,7 +190,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
             conic-gradient(#8b5cf6 0deg, #8b5cf6 0deg, #333 0deg, #333 360deg);"></div>
           <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
         </div>
-        <div class="text-sm text-gray-300" id="dlStatus">Please wait a few moments for the download to begin</div>
+        <div class="text-sm text-gray-300" id="dlStatus">Yükləmə başlaması üçün zəhmət olmasa gözləyin</div>
       </div>
     </div>
     <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
@@ -185,13 +225,56 @@ function option(el,v,t){const o=document.createElement('option');o.value=v;o.tex
 function addPlaceholder(selectEl,label){const o=document.createElement('option');o.value="";o.textContent=label;o.disabled=true;o.selected=true;o.hidden=true;selectEl.appendChild(o);selectEl.required=true}
 function enhanceFancySelect(select){
   if(select.dataset.fancyMounted==='1'){const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null;if(old)old.replaceWith(select);select.dataset.fancyMounted='0'}
-  const wrap=document.createElement('div');wrap.className='fs-wrap';wrap.setAttribute('aria-expanded','false');
-  const btn=document.createElement('button');btn.type='button';btn.className='fs-btn';btn.textContent=select.options[select.selectedIndex]?.text||select.getAttribute('placeholder')||'Seçin';
-  const menu=document.createElement('div');menu.className='fs-menu';
-  Array.from(select.options).forEach(o=>{const item=document.createElement('div');item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':'');item.textContent=o.text;item.addEventListener('click',()=>{Array.from(select.options).forEach(op=>op.selected=(op===o));select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));btn.textContent=o.text;wrap.setAttribute('aria-expanded','false')});menu.appendChild(item)});
+const wrap=document.createElement('div');wrap.className='fs-wrap';wrap.setAttribute('aria-expanded','false');
+
+const btn=document.createElement('button');
+btn.type='button';
+btn.className='fs-btn';
+btn.setAttribute('aria-haspopup','listbox');
+btn.setAttribute('aria-expanded','false');
+btn.textContent=select.options[select.selectedIndex]?.text||select.getAttribute('placeholder')||'Seçin';
+
+const menu=document.createElement('div');
+menu.className='fs-menu';
+menu.setAttribute('role','listbox');
+
+Array.from(select.options).forEach(o=>{
+  const item=document.createElement('div');
+  item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':'');
+  item.setAttribute('role','option');
+  item.setAttribute('aria-selected', String(o.selected));
+  item.textContent=o.text;
+  item.addEventListener('click',()=>{
+    Array.from(select.options).forEach(op=>op.selected=(op===o));
+    // aria-selected bayraqlarını yenilə
+    menu.querySelectorAll('[role="option"]').forEach(el=>el.setAttribute('aria-selected','false'));
+    item.setAttribute('aria-selected','true');
+
+    select.value=o.value;
+    select.dispatchEvent(new Event('change',{bubbles:true}));
+    btn.textContent=o.text;
+    wrap.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-expanded','false');
+  });
+  menu.appendChild(item)
+});
   select.classList.add('fs-native');select.tabIndex=-1;select.setAttribute('aria-hidden','true');
   select.parentNode.insertBefore(wrap,select);wrap.appendChild(btn);wrap.appendChild(select);wrap.appendChild(menu);select.dataset.fancyMounted='1';
-  btn.addEventListener('mousedown',e=>e.preventDefault());btn.addEventListener('click',e=>{e.stopPropagation();const open=wrap.getAttribute('aria-expanded')==='true';document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));wrap.setAttribute('aria-expanded', String(!open))});document.addEventListener('click',()=>wrap.setAttribute('aria-expanded','false'));
+btn.addEventListener('mousedown',e=>e.preventDefault());
+btn.addEventListener('click',e=>{
+  e.stopPropagation();
+  const open = wrap.getAttribute('aria-expanded')==='true';
+  document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>{
+    w.setAttribute('aria-expanded','false');
+    w.querySelector('.fs-btn')?.setAttribute('aria-expanded','false');
+  });
+  wrap.setAttribute('aria-expanded', String(!open));
+  btn.setAttribute('aria-expanded', String(!open));
+});
+document.addEventListener('click',()=>{
+  wrap.setAttribute('aria-expanded','false');
+  btn.setAttribute('aria-expanded','false');
+});
 }
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
@@ -203,7 +286,7 @@ function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-c
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
-function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" data-download="${it.dl}" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div></div></div></div>`;wrap.appendChild(card)})}
+function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" data-download="${it.dl}" rel="noopener noreferrer" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div></div></div></div>`;wrap.appendChild(card)})}
 function toggleResults(){const grid=$('#pp-results');const count=$('#pp-count-row');if(state.ppSubject){hideEmpty('pp-results-card');count?.classList.remove('hidden');renderPP()}else{count?.classList.add('hidden');grid.innerHTML='';showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
 /* === Feed === */
@@ -223,12 +306,13 @@ document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubje
   function updateRing(){ const deg=((DURATION - t)/DURATION)*360; RING.style.background=`conic-gradient(#8b5cf6 ${deg}deg, #333 ${deg}deg 360deg)`; }
   function closeModal(){ MODAL.classList.add('hidden'); MODAL.classList.remove('flex'); if(timer) clearInterval(timer); timer=null; }
   function finish(){ if(finished) return; finished=true; closeModal(); if(!targetUrl) return;
-    const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove();
+    const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener noreferrer'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove();
     requestAnimationFrame(()=>{ if(document.visibilityState!=='hidden'){ try{ window.location.assign(targetUrl); }catch{} }});
   }
-  function openModal(url){
-    targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex');
-    t=DURATION; COUNT.textContent=t; STATUS.textContent='Please wait a few moments for the download to begin'; BAR.style.width='0%'; updateRing();
+function openModal(url){
+  targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex');
+  document.getElementById('modal-ad')?.classList.add('block');
+  t=DURATION; COUNT.textContent=t; STATUS.textContent='Yükləmə başlaması üçün zəhmət olmasa gözləyin'; BAR.style.width='0%'; updateRing();
     if(!modalAdRendered){ modalAdRendered=true; const tryRender=()=>{ try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch{ setTimeout(()=>tryRender(),400);} }; adsReady?tryRender():setTimeout(()=>tryRender(),500); }
     timer=setInterval(()=>{ t--; COUNT.textContent=t>=0?t:0; const p=((DURATION - t)/DURATION)*100; BAR.style.width=Math.min(100,Math.max(0,p))+'%'; updateRing(); if(t<=0) finish(); },1000);
   }

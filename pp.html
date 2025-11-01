@@ -63,39 +63,46 @@ select,input{background-color:var(--card)!important;color:var(--text)!important}
 #dark-toggle:checked+span{background:#334155} #dark-toggle:checked+span .dot{transform:translateX(16px)}
 .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
 .panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
-/* --- Compact scrollbars (KSQ/BSQ ilə eyni) --- */
+/* --- Scrollbar (orta qalınlıq) --- */
+:root { --sb-size: 12px; }        /* 10–14px arası rahatdır */
+@media (min-width: 1024px){
+  :root { --sb-size: 12px; }      /* istəsən 14px də edə bilərsən */
+}
+
 html, body{
   /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(100,100,100,.45) transparent;
+  scrollbar-width: auto;          /* thin deyil */
+  scrollbar-color: rgba(110,110,120,.45) transparent;
 }
 
 /* WebKit (Chrome/Edge/Safari) */
 ::-webkit-scrollbar{
-  width:8px;      /* istəyirsənsə 6px də edə bilərsən */
-  height:8px;
+  width: var(--sb-size);
+  height: var(--sb-size);
 }
 ::-webkit-scrollbar-thumb{
-  background: rgba(100,100,100,.45);
+  background: rgba(110,110,120,.50);
   border-radius: 9999px;
-  border: 2px solid transparent;   /* daha zərif görünüş */
+  border: 3px solid transparent;      /* içini bir az “boş” göstərir */
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover{
-  background: rgba(100,100,100,.65);
+  background: rgba(110,110,120,.70);
 }
 ::-webkit-scrollbar-track{ background: transparent; }
 
-/* Dark üçün bir az açıq ton */
+/* Dark ton */
 .dark html, .dark body{
-  scrollbar-color: rgba(180,180,255,.30) transparent;
+  scrollbar-color: rgba(185,195,255,.35) transparent;
 }
 .dark ::-webkit-scrollbar-thumb{
-  background: rgba(180,180,255,.30);
+  background: rgba(185,195,255,.35);
+  border: 3px solid transparent;
 }
 .dark ::-webkit-scrollbar-thumb:hover{
-  background: rgba(180,180,255,.45);
+  background: rgba(185,195,255,.55);
 }
+
 
 /* Premium select + fancy menu (indexdəki ilə eyni) */
 .select-premium{appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}

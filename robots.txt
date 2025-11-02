@@ -1,3 +1,4 @@
 User-agent: *
-Allow: /timetable.html
+Allow: /
+
 Sitemap: https://www.eduplan.az/sitemap.xml

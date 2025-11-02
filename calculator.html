@@ -155,7 +155,10 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 /* dark ton kiçik tənzimlər */
 .dark .mode-row{ border-color:#253046; background:#0f172a; }
 .dark .actions-row .ep-btn-secondary{ background:#0f172a; border-color:#253046; }
-#fs-t1, #fs-t2 { scroll-margin-top: 80px; } /* header ~hündürlüyü */
+/* sticky header üçün offset */
+html{ scroll-padding-top: 92px; }      /* fallback */
+#fs-t1, #fs-t2{ scroll-margin-top: 92px; }  /* dəqiq hədəf */
+
 
 </style>
 
@@ -371,32 +374,23 @@ updateModeUI();
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
 
   function clearOutputs(){ ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade','out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id=>{ $id(id).textContent='—'; }); }
-  function resetCalc(){
-    ['t1','t2'].forEach(p=>{
-      ['1','2','3','4','5','6'].forEach(n=>{ const el=$id(`${p}-ksq${n}`); if(el) el.value=''; });
-      const bsq=$id(`${p}-bsq`); if(bsq) bsq.value='';
+function resetCalc(){
+  ['t1','t2'].forEach(p=>{
+    ['1','2','3','4','5','6'].forEach(n=>{
+      const el=$id(`${p}-ksq${n}`); if(el) el.value='';
     });
-    err.classList.add('hidden'); err.textContent='';
-    warn.classList.add('hidden'); clearOutputs();
-out.classList.add('hidden');
-// sticky header hündürlüyünü nəzərə al
-const headerH = document.querySelector('header')?.offsetHeight || 0;
-// görünən fieldset: rejim t2-dirsə II yarımil, yoxsa I yarımil
-const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
+    const bsq=$id(`${p}-bsq`); if(bsq) bsq.value='';
+  });
 
-// layout gizlətmə/temizləmədən sonra ölçülər dəqiq olsun deyə 1 frame gözlə
-requestAnimationFrame(() => {
-  if (target) {
-    const y = target.getBoundingClientRect().top + window.scrollY - headerH - 8; // 8px bufer
-    window.scrollTo({ top: y, behavior: 'smooth' });
-  } else {
-    // ehtiyat: heç bir rejim seçilməyibsə kartın başlanğıcına get
-    const cardTop = $id('calc-card')?.getBoundingClientRect().top + window.scrollY - headerH - 8;
-    if (!isNaN(cardTop)) window.scrollTo({ top: cardTop, behavior: 'smooth' });
-  }
-});
+  err.classList.add('hidden'); err.textContent='';
+  warn.classList.add('hidden'); clearOutputs();
+  out.classList.add('hidden');
 
-  }
+  // görünən bölmənin tam üstündə dayandır
+  const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
+  (target ?? $id('calc-card'))?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
   resetBtn?.addEventListener('click', resetCalc);
 
   const numOrNull=v=>(v===''||v==null)?null:(isFinite(+v)?+v:null);
@@ -430,41 +424,52 @@ requestAnimationFrame(() => {
     const el=$id(id); el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
   });
 
-  btn?.addEventListener('click',()=>{
-    err.classList.add('hidden'); err.textContent='';
-    updateModeUI();
-    if(!mode){
-      err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-      err.classList.remove('hidden'); return;
-    }
-    let t1=null,t2=null;
-    if(mode!=='t2'){
-      const r1=computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'});
-      if(r1 && r1.error) return; t1=(typeof r1==='number')?r1:null;
-    }else{
-      $id('out-t1').textContent='—'; $id('out-t1-ksq').textContent='—'; $id('out-t1-bsq').textContent='—'; $id('out-t1-grade').textContent='—';
-    }
-    if(mode!=='t1'){
-      const r2=computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'});
-      if(r2 && r2.error) return; t2=(typeof r2==='number')?r2:null;
-    }else{
-      $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
-    }
-prevScrollY = window.scrollY; 
-out.classList.remove('hidden');                         // ← əlavə olundu
-out.scrollIntoView({behavior:'smooth',block:'start'});
+btn?.addEventListener('click',()=>{
+  err.classList.add('hidden'); err.textContent='';
+  updateModeUI();
 
+  if(!mode){
+    err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
+    err.classList.remove('hidden'); return;
+  }
 
-    if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
-      const yearVal=+(((t1+t2)/2).toFixed(2));
-      $id('out-year').textContent=yearVal.toFixed(2);
-      $id('out-year-grade').textContent=to5(yearVal);
-      $id('out-year-card').classList.remove('hidden');
-    }else{
-      $id('out-year').textContent='—'; $id('out-year-grade').textContent='—';
-      $id('out-year-card').classList.add('hidden');
-    }
-  });
+  let t1=null, t2=null, hadError=false;
+
+  // I yarımil
+  if(mode!=='t2'){
+    const r1 = computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'});
+    if(r1 && r1.error) hadError=true; else if(typeof r1==='number') t1=r1;
+  }else{
+    ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id=>{$id(id).textContent='—';});
+  }
+
+  // II yarımil
+  if(mode!=='t1'){
+    const r2 = computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'});
+    if(r2 && r2.error) hadError=true; else if(typeof r2==='number') t2=r2;
+  }else{
+    ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id=>{$id(id).textContent='—';});
+  }
+
+  // nəticə panelini göstər və aşağı apar
+  out.classList.remove('hidden');
+  out.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // illik yalnız hər ikisi rəqəm olarsa
+  if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
+    const yearVal = +(((t1+t2)/2).toFixed(2));
+    $id('out-year').textContent = yearVal.toFixed(2);
+    $id('out-year-grade').textContent = to5(yearVal);
+    $id('out-year-card').classList.remove('hidden');
+  }else{
+    $id('out-year').textContent='—'; $id('out-year-grade').textContent='—';
+    $id('out-year-card').classList.add('hidden');
+  }
+
+  // hər iki yarımdan ən azı biri düzgün hesablansa panel qalır;
+  // səhv varsa mesaj artıq computeTerm içində yazılıb
+});
+
 })();
 
 (function init(){ if('scrollRestoration' in history) history.scrollRestoration='manual'; window.scrollTo(0,0); })();

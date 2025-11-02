@@ -103,36 +103,46 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
   width:min(720px,100%);   /* 520 → 720 */
   margin-inline:auto;
 }
+
 .mode-row{
-  display:flex; align-items:center; gap:.75rem;
-  border:none; background:transparent;   /* qutu YOXDUR */
-  padding:0; margin:0 0 8px 0;
+  display:flex;
+  flex-direction:column;     /* ✅ başlıq üstə, qrup altda */
+  align-items:flex-start;
+  gap:.5rem;
+  border:none;
+  background:transparent;
+  padding:0;
+  margin:0 0 8px 0;
+}
+.mode-row > span{            /* başlıq sətiri */
+  display:block;
+  font-size:0.875rem;
+  padding-left:2px;
 }
 
 .mode-group{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:.5rem; flex:1;
+  grid-template-columns:repeat(3,1fr);  /* ✅ həmişə 3 düymə yan-yana */
+  gap:.5rem;
+  width:100%;                           /* tam eni tut */
+  flex:initial;
 }
+
 .mode-group button{
-  min-width:0;              /* grid daxilində sığma */
+  min-width:0;
+  height:38px;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.2;
+  padding:.5rem .6rem;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;   /* çox dar ekranda ellipsis */
-  min-height:40px; height:auto;
-  border-radius:10px; font-size:12px; line-height:1.2;
-  padding:.5rem .75rem;
+  text-overflow:ellipsis;               /* dar ekranda sığmayanı ... */
 }
-
-/* çox dar ekran üçün 2 sütun — tam sığsın */
-@media (max-width:420px){ .mode-group{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:360px){
-  .mode-group button{ font-size:11px; padding:.45rem .6rem; }
+  .mode-group button{ font-size:11px; padding:.45rem .55rem; }
 }
 
-@media (max-width:380px){
-  .mode-group button{ font-size:11px; padding:.45rem .6rem; }
-}
 
 
 /* düymə sırası */

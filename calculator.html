@@ -105,38 +105,36 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 }
 .mode-row{
   display:flex; align-items:center; gap:.75rem;
-  border:1px solid var(--border); border-radius:12px;
-  padding:10px 12px;
+  border:none; background:transparent;   /* qutu YOXDUR */
+  padding:0; margin:0 0 8px 0;
 }
+
 .mode-group{
   display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap:.5rem; 
-  flex:1;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.5rem; flex:1;
 }
 .mode-group button{
-  min-width:0;
+  min-width:0;              /* grid daxilində sığma */
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
+  text-overflow:ellipsis;   /* çox dar ekranda ellipsis */
   min-height:40px; height:auto;
   border-radius:10px; font-size:12px; line-height:1.2;
   padding:.5rem .75rem;
 }
+
+/* çox dar ekran üçün 2 sütun — tam sığsın */
+@media (max-width:420px){ .mode-group{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:360px){
+  .mode-group button{ font-size:11px; padding:.45rem .6rem; }
+}
+
 @media (max-width:380px){
   .mode-group button{ font-size:11px; padding:.45rem .6rem; }
 }
 
-/* çox dar ekranlar üçün 2 sütun */
-@media (max-width:420px){
-  .mode-group{ grid-template-columns:repeat(2,1fr); }
-}
-@media (max-width: 360px){
-  .mode-group button{
-    font-size:11px;
-    padding:.45rem .6rem;
-  }
-}
+
 /* düymə sırası */
 .actions-row{ display:flex; gap:.75rem; margin-top:12px; }
 .actions-row .ep-btn-primary{ height:44px; border-radius:14px; font-weight:700; }
@@ -199,7 +197,6 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
         <div class="p-4 border-b"><h3 class="font-semibold">🧮 Bal kalkulyatoru</h3></div>
 
         <div class="scrollarea px-4 pt-2 pb-4 space-y-3">
-<div class="scrollarea px-4 pt-3 pb-5">
   <div class="calc-inner">
     <!-- Rejim seçimi -->
     <div class="mode-row">
@@ -271,7 +268,7 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 
     <div id="calc-error" class="hidden text-[12px] text-rose-500 mt-2"></div>
   </div>
-</div>
+
 
         </div>
       </div>
@@ -355,7 +352,7 @@ let prevScrollY = 0;
       mode=btn.dataset.mode;
       updateModeUI();
       btn.blur();
-      requestAnimationFrame(()=>{ window.scrollTo(0,keepY); });
+requestAnimationFrame(()=>window.scrollTo({top: keepY, left: 0, behavior: 'instant'}));
     });
   });
 updateModeUI();
@@ -370,8 +367,6 @@ updateModeUI();
     });
     err.classList.add('hidden'); err.textContent='';
     warn.classList.add('hidden'); clearOutputs();
-out.classList.add('hidden');
-window.scrollTo({ top: prevScrollY, behavior:'smooth' });  // ← əlavə
 out.classList.add('hidden');
 window.scrollTo({ top: prevScrollY, behavior:'smooth' });
 

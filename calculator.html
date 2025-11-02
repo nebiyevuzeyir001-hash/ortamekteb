@@ -295,140 +295,58 @@ html{ scroll-padding-top: 92px; }      /* fallback */
         </div>
       </div>
     </section>
-<!-- Məlumat — Bal kalkulyatoru (uzun versiya) -->
+<!-- Məlumat -->
 <section class="mt-10 add-shadow">
   <div class="panel-card rounded-2xl shadow-sm transition bg-white relative">
     <div class="p-4 border-b"><h3 class="font-semibold">Məlumat</h3></div>
 
-    <div class="p-5 space-y-7 text-[15px] leading-7 text-slate-700 dark:text-slate-300">
-      <!-- A) Nədir və nə üçündür -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Kalkulyator nədir?</h4>
-        <p>
-          Bu alət yarımil və illik nəticələri <span class="font-medium">KSQ 40% + BSQ 60%</span> çəki modeli ilə hesablamaq
-          üçün hazırlanıb. I və II yarımil üçün ayrı-ayrı bal çıxarır, “Hər ikisi” rejimində isə onların ortalamasına əsasən
-          <span class="font-medium">illik</span> nəticəni göstərir. Hesablamalar brauzerdə aparılır, məlumatlar serverə göndərilmir.
-        </p>
-      </div>
+    <div class="p-5 space-y-4 text-[15px] leading-7 text-slate-700 dark:text-slate-300">
+      <p>
+        <strong>Bal kalkulyatoru</strong> müəllim və şagirdlər üçün KSQ və BSQ nəticələrinə əsasən yarımil və illik
+        qiymətlərin avtomatik hesablanması məqsədilə hazırlanmışdır. Alqoritm <strong>KSQ 40% + BSQ 60%</strong> çəkisinə
+        əsaslanır və nəticələr real vaxtda, tam olaraq brauzerdə hesablanır.
+      </p>
 
-      <!-- B) İstifadə qaydası -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">İstifadə qaydası (addım-addım)</h4>
-        <ol class="list-decimal pl-5 space-y-1">
-          <li><span class="font-medium">Rejimi seçin:</span> I yarımil, II yarımil və ya <span class="font-medium">Hər ikisi</span>.</li>
-          <li><span class="font-medium">KSQ-ları daxil edin (0–100):</span> Olmayan KSQ-ları boş buraxa bilərsiniz — onlar hesablamaya qatılmır.</li>
-          <li><span class="font-medium">BSQ daxil edin (0–100):</span> BSQ mütləqdir; boş saxlanıldıqda sistem xəbərdarlıq edir.</li>
-          <li><span class="font-medium">Hesabla</span> düyməsinə basın. Kartlarda yarımil balı, KSQ ortalaması, BSQ və qiymət görünəcək.</li>
-          <li>“Hər ikisi” seçilib hər iki yarımil düzgün hesablanıbsa, üçüncü kartda <span class="font-medium">illik</span> nəticə çıxacaq.</li>
-          <li><span class="font-medium">Sıfırla</span> bütün xanaları təmizləyir və panelin əvvəlinə qaytarır.</li>
-        </ol>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Qısa yol: sahədə <kbd>Enter</kbd> düyməsi ilə də hesablanır.</p>
-      </div>
+      <p>
+        İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir. KSQ sahələrinə
+        daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəni formalaşdırır. “Hər ikisi” rejimində iki yarımilin
+        ortası <strong>İllik bal</strong> kimi hesablanır.
+      </p>
 
-      <!-- C) Daxiletmə qaydaları -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Daxiletmə qaydaları</h4>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>KSQ sahələri <em>istəyə bağlıdır</em>; boş qalan KSQ-lar ortalamaya daxil edilmir.</li>
-          <li>BSQ sahəsi <span class="font-medium">mütləqdir</span> və 0–100 aralığında olmalıdır.</li>
-          <li>Qeyri-rəqəm və ya aralıqdan kənar dəyərlər üçün səhv mesajı göstərilir.</li>
-          <li>Ondalık dəyərlər qəbul olunur (məs.: 87.5).</li>
-        </ul>
-      </div>
+      <p>
+        KSQ sahələri <em>istəyə bağlıdır</em> — boş buraxılanlar ortalamaya daxil edilmir. BSQ isə <em>mütləq daxil edilməlidir</em>;
+        0–100 aralığından kənar dəyərlər qəbul edilmir. Ondalıq rəqəmlər (məs: 87.5) dəstəklənir.
+      </p>
 
-      <!-- D) Hesablama formulları -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Hesablama qaydası və formul</h4>
-        <div class="rounded-xl border border-slate-200 p-3 bg-white/60 dark:bg-white/5 text-sm">
-          <div><span class="font-medium">KSQ orta</span> = daxil edilmiş KSQ-ların arifmetik ortası</div>
-          <div><span class="font-medium">Yarımil</span> = (KSQ orta × 0.40) + (BSQ × 0.60)</div>
-          <div><span class="font-medium">İllik</span> = (I yarımil + II yarımil) / 2</div>
-        </div>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Qeyd: KSQ daxil edilməyibsə, KSQ orta <code>0</code> qəbul olunmur — sadəcə hesablamadan çıxarılır.
-        </p>
-      </div>
+      <p>
+        Kalkulyator nəticələri 2–5 qiymət şkalasında göstərir:
+        <br>
+        <strong>81–100 → 5</strong>, <strong>61–80 → 4</strong>, <strong>41–60 → 3</strong>, <strong>0–40 → 2</strong>.
+      </p>
 
-      <!-- E) Qiymət şkalası -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Qiymət şkalası</h4>
-        <div class="grid sm:grid-cols-4 gap-2 text-sm">
-          <div class="rounded-lg border border-slate-200 px-3 py-2"><span class="font-semibold">5</span> — 81–100</div>
-          <div class="rounded-lg border border-slate-200 px-3 py-2"><span class="font-semibold">4</span> — 61–80</div>
-          <div class="rounded-lg border border-slate-200 px-3 py-2"><span class="font-semibold">3</span> — 41–60</div>
-          <div class="rounded-lg border border-slate-200 px-3 py-2"><span class="font-semibold">2</span> — 0–40</div>
-        </div>
-      </div>
+      <p>
+        <strong>İstifadə qaydası:</strong> Rejimi seçin → KSQ və BSQ dəyərlərini daxil edin → “Hesabla” düyməsinə basın. Nəticələr
+        dərhal aşağıda görünəcək. “Sıfırla” düyməsi bütün xanaları təmizləyir və səhifəni yuxarı qaytarır.
+      </p>
 
-      <!-- F) Nümunə hesablamalar -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Nümunə</h4>
-        <div class="grid lg:grid-cols-2 gap-4 text-sm">
-          <div class="rounded-xl border border-slate-200 p-3 bg-white/60 dark:bg-white/5">
-            <div class="font-medium mb-1">I yarımil</div>
-            <div>KSQ-lar: 70, 80, 90 → KSQ orta = (70+80+90)/3 = <span class="font-medium">80</span></div>
-            <div>BSQ: 85</div>
-            <div class="mt-1">Yarımil = 80×0.40 + 85×0.60 = <span class="font-medium">83</span> → Qiymət: <span class="font-medium">5</span></div>
-          </div>
-          <div class="rounded-xl border border-slate-200 p-3 bg-white/60 dark:bg-white/5">
-            <div class="font-medium mb-1">II yarımil + illik</div>
-            <div>KSQ-lar: 60, 75 → KSQ orta = <span class="font-medium">67.5</span></div>
-            <div>BSQ: 70</div>
-            <div class="mt-1">Yarımil = 67.5×0.40 + 70×0.60 = <span class="font-medium">69</span> → Qiymət: <span class="font-medium">4</span></div>
-            <div class="mt-1">İllik = (83 + 69)/2 = <span class="font-medium">76</span> → Qiymət: <span class="font-medium">4</span></div>
-          </div>
-        </div>
-      </div>
+      <p>
+        <strong>Məlumatların təhlükəsizliyi:</strong> daxil etdiyiniz bütün dəyərlər yalnız sizin brauzerdə emal olunur,
+        serverə ötürülmür və saxlanmır. Hesablamadan sonra səhifəni yenilədikdə məlumatlar sıfırlanır.
+      </p>
 
-      <!-- H) Pedaqoji qeydlər -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Pedaqoji qeydlər</h4>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>KSQ-ların məqsədi mövzu blokları üzrə ardıcıl izləmədir; ən azı 2–3 KSQ daxil etmək daha real nəticə verir.</li>
-          <li>BSQ yarımilin yekunu olduğundan nəticəyə təsiri daha böyükdür (60%).</li>
-          <li>İllik nəticə yarımillər üzrə davamiyyət və stabilliyi də əks etdirir.</li>
-        </ul>
-      </div>
+      <p>
+        Bu model yalnız standart <strong>KSQ 40% / BSQ 60%</strong> çəkisinə uyğundur. Fərqli çəki sistemləri (məs: 50/50 və ya 30/70)
+        üçün gələcəkdə ayrıca funksiyalar əlavə edilə bilər.
+      </p>
 
-      <!-- I) Məlumat təhlükəsizliyi -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Məlumatın emalı və təhlükəsizlik</h4>
-        <p>
-          Daxil etdiyiniz bal dəyərləri yalnız sizin brauzerdə emal olunur, serverə ötürülmür. Səhifəni yenilədikdə
-          xanalar sıfırlana bilər; paylaşmaq istədiyiniz nəticələr üçün ekran şəkli götürə bilərsiniz.
-        </p>
-      </div>
-
-      <!-- J) Texniki qeydlər və uyğunluq -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Texniki qeydlər</h4>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Kalkulyator müasir brauzerlərdə (Chrome, Edge, Firefox, Safari) tam dəstəklənir.</li>
-          <li>Əlçatanlıq üçün klaviatura ilə idarə (Tab, Shift+Tab, Enter) mümkündür.</li>
-          <li>Şrift ölçüsü böyüdüldükdə layout sabit qalması üçün sahələr elastikdir.</li>
-        </ul>
-      </div>
-
-      <!-- K) Məhdudiyyətlər -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Məhdudiyyətlər</h4>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Model yalnız <span class="font-medium">KSQ 40% / BSQ 60%</span> çəkisinə uyğundur; alternativ çəkilər üçün ayrıca alət tələb olunur.</li>
-          <li>Qiymət intervalı (2–5) standart şkalaya əsaslanır; məktəb daxilində fərqli şkala varsa, nəticəni uyğunlaşdırın.</li>
-        </ul>
-      </div>
-
-      <!-- L) Əlaqə -->
-      <div>
-        <h4 class="font-semibold text-slate-900 dark:text-white mb-1">Əlaqə və rəy</h4>
-        <p>
-          Suallarınız və təklifləriniz üçün <a href="mailto:eduplan.az@gmail.com" class="underline">eduplan.az@gmail.com</a> ünvanına yazın.
-          Rəyləriniz əsasında alət mütəmadi yaxşılaşdırılır.
-        </p>
-      </div>
+      <p>
+        Platforma tam pulsuzdur və tədris məqsədi daşıyır. Əlavə təklif və rəy üçün:
+        <a href="mailto:eduplan.az@gmail.com" class="underline">eduplan.az@gmail.com</a> ünvanına yaza bilərsiniz.
+      </p>
     </div>
   </div>
 </section>
+
 
 
 

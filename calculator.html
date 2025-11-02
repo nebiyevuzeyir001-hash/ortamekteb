@@ -142,6 +142,15 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 @media (max-width:360px){
   .mode-group button{ font-size:11px; padding:.45rem .55rem; }
 }
+/* Desktop-də rejim düymələrini bir az hündür et */
+@media (min-width: 1024px){
+  .mode-group button{
+    height: 46px;          /* 38px → 46px */
+    padding: .7rem .85rem; /* azca daha “ətli” olsun */
+    font-size: 13px;       /* oxunuş yaxşılaşır */
+    border-radius: 12px;   /* forma uyğun yumrulanma */
+  }
+}
 
 
 

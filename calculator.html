@@ -110,15 +110,23 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 }
 .mode-group{
   display:grid;
-  grid-template-columns:repeat(3, minmax(96px, 1fr));
-  gap:.5rem; flex:1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:.5rem; 
+  flex:1;
 }
 .mode-group button{
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
   min-height:40px; height:auto;
   border-radius:10px; font-size:12px; line-height:1.2;
   padding:.5rem .75rem;
-  white-space:nowrap;
 }
+@media (max-width:380px){
+  .mode-group button{ font-size:11px; padding:.45rem .6rem; }
+}
+
 /* çox dar ekranlar üçün 2 sütun */
 @media (max-width:420px){
   .mode-group{ grid-template-columns:repeat(2,1fr); }
@@ -265,7 +273,6 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
   </div>
 </div>
 
-          <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
         </div>
       </div>
     </section>
@@ -352,7 +359,6 @@ let prevScrollY = 0;
     });
   });
 updateModeUI();
-let prevScrollY = 0; // ✅ Səhifənin son mövqeyini saxlamaq üçün əlavə et
 
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
 
@@ -366,6 +372,9 @@ let prevScrollY = 0; // ✅ Səhifənin son mövqeyini saxlamaq üçün əlavə 
     warn.classList.add('hidden'); clearOutputs();
 out.classList.add('hidden');
 window.scrollTo({ top: prevScrollY, behavior:'smooth' });  // ← əlavə
+out.classList.add('hidden');
+window.scrollTo({ top: prevScrollY, behavior:'smooth' });
+
   }
   resetBtn?.addEventListener('click', resetCalc);
 
@@ -420,7 +429,7 @@ window.scrollTo({ top: prevScrollY, behavior:'smooth' });  // ← əlavə
     }else{
       $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
     }
-const out=$id('calc-output');
+prevScrollY = window.scrollY; 
 out.classList.remove('hidden');                         // ← əlavə olundu
 out.scrollIntoView({behavior:'smooth',block:'start'});
 

@@ -159,37 +159,6 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 html{ scroll-padding-top: 92px; }      /* fallback */
 #fs-t1, #fs-t2{ scroll-margin-top: 92px; }  /* dəqiq hədəf */
 
-/* === Məlumat: KSQ/BSQ/PP tablı panel === */
-.info-tabs { display:grid; gap:.75rem; }
-.info-tabs .tab-row{
-  display:flex; gap:.5rem; flex-wrap:wrap;
-}
-.info-tabs .tab-btn{
-  padding:.55rem .9rem; border-radius:9999px; font-weight:600; font-size:.9rem;
-  border:1px solid var(--border); background:var(--card); color:var(--text);
-  transition:filter .15s, box-shadow .2s, transform .06s;
-}
-.info-tabs .tab-btn[aria-selected="true"]{
-  background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%);
-  color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(79,70,229,.35);
-}
-.dark .info-tabs .tab-btn[aria-selected="true"]{
-  background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%);
-  box-shadow:0 6px 16px rgba(255,255,255,.10);
-}
-.info-tabs .panel{
-  border:1px solid var(--border); border-radius:14px; background:var(--card);
-  padding:16px;
-}
-.info-tabs .panel.hidden{ display:none; }
-.info-tabs h4{ font-weight:700; margin-bottom:.35rem; }
-.info-tabs p{ color:var(--muted); line-height:1.6; margin:.4rem 0; }
-.info-badges{ display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.35rem; }
-.info-badges span{
-  font-size:.75rem; padding:.15rem .5rem; border-radius:9999px;
-  background:rgba(148,163,184,.16); border:1px solid var(--border);
-}
-
 </style>
 
 <!-- AdSense -->

@@ -374,7 +374,14 @@ updateModeUI();
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
 
   function clearOutputs(){ ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade','out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id=>{ $id(id).textContent='—'; }); }
-function resetCalc(){
+// header örtməsin deyə offset-lə scroll
+function scrollToWithHeader(el){
+  const headerH = document.querySelector('header')?.offsetHeight || 0;
+  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 8; // 8px bufer
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
+  function resetCalc(){
   ['t1','t2'].forEach(p=>{
     ['1','2','3','4','5','6'].forEach(n=>{
       const el=$id(`${p}-ksq${n}`); if(el) el.value='';
@@ -388,7 +395,8 @@ function resetCalc(){
 
   // görünən bölmənin tam üstündə dayandır
   const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
-  (target ?? $id('calc-card'))?.scrollIntoView({ behavior:'smooth', block:'start' });
+const anchor = document.querySelector('#calc-card .p-4') || (target ?? $id('calc-card'));
+scrollToWithHeader(anchor);
 }
 
   resetBtn?.addEventListener('click', resetCalc);
@@ -453,7 +461,7 @@ btn?.addEventListener('click',()=>{
 
   // nəticə panelini göstər və aşağı apar
   out.classList.remove('hidden');
-  out.scrollIntoView({behavior:'smooth', block:'start'});
+scrollToWithHeader(out);
 
   // illik yalnız hər ikisi rəqəm olarsa
   if(mode==='both' && typeof t1==='number' && typeof t2==='number'){

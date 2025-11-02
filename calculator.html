@@ -547,31 +547,6 @@ scrollToWithHeader(out);
 
 (function init(){ if('scrollRestoration' in history) history.scrollRestoration='manual'; window.scrollTo(0,0); })();
 </script>
-  <script>
-// Məlumat tabları (heç nəyə toxunmur, müstəqildir)
-(() => {
-  const tabs = [
-    {btn: 'btn-ksq', panel: 'tab-ksq'},
-    {btn: 'btn-bsq', panel: 'tab-bsq'},
-    {btn: 'btn-pp',  panel: 'tab-pp'},
-  ];
-  const byId = id => document.getElementById(id);
-  function activate(id){
-    tabs.forEach(t=>{
-      const b = byId(t.btn), p = byId(t.panel), on = (t.panel === id);
-      b.setAttribute('aria-selected', on ? 'true' : 'false');
-      p.classList.toggle('hidden', !on);
-    });
-  }
-  tabs.forEach(t=>{
-    byId(t.btn)?.addEventListener('click', () => activate(t.panel));
-  });
-  // default: KSQ açıqdır; istəyirsənsə URL hash ilə aç: #info=bsq / #info=pp
-  const open = new URLSearchParams(location.hash.replace('#','')).get('info');
-  if (open === 'bsq') activate('tab-bsq');
-  if (open === 'pp')  activate('tab-pp');
-})();
-</script>
 
 </body>
 </html>

@@ -155,6 +155,7 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 /* dark ton kiçik tənzimlər */
 .dark .mode-row{ border-color:#253046; background:#0f172a; }
 .dark .actions-row .ep-btn-secondary{ background:#0f172a; border-color:#253046; }
+#fs-t1, #fs-t2 { scroll-margin-top: 80px; } /* header ~hündürlüyü */
 
 </style>
 
@@ -378,7 +379,22 @@ updateModeUI();
     err.classList.add('hidden'); err.textContent='';
     warn.classList.add('hidden'); clearOutputs();
 out.classList.add('hidden');
-window.scrollTo({ top: prevScrollY, behavior:'smooth' });
+// sticky header hündürlüyünü nəzərə al
+const headerH = document.querySelector('header')?.offsetHeight || 0;
+// görünən fieldset: rejim t2-dirsə II yarımil, yoxsa I yarımil
+const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
+
+// layout gizlətmə/temizləmədən sonra ölçülər dəqiq olsun deyə 1 frame gözlə
+requestAnimationFrame(() => {
+  if (target) {
+    const y = target.getBoundingClientRect().top + window.scrollY - headerH - 8; // 8px bufer
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  } else {
+    // ehtiyat: heç bir rejim seçilməyibsə kartın başlanğıcına get
+    const cardTop = $id('calc-card')?.getBoundingClientRect().top + window.scrollY - headerH - 8;
+    if (!isNaN(cardTop)) window.scrollTo({ top: cardTop, behavior: 'smooth' });
+  }
+});
 
   }
   resetBtn?.addEventListener('click', resetCalc);

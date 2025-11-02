@@ -108,9 +108,26 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
   border:1px solid var(--border); border-radius:12px;
   padding:10px 12px;
 }
-.mode-group{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; flex:1; }
+.mode-group{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(96px, 1fr));
+  gap:.5rem; flex:1;
+}
 .mode-group button{
-  height:36px; border-radius:10px; font-size:12px; line-height:1; padding:0 .75rem;
+  min-height:40px; height:auto;
+  border-radius:10px; font-size:12px; line-height:1.2;
+  padding:.5rem .75rem;
+  white-space:nowrap;
+}
+/* çox dar ekranlar üçün 2 sütun */
+@media (max-width:420px){
+  .mode-group{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 360px){
+  .mode-group button{
+    font-size:11px;
+    padding:.45rem .6rem;
+  }
 }
 /* düymə sırası */
 .actions-row{ display:flex; gap:.75rem; margin-top:12px; }
@@ -300,7 +317,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const W_KSQ=0.40, W_BSQ=0.60;
   const $id=(x)=>document.getElementById(x);
   const $qsa=(s)=>Array.from(document.querySelectorAll(s));
-  let mode=null;
+let mode=null;
+let prevScrollY = 0;   
 
   function updateModeUI(){
     const card=document.getElementById('calc-card');
@@ -333,7 +351,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
       requestAnimationFrame(()=>{ window.scrollTo(0,keepY); });
     });
   });
-  updateModeUI();
+updateModeUI();
+let prevScrollY = 0; // ✅ Səhifənin son mövqeyini saxlamaq üçün əlavə et
 
   const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
 
@@ -345,7 +364,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
     });
     err.classList.add('hidden'); err.textContent='';
     warn.classList.add('hidden'); clearOutputs();
-    out.classList.add('hidden');
+out.classList.add('hidden');
+window.scrollTo({ top: prevScrollY, behavior:'smooth' });  // ← əlavə
   }
   resetBtn?.addEventListener('click', resetCalc);
 
@@ -400,8 +420,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
     }else{
       $id('out-t2').textContent='—'; $id('out-t2-ksq').textContent='—'; $id('out-t2-bsq').textContent='—'; $id('out-t2-grade').textContent='—';
     }
-    const out=$id('calc-output');
-    out.scrollIntoView({behavior:'smooth',block:'start'});
+const out=$id('calc-output');
+out.classList.remove('hidden');                         // ← əlavə olundu
+out.scrollIntoView({behavior:'smooth',block:'start'});
+
 
     if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
       const yearVal=+(((t1+t2)/2).toFixed(2));

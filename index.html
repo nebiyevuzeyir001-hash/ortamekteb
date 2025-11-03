@@ -947,17 +947,26 @@ html, body{
   </div>
 </div>
 
-  <footer class="border-t border-slate-200 py-10 text-sm">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · <span id="ft-rights">Bütün hüquqlar qorunur</span></p>
-<div class="flex items-center gap-4 text-slate-600 text-sm">
-  <a class="hover:underline" href="about.html">Haqqımızda</a>
-  <a class="hover:underline" href="terms.html">Şərtlər</a>
-  <a class="hover:underline" href="privacy.html">Məxfilik</a>
-</div>
+<footer class="mt-12 border-t border-slate-200/70 dark:border-slate-700/60">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
+              text-slate-600 dark:text-slate-400">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="text-center sm:text-left leading-6 whitespace-normal">
+        © <span id="year"></span>
+        <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span>
+        · Bütün hüquqlar qorunur
+      </div>
 
+      <!-- Linklər mobil-də iki sətirə rahatca keçə bilsin -->
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <a href="/about.html"   class="hover:underline">Haqqımızda</a>
+        <a href="/terms.html"   class="hover:underline">Şərtlər</a>
+        <a href="/privacy.html" class="hover:underline">Məxfilik</a>
+      </nav>
     </div>
-  </footer>
+  </div>
+</footer>
+
 <!-- FOOTER-dən sonra: TƏK skript -->
 <script>
 /* ================== Sənin bütün mövcud JS-in ================== */

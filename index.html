@@ -757,7 +757,7 @@ html, body, .scrollarea {
         <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ <span data-i18n="nav.settings">Tənzimləmələr</span></button>
         <!-- Settings popover -->
 <div id="settings-panel"
-       class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+     class="hidden fixed right-4 top-[72px] z-[80] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
     <div class="flex items-center justify-between">
       <div class="text-sm">🌙 Qaranlıq rejim</div>
       <label class="inline-flex items-center cursor-pointer">
@@ -1974,6 +1974,62 @@ function enhanceAllFancySelects(){
 }
 
   </script>
+<script>
+  // ===== YALNIZ TƏMA + TƏNZİMLƏMƏLƏR PANELİ =====
+  const settingsBtn = document.getElementById('btn-settings');
+  const panel       = document.getElementById('settings-panel');
+  const darkToggle  = document.getElementById('dark-toggle');
+
+  // İl (footer)
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Tema qurulumu (localStorage > system)
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  const saved = localStorage.getItem('theme');
+  const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
+
+  document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+  if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
+  applyThemeAssets(initialTheme);
+
+  darkToggle?.addEventListener('change', (e) => {
+    const theme = e.target.checked ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+    applyThemeAssets(theme);
+  });
+
+  mq.addEventListener?.('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      const theme = e.matches ? 'dark' : 'light';
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      if (darkToggle) darkToggle.checked = (theme === 'dark');
+      applyThemeAssets(theme);
+    }
+  });
+
+  function applyThemeAssets(theme) {
+    const isDark = theme === 'dark';
+    const logoEl = document.getElementById('site-logo');
+    if (logoEl) logoEl.src = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
+    const apple = document.getElementById('apple-icon');
+    if (apple) apple.href = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
+  }
+
+  // Panel aç/bağla (fixed olduğu üçün kəsilməyəcək)
+  settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    panel.classList.toggle('hidden');
+  });
+  document.addEventListener('click', (e) => {
+    if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) {
+      panel.classList.add('hidden');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') panel.classList.add('hidden');
+  });
+</script>
 
 
 

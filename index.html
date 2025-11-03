@@ -729,6 +729,17 @@ html, body{
     padding-bottom: calc(var(--panel-pad-bottom) + 24px) !important; /* alt nəfəs */
   }
 }
+/* index üçün: info bölməsi kart kimi davranmasın */
+.info-section {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+/* rəngləri də sistem dəyişənlərindən alsın (digərlərindəki kimi) */
+.info-section, .info-section p, .info-section h2, .info-section a {
+  color: var(--text) !important;
+}
 
   </style>
 

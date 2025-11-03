@@ -842,260 +842,46 @@ html, body, .scrollarea {
   </section>
 
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-<div id="tabs" role="tablist" aria-label="Bölmələr"
-     class="mt-2 grid grid-cols-3 rounded-2xl p-1 bg-slate-100/80 border border-slate-200 shadow-inner overflow-hidden">
-<button id="tab-ksq"   data-tab="ksq"   role="tab" aria-selected="true"  class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">KSQ / BSQ</button>
-<button id="tab-pp"    data-tab="pp"    role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Perspektiv plan</button>
-<button id="tab-tools" data-tab="tools" role="tab" aria-selected="false" class="tab-btn rounded-xl px-4 py-2 text-sm text-slate-600">Alətlər & Testlər</button>
-</div>
-
-    <section id="panel-ksq" class="tab-panel is-active mt-6">
-      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-        <div class="p-4 border-b"><h3 class="font-semibold" id="ksq-title">KSQ/BSQ</h3></div>
-        <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
-          <div class="space-y-4">
-            <div><label class="text-sm text-slate-700 block" id="lbl-grade">Sinif</label>
-              <select id="grade"     class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
-            <div><label class="text-sm text-slate-700 block" id="lbl-subject">Fənn</label>
-              <select id="subject"   class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
-            <div><label class="text-sm text-slate-700 block" id="lbl-type">Növ</label>
-              <select id="ksqType"   class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1">
-                  <option>KSQ</option><option>BSQ</option>
-              </select></div>
-            <div><label class="text-sm text-slate-700 block" id="lbl-examNo">Nömrə</label>
-              <select id="examIndex" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
-            </div>
-          </div>
-<div class="lg:col-span-2 min-w-0">
-  <div id="ksq-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
-    <div id="ksq-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-      <span id="ksq-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
-    </div>
-    <div id="ksq-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
-  </div>
-</div>
 
 
 
 
 
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-pp"  class="tab-panel mt-6">
-      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-        <div class="p-4 border-b"><h3 class="font-semibold" id="pp-title">Perspektiv (illik) plan</h3></div>
-          <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
-            <div class="space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
-            <div><label class="text-sm text-slate-700 block" id="lbl-pp-subject">Fənn</label>
-              <select id="ppSubject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select></div>
-          </div>
-<div class="lg:col-span-2 min-w-0">
-  <div id="pp-results-card"  class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
-    <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-      <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
-    </div>
-    <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4"></div>
-  </div>
-</div>
-
-
-
-
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-tools" class="tab-panel grid-on mt-6">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch tools-grid">
-          <div class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white grid grid-rows-[auto_minmax(0,1fr)]">
-          <div class="p-4 border-b"><div class="text-base font-semibold">🧮 <span id="tool-calc-title">Bal kalkulyatoru</span></div></div>
-<!-- yalnız pt-ni kiçilt -->
-<div class="scrollarea p-4 pt-4 pb-4 space-y-3" id="calc-card">
-
-  <!-- ✔️ İstifadəçi seçimi -->
-<div class="rounded-xl border px-3 py-2 text-sm flex flex-col sm:flex-row gap-2 sm:items-center">
-  <span class="text-slate-600 dark:text-slate-300">Hesablama rejimi</span>
-
-  <!-- Mobil: 3 bərabər sütun; böyük ekranda da stabil qalır -->
-  <div class="grid grid-cols-3 gap-2 w-full">
-<button type="button"
-  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
-  data-mode="t1">I yarımil</button>
-
-<button type="button"
-  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
-  data-mode="t2">II yarımil</button>
-
-<button type="button"
-  class="w-full min-w-0 px-3 py-1 h-9 rounded-lg border text-[11px] sm:text-xs whitespace-nowrap leading-none"
-  data-mode="both">Hər ikisi</button>
-
-  </div>
-</div>
-
-
-  <!-- I yarımil -->
-<fieldset id="fs-t1" class="rounded-xl border px-3 py-2">
-  <legend class="px-2 text-sm font-medium">I yarımil</legend>
-  <div class="grid grid-cols-2 gap-2 mt-1">
-      <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
-    </div>
-    <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
-  </fieldset>
-
-  <!-- II yarımil -->
-  <fieldset id="fs-t2" class="rounded-xl border px-3 py-2">
-    <legend class="px-2 text-sm font-medium">II yarımil</legend>
-    <div class="grid grid-cols-2 gap-2 mt-1">
-      <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" class="rounded-xl border px-3 py-2 text-sm" />
-      <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" class="rounded-xl border px-3 py-2 text-sm" />
-    </div>
-    <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="rounded-xl border px-3 py-2 text-sm mt-3" />
-  </fieldset>
-<!-- Hesabla + Sıfırla -->
-<div class="grid grid-cols-2 gap-2" id="calc-actions">
-  <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
-  <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
-</div>
-
-  <!-- Nəticələr -->
-  <div id="calc-output" class="hidden rounded-xl border px-4 py-4">
-    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
-
-    <div class="mt-3 grid sm:grid-cols-3 gap-3">
-      <!-- I yarımil -->
-      <div id="out-t1-card" class="rounded-lg border px-3 py-2">
-        <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">I yarımil</div>
-        <div class="text-lg font-semibold" id="out-t1">—</div>
-        <div class="text-xs mt-1">KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span></div>
-        <div class="text-xs">Qiymət: <span id="out-t1-grade">—</span></div>
-      </div>
-
-      <!-- II yarımil -->
-      <div id="out-t2-card" class="rounded-lg border px-3 py-2">
-        <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">II yarımil</div>
-        <div class="text-lg font-semibold" id="out-t2">—</div>
-        <div class="text-xs mt-1">KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span></div>
-        <div class="text-xs">Qiymət: <span id="out-t2-grade">—</span></div>
-      </div>
-
-      <!-- İllik -->
-      <div id="out-year-card" class="rounded-lg border px-3 py-2">
-        <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">İllik</div>
-        <div class="text-lg font-semibold" id="out-year">—</div>
-        <div class="text-xs mt-1">Hesab: (I + II) / 2</div>
-        <div class="text-xs">Qiymət: <span id="out-year-grade">—</span></div>
-      </div>
-    </div>
-
-    <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">* Boş buraxılan KSQ-lar hesablanmaya qatılmadı.</div>
-  </div>
-
-  <div id="calc-error" class="hidden text-[12px] text-rose-500"></div>
-</div>
-
-
-
-        </div>
-
-<!-- Online dərs cədvəli hazırlama — panel-card formatında (YENİ) -->
-<div id="tt-card" class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-  <!-- Başlıq -->
-  <div class="p-4 border-b">
-    <div class="text-base font-semibold">📅 Online dərs cədvəli hazırlama</div>
-  </div>
-
-<!-- MƏZMUN — balanslı, 3 sətirlik və işlək -->
-<!-- #tt-card içi — yenilə -->
-<div class="p-6 grid place-items-center text-center min-h-[240px]">
-  <div class="space-y-4 w-full max-w-[40ch]">
-    <!-- 3 SƏTİR MƏTN -->
-    <p class="text-sm text-slate-600 leading-relaxed">
-      Məktəb üçün peşəkar cədvəl qurucusu:
-      <span class="block">sinif, müəllim, fənn, kabinet</span>
-      <span class="block">və məhdudiyyətləri asanlıqla idarə edin.</span>
-    </p>
-
-    <!-- DÜYMƏ — “Hesabla” ilə eyni stil və ölçü -->
-<a href="/timetable.html" class="ep-btn-primary w-full">Aç</a>
-
-  </div>
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-<!-- SUAL BANKI — CƏLBEDİCİ "TEZLİKLƏ" BLOKU -->
-<div id="bank-card" class="panel-card panel-scroll rounded-2xl shadow-sm hover:shadow-md transition border bg-white">
-  <div class="p-4 border-b">
-    <div class="text-base font-semibold">📚 <span id="tool-bank-title">Sual bankı</span></div>
-  </div>
-
-<div class="p-6 grid place-items-center overflow-clip">
-  <div class="w-full max-w-[560px] relative rounded-2xl p-[1px] bg-gradient-to-r from-cyan-400/35 via-fuchsia-400/35 to-violet-400/35">
-    <div class="rounded-2xl border border-white/30 dark:border-white/10 bg-white/65 dark:bg-slate-900/40 backdrop-blur-md text-center px-8 py-10">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/30 dark:border-white/10 bg-black/20 text-white/95 badge-blur">
-        <span class="text-[12px] font-semibold tracking-wide">Tezliklə</span>
-      </div>
-      <div class="mt-3 text-lg font-semibold">Peşəkar sual bankı</div>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-        Multiple-choice, qısa cavab və praktiki tapşırıqlar — hazırlanır.
-      </p>
-      <div class="mt-4 inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-300">
-        <span class="h-2 w-2 rounded-full shimmer"></span> Hazırlanır
-      </div>
-    </div>
-    <div class="pointer-events-none absolute inset-0 rounded-2xl shimmer opacity-20"></div>
-  </div>
-</div>
-</div>
-
-
-
-
-
-        
-      </div>
-    </section>
     <section id="about-site" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
   <div class="rounded-2xl border bg-white dark:bg-slate-900 shadow-sm">
     <div class="p-6 sm:p-8">
-      <h2 class="text-2xl font-bold tracking-tight">EduPlan.az haqqında</h2>
-      <p class="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
-        EduPlan.az müəllimlər üçün rəqəmsal resurs platformasıdır. Məqsəd – dərs planlaşdırma və
-        qiymətləndirmə prosesini sadələşdirmək, materiallara operativ çıxış və səhvsiz hesablamalar təqdim etməkdir.
-      </p>
-      <h3 class="mt-6 text-lg font-semibold">Nə təqdim edirik?</h3>
-      <ul class="mt-2 list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-300">
-        <li><strong>KSQ/BSQ:</strong> sinif, fənn, növ və nömrə üzrə filtrlənən fayllar.</li>
-        <li><strong>Perspektiv plan (PP):</strong> fənlər üzrə illik planlar.</li>
-        <li><strong>Bal kalkulyatoru:</strong> KSQ 40% / BSQ 60% çəkili hesablamalar.</li>
-        <li><strong>Online dərs cədvəli:</strong> sinif, müəllim və kabinet məhdudiyyətləri ilə.</li>
-      </ul>
-      <h3 class="mt-6 text-lg font-semibold">Keyfiyyət və hüquqi qeydlər</h3>
-      <p class="mt-2 text-slate-600 dark:text-slate-300">
-        Materiallar Azərbaycan tədris proqramına uyğun seçilir və mütəmadi yenilənir.
-        İstifadə <a class="underline" href="/terms.html">Şərtlər</a> və <a class="underline" href="/privacy.html">Məxfilik</a>
-        sənədlərində göstərilən qaydalar çərçivəsindədir.
-      </p>
+<h2 class="text-2xl font-bold tracking-tight">Məlumat</h2>
+
+<div class="mt-4 space-y-3 text-slate-600 dark:text-slate-300 leading-relaxed">
+  <p>
+    KSQ (Kiçik Summativ Qiymətləndirmə) və BSQ (Böyük Summativ Qiymətləndirmə) ümumi təhsil sistemində tətbiq olunan qiymətləndirmə formalarıdır.
+    Qiymətləndirmələr dövlət standartlarına uyğun olaraq şagirdlərin bilik, bacarıq və kompetensiyalarını obyektiv ölçməyi hədəfləyir.
+  </p>
+  <p>
+    KSQ adətən yarımildə bir neçə dəfə keçirilir və konkret mövzuları əhatə edir. Test və ya yazılı iş formatında ola bilər və cari mövzular üzrə anlayış səviyyəsini ölçür.
+  </p>
+  <p>
+    BSQ yarımilin sonunda keçirilən yekun qiymətləndirmədir. Geniş mövzu dairəsini əhatə edir və yarımil boyu əldə edilən bilik və bacarıqları ümumi şəkildə yoxlayır.
+  </p>
+  <p>
+    EduPlan.az faylları sinif, fənn, növ (KSQ/BSQ) və nömrə üzrə təsnifləşdirir. Seçim etdikdən sonra materialları birbaşa yükləyə bilərsiniz.
+    Fayllar əsasən PDF və DOCX formatındadır, qeydiyyat tələb etmir və müəllimlər, şagirdlər, təhsil işçiləri üçün açıqdır.
+  </p>
+  <p>
+    Hər hansı uyğunsuzluq aşkar etsəniz, <a class="underline" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a> ünvanına yazın.
+    Müraciətlər nəzərdən keçirilir və fayllar yenilənir.
+  </p>
+  <p>
+    Platforma pulsuzdur və yalnız tədris məqsədi daşıyır. Gələcəkdə funksiyalar genişləndirilə bilər.
+  </p>
+  <p class="pt-2">
+    Materiallar Azərbaycan tədris proqramına uyğun seçilir və mütəmadi yenilənir. İstifadə
+    <a class="underline" href="/terms.html">Şərtlər</a> və
+    <a class="underline" href="/privacy.html">Məxfilik</a>
+    sənədlərində göstərilən qaydalar çərçivəsindədir.
+  </p>
+</div>
+
     </div>
   </div>
 </section>
@@ -2189,15 +1975,7 @@ function enhanceAllFancySelects(){
 
   </script>
 
-<script>
-  // Tabs: SPA click handler
-  document.querySelectorAll('.tab-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const name = btn.dataset.tab;
-      if (typeof setActiveTab === 'function') setActiveTab(name, {scroll:true});
-    });
-  });
-</script>
+
 
 
 

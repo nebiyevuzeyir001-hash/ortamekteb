@@ -632,48 +632,58 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
-/* ==== PREMIUM SCROLLBAR (Hər iki tema üçün uyğun) ==== */
+/* ==== PREMIUM SCROLLBAR — Windows/Edge tərzi (hər iki tema) ==== */
 
-/* Ümumi (Firefox) */
+/* Firefox */
 html, body, .scrollarea {
   scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) transparent;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
 }
 
-/* Tema əsaslı rənglər */
+/* Tema rəngləri */
 :root {
-  --scroll-thumb: rgba(100, 100, 100, 0.4);
-  --scroll-thumb-hover: rgba(100, 100, 100, 0.6);
+  --scroll-track: rgba(0,0,0,0.06);
+  --scroll-thumb: rgba(120,120,120,0.65);
+  --scroll-thumb-hover: rgba(120,120,120,0.85);
 }
 .dark {
-  --scroll-thumb: rgba(180, 180, 255, 0.25);
-  --scroll-thumb-hover: rgba(180, 180, 255, 0.5);
+  --scroll-track: rgba(255,255,255,0.18);
+  --scroll-thumb: rgba(255,255,255,0.65);
+  --scroll-thumb-hover: rgba(255,255,255,0.85);
 }
 
-/* Webkit (Chrome, Edge, Opera, Safari) */
+/* WebKit (Chrome, Edge, Opera, Safari) */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 10px;
+  background: var(--scroll-track);
+  border-radius: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border-radius: 10px;
-  transition: background 0.3s ease;
+  background-color: var(--scroll-thumb);
+  border-radius: 12px;
+  border: 3px solid transparent;  /* tray halqası effekti */
+  background-clip: padding-box;   /* halqanı göstər */
+  transition: background-color .2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--scroll-thumb-hover);
+  background-color: var(--scroll-thumb-hover);
 }
 
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* Mobil/dar ekranlarda bir az incə */
+@media (max-width: 480px) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+}
+
   .is-disabled{ opacity:.6; pointer-events:none; cursor:not-allowed; }
 /* 📱 Mobil (≤640px): panel kartlarında hündürlük məhdudiyyəti olmasın */
 @media (max-width: 640px){

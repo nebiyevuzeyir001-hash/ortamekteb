@@ -632,57 +632,46 @@ html, body {
   white-space: nowrap;
   overflow: visible;
 }
-/* ==== PREMIUM SCROLLBAR — Windows/Edge tərzi (hər iki tema) ==== */
-
-/* Firefox */
-html, body, .scrollarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+/* --- Scrollbar (orta qalınlıq) --- */
+:root { --sb-size: 12px; }        /* 10–14px arası rahatdır */
+@media (min-width: 1024px){
+  :root { --sb-size: 12px; }      /* istəsən 14px də edə bilərsən */
 }
 
-/* Tema rəngləri */
-:root {
-  --scroll-track: rgba(0,0,0,0.06);
-  --scroll-thumb: rgba(120,120,120,0.65);
-  --scroll-thumb-hover: rgba(120,120,120,0.85);
-}
-.dark {
-  --scroll-track: rgba(255,255,255,0.18);
-  --scroll-thumb: rgba(255,255,255,0.65);
-  --scroll-thumb-hover: rgba(255,255,255,0.85);
+html, body{
+  /* Firefox */
+  scrollbar-width: auto;          /* thin deyil */
+  scrollbar-color: rgba(110,110,120,.45) transparent;
 }
 
-/* WebKit (Chrome, Edge, Opera, Safari) */
-::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+/* WebKit (Chrome/Edge/Safari) */
+::-webkit-scrollbar{
+  width: var(--sb-size);
+  height: var(--sb-size);
+}
+::-webkit-scrollbar-thumb{
+  background: rgba(110,110,120,.50);
+  border-radius: 9999px;
+  border: 3px solid transparent;      /* içini bir az “boş” göstərir */
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover{
+  background: rgba(110,110,120,.70);
+}
+::-webkit-scrollbar-track{ background: transparent; }
+
+/* Dark ton */
+.dark html, .dark body{
+  scrollbar-color: rgba(185,195,255,.35) transparent;
+}
+.dark ::-webkit-scrollbar-thumb{
+  background: rgba(185,195,255,.35);
+  border: 3px solid transparent;
+}
+.dark ::-webkit-scrollbar-thumb:hover{
+  background: rgba(185,195,255,.55);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--scroll-track);
-  border-radius: 12px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--scroll-thumb);
-  border-radius: 12px;
-  border: 3px solid transparent;  /* tray halqası effekti */
-  background-clip: padding-box;   /* halqanı göstər */
-  transition: background-color .2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scroll-thumb-hover);
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* Mobil/dar ekranlarda bir az incə */
-@media (max-width: 480px) {
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-}
 
   .is-disabled{ opacity:.6; pointer-events:none; cursor:not-allowed; }
 /* 📱 Mobil (≤640px): panel kartlarında hündürlük məhdudiyyəti olmasın */

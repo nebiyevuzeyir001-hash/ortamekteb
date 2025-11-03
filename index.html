@@ -1207,6 +1207,8 @@ function setActiveTab(name, opts = { scroll: false }) {
     // --- GAS feed ---
 
 function renderSelects(){
+  // Bu səhifədə select-lər yoxdursa, dayandır
+  if (!document.getElementById('grade')) return;
   const t = translations[state.lang];
 
   // === KSQ/BSQ select-ləri ===
@@ -1295,7 +1297,7 @@ idxEl.disabled = !state.ksqType; // növ seçilməyibsə passiv
 
 }
 
-document.getElementById('grade').addEventListener('change', e=>{
+document.getElementById('grade')?.addEventListener('change', e=>{
   state.grade = e.target.value || null;
   // sinif dəyişdisə, fənni sıfırla
   state.subject = null;
@@ -1303,12 +1305,12 @@ document.getElementById('grade').addEventListener('change', e=>{
   toggleResults();
 });
 
-document.getElementById('subject').addEventListener('change', e=>{
+document.getElementById('subject')?.addEventListener('change', e=>{
   state.subject = e.target.value || null;
   toggleResults();
 });
 
-document.getElementById('ksqType').addEventListener('change', e=>{
+document.getElementById('ksqType')?.addEventListener('change', e=>{
   state.ksqType = e.target.value || null;
   state.examIndex = null;        // <-- bu bəs edir
   renderSelects();
@@ -1317,13 +1319,13 @@ document.getElementById('ksqType').addEventListener('change', e=>{
 
 
 
-document.getElementById('examIndex').addEventListener('change', e=>{
+document.getElementById('examIndex')?.addEventListener('change', e=>{
   state.examIndex = e.target.value || null;
   toggleResults();
 });
 
 
-document.getElementById('ppSubject').addEventListener('change', e=>{
+document.getElementById('ppSubject')?.addEventListener('change', e=>{
   state.ppSubject = e.target.value || null;
   toggleResults();
 });
@@ -1346,76 +1348,7 @@ document.getElementById('ppSubject').addEventListener('change', e=>{
 })();
 
     
-  const settingsBtn = document.getElementById('btn-settings');
-  const panel = document.getElementById('settings-panel');
-  const darkToggle = document.getElementById('dark-toggle');
-// Sistem ayarını da nəzərə al
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
 
-// LocalStorage-da yoxdursa, sistemi götür
-const saved = localStorage.getItem('theme');
-const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
-
-// Tətbiq et
-// Tətbiq et
-document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
-applyThemeAssets(initialTheme);
-
-// NEW — ilk yüklənmədə boş kartların (KSQ/PP) placeholder-larını
-// mövcud temaya (light/dark) uyğun yenilə
-if (document.readyState !== 'loading') {
-  refreshEmptyPlaceholders();
-} else {
-  document.addEventListener('DOMContentLoaded', refreshEmptyPlaceholders);
-}
-
-darkToggle?.addEventListener('change', (e) => {
-  const theme = e.target.checked ? 'dark' : 'light';
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  localStorage.setItem('theme', theme);
-  applyThemeAssets(theme);
-  refreshEmptyPlaceholders(); // NEW
-});
-
-
-mq.addEventListener?.('change', (e) => {
-  if (!localStorage.getItem('theme')) {
-    const theme = e.matches ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    if (darkToggle) darkToggle.checked = (theme === 'dark');
-    applyThemeAssets(theme);
-    refreshEmptyPlaceholders(); // NEW
-  }
-});
-
-  // paneli aç/bağla
-  settingsBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    panel.classList.toggle('hidden');
-  });
-
-  // kənara klik = bağla
-  document.addEventListener('click', (e) => {
-    if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) {
-      panel.classList.add('hidden');
-    }
-  });
-function applyThemeAssets(theme) {
-  const isDark = theme === 'dark';
-
-  // Header loqo — favicon deyil, loqo faylları
-  const logoEl = document.getElementById('site-logo');
-  if (logoEl) {
-    logoEl.src = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-  }
-
-  // Apple Touch Icon (mobil üçün)
-  const apple = document.getElementById('apple-icon');
-  if (apple) {
-    apple.href = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-  }
-}
 
 
 

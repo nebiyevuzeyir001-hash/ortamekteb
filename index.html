@@ -797,17 +797,6 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 </a>
 
       <div class="relative flex items-center gap-3" id="header-controls">
-<div id="lang-switch" class="flex items-center gap-1 mr-1" role="group" aria-label="Language">
-  <button data-lang="az"
-          class="lang-btn rounded-xl border px-2.5 py-1.5 text-xs font-semibold opacity-70 hover:opacity-100">
-    🇦🇿 AZ
-  </button>
-  <button data-lang="en"
-          class="lang-btn rounded-xl border px-2.5 py-1.5 text-xs font-semibold opacity-70 hover:opacity-100">
-    🇬🇧 EN
-  </button>
-</div>
-
         <button id="btn-settings" class="rounded-2xl border p-2 text-base leading-none"
           aria-label="Settings" title="Settings">⚙️</button>
         <!-- Settings popover -->
@@ -1191,35 +1180,7 @@ document.addEventListener('click', (e) => {
       },
       footer: { rights: 'Bütün hüquqlar qorunur', terms: 'Şərtlər', privacy: 'Məxfilik' },
     },
-    en: {
-    nav: { settings: 'Settings', signIn: 'Sign in' },
-    hero: {
-      title: 'A digital resource platform for teachers',
-      subtitle: 'Optimized for schools in Azerbaijan.',
-      ctaPrimary: 'New document', ctaSecondary: 'Browse templates',
-      badges: { one: 'KSQ/BSQ & PP', two: 'Tools & Tests', three: 'Timetable builder' }
-    },
-    features: {
-      ksqBsq: { title: 'KSQ/BSQ', desc: 'Summative assessment files by grade, subject, type and index.' },
-      pp:     { title: 'Perspective plan (PP)', desc: 'Yearly subject plans.' },
-      calc: 'Score calculator', templates: 'Question bank', export: 'Export'
-    },
-    tabs: { pp: 'Perspective plan', tools: 'Tools & Tests' },
-    ksq: { title: 'KSQ/BSQ', type: 'Type' },
-    pp:  { title: 'Perspective (yearly) plan' },
-    tools: { calcTitle: 'Score calculator', templatesTitle: 'Template library', bankTitle: 'Question bank' },
-    labels: { examNo: 'Index' },
-    common: { grade: 'Grade', subject: 'Subject', calculate: 'Calculate', browse: 'Browse', add: 'Add' },
-    subjects: {
-      az: 'Azerbaijani', lit: 'Literature', science: 'Science', eng: 'English', rus: 'Russian', math: 'Mathematics',
-      physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology',
-      az_history: 'Azerbaijan history', world_history: 'World history', geography: 'Geography',
-      it: 'Informatics', life: 'Life skills', tech: 'Technology', art: 'Art', music: 'Music',
-      pe: 'Physical education', premilitary: 'Pre-military training',
-    },
-    footer: { rights: 'All rights reserved', terms: 'Terms', privacy: 'Privacy' },
-  },
-  };
+    };
 
   const subjectKeysByGrade = {
       I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
@@ -1239,7 +1200,7 @@ document.addEventListener('click', (e) => {
   const $$ = sel => Array.from(document.querySelectorAll(sel));
 
 const state = {
-lang: (localStorage.getItem('lang') || 'en'),
+  lang: 'az',
   grade: null,       // əvvəl 'V' idi → boş
   subject: null,     // əvvəl null qalır
   ksqType: null,     // KSQ/BSQ seçilməyib
@@ -1249,45 +1210,7 @@ lang: (localStorage.getItem('lang') || 'en'),
 };
 
   window.state = state;
-    function applyLang(lang) {
-  // 1) yadda saxla və html lang atributunu dəyiş
-  state.lang = lang;
-  localStorage.setItem('lang', lang);
-  document.documentElement.setAttribute('lang', lang);
 
-  // 2) brand yazısı
-  const brand = document.getElementById('brand-text');
-  if (brand) brand.textContent = (lang === 'en' ? 'EduPlan' : 'EduPlan AZ');
-
-  // 3) mətni yenilə
-  renderSelects();          // artıq səndə bütün mətnləri yeniləyir
-  refreshEmptyPlaceholders();
-}
-
-// Dil düymələri aktiv/passiv vizualı
-function paintLangButtons() {
-  document.querySelectorAll('.lang-btn').forEach(b=>{
-    const active = b.dataset.lang === state.lang;
-    b.classList.toggle('bg-slate-900', active);
-    b.classList.toggle('text-white', active);
-    b.classList.toggle('opacity-100', active);
-    b.classList.toggle('opacity-70', !active);
-  });
-}
-
-// İlk yüklənmə: html lang və brand
-applyLang(state.lang);
-paintLangButtons();
-
-// Klik handler
-document.getElementById('lang-switch')?.addEventListener('click', (e)=>{
-  const btn = e.target.closest('.lang-btn');
-  if (!btn) return;
-  const lang = btn.dataset.lang;
-  if (!lang || lang === state.lang) return;
-  applyLang(lang);
-  paintLangButtons();
-});
 function setActiveTab(name, opts = { scroll: false }) {
   // Tab düymələrinin aktivliyi
   $$('.tab-btn').forEach(btn => {

@@ -670,5 +670,6 @@ document.getElementById('subject').addEventListener('change', e=>{ state.subject
 document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); toggleResults(); });
 document.getElementById('examIndex').addEventListener('change', e=>{ state.examIndex=e.target.value||null; toggleResults(); });
 </script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /timetable.html
+Disallow: /question-bank.html
 Allow: /
 
 Sitemap: https://www.eduplan.az/sitemap.xml

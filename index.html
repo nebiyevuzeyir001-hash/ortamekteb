@@ -1220,7 +1220,36 @@ document.addEventListener('click', (e) => {
     footer: { rights: 'All rights reserved', terms: 'Terms', privacy: 'Privacy' },
   },
   };
-function applyLang(lang) {
+
+  const subjectKeysByGrade = {
+      I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      III:['az','life','math','eng','rus','art','music','pe','tech','it'],
+      IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
+      V:  ['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
+      VI: ['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
+      VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
+      VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
+      IX: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
+      X:  ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
+      XI: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
+  };
+
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+const state = {
+lang: (localStorage.getItem('lang') || 'en'),
+  grade: null,       // əvvəl 'V' idi → boş
+  subject: null,     // əvvəl null qalır
+  ksqType: null,     // KSQ/BSQ seçilməyib
+  examIndex: null,
+  ppSubject: null,   // PP fənni də seçilməyib
+  catalog: [],
+};
+
+  window.state = state;
+    function applyLang(lang) {
   // 1) yadda saxla və html lang atributunu dəyiş
   state.lang = lang;
   localStorage.setItem('lang', lang);
@@ -1259,36 +1288,6 @@ document.getElementById('lang-switch')?.addEventListener('click', (e)=>{
   applyLang(lang);
   paintLangButtons();
 });
-
-  const subjectKeysByGrade = {
-      I:  ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      II: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      III:['az','life','math','eng','rus','art','music','pe','tech','it'],
-      IV: ['az','life','math','eng','rus','art','music','pe','tech','it'],
-      V:  ['az','lit','eng','rus','math','science','it','az_history','geography','art','music','pe','tech'],
-      VI: ['az','lit','eng','rus','math','physics','science','it','az_history','geography','art','music','pe','tech'],
-      VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      IX: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech'],
-      X:  ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-      XI: ['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
-  };
-
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-const state = {
-lang: (localStorage.getItem('lang') || 'en'),
-  grade: null,       // əvvəl 'V' idi → boş
-  subject: null,     // əvvəl null qalır
-  ksqType: null,     // KSQ/BSQ seçilməyib
-  examIndex: null,
-  ppSubject: null,   // PP fənni də seçilməyib
-  catalog: [],
-};
-
-  window.state = state;
-    
 function setActiveTab(name, opts = { scroll: false }) {
   // Tab düymələrinin aktivliyi
   $$('.tab-btn').forEach(btn => {

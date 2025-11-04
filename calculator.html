@@ -1,562 +1,99 @@
 <!doctype html>
 <html lang="az">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="canonical" href="https://www.eduplan.az/calculator.html" />
-<meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
-<title>Bal kalkulyatoru — EduPlan</title>
-<meta name="description" content="KSQ 40% / BSQ 60% çəkili bal kalkulyatoru — EduPlan.az">
-<meta name="robots" content="index, follow">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Bal kalkulyatoru — EduPlan">
-<meta property="og:description" content="I/II yarımil və illik hesablamalar.">
-<meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
-<meta property="og:url" content="https://www.eduplan.az/calculator.html">
-<meta name="theme-color" content="#0a0b10">
-<meta name="language" content="az">
-<meta name="google-adsense-account" content="ca-pub-1241199346930032">
-<link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hazırlanır — EduPlan</title>
 
-<style>
-/* ---------- Tema dəyişənləri ---------- */
-:root{
-  --bg-from:#f8fafc; --bg-to:#ffffff; --text:#0f172a; --card:#ffffff; --muted:#475569; --border:#e2e8f0;
-  --tab-track:#eef2f6; --pill:#e9edf3; --pill-text:#334155;
-  --panel-min-h:320px; --panel-max-h:520px; --panel-pad-top:8px; --panel-pad-bottom:8px;
-}
-.dark{
-  --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a; --muted:#cbd5e1; --border:#334155;
-  --tab-track:#111827; --pill:#0f172a; --pill-text:#cbd5e1;
-}
+  <!-- SEO: bu səhifə indekslənməsin -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://www.eduplan.az/" />
 
-/* ---------- Layout qoruyucular ---------- */
-:where(html, body, main, header, footer, section){ overflow-x:clip; min-width:0; }
-select, input, button{ max-width:100%; }
-html::before{ content:""; position:fixed; inset:0; z-index:-1;
-  background:linear-gradient(to bottom,var(--bg-from),var(--bg-to)); }
-html{ background:var(--bg-to); } html.dark{ background:#0a0f1a; }
-body{ min-height:100svh; color:var(--text); }
-.bg-white{ background-color:var(--card)!important; }
-.text-slate-600,.text-slate-500{ color:var(--muted)!important; }
-.text-slate-900{ color:var(--text)!important; }
-.border-slate-200{ border-color:var(--border)!important; }
-.backdrop-blur.bg-white\/70{ background-color:color-mix(in srgb,var(--card) 70%,transparent)!important; }
+  <!-- Open Graph (zərurət deyil, amma brend üçün yaxşıdır) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hazırlanır — EduPlan">
+  <meta property="og:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
+  <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
+  <meta property="og:url" content="https://www.eduplan.az/coming-soon.html">
 
-/* ---------- Panel & boş hal ---------- */
-.panel-card{ display:grid; grid-template-rows:auto minmax(0,1fr); min-height:var(--panel-min-h); border-radius:1rem; border:1px solid var(--border); }
-.panel-card > :nth-child(2){ padding-top:var(--panel-pad-top)!important; padding-bottom:var(--panel-pad-bottom)!important; }
-.panel-card.vcenter .scrollarea{ display:flex; align-items:center; justify-content:center; min-height:320px; }
-.empty-light{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
-.empty-light .card{ width:min(520px,100%); border:1px solid var(--border); background:var(--card); border-radius:16px; text-align:center; padding:22px 18px; box-shadow:0 6px 16px rgba(0,0,0,.06);}
-.empty-light .icon{ width:44px; height:44px; border-radius:9999px; display:grid; place-items:center; margin:0 auto 8px;
-  background:radial-gradient(closest-side, rgba(147,51,234,.12), transparent 70%), conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33);
-  border:1px solid #e9eaf0; font-size:20px; }
-.empty-light .title{ font-weight:600; font-size:15px; }
-.empty-light .desc{ font-size:13px; color:var(--muted); margin-top:4px; }
-.empty-overlay{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; background:transparent; }
-.empty-overlay .inner{ width:min(520px,100%); border:1px solid rgba(255,255,255,.22); background:rgba(2,6,23,.55);
-  border-radius:16px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:22px 18px; text-align:center; box-shadow:0 8px 22px rgba(0,0,0,.35); }
-.empty-overlay .icon{ width:44px; height:44px; border-radius:9999px; display:grid; place-items:center; margin:0 auto 8px;
-  background:radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%), conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33); border:1px solid rgba(255,255,255,.22); font-size:20px; }
-.dark .empty-light{ display:none; }
+  <link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-/* ---------- Inputs ---------- */
-input[type="number"], input[type="text"]{
-  background:transparent; color:inherit; border:1px solid var(--border);
-  border-radius:.75rem; padding:.65rem .9rem; outline:none; font-size:14px;
-}
-input::placeholder{ color:#94a3b8; }
-input:focus{
-  border-color:#6366f1; box-shadow:0 0 0 3px color-mix(in oklab, #6366f1 20%, transparent);
-}
-
-/* ---------- Buttons ---------- */
-.ep-btn-primary{ display:inline-block; width:100%; padding:.65rem 1rem; border-radius:.75rem; font-weight:600; font-size:.9rem; color:#fff;
-  background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); box-shadow:0 4px 12px rgba(79,70,229,.35);
-  transition:transform .15s, box-shadow .25s, filter .25s; }
-.ep-btn-primary:hover{ transform:translateY(-2px); filter:brightness(1.08); box-shadow:0 6px 18px rgba(147,51,234,.45); }
-.dark .ep-btn-primary{ background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); box-shadow:0 4px 10px rgba(255,255,255,.1); }
-.ep-btn-secondary{ background:var(--card); color:var(--text); }
-
-/* Toggle – index görünüşü */
-#dark-toggle:checked + span { background:#334155; }
-#dark-toggle:checked + span .dot { transform: translateX(16px); }
-
-/* --- Scrollbar (orta qalınlıq) --- */
-:root { --sb-size: 12px; }
-@media (min-width: 1024px){ :root { --sb-size: 12px; } }
-html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transparent; }
-::-webkit-scrollbar{ width: var(--sb-size); height: var(--sb-size); }
-::-webkit-scrollbar-thumb{ background: rgba(110,110,120,.50); border-radius: 9999px; border: 3px solid transparent; background-clip: content-box; }
-::-webkit-scrollbar-thumb:hover{ background: rgba(110,110,120,.70); }
-::-webkit-scrollbar-track{ background: transparent; }
-.dark html, .dark body{ scrollbar-color: rgba(185,195,255,.35) transparent; }
-.dark ::-webkit-scrollbar-thumb{ background: rgba(185,195,255,.35); border: 3px solid transparent; }
-.dark ::-webkit-scrollbar-thumb:hover{ background: rgba(185,195,255,.55); }
-
-/* Kiçik util */
-.scrollarea{ max-height:none; overflow:visible; }
-  /* Panel daxili kolonka (index kartlarındakı kimi) */
-.calc-inner{
-  width:min(720px,100%);   /* 520 → 720 */
-  margin-inline:auto;
-}
-
-.mode-row{
-  display:flex;
-  flex-direction:column;     /* ✅ başlıq üstə, qrup altda */
-  align-items:flex-start;
-  gap:.5rem;
-  border:none;
-  background:transparent;
-  padding:0;
-  margin:0 0 8px 0;
-}
-.mode-row > span{            /* başlıq sətiri */
-  display:block;
-  font-size:0.875rem;
-  padding-left:2px;
-}
-
-.mode-group{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);  /* ✅ həmişə 3 düymə yan-yana */
-  gap:.5rem;
-  width:100%;                           /* tam eni tut */
-  flex:initial;
-}
-
-.mode-group button{
-  min-width:0;
-  height:38px;
-  border-radius:10px;
-  font-size:12px;
-  line-height:1.2;
-  padding:.5rem .6rem;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;               /* dar ekranda sığmayanı ... */
-}
-@media (max-width:360px){
-  .mode-group button{ font-size:11px; padding:.45rem .55rem; }
-}
-/* Desktop-də rejim düymələrini bir az hündür et */
-@media (min-width: 1024px){
-  .mode-group button{
-    height: 46px;          /* 38px → 46px */
-    padding: .7rem .85rem; /* azca daha “ətli” olsun */
-    font-size: 13px;       /* oxunuş yaxşılaşır */
-    border-radius: 12px;   /* forma uyğun yumrulanma */
-  }
-}
-
-
-
-/* düymə sırası */
-.actions-row{ display:flex; gap:.75rem; margin-top:12px; }
-.actions-row .ep-btn-primary{ height:44px; border-radius:14px; font-weight:700; }
-.actions-row .ep-btn-secondary{
-  height:44px; border-radius:14px; border:1px solid var(--border);
-  background:color-mix(in srgb,var(--card) 88%, transparent);
-}
-/* dark ton kiçik tənzimlər */
-.dark .mode-row{ border-color:#253046; background:#0f172a; }
-.dark .actions-row .ep-btn-secondary{ background:#0f172a; border-color:#253046; }
-/* sticky header üçün offset */
-html{ scroll-padding-top: 92px; }      /* fallback */
-#fs-t1, #fs-t2{ scroll-margin-top: 92px; }  /* dəqiq hədəf */
-
-</style>
-
-<!-- AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
+  <style>
+    :root{
+      --bg-from:#0f172a; --bg-to:#111827; --card:#0b1020cc; --border:#233155; --glass:#0b1020cc;
+    }
+    .gradient-bg{
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.20), transparent 60%),
+                  radial-gradient(900px 500px at 110% 30%, rgba(167,139,250,.18), transparent 55%),
+                  linear-gradient(180deg, var(--bg-from), var(--bg-to));
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: var(--glass);
+      border: 1px solid var(--border);
+    }
+    .shine {
+      position: relative; overflow: hidden;
+    }
+    .shine::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
+      transform: translateX(-100%); animation: shine 2.2s infinite;
+    }
+    @keyframes shine { to { transform: translateX(100%);} }
+  </style>
 </head>
-<body class="min-h-screen text-slate-900 relative">
-  <!-- dekor -->
-  <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
-    <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
-  </div>
-
-  <!-- Header -->
-  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img id="site-logo" src="assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl shadow-sm" alt="EduPlan" />
-        <span class="font-semibold tracking-tight">EduPlan AZ</span>
+<body class="min-h-screen gradient-bg text-slate-100 antialiased">
+  <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-2xl glass rounded-3xl p-8 sm:p-10 shadow-2xl">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="assets/ep-favicon-180.png" alt="EduPlan" class="w-10 h-10 rounded-xl">
+        <span class="text-xl font-semibold tracking-tight">EduPlan</span>
       </div>
-      <div class="relative flex items-center gap-3" id="header-controls">
-        <a href="/" class="rounded-2xl border px-3 py-2 text-sm">← Ana səhifə</a>
-        <button id="btn-settings" class="rounded-2xl border px-3 py-2 text-sm">⚙️ Tənzimləmələr</button>
-        <div id="settings-panel"
-             class="hidden absolute right-0 top-12 z-[60] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-          <div class="flex items-center justify-between">
-            <div class="text-sm">🌙 Qaranlıq rejim</div>
-            <label class="inline-flex items-center cursor-pointer">
-              <input id="dark-toggle" type="checkbox" class="sr-only">
-              <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
-                <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
-              </span>
-            </label>
-          </div>
+
+      <h1 class="text-3xl sm:text-4xl font-bold leading-tight">
+        Bölmə hazırlanır<span class="text-sky-400">.</span>
+      </h1>
+      <p class="mt-3 text-slate-300 leading-7">
+        Bu funksiya üzərində hazırda işləyirik. Məqsədimiz — müəllimlər üçün
+        daha sürətli, daha rahat və etibarlı bir təcrübə təqdim etməkdir.
+        <br class="hidden sm:block">Tezliklə istifadəyə veriləcək.
+      </p>
+
+      <!-- Status kartları -->
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Status</div>
+          <div class="mt-1 text-base font-medium">Aktiv inkişaf</div>
+        </div>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Növbəti addım</div>
+          <div class="mt-1 text-base font-medium">İstifadəçi testləri</div>
+        </div>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Buraxılış</div>
+          <div class="mt-1 text-base font-medium">Tezliklə</div>
         </div>
       </div>
-    </div>
-  </header>
 
-  <!-- Başlıq -->
-<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-    <section class="py-8 sm:py-10">
-      <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900">Bal kalkulyatoru</h1>
-      <p class="mt-2 text-slate-600">KSQ 40% / BSQ 60% — I/II yarımil və illik.</p>
-    </section>
-
-    <!-- Panel -->
-    <section class="add-shadow">
-      <div class="panel-card rounded-2xl shadow-sm transition bg-white relative" id="calc-card">
-        <div class="p-4 border-b"><h3 class="font-semibold">🧮 Bal kalkulyatoru</h3></div>
-
-        <div class="scrollarea px-4 pt-2 pb-4 space-y-3">
-  <div class="calc-inner">
-    <!-- Rejim seçimi -->
-    <div class="mode-row">
-      <span class="text-slate-600 dark:text-slate-300 text-sm shrink-0">Hesablama rejimi</span>
-      <div class="mode-group">
-        <button type="button" class="border" data-mode="t1">I yarımil</button>
-        <button type="button" class="border" data-mode="t2">II yarımil</button>
-        <button type="button" class="border" data-mode="both">Hər ikisi</button>
-      </div>
-    </div>
-
-    <!-- I yarımil -->
-    <fieldset id="fs-t1" class="rounded-xl border border-slate-200 px-3 py-2 mt-4">
-      <legend class="px-2 text-sm font-medium">I yarımil</legend>
-      <div class="grid grid-cols-2 gap-2 mt-1">
-        <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-        <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-        <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-        <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-        <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-        <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-      </div>
-      <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" class="mt-3" />
-    </fieldset>
-
-    <!-- II yarımil -->
-    <fieldset id="fs-t2" class="rounded-xl border border-slate-200 px-3 py-2 mt-4">
-      <legend class="px-2 text-sm font-medium">II yarımil</legend>
-      <div class="grid grid-cols-2 gap-2 mt-1">
-        <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-        <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-        <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-        <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-        <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-        <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-      </div>
-      <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="mt-3" />
-    </fieldset>
-    
-    <div class="actions-row mt-4">
-      <button class="ep-btn-primary w-full" id="btn-calc">Hesabla</button>
-      <button class="ep-btn-secondary w-full" type="button" id="btn-reset">Sıfırla</button>
-    </div>
-    <!-- Nəticələr -->
-    <div id="calc-output" class="hidden rounded-xl border border-slate-200 px-4 py-4 mt-4">
-      <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr (çəki: KSQ 40% / BSQ 60%)</div>
-      <div class="mt-3 grid sm:grid-cols-3 gap-3">
-        <div id="out-t1-card" class="rounded-lg border border-slate-200 px-3 py-2">
-          <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">I yarımil</div>
-          <div class="text-lg font-semibold" id="out-t1">—</div>
-          <div class="text-xs mt-1">KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span></div>
-          <div class="text-xs">Qiymət: <span id="out-t1-grade">—</span></div>
-        </div>
-        <div id="out-t2-card" class="rounded-lg border border-slate-200 px-3 py-2">
-          <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">II yarımil</div>
-          <div class="text-lg font-semibold" id="out-t2">—</div>
-          <div class="text-xs mt-1">KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span></div>
-          <div class="text-xs">Qiymət: <span id="out-t2-grade">—</span></div>
-        </div>
-        <div id="out-year-card" class="rounded-lg border border-slate-200 px-3 py-2">
-          <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">İllik</div>
-          <div class="text-lg font-semibold" id="out-year">—</div>
-          <div class="text-xs mt-1">Hesab: (I + II) / 2</div>
-          <div class="text-xs">Qiymət: <span id="out-year-grade">—</span></div>
-        </div>
-      </div>
-      <div id="calc-warn" class="hidden mt-2 text-xs text-amber-600">* Boş buraxılan KSQ-lar hesablanmaya qatılmadı.</div>
-    </div>
-
-    <div id="calc-error" class="hidden text-[12px] text-rose-500 mt-2"></div>
-  </div>
-
-
-        </div>
-      </div>
-    </section>
-<!-- Məlumat -->
-<section class="mt-10 px-4 sm:px-6 lg:px-8 info-section relative z-[1]">
-  <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Məlumat</h2>
-
-  <div class="space-y-3 text-base leading-7">
-    <p>
-      Bal kalkulyatoru KSQ və BSQ nəticələrinə əsaslanaraq yarımil və illik qiymətləri avtomatik hesablayır.
-      Alqoritm <span class="font-medium">KSQ 40% + BSQ 60%</span> çəkisinə əsaslanır və bütün hesablamalar
-      brauzerdə aparılır.
-    </p>
-
-    <p>
-      İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir.
-      KSQ sahələrinə daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəyə daha çox təsir edir.
-      “Hər ikisi” rejimində iki yarımilin ortası illik bal kimi göstərilir.
-    </p>
-
-    <p>
-      KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir. BSQ sahəsi mütləqdir və
-      0–100 aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir. Qeyri-uyğun dəyərlər üçün
-      səhv mesajı göstərilir.
-    </p>
-
-    <p>
-      Nəticələr 2–5 qiymət şkalasında təqdim olunur: 81–100 → 5, 61–80 → 4, 41–60 → 3, 0–40 → 2.
-    </p>
-
-    <p>
-      İstifadə qaydası qısa: rejimi seçin → KSQ və BSQ dəyərlərini daxil edin → “Hesabla” düyməsinə basın.
-      “Sıfırla” bütün xanaları təmizləyir və panelin əvvəlinə qaytarır.
-    </p>
-
-    <p>
-      Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
-      Səhifə yenilənərsə dəyərlər sıfırlanır.
-    </p>
-
-    <p>
-      Bu model standart <span class="font-medium">KSQ 40% / BSQ 60%</span> üçün nəzərdə tutulub. Təklif və rəy üçün
-      <a href="mailto:eduplan.az@gmail.com" class="underline decoration-slate-300 hover:decoration-slate-500">
-        eduplan.az@gmail.com
-      </a>
-      ünvanına yaza bilərsiniz.
-    </p>
-  </div>
-</section>
-
-
-
-
-
-<footer class="mt-12 border-t border-slate-200/70 dark:border-slate-700/60">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
-              text-slate-600 dark:text-slate-400">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="text-center sm:text-left leading-6 whitespace-normal">
-        © <span id="year"></span>
-        <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span>
-        · Bütün hüquqlar qorunur
+      <!-- Düymələr -->
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <a href="/" class="inline-flex items-center justify-center rounded-2xl px-5 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-semibold transition">
+          Ana səhifəyə qayıt
+        </a>
+        <a href="mailto:contact@eduplan.az?subject=Bildiriş%20tələbi%20-%20EduPlan&body=Hazır%20olan%20kimi%20məni%20xəbərdar%20edin."
+           class="inline-flex items-center justify-center rounded-2xl px-5 py-3 border border-slate-700 hover:border-slate-600 text-slate-100 font-medium transition">
+          Hazır olunca xəbərdar et
+        </a>
       </div>
 
-      <!-- Linklər mobil-də iki sətirə rahatca keçə bilsin -->
-      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <a href="/about.html"   class="hover:underline">Haqqımızda</a>
-        <a href="/terms.html"   class="hover:underline">Şərtlər</a>
-        <a href="/privacy.html" class="hover:underline">Məxfilik</a>
-      </nav>
+      <!-- Kiçik qeydlər -->
+      <p class="mt-6 text-sm text-slate-400">
+        * SEO üçün bu səhifə <code>noindex</code> ilə qorunur. Yalnız canlı buraxılışdan sonra indeksləmə açılacaq.
+      </p>
     </div>
   </div>
-</footer>
-
-
-  </main>
-
-<script>
-/* ------------------ THEME (KSQ/BSQ ilə eyni) ------------------ */
-const settingsBtn = document.getElementById('btn-settings');
-const panel = document.getElementById('settings-panel');
-const darkToggle = document.getElementById('dark-toggle');
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
-const saved = localStorage.getItem('theme');
-const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
-
-document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-if(darkToggle) darkToggle.checked = (initialTheme === 'dark');
-applyThemeAssets(initialTheme);
-
-document.addEventListener('click', e=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-settingsBtn?.addEventListener('click', (e)=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
-
-darkToggle?.addEventListener('change', e=>{
-  const theme = e.target.checked ? 'dark' : 'light';
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  localStorage.setItem('theme', theme);
-  applyThemeAssets(theme);
-});
-mq.addEventListener?.('change', e=>{
-  if(!localStorage.getItem('theme')){
-    const theme = e.matches ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    if(darkToggle) darkToggle.checked = (theme === 'dark');
-    applyThemeAssets(theme);
-  }
-});
-function applyThemeAssets(theme){
-  const logo = document.getElementById('site-logo');
-  if(logo) logo.src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-}
-document.getElementById('year').textContent = new Date().getFullYear();
-
-/* ------------------ Kalkulyator (index-dəkİ EYNİ backend) ------------------ */
-(function initCalculator(){
-  const W_KSQ=0.40, W_BSQ=0.60;
-  const $id=(x)=>document.getElementById(x);
-  const $qsa=(s)=>Array.from(document.querySelectorAll(s));
-let mode=null;
-let prevScrollY = 0;   
-
-  function updateModeUI(){
-    const card=document.getElementById('calc-card');
-    document.querySelectorAll('[data-mode]').forEach(b=>{
-      const act=(b.dataset.mode===mode);
-      b.classList.toggle('bg-white/10',act);
-      b.classList.toggle('border-slate-300',act);
-      b.setAttribute('aria-pressed', act?'true':'false');
-    });
-    if(!mode){
-      card?.classList.add('vcenter');
-      ['fs-t1','fs-t2','calc-output'].forEach(id=>$id(id)?.classList.add('hidden'));
-      ['out-t1-card','out-t2-card','out-year-card'].forEach(id=>$id(id)?.classList.add('hidden'));
-      return;
-    }
-    card?.classList.remove('vcenter');
-    $id('fs-t1').classList.toggle('hidden', mode==='t2');
-    $id('fs-t2').classList.toggle('hidden', mode==='t1');
-    $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
-    $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
-    $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
-  }
-
-  $qsa('[data-mode]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const keepY=window.scrollY;
-      mode=btn.dataset.mode;
-      updateModeUI();
-      btn.blur();
-requestAnimationFrame(()=>window.scrollTo({top: keepY, left: 0, behavior: 'instant'}));
-    });
-  });
-updateModeUI();
-
-  const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
-
-  function clearOutputs(){ ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade','out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id=>{ $id(id).textContent='—'; }); }
-// header örtməsin deyə offset-lə scroll
-function scrollToWithHeader(el){
-  const headerH = document.querySelector('header')?.offsetHeight || 0;
-  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 8; // 8px bufer
-  window.scrollTo({ top: y, behavior: 'smooth' });
-}
-
-  function resetCalc(){
-  ['t1','t2'].forEach(p=>{
-    ['1','2','3','4','5','6'].forEach(n=>{
-      const el=$id(`${p}-ksq${n}`); if(el) el.value='';
-    });
-    const bsq=$id(`${p}-bsq`); if(bsq) bsq.value='';
-  });
-
-  err.classList.add('hidden'); err.textContent='';
-  warn.classList.add('hidden'); clearOutputs();
-  out.classList.add('hidden');
-
-  // görünən bölmənin tam üstündə dayandır
-  const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
-const anchor = document.querySelector('#calc-card .p-4') || (target ?? $id('calc-card'));
-scrollToWithHeader(anchor);
-}
-
-  resetBtn?.addEventListener('click', resetCalc);
-
-  const numOrNull=v=>(v===''||v==null)?null:(isFinite(+v)?+v:null);
-  const to5=x=>(x>=81)?5:(x>=61)?4:(x>=41)?3:2;
-  const idsFor=prefix=>['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`);
-  const avg=arr=>arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-
-  function readTerm(prefix){
-    const ksq=idsFor(prefix).map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
-    const bsq=numOrNull($id(`${prefix}-bsq`).value);
-    return {ksq,bsq};
-  }
-  function computeTerm(prefix,outIds){
-    const {ksq,bsq}=readTerm(prefix);
-    if(ksq.length===0 && bsq===null) return null;
-    if(bsq===null || bsq<0 || bsq>100){
-      err.textContent=(prefix==='t1'?'I':'II')+' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
-      err.classList.remove('hidden'); return {error:true};
-    }
-    const kAvg=ksq.length? avg(ksq) : 0;
-    warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
-    const total=+(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
-    $id(outIds.total).textContent=total.toFixed(2);
-    $id(outIds.ksq).textContent=kAvg.toFixed(2);
-    $id(outIds.bsq).textContent=bsq.toFixed(2);
-    $id(outIds.grade).textContent=to5(total);
-    return total;
-  }
-
-  [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id=>{
-    const el=$id(id); el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
-  });
-
-btn?.addEventListener('click',()=>{
-  err.classList.add('hidden'); err.textContent='';
-  updateModeUI();
-
-  if(!mode){
-    err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-    err.classList.remove('hidden'); return;
-  }
-
-  let t1=null, t2=null, hadError=false;
-
-  // I yarımil
-  if(mode!=='t2'){
-    const r1 = computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'});
-    if(r1 && r1.error) hadError=true; else if(typeof r1==='number') t1=r1;
-  }else{
-    ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id=>{$id(id).textContent='—';});
-  }
-
-  // II yarımil
-  if(mode!=='t1'){
-    const r2 = computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'});
-    if(r2 && r2.error) hadError=true; else if(typeof r2==='number') t2=r2;
-  }else{
-    ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id=>{$id(id).textContent='—';});
-  }
-
-  // nəticə panelini göstər və aşağı apar
-  out.classList.remove('hidden');
-scrollToWithHeader(out);
-
-  // illik yalnız hər ikisi rəqəm olarsa
-  if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
-    const yearVal = +(((t1+t2)/2).toFixed(2));
-    $id('out-year').textContent = yearVal.toFixed(2);
-    $id('out-year-grade').textContent = to5(yearVal);
-    $id('out-year-card').classList.remove('hidden');
-  }else{
-    $id('out-year').textContent='—'; $id('out-year-grade').textContent='—';
-    $id('out-year-card').classList.add('hidden');
-  }
-
-  // hər iki yarımdan ən azı biri düzgün hesablansa panel qalır;
-  // səhv varsa mesaj artıq computeTerm içində yazılıb
-});
-
-})();
-
-(function init(){ if('scrollRestoration' in history) history.scrollRestoration='manual'; window.scrollTo(0,0); })();
-</script>
-
 </body>
 </html>

@@ -3,57 +3,97 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="canonical" href="https://www.eduplan.az/question-bank.html" />
-  <title>Sual bankı – Tezliklə | EduPlan</title>
-  <meta name="description" content="Multiple-choice, qısa cavab və praktik tapşırıqlar üçün peşəkar sual bankı hazırlanır.">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Sual bankı – Tezliklə | EduPlan">
-  <meta property="og:description" content="Sual bankı hazırlanır.">
+  <title>Hazırlanır — EduPlan</title>
+
+  <!-- SEO: bu səhifə indekslənməsin -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://www.eduplan.az/" />
+
+  <!-- Open Graph (zərurət deyil, amma brend üçün yaxşıdır) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hazırlanır — EduPlan">
+  <meta property="og:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
   <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
-  <meta property="og:url" content="https://www.eduplan.az/question-bank.html">
-  <link rel="icon" type="image/png" sizes="180x180" href="/assets/ep-favicon-180.png">
-  <meta name="theme-color" content="#0a0b10">
+  <meta property="og:url" content="https://www.eduplan.az/coming-soon.html">
+
+  <link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      --bg-from:#0f172a; --bg-to:#111827; --card:#0b1020cc; --border:#233155; --glass:#0b1020cc;
+    }
+    .gradient-bg{
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.20), transparent 60%),
+                  radial-gradient(900px 500px at 110% 30%, rgba(167,139,250,.18), transparent 55%),
+                  linear-gradient(180deg, var(--bg-from), var(--bg-to));
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: var(--glass);
+      border: 1px solid var(--border);
+    }
+    .shine {
+      position: relative; overflow: hidden;
+    }
+    .shine::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
+      transform: translateX(-100%); animation: shine 2.2s infinite;
+    }
+    @keyframes shine { to { transform: translateX(100%);} }
+  </style>
 </head>
-<body class="min-h-screen text-slate-900 dark:text-slate-200">
-  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/70 border-b">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3">
-        <img src="/assets/ep-favicon-light.svg" class="h-9 w-9 rounded-2xl" alt="EduPlan">
-        <span class="font-semibold tracking-tight">EduPlan AZ</span>
-      </a>
-      <nav class="text-sm flex items-center gap-4">
-        <a class="hover:underline" href="/ksq-bsq.html">KSQ/BSQ</a>
-        <a class="hover:underline" href="/pp.html">PP</a>
-        <a class="hover:underline" href="/calculator.html">Kalkulyator</a>
-      </nav>
-    </div>
-  </header>
+<body class="min-h-screen gradient-bg text-slate-100 antialiased">
+  <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-2xl glass rounded-3xl p-8 sm:p-10 shadow-2xl">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="assets/ep-favicon-180.png" alt="EduPlan" class="w-10 h-10 rounded-xl">
+        <span class="text-xl font-semibold tracking-tight">EduPlan</span>
+      </div>
 
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid place-items-center">
-    <div class="w-full max-w-[560px] relative rounded-2xl p-[1px] bg-gradient-to-r from-cyan-400/35 via-fuchsia-400/35 to-violet-400/35">
-      <div class="rounded-2xl border border-white/30 dark:border-white/10 bg-white/70 dark:bg-slate-900/50 backdrop-blur-md text-center px-8 py-10">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/30 dark:border-white/10 bg-black/20 text-white/95">
-          <span class="text-[12px] font-semibold tracking-wide">Tezliklə</span>
+      <h1 class="text-3xl sm:text-4xl font-bold leading-tight">
+        Bölmə hazırlanır<span class="text-sky-400">.</span>
+      </h1>
+      <p class="mt-3 text-slate-300 leading-7">
+        Bu funksiya üzərində hazırda işləyirik. Məqsədimiz — müəllimlər üçün
+        daha sürətli, daha rahat və etibarlı bir təcrübə təqdim etməkdir.
+        <br class="hidden sm:block">Tezliklə istifadəyə veriləcək.
+      </p>
+
+      <!-- Status kartları -->
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Status</div>
+          <div class="mt-1 text-base font-medium">Aktiv inkişaf</div>
         </div>
-        <div class="mt-3 text-lg font-semibold">Peşəkar sual bankı</div>
-        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-          Multiple-choice, qısa cavab və praktiki tapşırıqlardan ibarət geniş baza hazırlanır.
-        </p>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Növbəti addım</div>
+          <div class="mt-1 text-base font-medium">İstifadəçi testləri</div>
+        </div>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Buraxılış</div>
+          <div class="mt-1 text-base font-medium">Tezliklə</div>
+        </div>
       </div>
-    </div>
-  </main>
 
-  <footer class="border-t border-slate-200 py-10 text-sm">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-      <p class="text-slate-600">© <span id="year"></span> EduPlan AZ · Bütün hüquqlar qorunur</p>
-      <div class="flex items-center gap-4 text-slate-600">
-        <a class="hover:underline" href="/terms.html">Şərtlər</a>
-        <a class="hover:underline" href="/privacy.html">Məxfilik</a>
+      <!-- Düymələr -->
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <a href="/" class="inline-flex items-center justify-center rounded-2xl px-5 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-semibold transition">
+          Ana səhifəyə qayıt
+        </a>
+        <a href="mailto:contact@eduplan.az?subject=Bildiriş%20tələbi%20-%20EduPlan&body=Hazır%20olan%20kimi%20məni%20xəbərdar%20edin."
+           class="inline-flex items-center justify-center rounded-2xl px-5 py-3 border border-slate-700 hover:border-slate-600 text-slate-100 font-medium transition">
+          Hazır olunca xəbərdar et
+        </a>
       </div>
-    </div>
-  </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+      <!-- Kiçik qeydlər -->
+      <p class="mt-6 text-sm text-slate-400">
+        * SEO üçün bu səhifə <code>noindex</code> ilə qorunur. Yalnız canlı buraxılışdan sonra indeksləmə açılacaq.
+      </p>
+    </div>
+  </div>
 </body>
 </html>

@@ -240,6 +240,48 @@ select.select-premium.fs-native{
 .info-section, .info-section p, .info-section h2, .info-section a {
   color: var(--text) !important;      /* light: #0f172a, dark: #e2e8f0 */
 }
+/* === Unified Footer (lock style) === */
+.ep-footer{
+  border-top: 1px solid var(--border) !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+.ep-footer .wrap{
+  max-width: 80rem; /* max-w-7xl */
+  margin-inline: auto;
+  padding: 1rem 1rem; /* sm:px-6 lg:px-8 py-4 üçün sabitlik */
+}
+@media (min-width: 640px){
+  .ep-footer .wrap{ padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 1024px){
+  .ep-footer .wrap{ padding-left: 2rem; padding-right: 2rem; }
+}
+.ep-footer .row{
+  display: flex; flex-direction: column; gap: .75rem;
+}
+@media (min-width: 640px){
+  .ep-footer .row{ flex-direction: row; align-items: center; justify-content: space-between; }
+}
+.ep-footer .brand{
+  color: var(--text) !important; /* hər yerdə eyni ton */
+  font-weight: 500;
+}
+.ep-footer a{
+  color: inherit; text-decoration: none;
+}
+.ep-footer a:hover{
+  text-decoration: underline;
+}
+
+/* Dark tənzimləmələri */
+.dark .ep-footer{
+  border-top-color: #334155 !important; /* var(--border) ilə uyğundur */
+  color: #94a3b8 !important;            /* linklər də eyni tonu miras alır */
+}
+.dark .ep-footer .brand{
+  color: #e2e8f0 !important;
+}
 
 </style>
 <!-- Adsense (modal üçün) -->
@@ -362,25 +404,24 @@ select.select-premium.fs-native{
   </div>
 </section>
 
-<footer class="mt-12">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
-              text-slate-600 dark:text-slate-400
-              border-t border-slate-200/70 dark:border-slate-700/60">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<footer class="ep-footer mt-12">
+  <div class="wrap">
+    <div class="row">
       <div class="text-center sm:text-left leading-6 whitespace-normal">
         © <span id="year"></span>
-        <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span>
+        <span class="brand">EduPlan AZ</span>
         · Bütün hüquqlar qorunur
       </div>
 
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <a href="/about.html"   class="hover:underline">Haqqımızda</a>
-        <a href="/terms.html"   class="hover:underline">Şərtlər</a>
-        <a href="/privacy.html" class="hover:underline">Məxfilik</a>
+        <a href="/about.html">Haqqımızda</a>
+        <a href="/terms.html">Şərtlər</a>
+        <a href="/privacy.html">Məxfilik</a>
       </nav>
     </div>
   </div>
 </footer>
+
 
 
 

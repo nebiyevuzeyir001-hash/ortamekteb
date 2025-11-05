@@ -52,8 +52,6 @@
 </script>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- (İstəyə görə) AdSense — indexdəki kimi -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1241199346930032" crossorigin="anonymous"></script>
 <style>
 /* === index.css-dən götürülənlər (PP paneli ilə 1:1) === */
 :root{--bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;--panel-min-h:320px;--panel-max-h:520px;--panel-pad-top:16px;--panel-pad-bottom:16px}
@@ -291,32 +289,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 
 </main>
 
-<!-- 15s interstitial download modal (indexlə eyni) -->
-<div id="dlModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60">
-  <div class="relative w-[92%] max-w-[440px] rounded-3xl bg-[#121212] text-white p-4 sm:p-5 shadow-2xl" id="dlCard">
-    <button id="dlClose" aria-label="Pencərəni bağla" class="absolute -right-3 -top-3 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-800 shadow">✕</button>
-    <div class="mb-3 text-sm text-gray-300">Yüklənməniz hazırlanır</div>
-    <div class="relative overflow-hidden rounded-2xl bg-[#1b1b1b] border border-white/10">
-      <div class="w-full grid place-items-center" style="min-height:250px">
-        <ins class="adsbygoogle" id="modal-ad" style="display:inline-block;width:300px;height:250px"
-             data-ad-client="ca-pub-1241199346930032" data-ad-slot="4681795317"></ins>
-      </div>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="relative h-10 w-10">
-          <div id="ring" class="h-10 w-10 rounded-full" style="background:
-            conic-gradient(#8b5cf6 0deg, #8b5cf6 0deg, #333 0deg, #333 360deg);"></div>
-          <div class="absolute inset-0 grid place-items-center text-sm font-semibold" id="dlCount"></div>
-        </div>
-        <div class="text-sm text-gray-300" id="dlStatus">Yükləmə başlaması üçün zəhmət olmasa gözləyin</div>
-      </div>
-    </div>
-    <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
-      <div id="dlBar" class="h-1 bg-violet-500 w-0"></div>
-    </div>
-  </div>
-</div>
+
 
 <script>
 /* === Theme (indexdəki kimi) === */
@@ -405,7 +378,7 @@ function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-c
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
-function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" data-download="${it.dl}" rel="noopener noreferrer" class="download-btn rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div></div></div></div>`;wrap.appendChild(card)})}
+function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" rel="noopener noreferrer" class="rounded-2xl bg-slate-900 text-white px-3 py-1.5 text-sm inline-flex items-center gap-2">⬇️ Yüklə</a></div></div></div></div>`;wrap.appendChild(card)})}
 function toggleResults(){const grid=$('#pp-results');const count=$('#pp-count-row');if(state.ppSubject){hideEmpty('pp-results-card');count?.classList.remove('hidden');renderPP()}else{count?.classList.add('hidden');grid.innerHTML='';showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
 /* === Feed === */
@@ -416,35 +389,7 @@ document.getElementById('year').textContent=new Date().getFullYear();
 refreshEmptyPlaceholders(); loadAllFromMaterials();
 document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubject=e.target.value||null;toggleResults()});
 
-/* ============ 15s interstitial modal (indexlə eyni) ============ */
-(()=> {
-  const MODAL=$('#dlModal'), CARD=$('#dlCard'), BTN_CLOSE=$('#dlClose'), COUNT=$('#dlCount'), RING=$('#ring'), BAR=$('#dlBar'), STATUS=$('#dlStatus');
-  let t=0,timer=null,finished=false,targetUrl=null,modalAdRendered=false,adsReady=false;
-  const DURATION=15;
-  window.addEventListener('load',()=>{ adsReady=true; });
-  function updateRing(){ const deg=((DURATION - t)/DURATION)*360; RING.style.background=`conic-gradient(#8b5cf6 ${deg}deg, #333 ${deg}deg 360deg)`; }
-  function closeModal(){ MODAL.classList.add('hidden'); MODAL.classList.remove('flex'); if(timer) clearInterval(timer); timer=null; }
-  function finish(){ if(finished) return; finished=true; closeModal(); if(!targetUrl) return;
-    const a=document.createElement('a'); a.href=targetUrl; a.rel='noopener noreferrer'; a.target='_self'; a.download=''; document.body.appendChild(a); a.click(); a.remove();
-    requestAnimationFrame(()=>{ if(document.visibilityState!=='hidden'){ try{ window.location.assign(targetUrl); }catch{} }});
-  }
-function openModal(url){
-  targetUrl=url; finished=false; MODAL.classList.remove('hidden'); MODAL.classList.add('flex');
-  document.getElementById('modal-ad')?.classList.add('block');
-  t=DURATION; COUNT.textContent=t; STATUS.textContent='Yükləmə başlaması üçün zəhmət olmasa gözləyin'; BAR.style.width='0%'; updateRing();
-    if(!modalAdRendered){ modalAdRendered=true; const tryRender=()=>{ try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch{ setTimeout(()=>tryRender(),400);} }; adsReady?tryRender():setTimeout(()=>tryRender(),500); }
-    timer=setInterval(()=>{ t--; COUNT.textContent=t>=0?t:0; const p=((DURATION - t)/DURATION)*100; BAR.style.width=Math.min(100,Math.max(0,p))+'%'; updateRing(); if(t<=0) finish(); },1000);
-  }
-  document.addEventListener('click', e=>{
-    const a=e.target.closest('a.download-btn'); if(!a) return;
-    if(e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const url=a.getAttribute('data-download') || a.getAttribute('href'); if(!url) return;
-    e.preventDefault(); openModal(url);
-  });
-  BTN_CLOSE.addEventListener('click', closeModal);
-  MODAL.addEventListener('click', e=>{ if(!CARD.contains(e.target)) closeModal(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !MODAL.classList.contains('hidden')) closeModal(); });
-})();
+
 </script>
 </body>
 </html>

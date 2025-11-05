@@ -5,12 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>KSQ/BSQ — EduPlan</title>
 <meta name="description" content="Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları." />
-<link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-  <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9"><meta name="theme-color" content="#0ea5e9">
+<!-- Favicons & PWA (unified) -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="/android-chrome-512x512.png" sizes="512x512">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
+<meta name="theme-color" content="#0ea5e9">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ---------- Tema dəyişənləri ---------- */
@@ -723,6 +728,5 @@ document.getElementById('subject').addEventListener('change', e=>{ state.subject
 document.getElementById('ksqType').addEventListener('change', e=>{ state.ksqType=e.target.value||null; state.examIndex=null; renderSelects(); toggleResults(); });
 document.getElementById('examIndex').addEventListener('change', e=>{ state.examIndex=e.target.value||null; toggleResults(); });
 </script>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

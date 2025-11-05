@@ -4,11 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="canonical" href="https://www.eduplan.az/calculator.html" />
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-  <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9"><meta name="theme-color" content="#0ea5e9">
+<!-- Favicons & PWA (unified) -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="/android-chrome-512x512.png" sizes="512x512">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
+<meta name="theme-color" content="#0ea5e9">
 <meta name="google-site-verification" content="arARShX5-FqxTThszjmchhNpO0WHdzJlhWi0E3-zuzQ" />
 <title>Bal kalkulyatoru — EduPlan</title>
 <meta name="description" content="KSQ 40% / BSQ 60% çəkili bal kalkulyatoru — EduPlan.az">
@@ -18,10 +23,10 @@
 <meta property="og:description" content="I/II yarımil və illik hesablamalar.">
 <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
 <meta property="og:url" content="https://www.eduplan.az/calculator.html">
-<meta name="theme-color" content="#0a0b10">
+
 <meta name="language" content="az">
 <meta name="google-adsense-account" content="ca-pub-1241199346930032">
-<link rel="icon" href="assets/ep-favicon-180.png" type="image/png" sizes="180x180" />
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -172,6 +177,11 @@ html, body{ scrollbar-width:auto; scrollbar-color: rgba(110,110,120,.45) transpa
 /* sticky header üçün offset */
 html{ scroll-padding-top: 92px; }      /* fallback */
 #fs-t1, #fs-t2{ scroll-margin-top: 92px; }  /* dəqiq hədəf */
+/* Info section color lock (KSQ/PP ilə eyni) */
+.info-section { background: transparent !important; }
+.info-section, .info-section p, .info-section h2, .info-section a {
+  color: var(--text) !important;
+}
 
 </style>
 
@@ -218,7 +228,7 @@ html{ scroll-padding-top: 92px; }      /* fallback */
   <!-- Başlıq -->
 <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
     <section class="py-8 sm:py-10">
-      <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900">Bal kalkulyatoru</h1>
+      <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">Bal kalkulyatoru</h1>
       <p class="mt-2 text-slate-600">KSQ 40% / BSQ 60% — I/II yarımil və illik.</p>
     </section>
 

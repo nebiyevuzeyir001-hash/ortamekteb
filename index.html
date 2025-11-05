@@ -16,10 +16,10 @@
 <meta name="author" content="EduPlan.az">
 <meta property="og:title" content="EduPlan — Müəllimlər üçün rəqəmsal resurs platforması">
 <meta property="og:description" content="KSQ/BSQ faylları, PP planları, Bal kalkulyatoru, Online dərs cədvəli və daha çox — hamısı bir yerdə.">
-<meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
 <meta property="og:url" content="https://www.eduplan.az/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="EduPlan">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0ea5e9">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1585,9 +1585,13 @@ async function loadAllFromMaterials() {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderSelects();
-  loadAllFromMaterials();
-  refreshEmptyPlaceholders(); // NEW
+  const needsCatalog = document.getElementById('ksq-results') || document.getElementById('pp-results');
+  if (needsCatalog) {
+    loadAllFromMaterials();
+    refreshEmptyPlaceholders();
+  }
 });
+
 function addPlaceholder(selectEl, label){
   const o = document.createElement('option');
   o.value = "";
@@ -2038,6 +2042,5 @@ function enhanceAllFancySelects(){
     if (e.key === 'Escape') panel.classList.add('hidden');
   });
 </script>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

@@ -778,14 +778,15 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 
 /* Footer — mobil dostu ölçü və qırılma */
 .ft-text{
-  font-size: clamp(12px, 3.2vw, 14px); /* kiçik ekranda avtomatik kiçilsin */
-  line-height: 1.4;
-  white-space: normal;                  /* sətirə düşə bilsin */
-  text-wrap: balance;                   /* dəstəkləyən brauzerdə balanslı qırılır */
-  overflow: visible;                    /* ellipsis yoxdur */
+  font-size: clamp(13.5px, 2.8vw, 15px); /* minimum 13.5px, maksimum 15px */
+  line-height: 1.45;
+  white-space: normal;
+  text-wrap: balance;
+  overflow: visible;
   text-overflow: clip;
   word-break: keep-all;
 }
+
 
 /* parçalanmamalı hissələr üçün */
 .ft-chunk{ white-space: nowrap; }

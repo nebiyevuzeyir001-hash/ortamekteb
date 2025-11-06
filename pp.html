@@ -179,6 +179,34 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
   box-shadow:0 6px 16px rgba(30,58,138,.35);
 }
 .dark .ep-dl-btn:hover{ box-shadow:0 12px 26px rgba(30,58,138,.45); }
+/* === Loading overlay (Hazırlanır...) === */
+@keyframes ep-spin { to { transform: rotate(360deg); } }
+.ep-loading{
+  position:absolute; inset:0; display:grid; place-items:center;
+  background:transparent; pointer-events:none;
+}
+.ep-loading .box{
+  display:flex; align-items:center; gap:.75rem;
+  padding:.9rem 1.1rem; border-radius:12px;
+  font-weight:600; font-size:.95rem;
+  color:#0f172a; background:rgba(255,255,255,.85);
+  border:1px solid var(--border);
+  box-shadow:0 8px 22px rgba(0,0,0,.10);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+}
+.ep-loading .spinner{
+  width:18px; height:18px; border-radius:9999px;
+  border:2px solid #cbd5e1; border-top-color:#0f172a;
+  animation: ep-spin .8s linear infinite;
+}
+.dark .ep-loading .box{
+  color:#e2e8f0; background:rgba(2,6,23,.65);
+  border-color:rgba(148,163,184,.35);
+  box-shadow:0 12px 28px rgba(0,0,0,.45);
+}
+.dark .ep-loading .spinner{
+  border-color:rgba(148,163,184,.45); border-top-color:#93c5fd;
+}
 
 </style>
 </head>
@@ -344,7 +372,7 @@ function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets
 /* === DATA === */
 const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
 const translations={subjects:{az:'Azərbaycan dili',lit:'Ədəbiyyat',science:'Təbiət',eng:'İngilis dili',rus:'Rus dili',math:'Riyaziyyat',physics:'Fizika',chemistry:'Kimya',biology:'Biologiya',az_history:'Azərbaycan tarixi',world_history:'Ümumi tarix',geography:'Coğrafiya',it:'İnformatika',life:'Həyat bilgisi',tech:'Texnologiya',art:'Təsviri incəsənət',music:'Musiqi',pe:'Fiziki tərbiyə',premilitary:'Çağırışaqədərki hazırlıq'}};
-const state={ppSubject:null,catalog:[]};
+const state = { ppSubject: null, catalog: [], loading: true };
 
 /* === Select qurulması === */
 function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)}
@@ -409,6 +437,21 @@ function enhanceAllFancySelects(){document.querySelectorAll('select.select-premi
 function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
 function hideEmpty(cardId){const c=document.getElementById(cardId);c?.querySelector('.empty-overlay')?.remove();c?.querySelector('.empty-light')?.remove();c?.classList.remove('min-h-[320px]','md:min-h-[340px]')}
 function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
+function showLoading(cardId, text='Hazırlanır...'){
+  const card = document.getElementById(cardId);
+  if(!card) return;
+  card.querySelector('.ep-loading')?.remove(); // təmizlə
+  const wrap = document.createElement('div');
+  wrap.className = 'ep-loading';
+  wrap.innerHTML = `<div class="box">
+      <div class="spinner" aria-hidden="true"></div>
+      <span>${text}</span>
+    </div>`;
+  card.appendChild(wrap);
+}
+function hideLoading(cardId){
+  document.getElementById(cardId)?.querySelector('.ep-loading')?.remove();
+}
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
@@ -422,10 +465,63 @@ function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=sta
   Yüklə
 </a>
 </div></div></div></div>`;wrap.appendChild(card)})}
-function toggleResults(){const grid=$('#pp-results');const count=$('#pp-count-row');if(state.ppSubject){hideEmpty('pp-results-card');count?.classList.remove('hidden');renderPP()}else{count?.classList.add('hidden');grid.innerHTML='';showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
+function toggleResults(){
+  const grid  = $('#pp-results');
+  const count = $('#pp-count-row');
+
+  // Fənn seçilməyibsə -> boş yönləndirmə
+  if(!state.ppSubject){
+    hideLoading('pp-results-card');
+    count?.classList.add('hidden');
+    grid.innerHTML = '';
+    showEmpty('pp-results-card', {
+      icon:'🗂️',
+      title:'Zəhmət olmasa fənni seçin',
+      desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+    });
+    return;
+  }
+
+  // Fənn seçilib, amma data yoldadır -> loading
+  if(state.loading){
+    count?.classList.add('hidden');
+    grid.innerHTML = '';
+    hideEmpty('pp-results-card');     // “Fayl yoxdur” görünməsin
+    showLoading('pp-results-card', 'Hazırlanır...');
+    return;
+  }
+
+  // Data hazırdır -> render
+  hideLoading('pp-results-card');
+  hideEmpty('pp-results-card');
+
+  const list = state.catalog.filter(it => it.type==='PP' && it.subject===state.ppSubject);
+  count?.classList.remove('hidden');
+  $('#pp-count').textContent = list.length;
+
+  if(list.length === 0){
+    grid.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+    return;
+  }
+  renderPP();
+}
 
 /* === Feed === */
-async function loadAllFromMaterials(){try{const res=await fetch(FEED_URL,{cache:'no-store'});const catalog=await res.json();state.catalog=Array.isArray(catalog)?catalog:[];toggleResults()}catch(e){if(state.ppSubject){$('#pp-results').innerHTML=`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`}}}
+async function loadAllFromMaterials(){
+  try{
+    state.loading = true;
+    toggleResults(); // seçilibsə “Hazırlanır...” göstər
+    const res = await fetch(FEED_URL, { cache:'no-store' });
+    const catalog = await res.json();
+    state.catalog = Array.isArray(catalog) ? catalog : [];
+  }catch(e){
+    console.error(e);
+    // səhv olsa da loading-i söndürüb UI-ni yenilə
+  }finally{
+    state.loading = false;
+    toggleResults();
+  }
+}
 
 /* init */
 document.getElementById('year').textContent=new Date().getFullYear();

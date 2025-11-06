@@ -775,22 +775,27 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 /* === Footer anti-wrap (hamı səhifə üçün) === */
 .ep-footer .row{ row-gap:.75rem; column-gap:1rem; }
 
+
+/* Footer — mobil dostu ölçü və qırılma */
 .ft-text{
-  white-space: nowrap;       /* geniş ekranda sətirə düşməsin */
-  word-break: keep-all;      /* sözləri bölmə */
+  font-size: clamp(12px, 3.2vw, 14px); /* kiçik ekranda avtomatik kiçilsin */
+  line-height: 1.4;
+  white-space: normal;                  /* sətirə düşə bilsin */
+  text-wrap: balance;                   /* dəstəkləyən brauzerdə balanslı qırılır */
+  overflow: visible;                    /* ellipsis yoxdur */
+  text-overflow: clip;
+  word-break: keep-all;
 }
-/* Footer hüquq mətni: heç vaxt parçalanmasın; yer çatmırsa ... ilə kəs */
-.ft-col { min-width: 0; }                 /* flex shrink üçün vacib */
-.ft-text{
-  display: inline-block;
-  max-width: 100%;
-  white-space: nowrap;                    /* sətirə düşməsin */
-  overflow: hidden;                       /* daşanı gizlət */
-  text-overflow: ellipsis;                /* … ilə göstər */
-  word-break: normal;
-  overflow-wrap: normal;
-  hyphens: none;                          /* cihazın auto-hyphenation-unu söndür */
+
+/* parçalanmamalı hissələr üçün */
+.ft-chunk{ white-space: nowrap; }
+
+@media (max-width: 360px){
+  .ep-footer .wrap{ padding: .75rem .75rem; }
+  .ft-text{ font-size: 12px; line-height: 1.35; }
+  .ep-footer nav a{ font-size: 12px; }
 }
+
 
 
 /* nav-ın texti itələməməsi üçün – geniş ekranda yer bölüşdürsün */
@@ -983,11 +988,12 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
     <div class="row">
 <div class="ft-col text-center sm:text-left leading-6 whitespace-normal">
   <span class="ft-text">
-    © <span id="year"></span>
-    <span class="brand">EduPlan AZ</span>
-    &nbsp;·&nbsp; Bütün hüquqlar qorunur
+    <span class="ft-chunk">© <span id="year"></span> <span class="brand">EduPlan AZ</span></span>
+    &nbsp;·&nbsp;
+    <span class="ft-chunk">Bütün hüquqlar qorunur</span>
   </span>
 </div>
+
 
 
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

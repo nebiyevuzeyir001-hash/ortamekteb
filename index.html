@@ -772,6 +772,27 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 .dark .ep-footer .brand{
   color: #e2e8f0 !important;
 }
+/* === Footer anti-wrap (hamı səhifə üçün) === */
+.ep-footer .row{ row-gap:.75rem; column-gap:1rem; }
+
+.ft-text{
+  white-space: nowrap;       /* geniş ekranda sətirə düşməsin */
+  word-break: keep-all;      /* sözləri bölmə */
+}
+
+@media (max-width: 480px){
+  .ft-text{
+    white-space: normal;     /* dar ekranda sətirə düşsün, amma səliqəli */
+    display: inline; 
+    text-align: center;
+    line-height: 1.6;
+  }
+}
+
+/* nav-ın texti itələməməsi üçün – geniş ekranda yer bölüşdürsün */
+@media (min-width: 640px){
+  .ep-footer .row > .ft-col { flex: 1 1 auto; min-width: 0; }
+}
 
   </style>
 
@@ -956,11 +977,14 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 <footer class="ep-footer mt-12">
   <div class="wrap">
     <div class="row">
-      <div class="text-center sm:text-left leading-6 whitespace-normal">
-        © <span id="year"></span>
-        <span class="brand">EduPlan AZ</span>
-        · Bütün hüquqlar qorunur
-      </div>
+<div class="ft-col text-center sm:text-left leading-6 whitespace-normal">
+  <span class="ft-text">
+    © <span id="year"></span>
+    <span class="brand">EduPlan AZ</span>
+    &nbsp;·&nbsp; Bütün hüquqlar qorunur
+  </span>
+</div>
+
 
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         <a href="/about.html">Haqqımızda</a>

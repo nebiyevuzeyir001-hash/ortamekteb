@@ -77,33 +77,8 @@ select.select-premium.fs-native{
 select:invalid,
 .fs-opt.is-placeholder{ color:#9aa4b2 !important; }
 
-/* Fancy Select menyusu – default bağlı */
-.fs-menu{
-  display:none;
-  padding:6px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--card);
-  color:var(--text);
-  box-shadow:0 12px 28px rgba(0,0,0,.12);
-  overflow:auto;
-  max-height:260px;              /* fallback */
-  z-index:70;
-}
-
-/* Portal rejimi: body-də fixed, layout-a təsir etmir */
-.fs-menu.fs-portal{
-  position:fixed;
-  left:0; top:0;                 /* JS-lə real koordinat veriləcək */
-  max-height:min(40vh, 320px);   /* ekrana uyğun limit */
-}
-
-/* Köhnə qaydanı öldür: wrap açıq olsa belə içindəki menyunu göstərmə */
-.fs-wrap[aria-expanded="true"] .fs-menu{ display:none !important; }
-
-.dark .fs-menu{
-  background:#0f172a; border-color:#253046; box-shadow:0 16px 32px rgba(0,0,0,.45);
-}
+/* Fancy select menyusu həmişə üst qatda olsun, kəsilməsin */
+.fs-menu{ z-index:70 !important; }
 
 /* ---------- Panel & boş hal ---------- */
 .panel-card{ display:grid; grid-template-rows:auto minmax(0,1fr); min-height:var(--panel-min-h); border-radius:1rem; }
@@ -202,7 +177,14 @@ select.select-premium.fs-native{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
   background-repeat:no-repeat; background-size:16px 16px; opacity:.9; pointer-events:none;
 }
-
+.fs-menu{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70;
+  background:var(--card); color:var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.12);
+  max-height:260px; overflow:auto; padding:6px; display:none;
+}
+.fs-wrap[aria-expanded="true"] .fs-menu{ display:block; }
 .fs-opt{ padding:9px 10px; border-radius:10px; cursor:pointer; font-size:0.875rem; }
 .fs-opt.is-placeholder{ color:#9aa4b2; font-style:italic; }
 .fs-opt:hover{ background:rgba(148,163,184,.12); }
@@ -644,13 +626,12 @@ function enhanceFancySelect(select){
 
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.className = 'fs-btn';
+  btn.className = 'fs-btn';                // ✅ index kimi
   btn.textContent = select.options[select.selectedIndex]?.text || select.getAttribute('placeholder') || 'Seçin';
 
   const menu = document.createElement('div');
   menu.className = 'fs-menu';
 
-  // item-lər
   Array.from(select.options).forEach((o)=>{
     const item = document.createElement('div');
     item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
@@ -661,12 +642,12 @@ function enhanceFancySelect(select){
       select.value = o.value;
       select.dispatchEvent(new Event('change', {bubbles:true}));
       btn.textContent = o.text;
-      closeMenu();
+      wrap.setAttribute('aria-expanded','false');
     });
     menu.appendChild(item);
   });
 
-  // native select gizli qalsın
+  // native select formda qalsın, amma İNTERAKTİV olmasın
   select.classList.add('fs-native');
   select.tabIndex = -1;
   select.setAttribute('aria-hidden','true');
@@ -678,73 +659,18 @@ function enhanceFancySelect(select){
   wrap.appendChild(menu);
   select.dataset.fancyMounted = '1';
 
-  let isOpen = false;
-
-  // --- Portal yerləşdirmə ---
-  const positionMenu = ()=>{
-    const r = btn.getBoundingClientRect();
-    const vh = window.innerHeight, vw = window.innerWidth;
-
-    const spaceBelow = vh - r.bottom - 8;
-    const spaceAbove = r.top - 8;
-    const desired    = Math.min(vh * 0.40, 320);
-
-    const openDown = spaceBelow >= Math.min(desired, spaceAbove) || spaceBelow >= 160;
-    const maxH = openDown
-      ? Math.max(160, Math.min(spaceBelow, desired))
-      : Math.max(160, Math.min(spaceAbove, desired));
-
-    const top  = openDown ? (r.bottom + 6) : (r.top - maxH - 6);
-    const left = Math.max(8, Math.min(r.left, vw - r.width - 8));
-
-    Object.assign(menu.style, {
-      top:  Math.round(top)  + 'px',
-      left: Math.round(left) + 'px',
-      width:Math.round(r.width) + 'px',
-      maxHeight: Math.round(maxH) + 'px'
-    });
-  };
-
-  const openMenu = ()=>{
-    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>{
-      if(w!==wrap) w.setAttribute('aria-expanded','false');
-    });
-
-    if(!menu.classList.contains('fs-portal')){
-      document.body.appendChild(menu);
-      menu.classList.add('fs-portal');
-    }
-    menu.style.display = 'block';
-    wrap.setAttribute('aria-expanded','true');
-    isOpen = true;
-    positionMenu();
-    window.addEventListener('scroll', onScrollResize, {passive:true});
-    window.addEventListener('resize', onScrollResize, {passive:true});
-  };
-
-  const closeMenu = ()=>{
-    wrap.setAttribute('aria-expanded','false');
-    isOpen = false;
-    menu.style.display = 'none';
-    if(menu.parentNode !== wrap){ wrap.appendChild(menu); }
-    menu.classList.remove('fs-portal');
-    window.removeEventListener('scroll', onScrollResize);
-    window.removeEventListener('resize', onScrollResize);
-  };
-
-  const onScrollResize = ()=>{ if(isOpen) positionMenu(); };
-
-  btn.addEventListener('mousedown', e=> e.preventDefault());
+  // aç/bağla (mousedown + click — Safari/Win fix)
+  const toggle = (open) => wrap.setAttribute('aria-expanded', open ? 'true' : 'false');
+  btn.addEventListener('mousedown', (e)=>{ e.preventDefault(); }); // native fokusun qarşısını al
   btn.addEventListener('click', (e)=>{
     e.stopPropagation();
-    isOpen ? closeMenu() : openMenu();
+    const open = wrap.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>w.setAttribute('aria-expanded','false'));
+    toggle(!open);
   });
-  document.addEventListener('click', (e)=>{
-    if(isOpen && !menu.contains(e.target) && e.target!==btn) closeMenu();
-  });
-  wrap.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+  document.addEventListener('click', ()=> toggle(false));
+  wrap.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggle(false); });
 }
-
 
 function enhanceAllFancySelects(){ document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect); }
 

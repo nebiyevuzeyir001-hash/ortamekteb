@@ -184,10 +184,12 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .ep-loading{
   position:absolute; inset:0; display:grid; place-items:center;
   background:transparent; pointer-events:none;
+  z-index:20; /* həmişə üstdə olsun */
 }
 .ep-loading .box{
   display:flex; align-items:center; gap:.75rem;
   padding:.9rem 1.1rem; border-radius:12px;
+  min-width: 180px;              /* çox incə görünməsin */
   font-weight:600; font-size:.95rem;
   color:#0f172a; background:rgba(255,255,255,.85);
   border:1px solid var(--border);
@@ -440,7 +442,11 @@ function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-c
 function showLoading(cardId, text='Hazırlanır...'){
   const card = document.getElementById(cardId);
   if(!card) return;
-  card.querySelector('.ep-loading')?.remove(); // təmizlə
+  // kart hündür olsun ki, overlay mərkəzdə dursun
+  card.classList.add('min-h-[320px]','md:min-h-[340px]');
+  // əvvəlki overlay varsa sil
+  card.querySelector('.ep-loading')?.remove();
+  // overlay əlavə et
   const wrap = document.createElement('div');
   wrap.className = 'ep-loading';
   wrap.innerHTML = `<div class="box">
@@ -449,9 +455,15 @@ function showLoading(cardId, text='Hazırlanır...'){
     </div>`;
   card.appendChild(wrap);
 }
+
 function hideLoading(cardId){
-  document.getElementById(cardId)?.querySelector('.ep-loading')?.remove();
+  const card = document.getElementById(cardId);
+  if(!card) return;
+  card.querySelector('.ep-loading')?.remove();
+  // kartı normal vəziyyətə qaytar
+  card.classList.remove('min-h-[320px]','md:min-h-[340px]');
 }
+
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}

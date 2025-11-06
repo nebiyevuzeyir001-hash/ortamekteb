@@ -146,6 +146,16 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
 .dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
 .dark #pp-results span.rounded-full.bg-slate-100{background:rgba(148,163,184,.16)!important;border-color:rgba(148,163,184,.38)!important;color:#e5e7eb!important}
+/* Footer mətni: böyük qalsın, amma sıxmasın */
+.footer-text{
+  font-size: clamp(13.5px, 2.6vw, 15px); /* min 13.5px, max 15px */
+  line-height: 1.45;
+  white-space: normal;      /* lazım gəlsə qırılsın */
+  text-wrap: balance;       /* sətir tarazlığı */
+}
+/* Birlikdə qalmalı hissələr */
+.footer-text .chunk{ white-space: nowrap; }
+
 </style>
 </head>
 <body class="min-h-screen text-slate-900 relative">
@@ -270,11 +280,11 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
               text-slate-600 dark:text-slate-400">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="text-center sm:text-left leading-6 whitespace-normal">
-        © <span id="year"></span>
-        <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span>
-        · Bütün hüquqlar qorunur
-      </div>
+<div class="footer-text text-center sm:text-left leading-6">
+  <span class="chunk">© <span id="year"></span> <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span></span>
+  <span class="chunk"> · Bütün hüquqlar qorunur</span>
+</div>
+
 
       <!-- Linklər mobil-də iki sətirə rahatca keçə bilsin -->
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

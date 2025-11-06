@@ -180,6 +180,15 @@ html{ scroll-padding-top: 92px; }      /* fallback */
 .info-section, .info-section p, .info-section h2, .info-section a {
   color: var(--text) !important;
 }
+/* Footer mətni: böyük qalsın, amma sıxmasın */
+.footer-text{
+  font-size: clamp(13.5px, 2.6vw, 15px); /* min 13.5px, max 15px */
+  line-height: 1.45;
+  white-space: normal;
+  text-wrap: balance;
+}
+/* Birlikdə qalmalı hissələr */
+.footer-text .chunk{ white-space: nowrap; }
 
 </style>
 
@@ -365,11 +374,11 @@ html{ scroll-padding-top: 92px; }      /* fallback */
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
               text-slate-600 dark:text-slate-400">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="text-center sm:text-left leading-6 whitespace-normal">
-        © <span id="year"></span>
-        <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span>
-        · Bütün hüquqlar qorunur
-      </div>
+<div class="footer-text text-center sm:text-left leading-6">
+  <span class="chunk">© <span id="year"></span> <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span></span>
+  <span class="chunk"> · Bütün hüquqlar qorunur</span>
+</div>
+
 
       <!-- Linklər mobil-də iki sətirə rahatca keçə bilsin -->
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

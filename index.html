@@ -779,15 +779,19 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
   white-space: nowrap;       /* geniş ekranda sətirə düşməsin */
   word-break: keep-all;      /* sözləri bölmə */
 }
-
-@media (max-width: 480px){
-  .ft-text{
-    white-space: normal;     /* dar ekranda sətirə düşsün, amma səliqəli */
-    display: inline; 
-    text-align: center;
-    line-height: 1.6;
-  }
+/* Footer hüquq mətni: heç vaxt parçalanmasın; yer çatmırsa ... ilə kəs */
+.ft-col { min-width: 0; }                 /* flex shrink üçün vacib */
+.ft-text{
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;                    /* sətirə düşməsin */
+  overflow: hidden;                       /* daşanı gizlət */
+  text-overflow: ellipsis;                /* … ilə göstər */
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;                          /* cihazın auto-hyphenation-unu söndür */
 }
+
 
 /* nav-ın texti itələməməsi üçün – geniş ekranda yer bölüşdürsün */
 @media (min-width: 640px){

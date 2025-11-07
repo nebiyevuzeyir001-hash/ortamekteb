@@ -133,15 +133,33 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .dark .fs-opt:hover{background:rgba(148,163,184,.15)}
 
 /* Boş hal — indexdəki kimi (mini card light, blur overlay dark) */
-.empty-light{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
-.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid #e9eaf0;font-size:20px}
+.empty-light{
+  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+  z-index:25; /* Üstdə dursun */
+}
+.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);
+  background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
+.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;
+  background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);
+  border:1px solid #e9eaf0;font-size:20px}
 .empty-light .title{font-weight:600;font-size:15px}
 .empty-light .desc{font-size:13px;color:var(--muted);margin-top:4px}
-.empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
-.empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
-.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
+
+.empty-overlay{
+  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; background:transparent;
+  z-index:26; /* Dark overlay hər şeydən üstdə */
+}
+.empty-overlay .inner{
+  width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;
+  background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  box-shadow:0 8px 22px rgba(0,0,0,.35); color:inherit;
+}
+.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;
+  background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);
+  border:1px solid rgba(255,255,255,.22);font-size:20px}
 .dark .empty-light{display:none}
+
 /* Dark kontrast fixləri (pill/badge) */
 .dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
 .dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
@@ -273,7 +291,8 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 
         <!-- Sağ nəticə kartı -->
         <div class="lg:col-span-2 min-w-0">
-          <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
+<div id="pp-results-card"
+     class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
             <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
               <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
             </div>

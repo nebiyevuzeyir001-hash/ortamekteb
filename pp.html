@@ -454,10 +454,61 @@ document.addEventListener('click',()=>{
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
 
-/* === Placeholder (indexdəki showEmpty/hideEmpty) === */
-function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
-function hideEmpty(cardId){const c=document.getElementById(cardId);c?.querySelector('.empty-overlay')?.remove();c?.querySelector('.empty-light')?.remove();c?.classList.remove('min-h-[320px]','md:min-h-[340px]')}
-function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
+/* === Placeholder (KSQ/BSQ ilə 1:1 klon) === */
+function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {
+  const card = document.getElementById(cardId);
+  if (!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
+
+  const isDark = document.documentElement.classList.contains('dark');
+
+  // kartın hündürlüyünü sabit saxla
+  card.classList.add('min-h-[320px]', 'md:min-h-[340px]');
+
+  if (isDark) {
+    const overlay = document.createElement('div');
+    overlay.className = 'empty-overlay';
+    overlay.innerHTML = `
+      <div class="w-full h-full grid place-items-center px-6">
+        <div class="inner">
+          <div class="icon">${icon}</div>
+          <div class="title">${title}</div>
+          <div class="desc">${desc}</div>
+        </div>
+      </div>`;
+    card.appendChild(overlay);
+  } else {
+    const box = document.createElement('div');
+    box.className = 'empty-light';
+    box.innerHTML = `
+      <div class="card">
+        <div class="icon">${icon}</div>
+        <div class="title">${title}</div>
+        <div class="desc">${desc}</div>
+      </div>`;
+    card.appendChild(box);
+  }
+}
+
+function hideEmpty(cardId) {
+  const c = document.getElementById(cardId);
+  c?.querySelector('.empty-overlay')?.remove();
+  c?.querySelector('.empty-light')?.remove();
+  c?.classList.remove('min-h-[320px]', 'md:min-h-[340px]');
+}
+
+function refreshEmptyPlaceholders() {
+  if (!state.ppSubject) {
+    hideEmpty('pp-results-card');
+    showEmpty('pp-results-card', {
+      icon: '🗂️',
+      title: 'Zəhmət olmasa seçim edin',
+      desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+    });
+  } else {
+    hideEmpty('pp-results-card');
+  }
+}
+
 function showLoading(cardId, text='Hazırlanır...'){
   const card = document.getElementById(cardId);
   if(!card) return;
@@ -496,46 +547,60 @@ function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=sta
   Yüklə
 </a>
 </div></div></div></div>`;wrap.appendChild(card)})}
-function toggleResults(){
+function toggleResults() {
   const grid  = $('#pp-results');
   const count = $('#pp-count-row');
 
-  // Fənn seçilməyibsə -> boş yönləndirmə
-  if(!state.ppSubject){
+  // 1) Heç nə seçilməyibsə – eyni KSQ/BSQ kimi boş kart
+  if (!state.ppSubject) {
     hideLoading('pp-results-card');
     count?.classList.add('hidden');
     grid.innerHTML = '';
     showEmpty('pp-results-card', {
-      icon:'🗂️',
-      title:'Zəhmət olmasa fənni seçin',
-      desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+      icon: '🗂️',
+      title: 'Zəhmət olmasa seçim edin',
+      desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
     });
     return;
   }
 
-  // Fənn seçilib, amma data yoldadır -> loading
-  if(state.loading){
+  // 2) Fənn seçilib, amma data yoldadır – “Hazırlanır...”
+  if (state.loading) {
     count?.classList.add('hidden');
     grid.innerHTML = '';
-    hideEmpty('pp-results-card');     // “Fayl yoxdur” görünməsin
+    hideEmpty('pp-results-card');
     showLoading('pp-results-card', 'Hazırlanır...');
     return;
   }
 
-  // Data hazırdır -> render
+  // 3) Data hazırdır – nəticələri göstər
   hideLoading('pp-results-card');
   hideEmpty('pp-results-card');
 
-  const list = state.catalog.filter(it => it.type==='PP' && it.subject===state.ppSubject);
+  const list = state.catalog.filter(
+    it => it.type === 'PP' && it.subject === state.ppSubject
+  );
+
   count?.classList.remove('hidden');
   $('#pp-count').textContent = list.length;
 
-  if(list.length === 0){
-    grid.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
+  const center = (list.length > 0 && list.length <= 2);
+  grid.classList.toggle('min-h-[240px]', center);
+  grid.classList.toggle('place-content-center', center);
+  grid.classList.toggle('justify-items-center', center);
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+        Fayl yoxdur
+      </div>`;
     return;
   }
+
+  // mövcud kart renderləmə funksiyanı istifadə edirik
   renderPP();
 }
+
 
 /* === Feed === */
 async function loadAllFromMaterials(){

@@ -292,7 +292,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
         <!-- Sağ nəticə kartı -->
         <div class="lg:col-span-2 min-w-0">
 <div id="pp-results-card"
-     class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-hidden">
+     class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
             <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
               <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
             </div>
@@ -386,8 +386,24 @@ darkToggle.checked=(initialTheme==='dark');
 applyThemeAssets(initialTheme);
 document.addEventListener('click',e=>{if(!panel.contains(e.target)&&!settingsBtn.contains(e.target))panel.classList.add('hidden')});
 settingsBtn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('hidden')});
-darkToggle.addEventListener('change',e=>{const t=e.target.checked?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');localStorage.setItem('theme',t);applyThemeAssets(t);refreshEmptyPlaceholders()});
-mq.addEventListener?.('change',e=>{if(!localStorage.getItem('theme')){const t=e.matches?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');darkToggle.checked=(t==='dark');applyThemeAssets(t);refreshEmptyPlaceholders()}})
+darkToggle.addEventListener('change',e=>{
+  const t = e.target.checked ? 'dark' : 'light';
+  document.documentElement.classList.toggle('dark', t==='dark');
+  localStorage.setItem('theme', t);
+  applyThemeAssets(t);
+  toggleResults();            // ⚡ boş kartı yenilə
+});
+
+mq.addEventListener?.('change',e=>{
+  if(!localStorage.getItem('theme')){
+    const t = e.matches ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', t==='dark');
+    darkToggle.checked = (t==='dark');
+    applyThemeAssets(t);
+    toggleResults();          // ⚡ yenilə
+  }
+});
+
 function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
 
 /* === DATA === */
@@ -496,18 +512,7 @@ function hideEmpty(cardId) {
   c?.classList.remove('min-h-[320px]', 'md:min-h-[340px]');
 }
 
-function refreshEmptyPlaceholders() {
-  if (!state.ppSubject) {
-    hideEmpty('pp-results-card');
-    showEmpty('pp-results-card', {
-      icon: '🗂️',
-      title: 'Zəhmət olmasa seçim edin',
-      desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
-    });
-  } else {
-    hideEmpty('pp-results-card');
-  }
-}
+
 
 function showLoading(cardId, text='Hazırlanır...'){
   const card = document.getElementById(cardId);
@@ -619,10 +624,19 @@ async function loadAllFromMaterials(){
   }
 }
 
-/* init */
-document.getElementById('year').textContent=new Date().getFullYear();
-refreshEmptyPlaceholders(); loadAllFromMaterials();
-document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubject=e.target.value||null;toggleResults()});
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// İlk açılışda dərhal boş kartı göstər
+toggleResults();
+
+// Data yüklənsin (bu da içində bir dəfə daha toggleResults çağırır)
+loadAllFromMaterials();
+
+document.getElementById('ppSubject').addEventListener('change', e=>{
+  state.ppSubject = e.target.value || null;
+  toggleResults();
+});
+
 
 
 </script>

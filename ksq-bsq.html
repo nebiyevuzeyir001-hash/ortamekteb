@@ -680,14 +680,16 @@ function renderKSQ(){
   gridEl.classList.toggle('place-content-center', center);
   gridEl.classList.toggle('justify-items-center', center);
 
-  // Kataloq artıq yüklənib, amma heç nə tapılmayıbsa – real "Fayl yoxdur"
-  if (list.length === 0) {
-    wrap.innerHTML = `
-      <div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+if (list.length === 0) {
+  wrap.innerHTML = `
+    <div class="w-full h-full grid place-items-center">
+      <div class="rounded-lg border border-dashed border-slate-300 px-6 py-4 text-slate-500 text-center">
         Fayl yoxdur
-      </div>`;
-    return;
-  }
+      </div>
+    </div>`;
+  return;
+}
+
 
   list.forEach(it=>{
     const card=document.createElement('div');

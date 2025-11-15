@@ -182,12 +182,20 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 /* PP nəticə paneli – hər zaman eyni hündürlükdə olsun */
 #pp-results-card{
   min-height: 320px;
+  display:flex;
+  flex-direction:column;
 }
 @media (min-width: 768px){
   #pp-results-card{
     min-height: 340px;
   }
 }
+
+/* İç grid kartın hündürlüyünü doldursun */
+#pp-results{
+  flex:1;
+}
+
 
 </style>
 </head>

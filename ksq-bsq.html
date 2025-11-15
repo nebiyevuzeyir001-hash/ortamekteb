@@ -499,7 +499,14 @@ const subjectKeysByGrade = {
   X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
   XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','art','music','tech','premilitary'],
 };
-const state = { grade:null, subject:null, ksqType:null, examIndex:null, catalog:[] };
+const state = {
+  grade: null,
+  subject: null,
+  ksqType: null,
+  examIndex: null,
+  catalog: [],
+  isCatalogLoaded: false   // <-- YENİ
+};
 
 const $ = s => document.querySelector(s);
 
@@ -547,6 +554,25 @@ function addPlaceholder(selectEl, label){
 }
 function subjectsFor(grade){ const keys = subjectKeysByGrade[grade] || Object.keys(translations.subjects); return keys.map(k=>translations.subjects[k]).filter(Boolean); }
 function allChosenKSQ(){ return !!(state.grade && state.subject && state.ksqType && state.examIndex); }
+// KSQ/BSQ üçün premium "hazırlanır" görünüşü
+function renderLoadingBlock(title, subtitle) {
+  return `
+    <div class="flex flex-col items-center justify-center gap-2 py-10 text-slate-500 dark:text-slate-300 text-center">
+      <div class="inline-flex h-11 w-11 items-center justify-center rounded-full
+                  bg-gradient-to-tr from-sky-500/10 via-indigo-500/10 to-violet-500/10
+                  border border-slate-200/70 dark:border-slate-600/70 shadow-sm">
+        <div class="h-4 w-4 rounded-full border-2 border-sky-400 dark:border-sky-300
+                    border-t-transparent animate-spin"></div>
+      </div>
+      <div class="text-sm font-semibold tracking-tight">
+        ${title}
+      </div>
+      <p class="text-xs text-slate-400 dark:text-slate-500">
+        ${subtitle}
+      </p>
+    </div>
+  `;
+}
 
 /* ------------------ RENDER SELECTS ------------------ */
 function renderSelects(){
@@ -588,16 +614,41 @@ function refreshEmptyPlaceholders(){
 /* ------------------ RESULTS ------------------ */
 function buildTitle(it){ const format=(it.ext||'FILE').toUpperCase(); return `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`; }
 function renderKSQ(){
-  const wrap = $('#ksq-results'); wrap.innerHTML = '';
-  const list = state.catalog.filter(it => it.type===state.ksqType && it.grade===state.grade && it.subject===state.subject && it.index===state.examIndex);
+  const wrap = $('#ksq-results');
+  wrap.innerHTML = '';
+
+  // Kataloq hələ gəlməyibsə — "hazırlanır" kartı
+  if (!state.isCatalogLoaded) {
+    wrap.innerHTML = renderLoadingBlock(
+      'Fayllar hazırlanır…',
+      'Zəhmət olmasa bir neçə saniyə gözləyin.'
+    );
+    return;
+  }
+
+  const list = state.catalog.filter(it =>
+    it.type === state.ksqType &&
+    it.grade === state.grade &&
+    it.subject === state.subject &&
+    it.index === state.examIndex
+  );
+
   $('#ksq-count').textContent = list.length;
 
   const gridEl = $('#ksq-results');
-  const center = (list.length>0 && list.length<=2);
-  gridEl.classList.toggle('min-h-[240px]',center);
-  gridEl.classList.toggle('place-content-center',center);
-  gridEl.classList.toggle('justify-items-center',center);
-  if(list.length===0){ wrap.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>'; return; }
+  const center = (list.length > 0 && list.length <= 2);
+  gridEl.classList.toggle('min-h-[240px]', center);
+  gridEl.classList.toggle('place-content-center', center);
+  gridEl.classList.toggle('justify-items-center', center);
+
+  // Kataloq artıq yüklənib, amma heç nə tapılmayıbsa – real "Fayl yoxdur"
+  if (list.length === 0) {
+    wrap.innerHTML = `
+      <div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+        Fayl yoxdur
+      </div>`;
+    return;
+  }
 
   list.forEach(it=>{
     const card=document.createElement('div');
@@ -607,24 +658,30 @@ function renderKSQ(){
         <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
         <div class="flex-1">
           <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-          <div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div>
+          <div class="mt-1">
+            <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border"
+                  data-ext="${(it.ext||'FILE').toUpperCase()}">
+              ${(it.ext||'FILE').toUpperCase()}
+            </span>
+          </div>
           <div class="mt-3">
             <a href="${it.dl}" class="ep-dl-btn" download>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-    <polyline points="7 10 12 15 17 10"/>
-    <line x1="12" y1="15" x2="12" y2="3"/>
-  </svg>
-  Yüklə
-</a>
-
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Yüklə
+            </a>
           </div>
         </div>
-      </div></div>`;
+      </div>
+    </div>`;
     wrap.appendChild(card);
   });
 }
+
 function toggleResults(){
   const gridKSQ = $('#ksq-results'); const countRowK = $('#ksq-count-row');
   if(allChosenKSQ()){ hideEmpty('ksq-results-card'); countRowK?.classList.remove('hidden'); renderKSQ(); }
@@ -633,13 +690,26 @@ function toggleResults(){
 
 /* ------------------ FEED ------------------ */
 async function loadAllFromMaterials(){
+  // yeni sorğu başlayanda "hazırlanır" statusuna qaytar
+  state.isCatalogLoaded = false;
+
   try{
-    const res = await fetch(FEED_URL,{cache:'no-store'}); const catalog = await res.json();
-    state.catalog = Array.isArray(catalog)? catalog : []; toggleResults();
+    const res = await fetch(FEED_URL,{cache:'no-store'});
+    const catalog = await res.json();
+    state.catalog = Array.isArray(catalog) ? catalog : [];
+    state.isCatalogLoaded = true;
+    toggleResults(); // seçim varsa nəticələr yenilənsin
   }catch(e){
-    if(allChosenKSQ()){ $('#ksq-results').innerHTML = `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`; }
+    state.isCatalogLoaded = true; // artıq sorğu bitib
+    if(allChosenKSQ()){
+      $('#ksq-results').innerHTML =
+        `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+          Xəta: ${e.message}
+        </div>`;
+    }
   }
 }
+
 
 function enhanceFancySelect(select){
   // əvvəl qurulubsa təmizlə

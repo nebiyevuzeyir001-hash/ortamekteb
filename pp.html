@@ -133,33 +133,15 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .dark .fs-opt:hover{background:rgba(148,163,184,.15)}
 
 /* Boş hal — indexdəki kimi (mini card light, blur overlay dark) */
-.empty-light{
-  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
-  z-index:25; /* Üstdə dursun */
-}
-.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);
-  background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
-.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;
-  background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);
-  border:1px solid #e9eaf0;font-size:20px}
+.empty-light{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
+.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid #e9eaf0;font-size:20px}
 .empty-light .title{font-weight:600;font-size:15px}
 .empty-light .desc{font-size:13px;color:var(--muted);margin-top:4px}
-
-.empty-overlay{
-  position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; background:transparent;
-  z-index:26; /* Dark overlay hər şeydən üstdə */
-}
-.empty-overlay .inner{
-  width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;
-  background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);
-  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  box-shadow:0 8px 22px rgba(0,0,0,.35); color:inherit;
-}
-.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;
-  background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);
-  border:1px solid rgba(255,255,255,.22);font-size:20px}
+.empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
+.empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
 .dark .empty-light{display:none}
-
 /* Dark kontrast fixləri (pill/badge) */
 .dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
 .dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
@@ -202,12 +184,10 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .ep-loading{
   position:absolute; inset:0; display:grid; place-items:center;
   background:transparent; pointer-events:none;
-  z-index:20; /* həmişə üstdə olsun */
 }
 .ep-loading .box{
   display:flex; align-items:center; gap:.75rem;
   padding:.9rem 1.1rem; border-radius:12px;
-  min-width: 180px;              /* çox incə görünməsin */
   font-weight:600; font-size:.95rem;
   color:#0f172a; background:rgba(255,255,255,.85);
   border:1px solid var(--border);
@@ -291,8 +271,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 
         <!-- Sağ nəticə kartı -->
         <div class="lg:col-span-2 min-w-0">
-<div id="pp-results-card"
-     class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
+          <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
             <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
               <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
             </div>
@@ -386,24 +365,8 @@ darkToggle.checked=(initialTheme==='dark');
 applyThemeAssets(initialTheme);
 document.addEventListener('click',e=>{if(!panel.contains(e.target)&&!settingsBtn.contains(e.target))panel.classList.add('hidden')});
 settingsBtn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('hidden')});
-darkToggle.addEventListener('change',e=>{
-  const t = e.target.checked ? 'dark' : 'light';
-  document.documentElement.classList.toggle('dark', t==='dark');
-  localStorage.setItem('theme', t);
-  applyThemeAssets(t);
-  toggleResults();            // ⚡ boş kartı yenilə
-});
-
-mq.addEventListener?.('change',e=>{
-  if(!localStorage.getItem('theme')){
-    const t = e.matches ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark', t==='dark');
-    darkToggle.checked = (t==='dark');
-    applyThemeAssets(t);
-    toggleResults();          // ⚡ yenilə
-  }
-});
-
+darkToggle.addEventListener('change',e=>{const t=e.target.checked?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');localStorage.setItem('theme',t);applyThemeAssets(t);refreshEmptyPlaceholders()});
+mq.addEventListener?.('change',e=>{if(!localStorage.getItem('theme')){const t=e.matches?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');darkToggle.checked=(t==='dark');applyThemeAssets(t);refreshEmptyPlaceholders()}})
 function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
 
 /* === DATA === */
@@ -470,58 +433,14 @@ document.addEventListener('click',()=>{
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
 
-/* === Placeholder (KSQ/BSQ ilə 1:1 klon) === */
-function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {
-  const card = document.getElementById(cardId);
-  if (!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
-
-  const isDark = document.documentElement.classList.contains('dark');
-
-  // kartın hündürlüyünü sabit saxla
-  card.classList.add('min-h-[320px]', 'md:min-h-[340px]');
-
-  if (isDark) {
-    const overlay = document.createElement('div');
-    overlay.className = 'empty-overlay';
-    overlay.innerHTML = `
-      <div class="w-full h-full grid place-items-center px-6">
-        <div class="inner">
-          <div class="icon">${icon}</div>
-          <div class="title">${title}</div>
-          <div class="desc">${desc}</div>
-        </div>
-      </div>`;
-    card.appendChild(overlay);
-  } else {
-    const box = document.createElement('div');
-    box.className = 'empty-light';
-    box.innerHTML = `
-      <div class="card">
-        <div class="icon">${icon}</div>
-        <div class="title">${title}</div>
-        <div class="desc">${desc}</div>
-      </div>`;
-    card.appendChild(box);
-  }
-}
-
-function hideEmpty(cardId) {
-  const c = document.getElementById(cardId);
-  c?.querySelector('.empty-overlay')?.remove();
-  c?.querySelector('.empty-light')?.remove();
-  c?.classList.remove('min-h-[320px]', 'md:min-h-[340px]');
-}
-
-
-
+/* === Placeholder (indexdəki showEmpty/hideEmpty) === */
+function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
+function hideEmpty(cardId){const c=document.getElementById(cardId);c?.querySelector('.empty-overlay')?.remove();c?.querySelector('.empty-light')?.remove();c?.classList.remove('min-h-[320px]','md:min-h-[340px]')}
+function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 function showLoading(cardId, text='Hazırlanır...'){
   const card = document.getElementById(cardId);
   if(!card) return;
-  // kart hündür olsun ki, overlay mərkəzdə dursun
-  card.classList.add('min-h-[320px]','md:min-h-[340px]');
-  // əvvəlki overlay varsa sil
-  card.querySelector('.ep-loading')?.remove();
-  // overlay əlavə et
+  card.querySelector('.ep-loading')?.remove(); // təmizlə
   const wrap = document.createElement('div');
   wrap.className = 'ep-loading';
   wrap.innerHTML = `<div class="box">
@@ -530,15 +449,9 @@ function showLoading(cardId, text='Hazırlanır...'){
     </div>`;
   card.appendChild(wrap);
 }
-
 function hideLoading(cardId){
-  const card = document.getElementById(cardId);
-  if(!card) return;
-  card.querySelector('.ep-loading')?.remove();
-  // kartı normal vəziyyətə qaytar
-  card.classList.remove('min-h-[320px]','md:min-h-[340px]');
+  document.getElementById(cardId)?.querySelector('.ep-loading')?.remove();
 }
-
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
@@ -552,60 +465,46 @@ function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=sta
   Yüklə
 </a>
 </div></div></div></div>`;wrap.appendChild(card)})}
-function toggleResults() {
+function toggleResults(){
   const grid  = $('#pp-results');
   const count = $('#pp-count-row');
 
-  // 1) Heç nə seçilməyibsə – eyni KSQ/BSQ kimi boş kart
-  if (!state.ppSubject) {
+  // Fənn seçilməyibsə -> boş yönləndirmə
+  if(!state.ppSubject){
     hideLoading('pp-results-card');
     count?.classList.add('hidden');
     grid.innerHTML = '';
     showEmpty('pp-results-card', {
-      icon: '🗂️',
-      title: 'Zəhmət olmasa seçim edin',
-      desc: 'Fənni seçdikdən sonra nəticələr burada görünəcək.'
+      icon:'🗂️',
+      title:'Zəhmət olmasa fənni seçin',
+      desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'
     });
     return;
   }
 
-  // 2) Fənn seçilib, amma data yoldadır – “Hazırlanır...”
-  if (state.loading) {
+  // Fənn seçilib, amma data yoldadır -> loading
+  if(state.loading){
     count?.classList.add('hidden');
     grid.innerHTML = '';
-    hideEmpty('pp-results-card');
+    hideEmpty('pp-results-card');     // “Fayl yoxdur” görünməsin
     showLoading('pp-results-card', 'Hazırlanır...');
     return;
   }
 
-  // 3) Data hazırdır – nəticələri göstər
+  // Data hazırdır -> render
   hideLoading('pp-results-card');
   hideEmpty('pp-results-card');
 
-  const list = state.catalog.filter(
-    it => it.type === 'PP' && it.subject === state.ppSubject
-  );
-
+  const list = state.catalog.filter(it => it.type==='PP' && it.subject===state.ppSubject);
   count?.classList.remove('hidden');
   $('#pp-count').textContent = list.length;
 
-  const center = (list.length > 0 && list.length <= 2);
-  grid.classList.toggle('min-h-[240px]', center);
-  grid.classList.toggle('place-content-center', center);
-  grid.classList.toggle('justify-items-center', center);
-
-  if (list.length === 0) {
-    grid.innerHTML = `
-      <div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
-        Fayl yoxdur
-      </div>`;
+  if(list.length === 0){
+    grid.innerHTML = '<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';
     return;
   }
-
-  // mövcud kart renderləmə funksiyanı istifadə edirik
   renderPP();
 }
-
 
 /* === Feed === */
 async function loadAllFromMaterials(){
@@ -624,19 +523,10 @@ async function loadAllFromMaterials(){
   }
 }
 
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// İlk açılışda dərhal boş kartı göstər
-toggleResults();
-
-// Data yüklənsin (bu da içində bir dəfə daha toggleResults çağırır)
-loadAllFromMaterials();
-
-document.getElementById('ppSubject').addEventListener('change', e=>{
-  state.ppSubject = e.target.value || null;
-  toggleResults();
-});
-
+/* init */
+document.getElementById('year').textContent=new Date().getFullYear();
+refreshEmptyPlaceholders(); loadAllFromMaterials();
+document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubject=e.target.value||null;toggleResults()});
 
 
 </script>

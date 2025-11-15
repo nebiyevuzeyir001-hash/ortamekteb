@@ -96,7 +96,15 @@ select:invalid,
 .empty-overlay .icon{ width:44px; height:44px; border-radius:9999px; display:grid; place-items:center; margin:0 auto 8px;
   background:radial-gradient(closest-side, rgba(255,255,255,.14), transparent 70%), conic-gradient(from 180deg at 50% 50%, #22d3ee33, #a78bfa33, #22d3ee33); border:1px solid rgba(255,255,255,.22); font-size:20px; }
 .dark .empty-light{ display:none; }
-
+/* KSQ/BSQ nəticə paneli – hər zaman eyni hündürlükdə olsun */
+#ksq-results-card{
+  min-height: 320px;
+}
+@media (min-width: 768px){
+  #ksq-results-card{
+    min-height: 340px;
+  }
+}
 /* ---------- Buttons ---------- */
 .ep-btn-primary{ display:inline-block; width:100%; padding:.65rem 1rem; border-radius:.75rem; font-weight:600; font-size:.9rem; color:#fff;
   background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); box-shadow:0 4px 12px rgba(79,70,229,.35);
@@ -590,23 +598,44 @@ function renderSelects(){
 /* ------------------ PLACEHOLDER ------------------ */
 function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {
   const card = document.getElementById(cardId);
-  if(!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
+  if (!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
+
   const isDark = document.documentElement.classList.contains('dark');
-  card.classList.add('min-h-[320px]','md:min-h-[340px]');
-  if(isDark){
+
+  if (isDark) {
     const overlay = document.createElement('div');
-    overlay.className='empty-overlay';
-    overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6">
-      <div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;
+    overlay.className = 'empty-overlay';
+    overlay.innerHTML = `
+      <div class="w-full h-full grid place-items-center px-6">
+        <div class="inner">
+          <div class="icon">${icon}</div>
+          <div class="title">${title}</div>
+          <div class="desc">${desc}</div>
+        </div>
+      </div>`;
     card.appendChild(overlay);
-  }else{
-    const box=document.createElement('div');
-    box.className='empty-light';
-    box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;
+  } else {
+    const box = document.createElement('div');
+    box.className = 'empty-light';
+    box.innerHTML = `
+      <div class="card">
+        <div class="icon">${icon}</div>
+        <div class="title">${title}</div>
+        <div class="desc">${desc}</div>
+      </div>`;
     card.appendChild(box);
   }
 }
-function hideEmpty(cardId){ const c=document.getElementById(cardId); c?.querySelector('.empty-overlay')?.remove(); c?.querySelector('.empty-light')?.remove(); c?.classList.remove('min-h-[320px]','md:min-h-[340px]'); }
+
+function hideEmpty(cardId){
+  const c = document.getElementById(cardId);
+  if (!c) return;
+
+  c.querySelector('.empty-overlay')?.remove();
+  c.querySelector('.empty-light')?.remove();
+  // min-h klasslarını artıq silmirik, çünki CSS ilə sabitdir
+}
+
 function refreshEmptyPlaceholders(){
   if(!allChosenKSQ()){ hideEmpty('ksq-results-card'); showEmpty('ksq-results-card',{icon:'🗂️',title:'Zəhmət olmasa seçim edin',desc:'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.'}); }
 }

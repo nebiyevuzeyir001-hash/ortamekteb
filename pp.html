@@ -179,6 +179,15 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
   box-shadow:0 6px 16px rgba(30,58,138,.35);
 }
 .dark .ep-dl-btn:hover{ box-shadow:0 12px 26px rgba(30,58,138,.45); }
+/* PP nəticə paneli – hər zaman eyni hündürlükdə olsun */
+#pp-results-card{
+  min-height: 320px;
+}
+@media (min-width: 768px){
+  #pp-results-card{
+    min-height: 340px;
+  }
+}
 
 </style>
 </head>
@@ -429,8 +438,45 @@ function renderLoadingBlock(title, subtitle) {
 }
 
 /* === Placeholder (indexdəki showEmpty/hideEmpty) === */
-function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
-function hideEmpty(cardId){const c=document.getElementById(cardId);c?.querySelector('.empty-overlay')?.remove();c?.querySelector('.empty-light')?.remove();c?.classList.remove('min-h-[320px]','md:min-h-[340px]')}
+function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {
+  const card = document.getElementById(cardId);
+  if (!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
+
+  const isDark = document.documentElement.classList.contains('dark');
+
+  if (isDark) {
+    const overlay = document.createElement('div');
+    overlay.className = 'empty-overlay';
+    overlay.innerHTML = `
+      <div class="w-full h-full grid place-items-center px-6">
+        <div class="inner">
+          <div class="icon">${icon}</div>
+          <div class="title">${title}</div>
+          <div class="desc">${desc}</div>
+        </div>
+      </div>`;
+    card.appendChild(overlay);
+  } else {
+    const box = document.createElement('div');
+    box.className = 'empty-light';
+    box.innerHTML = `
+      <div class="card">
+        <div class="icon">${icon}</div>
+        <div class="title">${title}</div>
+        <div class="desc">${desc}</div>
+      </div>`;
+    card.appendChild(box);
+  }
+}
+
+function hideEmpty(cardId){
+  const c = document.getElementById(cardId);
+  if (!c) return;
+
+  c.querySelector('.empty-overlay')?.remove();
+  c.querySelector('.empty-light')?.remove();
+  // Diqqət: min-height klasslarını artıq silmirik
+}
 function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
 /* === PP render === */

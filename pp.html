@@ -425,25 +425,27 @@ document.addEventListener('click',()=>{
 }
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
-// PP üçün premium "hazırlanır" görünüşü (KSQ ilə eyni stil)
 function renderLoadingBlock(title, subtitle) {
   return `
-    <div class="flex flex-col items-center justify-center gap-2 py-10 text-slate-500 dark:text-slate-300 text-center">
-      <div class="inline-flex h-11 w-11 items-center justify-center rounded-full
-                  bg-gradient-to-tr from-sky-500/10 via-indigo-500/10 to-violet-500/10
-                  border border-slate-200/70 dark:border-slate-600/70 shadow-sm">
-        <div class="h-4 w-4 rounded-full border-2 border-sky-400 dark:border-sky-300
-                    border-t-transparent animate-spin"></div>
+    <div class="w-full h-full grid place-items-center">
+      <div class="flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-300 text-center">
+        <div class="inline-flex h-11 w-11 items-center justify-center rounded-full
+                    bg-gradient-to-tr from-sky-500/10 via-indigo-500/10 to-violet-500/10
+                    border border-slate-200/70 dark:border-slate-600/70 shadow-sm">
+          <div class="h-4 w-4 rounded-full border-2 border-sky-400 dark:border-sky-300
+                      border-t-transparent animate-spin"></div>
+        </div>
+        <div class="text-sm font-semibold tracking-tight">
+          ${title}
+        </div>
+        <p class="text-xs text-slate-400 dark:text-slate-500">
+          ${subtitle}
+        </p>
       </div>
-      <div class="text-sm font-semibold tracking-tight">
-        ${title}
-      </div>
-      <p class="text-xs text-slate-400 dark:text-slate-500">
-        ${subtitle}
-      </p>
     </div>
   `;
 }
+
 
 /* === Placeholder (indexdəki showEmpty/hideEmpty) === */
 function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {

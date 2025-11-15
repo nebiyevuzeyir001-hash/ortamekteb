@@ -344,7 +344,11 @@ function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets
 /* === DATA === */
 const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
 const translations={subjects:{az:'Azərbaycan dili',lit:'Ədəbiyyat',science:'Təbiət',eng:'İngilis dili',rus:'Rus dili',math:'Riyaziyyat',physics:'Fizika',chemistry:'Kimya',biology:'Biologiya',az_history:'Azərbaycan tarixi',world_history:'Ümumi tarix',geography:'Coğrafiya',it:'İnformatika',life:'Həyat bilgisi',tech:'Texnologiya',art:'Təsviri incəsənət',music:'Musiqi',pe:'Fiziki tərbiyə',premilitary:'Çağırışaqədərki hazırlıq'}};
-const state={ppSubject:null,catalog:[]};
+const state = {
+  ppSubject: null,
+  catalog: [],
+  isCatalogLoaded: false   // <-- YENİ
+};
 
 /* === Select qurulması === */
 function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)}
@@ -404,6 +408,25 @@ document.addEventListener('click',()=>{
 }
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
+// PP üçün premium "hazırlanır" görünüşü (KSQ ilə eyni stil)
+function renderLoadingBlock(title, subtitle) {
+  return `
+    <div class="flex flex-col items-center justify-center gap-2 py-10 text-slate-500 dark:text-slate-300 text-center">
+      <div class="inline-flex h-11 w-11 items-center justify-center rounded-full
+                  bg-gradient-to-tr from-sky-500/10 via-indigo-500/10 to-violet-500/10
+                  border border-slate-200/70 dark:border-slate-600/70 shadow-sm">
+        <div class="h-4 w-4 rounded-full border-2 border-sky-400 dark:border-sky-300
+                    border-t-transparent animate-spin"></div>
+      </div>
+      <div class="text-sm font-semibold tracking-tight">
+        ${title}
+      </div>
+      <p class="text-xs text-slate-400 dark:text-slate-500">
+        ${subtitle}
+      </p>
+    </div>
+  `;
+}
 
 /* === Placeholder (indexdəki showEmpty/hideEmpty) === */
 function showEmpty(cardId,{icon='🗂️',title='',desc=''}){const card=document.getElementById(cardId);if(!card||card.querySelector('.empty-overlay')||card.querySelector('.empty-light'))return;const isDark=document.documentElement.classList.contains('dark');card.classList.add('min-h-[320px]','md:min-h-[340px]');if(isDark){const overlay=document.createElement('div');overlay.className='empty-overlay';overlay.innerHTML=`<div class="w-full h-full grid place-items-center px-6"><div class="inner"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></div>`;card.appendChild(overlay)}else{const box=document.createElement('div');box.className='empty-light';box.innerHTML=`<div class="card"><div class="icon">${icon}</div><div class="title">${title}</div><div class="desc">${desc}</div></div>`;card.appendChild(box)}}
@@ -412,20 +435,93 @@ function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-c
 
 /* === PP render === */
 function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
-function renderPP(){const wrap=$('#pp-results');wrap.innerHTML='';const list=state.catalog.filter(it=>it.type==='PP'&&it.subject===state.ppSubject);$('#pp-count').textContent=list.length;const grid=$('#pp-results');const center=(list.length>0&&list.length<=2);grid.classList.toggle('min-h-[240px]',center);grid.classList.toggle('place-content-center',center);grid.classList.toggle('justify-items-center',center);if(list.length===0){wrap.innerHTML='<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Fayl yoxdur</div>';return}list.forEach(it=>{const card=document.createElement('div');card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition"><div class="flex items-start gap-3"><div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div><div class="flex-1"><div class="text-sm font-medium break-words">${buildTitle(it)}</div><div class="mt-1"><span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">${(it.ext||'FILE').toUpperCase()}</span></div><div class="mt-3"><a href="${it.dl}" class="ep-dl-btn" download rel="noopener">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-    <polyline points="7 10 12 15 17 10"/>
-    <line x1="12" y1="15" x2="12" y2="3"/>
-  </svg>
-  Yüklə
-</a>
-</div></div></div></div>`;wrap.appendChild(card)})}
+function renderPP(){
+  const wrap = $('#pp-results');
+  wrap.innerHTML = '';
+
+  // Kataloq hələ yüklənməyibsə – "hazırlanır" kartı
+  if (!state.isCatalogLoaded) {
+    wrap.innerHTML = renderLoadingBlock(
+      'Fayllar hazırlanır…',
+      'Zəhmət olmasa bir neçə saniyə gözləyin.'
+    );
+    return;
+  }
+
+  const list = state.catalog.filter(it =>
+    it.type === 'PP' && it.subject === state.ppSubject
+  );
+
+  $('#pp-count').textContent = list.length;
+  const grid = $('#pp-results');
+  const center = (list.length > 0 && list.length <= 2);
+  grid.classList.toggle('min-h-[240px]', center);
+  grid.classList.toggle('place-content-center', center);
+  grid.classList.toggle('justify-items-center', center);
+
+  // Kataloq artıq hazırdır, amma uyğun fayl yoxdur
+  if (list.length === 0) {
+    wrap.innerHTML = `
+      <div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+        Fayl yoxdur
+      </div>`;
+    return;
+  }
+
+  list.forEach(it=>{
+    const card=document.createElement('div');
+    card.className='group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
+    card.innerHTML=`<div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
+      <div class="flex items-start gap-3">
+        <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
+        <div class="flex-1">
+          <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
+          <div class="mt-1">
+            <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">
+              ${(it.ext||'FILE').toUpperCase()}
+            </span>
+          </div>
+          <div class="mt-3">
+            <a href="${it.dl}" class="ep-dl-btn" download rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Yüklə
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    wrap.appendChild(card);
+  });
+}
+
 function toggleResults(){const grid=$('#pp-results');const count=$('#pp-count-row');if(state.ppSubject){hideEmpty('pp-results-card');count?.classList.remove('hidden');renderPP()}else{count?.classList.add('hidden');grid.innerHTML='';showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
 
 /* === Feed === */
-async function loadAllFromMaterials(){try{const res=await fetch(FEED_URL,{cache:'no-store'});const catalog=await res.json();state.catalog=Array.isArray(catalog)?catalog:[];toggleResults()}catch(e){if(state.ppSubject){$('#pp-results').innerHTML=`<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">Xəta: ${e.message}</div>`}}}
+async function loadAllFromMaterials(){
+  state.isCatalogLoaded = false;
+
+  try{
+    const res = await fetch(FEED_URL,{cache:'no-store'});
+    const catalog = await res.json();
+    state.catalog = Array.isArray(catalog) ? catalog : [];
+    state.isCatalogLoaded = true;
+    toggleResults();
+  }catch(e){
+    state.isCatalogLoaded = true;
+    if(state.ppSubject){
+      $('#pp-results').innerHTML =
+        `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
+          Xəta: ${e.message}
+        </div>`;
+    }
+  }
+}
+
 
 /* init */
 document.getElementById('year').textContent=new Date().getFullYear();

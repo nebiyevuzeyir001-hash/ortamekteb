@@ -468,18 +468,18 @@ document.getElementById('year').textContent = new Date().getFullYear();
     $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
   }
 
-  // ✅ Rejim seçiləndən sonra avtomatik kalkulyator kartına scroll
-  $qsa('[data-mode]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      mode = btn.dataset.mode;
-      updateModeUI();
-      btn.blur();
+$qsa('[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    mode = btn.dataset.mode;
+    updateModeUI();
+    btn.blur();
 
-      const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
-      const anchor = target || document.getElementById('calc-card');
-      scrollToWithHeader(anchor);
-    });
+    // Seçimdən sonra həmişə ümumi blok görünsün
+    const anchor = document.querySelector('#calc-card .p-4') || document.getElementById('calc-card');
+    scrollToWithHeader(anchor);
   });
+});
+
   updateModeUI();
 
   const btn = $id('btn-calc'),

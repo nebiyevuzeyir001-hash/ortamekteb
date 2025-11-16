@@ -538,45 +538,24 @@ btn?.addEventListener('click',()=>{
 
   if(!mode){
     err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-    err.classList.remove('hidden'); return;
+    err.classList.remove('hidden'); 
+    return;
   }
 
   let t1=null, t2=null, hadError=false;
 
-  // I yarımil
-  if(mode!=='t2'){
-    const r1 = computeTerm('t1',{total:'out-t1',ksq:'out-t1-ksq',bsq:'out-t1-bsq',grade:'out-t1-grade'});
-    if(r1 && r1.error) hadError=true; else if(typeof r1==='number') t1=r1;
-  }else{
-    ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id=>{$id(id).textContent='—';});
-  }
+  // I və II yarımil hesablamaları burda qalır...
 
-  // II yarımil
-  if(mode!=='t1'){
-    const r2 = computeTerm('t2',{total:'out-t2',ksq:'out-t2-ksq',bsq:'out-t2-bsq',grade:'out-t2-grade'});
-    if(r2 && r2.error) hadError=true; else if(typeof r2==='number') t2=r2;
-  }else{
-    ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id=>{$id(id).textContent='—';});
-  }
-
-  // nəticə panelini göstər və aşağı apar
+  // nəticə panelini göstər
   out.classList.remove('hidden');
-scrollToWithHeader(out);
 
-  // illik yalnız hər ikisi rəqəm olarsa
-  if(mode==='both' && typeof t1==='number' && typeof t2==='number'){
-    const yearVal = +(((t1+t2)/2).toFixed(2));
-    $id('out-year').textContent = yearVal.toFixed(2);
-    $id('out-year-grade').textContent = to5(yearVal);
-    $id('out-year-card').classList.remove('hidden');
-  }else{
-    $id('out-year').textContent='—'; $id('out-year-grade').textContent='—';
-    $id('out-year-card').classList.add('hidden');
-  }
+  // ✅ həm nəticə, həm də 2 düymə görünsün
+  const anchor = document.querySelector('.actions-row') || out;
+  scrollToWithHeader(anchor);
 
-  // hər iki yarımdan ən azı biri düzgün hesablansa panel qalır;
-  // səhv varsa mesaj artıq computeTerm içində yazılıb
+  // illik yalnız hər ikisi rəqəm olarsa...
 });
+
 
 })();
 

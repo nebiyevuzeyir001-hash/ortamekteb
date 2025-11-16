@@ -132,10 +132,12 @@ select:invalid{color:#9aa4b2}
   box-shadow: 0 -16px 32px rgba(0,0,0,.45);
 }
 
-/* Oxu tərs çevir (istəsən) */
 .fs-wrap.fs-drop-up .fs-btn::after{
-  transform: translateY(-50%) rotate(180deg);
+  /* translate artıq yuxarıdakı .fs-btn::after qaydasından gəlir,
+     biz sadəcə oxu çeviririk ki, mərkəzdə qalsın */
+  rotate: 180deg;
 }
+
 
 select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
 .fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
@@ -513,22 +515,33 @@ function enhanceFancySelect(select){
     });
 
 if(!alreadyOpen){
-  // indi açılacaq – istiqaməti hesabla
+  // indi açılacaq – əvvəl real menyu hündürlüyünü gizli ölç
   const rect = wrap.getBoundingClientRect();
 
-  // Menyu bağlı olanda scrollHeight = 0 olur, ona görə sabit max hündürlük götürək
-  const MENU_MAX_HEIGHT = 260; // .fs-menu üçün max-height
-  const menuHeight = MENU_MAX_HEIGHT + 12; // buffer
+  const prevDisplay    = menu.style.display;
+  const prevVisibility = menu.style.visibility;
+
+  menu.style.visibility = 'hidden';
+  menu.style.display    = 'block';
+
+  const rawHeight       = menu.scrollHeight || 0;
+  const MENU_MAX_HEIGHT = 260;
+  const visibleHeight   = Math.min(rawHeight, MENU_MAX_HEIGHT);
+  const menuHeight      = visibleHeight + 12;
+
+  menu.style.display    = prevDisplay;
+  menu.style.visibility = prevVisibility;
 
   const spaceBelow = window.innerHeight - rect.bottom;
   const spaceAbove = rect.top;
 
-  if(spaceBelow < menuHeight && spaceAbove > spaceBelow){
-    wrap.classList.add('fs-drop-up');   // yuxarı aç
-  }else{
-    wrap.classList.remove('fs-drop-up'); // aşağı aç
+  if (spaceBelow < menuHeight && spaceAbove > spaceBelow){
+    wrap.classList.add('fs-drop-up');
+  } else {
+    wrap.classList.remove('fs-drop-up');
   }
 }
+
 
 
     const willOpen = !alreadyOpen;

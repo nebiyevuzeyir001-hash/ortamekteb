@@ -54,7 +54,11 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* === index.css-dən götürülənlər (PP paneli ilə 1:1) === */
-:root{--bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;--panel-min-h:320px;--panel-max-h:520px;--panel-pad-top:16px;--panel-pad-bottom:16px}
+:root{
+  --bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;
+  --panel-min-h:320px;--panel-max-h:520px;
+  --panel-pad-top:8px;--panel-pad-bottom:8px;
+}
 .dark{--bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;--tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1}
 :where(html,body,main,header,footer,section){overflow-x:clip;min-width:0}
 html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
@@ -260,7 +264,7 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
     <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
       <div class="p-4 border-b"><h3 class="font-semibold">Perspektiv (illik) planlaşdırma</h3></div>
 
-      <div class="p-4 grid lg:grid-cols-3 gap-6 items-stretch">
+      <div class="px-4 pt-2 pb-4 grid lg:grid-cols-3 gap-6 items-stretch">
         <!-- Sol filtr sütunu -->
         <div class="relative z-[60] space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
           <div>

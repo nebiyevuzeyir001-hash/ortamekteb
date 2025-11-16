@@ -150,6 +150,15 @@ select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%
 .dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
 .dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
 .dark #pp-results span.rounded-full.bg-slate-100{background:rgba(148,163,184,.16)!important;border-color:rgba(148,163,184,.38)!important;color:#e5e7eb!important}
+  .dark #pp-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
+  background: rgba(239,68,68,.18) !important;
+  border-color: rgba(239,68,68,.40) !important;
+}
+.dark #pp-results span.rounded-full.bg-slate-100[data-ext="DOCX"]{
+  background: rgba(59,130,246,.18) !important;
+  border-color: rgba(59,130,246,.40) !important;
+}
+
 /* Footer mətni: böyük qalsın, amma sıxmasın */
 .footer-text{
   font-size: clamp(13.5px, 2.6vw, 15px); /* min 13.5px, max 15px */
@@ -576,9 +585,11 @@ function renderPP(){
           <div class="flex-1">
             <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
             <div class="mt-1">
-              <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border">
-                ${(it.ext || 'FILE').toUpperCase()}
-              </span>
+<span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border"
+      data-ext="${(it.ext || 'FILE').toUpperCase()}">
+  ${(it.ext || 'FILE').toUpperCase()}
+</span>
+
             </div>
             <div class="mt-3">
               <a href="${it.dl}" class="ep-dl-btn" download rel="noopener">

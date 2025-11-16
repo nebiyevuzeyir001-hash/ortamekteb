@@ -385,6 +385,10 @@ select.select-premium.fs-native{
 .panel-center-overlay > *{
   pointer-events:auto; /* içindəki düymə/mətn normal işləsin */
 }
+.fs-btn{
+  position:relative;
+  /* qalan sənin mövcud stilin */
+}
 
 </style>
 </head>
@@ -914,19 +918,24 @@ function enhanceFancySelect(select){
       w.classList.remove('fs-drop-up');
     });
 
-    if(!alreadyOpen){
-      // indi açılacaq – yer ölç
-      const rect = wrap.getBoundingClientRect();
-      const menuHeight = Math.min(menu.scrollHeight, 260) + 12;
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
+if(!alreadyOpen){
+  // indi açılacaq – yer ölç
+  const rect = wrap.getBoundingClientRect();
 
-      if(spaceBelow < menuHeight && spaceAbove > spaceBelow){
-        wrap.classList.add('fs-drop-up');
-      }else{
-        wrap.classList.remove('fs-drop-up');
-      }
-    }
+  // Menyu bağlı vəziyyətdə scrollHeight = 0 olduğu üçün sabit max hündürlükdən istifadə edirik
+  const MENU_MAX_HEIGHT = 260;
+  const menuHeight = MENU_MAX_HEIGHT + 12;
+
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const spaceAbove = rect.top;
+
+  if(spaceBelow < menuHeight && spaceAbove > spaceBelow){
+    wrap.classList.add('fs-drop-up');   // yuxarı aç
+  }else{
+    wrap.classList.remove('fs-drop-up'); // aşağı aç
+  }
+}
+
 
     const willOpen = !alreadyOpen;
     wrap.setAttribute('aria-expanded', String(willOpen));

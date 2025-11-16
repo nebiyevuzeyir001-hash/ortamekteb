@@ -404,163 +404,225 @@ const saved = localStorage.getItem('theme');
 const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
 
 document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-if(darkToggle) darkToggle.checked = (initialTheme === 'dark');
+if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
 applyThemeAssets(initialTheme);
 
-document.addEventListener('click', e=>{ if(!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden'); });
-settingsBtn?.addEventListener('click', (e)=>{ e.stopPropagation(); panel.classList.toggle('hidden'); });
+document.addEventListener('click', e => {
+  if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden');
+});
+settingsBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  panel.classList.toggle('hidden');
+});
 
-darkToggle?.addEventListener('change', e=>{
+darkToggle?.addEventListener('change', e => {
   const theme = e.target.checked ? 'dark' : 'light';
   document.documentElement.classList.toggle('dark', theme === 'dark');
   localStorage.setItem('theme', theme);
   applyThemeAssets(theme);
 });
-mq.addEventListener?.('change', e=>{
-  if(!localStorage.getItem('theme')){
+mq.addEventListener?.('change', e => {
+  if (!localStorage.getItem('theme')) {
     const theme = e.matches ? 'dark' : 'light';
     document.documentElement.classList.toggle('dark', theme === 'dark');
-    if(darkToggle) darkToggle.checked = (theme === 'dark');
+    if (darkToggle) darkToggle.checked = (theme === 'dark');
     applyThemeAssets(theme);
   }
 });
-function applyThemeAssets(theme){
+function applyThemeAssets(theme) {
   const logo = document.getElementById('site-logo');
-  if(logo) logo.src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
+  if (logo) logo.src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
 }
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ------------------ Kalkulyator (index-dəkİ EYNİ backend) ------------------ */
-(function initCalculator(){
-  const W_KSQ=0.40, W_BSQ=0.60;
-  const $id=(x)=>document.getElementById(x);
-  const $qsa=(s)=>Array.from(document.querySelectorAll(s));
-let mode=null;
-let prevScrollY = 0;   
+/* ------------------ Kalkulyator backend ------------------ */
+(function initCalculator() {
+  const W_KSQ = 0.40, W_BSQ = 0.60;
+  const $id = (x) => document.getElementById(x);
+  const $qsa = (s) => Array.from(document.querySelectorAll(s));
 
-  function updateModeUI(){
-    const card=document.getElementById('calc-card');
-    document.querySelectorAll('[data-mode]').forEach(b=>{
-      const act=(b.dataset.mode===mode);
-      b.classList.toggle('bg-white/10',act);
-      b.classList.toggle('border-slate-300',act);
-      b.setAttribute('aria-pressed', act?'true':'false');
+  let mode = null;
+
+  function updateModeUI() {
+    const card = document.getElementById('calc-card');
+
+    document.querySelectorAll('[data-mode]').forEach(b => {
+      const act = (b.dataset.mode === mode);
+      b.classList.toggle('bg-white/10', act);
+      b.classList.toggle('border-slate-300', act);
+      b.setAttribute('aria-pressed', act ? 'true' : 'false');
     });
-    if(!mode){
+
+    if (!mode) {
       card?.classList.add('vcenter');
-      ['fs-t1','fs-t2','calc-output'].forEach(id=>$id(id)?.classList.add('hidden'));
-      ['out-t1-card','out-t2-card','out-year-card'].forEach(id=>$id(id)?.classList.add('hidden'));
+      ['fs-t1', 'fs-t2', 'calc-output'].forEach(id => $id(id)?.classList.add('hidden'));
+      ['out-t1-card', 'out-t2-card', 'out-year-card'].forEach(id => $id(id)?.classList.add('hidden'));
       return;
     }
+
     card?.classList.remove('vcenter');
-    $id('fs-t1').classList.toggle('hidden', mode==='t2');
-    $id('fs-t2').classList.toggle('hidden', mode==='t1');
-    $id('out-t1-card')?.classList.toggle('hidden', mode==='t2');
-    $id('out-t2-card')?.classList.toggle('hidden', mode==='t1');
-    $id('out-year-card')?.classList.toggle('hidden', mode!=='both');
+    $id('fs-t1').classList.toggle('hidden', mode === 't2');
+    $id('fs-t2').classList.toggle('hidden', mode === 't1');
+    $id('out-t1-card')?.classList.toggle('hidden', mode === 't2');
+    $id('out-t2-card')?.classList.toggle('hidden', mode === 't1');
+    $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
   }
 
-  $qsa('[data-mode]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const keepY=window.scrollY;
-      mode=btn.dataset.mode;
+  // ✅ Rejim seçiləndən sonra avtomatik kalkulyator kartına scroll
+  $qsa('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      mode = btn.dataset.mode;
       updateModeUI();
       btn.blur();
-requestAnimationFrame(()=>window.scrollTo({top: keepY, left: 0, behavior: 'instant'}));
+
+      const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
+      const anchor = target || document.getElementById('calc-card');
+      scrollToWithHeader(anchor);
     });
   });
-updateModeUI();
+  updateModeUI();
 
-  const btn=$id('btn-calc'), out=$id('calc-output'), err=$id('calc-error'), warn=$id('calc-warn'), resetBtn=$id('btn-reset');
+  const btn = $id('btn-calc'),
+        out = $id('calc-output'),
+        err = $id('calc-error'),
+        warn = $id('calc-warn'),
+        resetBtn = $id('btn-reset');
 
-  function clearOutputs(){ ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade','out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id=>{ $id(id).textContent='—'; }); }
-// header örtməsin deyə offset-lə scroll
-function scrollToWithHeader(el){
-  const headerH = document.querySelector('header')?.offsetHeight || 0;
-  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 8; // 8px bufer
-  window.scrollTo({ top: y, behavior: 'smooth' });
-}
+  function clearOutputs() {
+    [
+      'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
+      'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
+      'out-year','out-year-grade'
+    ].forEach(id => { $id(id).textContent = '—'; });
+  }
 
-  function resetCalc(){
-  ['t1','t2'].forEach(p=>{
-    ['1','2','3','4','5','6'].forEach(n=>{
-      const el=$id(`${p}-ksq${n}`); if(el) el.value='';
+  // header örtməsin deyə offset-lə scroll
+  function scrollToWithHeader(el) {
+    if (!el) return;
+    const headerH = document.querySelector('header')?.offsetHeight || 0;
+    const y = el.getBoundingClientRect().top + window.scrollY - headerH - 8;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  function resetCalc() {
+    ['t1', 't2'].forEach(p => {
+      ['1', '2', '3', '4', '5', '6'].forEach(n => {
+        const el = $id(`${p}-ksq${n}`); if (el) el.value = '';
+      });
+      const bsq = $id(`${p}-bsq`); if (bsq) bsq.value = '';
     });
-    const bsq=$id(`${p}-bsq`); if(bsq) bsq.value='';
-  });
 
-  err.classList.add('hidden'); err.textContent='';
-  warn.classList.add('hidden'); clearOutputs();
-  out.classList.add('hidden');
+    err.classList.add('hidden'); err.textContent = '';
+    warn.classList.add('hidden'); clearOutputs();
+    out.classList.add('hidden');
 
-  // görünən bölmənin tam üstündə dayandır
-  const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
-const anchor = document.querySelector('#calc-card .p-4') || (target ?? $id('calc-card'));
-scrollToWithHeader(anchor);
-}
+    const target = (mode === 't2') ? $id('fs-t2') : $id('fs-t1');
+    const anchor = document.querySelector('#calc-card .p-4') || (target ?? $id('calc-card'));
+    scrollToWithHeader(anchor);
+  }
 
   resetBtn?.addEventListener('click', resetCalc);
 
-  const numOrNull=v=>(v===''||v==null)?null:(isFinite(+v)?+v:null);
-  const to5=x=>(x>=81)?5:(x>=61)?4:(x>=41)?3:2;
-  const idsFor=prefix=>['1','2','3','4','5','6'].map(n=>`${prefix}-ksq${n}`);
-  const avg=arr=>arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+  const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
+  const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 41) ? 3 : 2;
+  const idsFor = prefix => ['1','2','3','4','5','6'].map(n => `${prefix}-ksq${n}`);
+  const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
-  function readTerm(prefix){
-    const ksq=idsFor(prefix).map(id=>numOrNull($id(id).value)).filter(v=>v!==null);
-    const bsq=numOrNull($id(`${prefix}-bsq`).value);
-    return {ksq,bsq};
+  function readTerm(prefix) {
+    const ksq = idsFor(prefix).map(id => numOrNull($id(id).value)).filter(v => v !== null);
+    const bsq = numOrNull($id(`${prefix}-bsq`).value);
+    return { ksq, bsq };
   }
-  function computeTerm(prefix,outIds){
-    const {ksq,bsq}=readTerm(prefix);
-    if(ksq.length===0 && bsq===null) return null;
-    if(bsq===null || bsq<0 || bsq>100){
-      err.textContent=(prefix==='t1'?'I':'II')+' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
-      err.classList.remove('hidden'); return {error:true};
+
+  function computeTerm(prefix, outIds) {
+    const { ksq, bsq } = readTerm(prefix);
+    if (ksq.length === 0 && bsq === null) return null;
+
+    if (bsq === null || bsq < 0 || bsq > 100) {
+      err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
+      err.classList.remove('hidden');
+      return { error:true };
     }
-    const kAvg=ksq.length? avg(ksq) : 0;
-    warn.classList.toggle('hidden', ksq.length===6 || ksq.length===0);
-    const total=+(kAvg*W_KSQ + bsq*W_BSQ).toFixed(2);
-    $id(outIds.total).textContent=total.toFixed(2);
-    $id(outIds.ksq).textContent=kAvg.toFixed(2);
-    $id(outIds.bsq).textContent=bsq.toFixed(2);
-    $id(outIds.grade).textContent=to5(total);
+
+    const kAvg = ksq.length ? avg(ksq) : 0;
+    warn.classList.toggle('hidden', ksq.length === 6 || ksq.length === 0);
+
+    const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
+    $id(outIds.total).textContent = total.toFixed(2);
+    $id(outIds.ksq).textContent   = kAvg.toFixed(2);
+    $id(outIds.bsq).textContent   = bsq.toFixed(2);
+    $id(outIds.grade).textContent = to5(total);
     return total;
   }
 
-  [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id=>{
-    const el=$id(id); el?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
+  [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id => {
+    const el = $id(id);
+    el?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
   });
 
-btn?.addEventListener('click',()=>{
-  err.classList.add('hidden'); err.textContent='';
-  updateModeUI();
+  btn?.addEventListener('click', () => {
+    err.classList.add('hidden'); err.textContent = '';
+    updateModeUI();
 
-  if(!mode){
-    err.textContent='Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-    err.classList.remove('hidden'); 
-    return;
-  }
+    if (!mode) {
+      err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
+      err.classList.remove('hidden');
+      return;
+    }
 
-  let t1=null, t2=null, hadError=false;
+    let t1 = null, t2 = null;
 
-  // I və II yarımil hesablamaları burda qalır...
+    // I yarımil
+    if (mode !== 't2') {
+      const r1 = computeTerm('t1',
+        { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
+      if (typeof r1 === 'number') t1 = r1;
+    } else {
+      ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
+    }
 
-  // nəticə panelini göstər
-  out.classList.remove('hidden');
+    // II yarımil
+    if (mode !== 't1') {
+      const r2 = computeTerm('t2',
+        { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
+      if (typeof r2 === 'number') t2 = r2;
+    } else {
+      ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
+    }
 
-  // ✅ həm nəticə, həm də 2 düymə görünsün
-  const anchor = document.querySelector('.actions-row') || out;
-  scrollToWithHeader(anchor);
+    // nəticə panelini göstər
+    out.classList.remove('hidden');
 
-  // illik yalnız hər ikisi rəqəm olarsa...
-});
+    // ✅ nəticə + "Hesabla / Sıfırla" birlikdə görünsün
+    const anchor = document.querySelector('.actions-row') || out;
+    scrollToWithHeader(anchor);
 
+    // illik yalnız hər ikisi rəqəm olarsa
+    if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
+      const yearVal = +(((t1 + t2) / 2).toFixed(2));
+      $id('out-year').textContent = yearVal.toFixed(2);
+      $id('out-year-grade').textContent = to5(yearVal);
+      $id('out-year-card').classList.remove('hidden');
+    } else {
+      $id('out-year').textContent = '—';
+      $id('out-year-grade').textContent = '—';
+      $id('out-year-card').classList.add('hidden');
+    }
+  });
 
 })();
 
-(function init(){ if('scrollRestoration' in history) history.scrollRestoration='manual'; window.scrollTo(0,0); })();
+(function init() {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0,0);
+})();
 </script>
+
 
 </body>
 </html>

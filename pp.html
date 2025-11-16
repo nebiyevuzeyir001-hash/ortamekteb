@@ -121,6 +121,22 @@ html, body{
 .select-premium:focus{outline:0;border-color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
 select:invalid{color:#9aa4b2}
 .fs-wrap{position:relative;display:block;width:100%}
+/* Drop-up rejimi (yuxarı açılan menyu) */
+.fs-wrap.fs-drop-up .fs-menu{
+  top: auto;
+  bottom: calc(100% + 6px);
+  box-shadow: 0 -12px 28px rgba(0,0,0,.12);
+}
+
+.dark .fs-wrap.fs-drop-up .fs-menu{
+  box-shadow: 0 -16px 32px rgba(0,0,0,.45);
+}
+
+/* Oxu tərs çevir (istəsən) */
+.fs-wrap.fs-drop-up .fs-btn::after{
+  transform: translateY(-50%) rotate(180deg);
+}
+
 select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
 .fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
 .fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
@@ -420,58 +436,104 @@ const state = {
 function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)}
 function addPlaceholder(selectEl,label){const o=document.createElement('option');o.value="";o.textContent=label;o.disabled=true;o.selected=true;o.hidden=true;selectEl.appendChild(o);selectEl.required=true}
 function enhanceFancySelect(select){
-  if(select.dataset.fancyMounted==='1'){const old=select.parentElement?.classList.contains('fs-wrap')?select.parentElement:null;if(old)old.replaceWith(select);select.dataset.fancyMounted='0'}
-const wrap=document.createElement('div');wrap.className='fs-wrap';wrap.setAttribute('aria-expanded','false');
+  // artıq qurulubsa, əvvəlkini sök
+  if(select.dataset.fancyMounted==='1'){
+    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
+    if(old) old.replaceWith(select);
+    select.dataset.fancyMounted='0';
+  }
 
-const btn=document.createElement('button');
-btn.type='button';
-btn.className='fs-btn';
-btn.setAttribute('aria-haspopup','listbox');
-btn.setAttribute('aria-expanded','false');
-btn.textContent=select.options[select.selectedIndex]?.text||select.getAttribute('placeholder')||'Seçin';
+  const wrap = document.createElement('div');
+  wrap.className = 'fs-wrap';
+  wrap.setAttribute('aria-expanded','false');
 
-const menu=document.createElement('div');
-menu.className='fs-menu';
-menu.setAttribute('role','listbox');
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'fs-btn';
+  btn.setAttribute('aria-haspopup','listbox');
+  btn.setAttribute('aria-expanded','false');
+  btn.textContent = select.options[select.selectedIndex]?.text ||
+                    select.getAttribute('placeholder') || 'Seçin';
 
-Array.from(select.options).forEach(o=>{
-  const item=document.createElement('div');
-  item.className='fs-opt'+(o.disabled&&o.hidden?' is-placeholder':'');
-  item.setAttribute('role','option');
-  item.setAttribute('aria-selected', String(o.selected));
-  item.textContent=o.text;
-  item.addEventListener('click',()=>{
-    Array.from(select.options).forEach(op=>op.selected=(op===o));
-    // aria-selected bayraqlarını yenilə
-    menu.querySelectorAll('[role="option"]').forEach(el=>el.setAttribute('aria-selected','false'));
-    item.setAttribute('aria-selected','true');
+  const menu = document.createElement('div');
+  menu.className = 'fs-menu';
+  menu.setAttribute('role','listbox');
 
-    select.value=o.value;
-    select.dispatchEvent(new Event('change',{bubbles:true}));
-    btn.textContent=o.text;
+  Array.from(select.options).forEach(o=>{
+    const item = document.createElement('div');
+    item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
+    item.setAttribute('role','option');
+    item.setAttribute('aria-selected', String(o.selected));
+    item.textContent = o.text;
+
+    item.addEventListener('click', ()=>{
+      Array.from(select.options).forEach(op => op.selected = (op === o));
+      menu.querySelectorAll('[role="option"]').forEach(el => el.setAttribute('aria-selected','false'));
+      item.setAttribute('aria-selected','true');
+
+      select.value = o.value;
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+
+      btn.textContent = o.text;
+      wrap.setAttribute('aria-expanded','false');
+      btn.setAttribute('aria-expanded','false');
+      wrap.classList.remove('fs-drop-up');
+    });
+
+    menu.appendChild(item);
+  });
+
+  // native select gizli qalsın
+  select.classList.add('fs-native');
+  select.tabIndex = -1;
+  select.setAttribute('aria-hidden','true');
+
+  // DOM-da yer dəyiş
+  select.parentNode.insertBefore(wrap, select);
+  wrap.appendChild(btn);
+  wrap.appendChild(select);
+  wrap.appendChild(menu);
+  select.dataset.fancyMounted='1';
+
+  btn.addEventListener('mousedown', e => e.preventDefault());
+
+  btn.addEventListener('click', e=>{
+    e.stopPropagation();
+    const alreadyOpen = wrap.getAttribute('aria-expanded') === 'true';
+
+    // əvvəlcə başqa açıq menyuları bağla
+    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>{
+      w.setAttribute('aria-expanded','false');
+      w.querySelector('.fs-btn')?.setAttribute('aria-expanded','false');
+      w.classList.remove('fs-drop-up');
+    });
+
+    if(!alreadyOpen){
+      // indi açılacaq – istiqaməti hesabla
+      const rect = wrap.getBoundingClientRect();
+      const menuHeight = Math.min(menu.scrollHeight, 260) + 12; // max-height + buffer
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      if(spaceBelow < menuHeight && spaceAbove > spaceBelow){
+        wrap.classList.add('fs-drop-up');   // yuxarı aç
+      }else{
+        wrap.classList.remove('fs-drop-up'); // aşağı aç
+      }
+    }
+
+    const willOpen = !alreadyOpen;
+    wrap.setAttribute('aria-expanded', String(willOpen));
+    btn.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  document.addEventListener('click', ()=>{
     wrap.setAttribute('aria-expanded','false');
     btn.setAttribute('aria-expanded','false');
+    wrap.classList.remove('fs-drop-up');
   });
-  menu.appendChild(item)
-});
-  select.classList.add('fs-native');select.tabIndex=-1;select.setAttribute('aria-hidden','true');
-  select.parentNode.insertBefore(wrap,select);wrap.appendChild(btn);wrap.appendChild(select);wrap.appendChild(menu);select.dataset.fancyMounted='1';
-btn.addEventListener('mousedown',e=>e.preventDefault());
-btn.addEventListener('click',e=>{
-  e.stopPropagation();
-  const open = wrap.getAttribute('aria-expanded')==='true';
-  document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>{
-    w.setAttribute('aria-expanded','false');
-    w.querySelector('.fs-btn')?.setAttribute('aria-expanded','false');
-  });
-  wrap.setAttribute('aria-expanded', String(!open));
-  btn.setAttribute('aria-expanded', String(!open));
-});
-document.addEventListener('click',()=>{
-  wrap.setAttribute('aria-expanded','false');
-  btn.setAttribute('aria-expanded','false');
-});
 }
+
 function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
 (function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
 function renderLoadingBlock(title, subtitle) {

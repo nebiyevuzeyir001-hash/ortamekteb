@@ -245,14 +245,33 @@ select.select-premium.fs-native{
   color:#e5e7eb !important;
 }
 
-/* 3) "DOCX/PDF" pill-i */
+/* 3) "DOCX/PDF" pill-i — LIGHT rejim */
+#ksq-results span.rounded-full.bg-slate-100{
+  background: rgba(148,163,184,.08) !important;
+  border-color: rgba(148,163,184,.45) !important;
+  color: #334155 !important;
+}
+
+/* LIGHT rejimdə PDF/DOCX fərqləndirilməsi */
+#ksq-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
+  background: rgba(239,68,68,.10) !important;
+  border-color: rgba(239,68,68,.45) !important;
+  color: #7f1d1d !important;
+}
+#ksq-results span.rounded-full.bg-slate-100[data-ext="DOCX"]{
+  background: rgba(59,130,246,.10) !important;
+  border-color: rgba(59,130,246,.45) !important;
+  color: #1e3a8a !important;
+}
+
+/* 3) "DOCX/PDF" pill-i — DARK rejim */
 .dark #ksq-results span.rounded-full.bg-slate-100{
   background: rgba(148,163,184,.16) !important;
   border-color: rgba(148,163,184,.38) !important;
   color: #e5e7eb !important;
 }
 
-/* (istəyə bağlı) PDF/DOCX üçün bir az rəng ipucu */
+/* DARK rejimdə PDF/DOCX fərqləndirilməsi */
 .dark #ksq-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
   background: rgba(239,68,68,.18) !important;
   border-color: rgba(239,68,68,.40) !important;
@@ -261,6 +280,7 @@ select.select-premium.fs-native{
   background: rgba(59,130,246,.18) !important;
   border-color: rgba(59,130,246,.40) !important;
 }
+
 /* Məlumat bölməsi üçün sərt rəng məcburiyyəti (çərçivə yoxdur) */
 .info-section { background: transparent !important; }
 .info-section, .info-section p, .info-section h2, .info-section a {

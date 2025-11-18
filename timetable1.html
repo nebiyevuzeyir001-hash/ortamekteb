@@ -4,10 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dərs cədvəli generatoru — EduPlan</title>
-  <meta name="description" content="Müəllim və sinif məlumatlarına əsasən avtomatik dərs cədvəli hazırlayan sadə generator.">
-  <meta name="robots" content="noindex, follow" />
+  <meta name="description" content="Azərbaycan orta məktəbləri üçün onlayn dərs cədvəli generatoru — müəllim, sinif və fənn məlumatlarını daxil edin, sistem avtomatik cədvəl qursun.">
 
-  <!-- Favicons / manifest – istəsən PP səhifəndən eynilə köçür -->
+  <!-- Favicons / PWA (sən artıq bunları saxlaya bilərsən) -->
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png"
         href="/favicon-light-32.png"
@@ -23,178 +22,79 @@
   <link rel="icon" type="image/png" href="/android-chrome-512x512.png" sizes="512x512">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
   <meta name="theme-color" content="#0ea5e9">
+
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="az" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Dərs cədvəli generatoru — EduPlan" />
+  <meta property="og:description" content="Müəllim və sinif məlumatlarını daxil edin, sistem avtomatik dərs cədvəli hazırlasın." />
+  <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg" />
+  <meta property="og:url" content="https://www.eduplan.az/timetable.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="EduPlan" />
 
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* === Ümumi tema dəyişənləri (PP / KSQ ilə uyğun) === */
     :root{
-      --bg-from:#f8fafc; --bg-to:#ffffff; --text:#0f172a; --card:#ffffff; --muted:#475569; --border:#e2e8f0;
-      --tab-track:#eef2f6; --pill:#e9edf3; --pill-text:#334155;
+      --bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;
+      --panel-min-h:320px;--panel-max-h:520px;
+      --panel-pad-top:8px;--panel-pad-bottom:8px;
     }
     .dark{
-      --bg-from:#0b1220; --bg-to:#0a0f1a; --text:#e2e8f0; --card:#0f172a; --muted:#cbd5e1; --border:#334155;
-      --tab-track:#111827; --pill:#0f172a; --pill-text:#cbd5e1;
+      --bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;--tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1;
     }
-    :where(html, body, main, header, footer, section){
-      overflow-x:clip; min-width:0;
-    }
-    html::before{
-      content:""; position:fixed; inset:0; z-index:-1;
-      background:linear-gradient(to bottom,var(--bg-from),var(--bg-to));
-    }
-    html{ background:var(--bg-to); }
-    html.dark{ background:#0a0f1a; }
-    body{ min-height:100svh; color:var(--text); }
-    .bg-white{ background-color:var(--card)!important; transition:box-shadow .2s; }
-    .bg-white:hover{ box-shadow:0 6px 16px rgba(0,0,0,.08); }
-    .dark .bg-white:hover{ box-shadow:0 6px 16px rgba(255,255,255,.12); }
-    .text-slate-900,.text-slate-800,.text-slate-700{ color:var(--text)!important; }
-    .text-slate-600,.text-slate-500{ color:var(--muted)!important; }
-    .border-slate-200{ border-color:var(--border)!important; }
-    .backdrop-blur.bg-white\/70{
-      background-color:color-mix(in srgb,var(--card) 70%,transparent)!important;
-    }
+
+    :where(html,body,main,header,footer,section){overflow-x:clip;min-width:0}
+    html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
+    html{background:var(--bg-to)} html.dark{background:#0a0f1a}
+    body{min-height:100svh;color:var(--text)}
+    .bg-white{background-color:var(--card)!important;transition:box-shadow .2s}
+    .bg-white:hover{box-shadow:0 6px 16px rgba(0,0,0,.08)} .dark .bg-white:hover{box-shadow:0 6px 16px rgba(0,0,0,.18)}
+    .text-slate-900,.text-slate-800,.text-slate-700{color:var(--text)!important}
+    .text-slate-600,.text-slate-500{color:var(--muted)!important}
+    .border-slate-200{border-color:var(--border)!important}
+    .backdrop-blur.bg-white\/70{background-color:color-mix(in srgb,var(--card) 70%,transparent)!important}
+    select,input{background-color:var(--card)!important;color:var(--text)!important}
+    #dark-toggle:checked+span{background:#334155} #dark-toggle:checked+span .dot{transform:translateX(16px)}
+    .panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
+    .panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
 
     /* Scrollbar */
     :root { --sb-size: 12px; }
-    @media (min-width: 1024px){ :root { --sb-size: 12px; } }
+    @media (min-width: 1024px){
+      :root { --sb-size: 12px; }
+    }
     html, body{
       scrollbar-width:auto;
       scrollbar-color: rgba(110,110,120,.45) transparent;
     }
-    ::-webkit-scrollbar{ width: var(--sb-size); height: var(--sb-size); }
+    ::-webkit-scrollbar{
+      width: var(--sb-size);
+      height: var(--sb-size);
+    }
     ::-webkit-scrollbar-thumb{
       background: rgba(110,110,120,.50);
       border-radius: 9999px;
       border: 3px solid transparent;
       background-clip: content-box;
     }
-    ::-webkit-scrollbar-thumb:hover{ background: rgba(110,110,120,.70); }
+    ::-webkit-scrollbar-thumb:hover{
+      background: rgba(110,110,120,.70);
+    }
     ::-webkit-scrollbar-track{ background: transparent; }
-    .dark html, .dark body{ scrollbar-color: rgba(185,195,255,.35) transparent; }
+    .dark html, .dark body{
+      scrollbar-color: rgba(185,195,255,.35) transparent;
+    }
     .dark ::-webkit-scrollbar-thumb{
-      background: rgba(185,195,255,.35); border: 3px solid transparent;
+      background: rgba(185,195,255,.35);
+      border: 3px solid transparent;
     }
     .dark ::-webkit-scrollbar-thumb:hover{
       background: rgba(185,195,255,.55);
-    }
-
-    /* Panel card */
-    .panel-card{
-      display:grid;
-      grid-template-rows:auto minmax(0,1fr);
-      border-radius:1rem;
-      border:1px solid var(--border);
-    }
-
-    /* Toggle */
-    #dark-toggle:checked+span{ background:#334155; }
-    #dark-toggle:checked+span .dot{ transform:translateX(16px); }
-
-    /* Custom primary button (KSQ stilində) */
-    .ep-btn-primary{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:.4rem;
-      padding:.6rem 1rem;
-      border-radius:.9rem;
-      border:none;
-      font-weight:600; font-size:.9rem;
-      color:#fff;
-      background:linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%);
-      box-shadow:0 4px 12px rgba(79,70,229,.35);
-      transition:transform .15s, box-shadow .25s, filter .25s;
-    }
-    .ep-btn-primary:hover{
-      transform:translateY(-1px);
-      filter:brightness(1.05);
-      box-shadow:0 6px 18px rgba(79,70,229,.55);
-    }
-    .ep-btn-primary:active{
-      transform:translateY(0);
-      filter:brightness(.98);
-      box-shadow:0 3px 10px rgba(15,23,42,.4);
-    }
-    .dark .ep-btn-primary{
-      background:linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%);
-      box-shadow:0 4px 10px rgba(15,23,42,.9);
-    }
-
-    /* Secondary button */
-    .ep-btn-secondary{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:.6rem 1rem;
-      border-radius:.9rem;
-      font-size:.85rem;
-      font-weight:500;
-      border:1px solid var(--border);
-      background:color-mix(in srgb,var(--card) 92%, transparent);
-    }
-
-    /* Teacher day pills */
-    .tt-day-pill{
-      border-radius:9999px;
-      border:1px solid var(--border);
-      padding:.2rem .55rem;
-      font-size:.7rem;
-      display:inline-flex;
-      align-items:center;
-      gap:.25rem;
-      background:rgba(148,163,184,.10);
-    }
-    .tt-day-pill input[type="checkbox"]{
-      width:12px; height:12px;
-      accent-color:#0ea5e9;
-    }
-
-    .dark .tt-day-pill{
-      background:rgba(15,23,42,.8);
-      border-color:#334155;
-    }
-
-    /* Timetable table */
-    .tt-table th,
-    .tt-table td{
-      border:1px solid var(--border);
-      font-size:.75rem;
-      text-align:center;
-      padding:.3rem .35rem;
-    }
-    .tt-table th{
-      background:rgba(148,163,184,.16);
-      font-weight:600;
-    }
-    .dark .tt-table th{
-      background:#020617;
-    }
-    .tt-slot-empty{
-      color:#9ca3af;
-      font-size:.7rem;
-    }
-
-    /* Tabs for classes */
-    .tt-tab-btn{
-      padding:.35rem .7rem;
-      border-radius:9999px;
-      border:1px solid transparent;
-      font-size:.75rem;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .tt-tab-btn.active{
-      background:#0ea5e9;
-      color:white;
-      border-color:#0ea5e9;
-    }
-    .tt-tab-btn:not(.active){
-      background:rgba(148,163,184,.08);
-      color:#475569;
-    }
-    .dark .tt-tab-btn:not(.active){
-      background:#020617;
-      color:#cbd5e1;
-      border-color:#1f2937;
     }
 
     /* Footer mətni */
@@ -205,24 +105,152 @@
       text-wrap: balance;
     }
     .footer-text .chunk{ white-space: nowrap; }
+
+    /* Form kartı */
+    .timetable-layout{
+      display:grid;
+      grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
+      gap:1.25rem;
+    }
+    @media (max-width:1023px){
+      .timetable-layout{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+
+    .section-title{
+      font-size:.85rem;
+      font-weight:600;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+      color:#64748b;
+    }
+    .dark .section-title{color:#94a3b8;}
+
+    table.config-table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 4px;
+      font-size:.8rem;
+    }
+    table.config-table th{
+      text-align:left;
+      font-weight:500;
+      color:#64748b;
+      padding:4px 6px;
+      font-size:.75rem;
+    }
+    table.config-table td{
+      padding:4px 6px;
+    }
+    table.config-table input,
+    table.config-table select{
+      width:100%;
+      border-radius:.6rem;
+      border:1px solid var(--border);
+      padding:.3rem .6rem;
+      font-size:.8rem;
+      outline:none;
+    }
+    table.config-table input:focus,
+    table.config-table select:focus{
+      border-color:#6366f1;
+      box-shadow:0 0 0 2px rgba(129,140,248,.25);
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      border-radius:9999px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(148,163,184,.08);
+      padding:2px 8px;
+      font-size:.7rem;
+      color:#475569;
+      gap:.25rem;
+    }
+    .dark .chip{
+      border-color:rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      color:#e5e7eb;
+    }
+
+    /* Nəticə tabları */
+    .tab-btn{
+      border-radius:9999px;
+      padding:.25rem .7rem;
+      font-size:.78rem;
+      border:1px solid transparent;
+      background:transparent;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .tab-btn.active{
+      border-color:#0ea5e9;
+      background:rgba(14,165,233,.07);
+      color:#0369a1;
+    }
+    .dark .tab-btn.active{
+      background:rgba(56,189,248,.10);
+      color:#e0f2fe;
+      border-color:#38bdf8;
+    }
+
+    .tt-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.78rem;
+    }
+    .tt-table th,
+    .tt-table td{
+      border:1px solid var(--border);
+      padding:.3rem .4rem;
+      text-align:center;
+    }
+    .tt-table th{
+      background:rgba(148,163,184,.12);
+      font-weight:600;
+      font-size:.75rem;
+    }
+    .dark .tt-table th{
+      background:rgba(15,23,42,.9);
+    }
+    .tt-slot-muted{
+      color:#9ca3af;
+      font-style:italic;
+    }
+
+    /* Çap üçün – yalnız cədvəl qalsın (istəsən əlavə düzəldərsən) */
+    @media print{
+      header, .no-print, footer{
+        display:none !important;
+      }
+      main{
+        padding:0 !important;
+        max-width:none !important;
+      }
+      body{
+        background:white !important;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen text-slate-900 relative">
-  <!-- Dekor -->
+  <!-- dekor -->
   <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
   </div>
 
-  <!-- Header (PP/KSQ ilə eyni struktur) -->
+  <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-indigo-400 rounded-xl">
           <img id="site-logo"
-              src="assets/ep-favicon-light.svg"
-              class="h-9 w-9 rounded-full overflow-hidden shadow-sm"
-              alt="EduPlan" />
+               src="assets/ep-favicon-light.svg"
+               class="h-9 w-9 rounded-full overflow-hidden shadow-sm"
+               alt="EduPlan" />
           <span class="font-semibold tracking-tight group-hover:underline">EduPlan AZ</span>
         </a>
       </div>
@@ -230,8 +258,9 @@
       <div class="relative flex items-center gap-3" id="header-controls">
         <button id="btn-settings" class="rounded-2xl border p-2 text-base leading-none"
                 aria-label="Settings" title="Settings">⚙️</button>
+
         <div id="settings-panel"
-            class="hidden fixed right-4 top-[72px] z-[80] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
+             class="hidden fixed right-4 top-[72px] z-[80] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div class="text-sm">🌙 Qaranlıq rejim</div>
             <label class="inline-flex items-center cursor-pointer">
@@ -248,223 +277,275 @@
 
   <!-- MAIN -->
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Başlıq -->
     <section class="mb-6 sm:mb-8">
       <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">
         Dərs cədvəli generatoru
       </h1>
-      <p class="mt-2 text-slate-600 dark:text-slate-300 text-sm sm:text-base">
-        Müəllim, sinif və fənn məlumatlarını daxil edin, sistem həftəlik dərs cədvəlini
-        avtomatik yerləşdirməyə cəhd edəcək. Bu versiya sadə greedy alqoritm istifadə edir,
-        tam ASC Timetable səviyyəsində optimallaşdırma etmir.
+      <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-2xl">
+        Orta məktəblər üçün dərs cədvəli: müəllim, sinif və fənn məlumatlarını daxil edin,
+        sistem Azərbaycan məktəblərinə uyğun məhdudiyyətlərlə avtomatik cədvəl qursun.
       </p>
     </section>
 
-    <!-- Panel -->
     <section class="add-shadow">
-      <div class="panel-card bg-white shadow-sm hover:shadow-md transition" id="tt-card">
-        <div class="p-4 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h3 class="font-semibold">Məlumat girişi</h3>
-          <div class="flex flex-wrap gap-2">
-            <button id="btn-generate" class="ep-btn-primary text-xs sm:text-sm">
-              Cədvəli hazırla
-            </button>
-            <button id="btn-reset-data" class="ep-btn-secondary text-xs sm:text-sm" type="button">
-              Məlumatı sıfırla
-            </button>
-          </div>
+      <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
+        <div class="p-4 border-b flex items-center justify-between">
+          <h3 class="font-semibold">🧩 Məktəb konfiqurasiyası və generator</h3>
+          <span class="chip no-print">
+            <span class="text-xs">Qeyd</span> ·
+            <span class="text-[11px]">ASC qədər ağır deyil, amma real istifadəyə uyğundur</span>
+          </span>
         </div>
 
-        <div class="px-4 pt-3 pb-4 space-y-6">
-          <!-- Müəllimlər paneli -->
-          <div class="grid lg:grid-cols-2 gap-4">
-            <div>
-              <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">
-                Müəllimlər və məhdudiyyətlər
-              </h4>
-              <p class="text-xs text-slate-500 mb-3">
-                Sadə nümunə müəllim siyahısı. Lazım olduqca JS-də “teachers” massivinə öz
-                müəllimlərinizi əlavə edə bilərsiniz. Aşağıda hər bir müəllim üçün
-                <span class="font-medium">gəlmə günlərini</span> işarələyə bilərsiniz.
-              </p>
-              <div id="teacher-list" class="space-y-3"></div>
+        <div class="px-4 pt-2 pb-4 timetable-layout">
+          <!-- SOL: Konfiqurasiya -->
+          <div class="space-y-4">
+            <!-- Məktəb parametrləri -->
+            <div class="rounded-xl border border-slate-200 p-3">
+              <div class="section-title mb-1">Məktəb parametrləri</div>
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <label class="block text-xs mb-1">Həftəlik iş günü</label>
+                  <select id="daysCount" class="w-full rounded-lg border px-2 py-1.5 text-sm">
+                    <option value="5">5 gün (B.e–C)</option>
+                    <option value="6">6 gün (B.e–Ş)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs mb-1">Gündə dərs saatı (max)</label>
+                  <input id="lessonsPerDay" type="number" min="1" max="8"
+                         value="7"
+                         class="w-full rounded-lg border px-2 py-1.5 text-sm" />
+                </div>
+              </div>
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                <label class="inline-flex items-start gap-2">
+                  <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
+                  <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
+                </label>
+                <label class="inline-flex items-start gap-2">
+                  <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
+                  <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın</span>
+                </label>
+              </div>
+              <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
+                İbtidai üçün gündə 6, əsas üçün 7, yuxarı üçün 8 dərs limiti standart kimi tətbiq olunur
+                (sinif cədvəlində ayrıca dəyişmək mümkündür).
+              </div>
             </div>
 
-            <!-- Dərs sətirləri paneli -->
-            <div>
-              <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">
-                Dərslər (sinif · fənn · müəllim · həftəlik saat)
-              </h4>
-              <p class="text-xs text-slate-500 mb-3">
-                Məsələn: “5A · Riyaziyyat · Rauf müəllim · 4 saat”. Hər əlavə etdiyiniz sətir
-                üçün sistem həftə ərzində uyğun slotlar tapmağa çalışacaq.
-              </p>
-
-              <!-- Dərs əlavə formu -->
-              <div class="rounded-xl border border-slate-200 p-3 space-y-2">
-                <div class="grid grid-cols-2 gap-2 mb-1">
-                  <div>
-                    <label class="block text-xs text-slate-500 mb-1">Sinif</label>
-                    <input id="in-class" type="text" placeholder="məs: 5A"
-                           class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm bg-transparent">
-                  </div>
-                  <div>
-                    <label class="block text-xs text-slate-500 mb-1">Fənn</label>
-                    <input id="in-subject" type="text" placeholder="məs: Riyaziyyat"
-                           class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm bg-transparent">
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="block text-xs text-slate-500 mb-1">Müəllim</label>
-                    <select id="in-teacher"
-                            class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm bg-transparent">
-                      <!-- JS ilə doldurulacaq -->
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-xs text-slate-500 mb-1">Həftəlik saat</label>
-                    <input id="in-hours" type="number" min="1" max="40" value="1"
-                           class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm bg-transparent">
-                  </div>
-                </div>
-
-                <div class="flex justify-end pt-2">
-                  <button id="btn-add-lesson" class="ep-btn-secondary text-xs" type="button">
-                    Sətir əlavə et
-                  </button>
-                </div>
+            <!-- Müəllimlər -->
+            <div class="rounded-xl border border-slate-200 p-3">
+              <div class="flex items-center justify-between mb-1">
+                <div class="section-title">Müəllimlər</div>
+                <button type="button" id="btnAddTeacher"
+                        class="no-print inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  ➕ Əlavə et
+                </button>
               </div>
-
-              <!-- Dərs siyahısı -->
-              <div class="mt-3">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-xs text-slate-500">Daxil edilmiş dərslər</span>
-                  <span id="lessons-count" class="text-xs text-slate-500">0 sətir</span>
-                </div>
-                <div class="rounded-xl border border-slate-200 max-h-60 overflow-auto">
-                  <table class="min-w-full text-xs">
-                    <thead class="bg-slate-50 dark:bg-slate-900/40">
-                      <tr>
-                        <th class="px-2 py-1 text-left">Sinif</th>
-                        <th class="px-2 py-1 text-left">Fənn</th>
-                        <th class="px-2 py-1 text-left">Müəllim</th>
-                        <th class="px-2 py-1 text-center">Saat / həftə</th>
-                      </tr>
-                    </thead>
-                    <tbody id="lessons-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
-                      <tr id="lessons-empty-row">
-                        <td colspan="4" class="px-2 py-3 text-center text-slate-400 text-[11px]">
-                          Hələ heç bir sətir əlavə olunmayıb.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+                Hər müəllim üçün həftəlik və gündəlik maksimum saat, həmçinin 1-ci və sonuncu saatdan qaçmaq istəyi.
               </div>
+              <div class="overflow-x-auto">
+                <table class="config-table" id="teacherTable">
+                  <thead>
+                    <tr>
+                      <th>Ad, soyad</th>
+                      <th>Kod</th>
+                      <th>Həftəlik max</th>
+                      <th>Gündə max</th>
+                      <th>1-ci saatı sevmir</th>
+                      <th>Sonuncu saatı sevmir</th>
+                      <th class="no-print"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="teacherTbody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-              <div id="tt-errors" class="mt-2 text-[11px] text-rose-500 hidden"></div>
+            <!-- Siniflər -->
+            <div class="rounded-xl border border-slate-200 p-3">
+              <div class="flex items-center justify-between mb-1">
+                <div class="section-title">Siniflər</div>
+                <button type="button" id="btnAddClass"
+                        class="no-print inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  ➕ Əlavə et
+                </button>
+              </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+                Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür (tətbiqə daxil etmək olar).
+              </div>
+              <div class="overflow-x-auto">
+                <table class="config-table" id="classTable">
+                  <thead>
+                    <tr>
+                      <th>Sinif</th>
+                      <th>Səviyyə</th>
+                      <th>Növbə</th>
+                      <th>Gündə max dərs</th>
+                      <th class="no-print"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="classTbody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Dərslər -->
+            <div class="rounded-xl border border-slate-200 p-3">
+              <div class="flex items-center justify-between mb-1">
+                <div class="section-title">Fənn / dərs saatları</div>
+                <button type="button" id="btnAddLesson"
+                        class="no-print inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  ➕ Əlavə et
+                </button>
+              </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+                Hər sətir: sinif + fənn + müəllim + həftəlik saat. Qoşa dərs seçsən, imkan daxilində ardıcıl yerləşdirəcək.
+              </div>
+              <div class="overflow-x-auto max-h-72">
+                <table class="config-table" id="lessonTable">
+                  <thead>
+                    <tr>
+                      <th>Sinif</th>
+                      <th>Fənn</th>
+                      <th>Müəllim kodu/adı</th>
+                      <th>Həftəlik saat</th>
+                      <th>Ağır?</th>
+                      <th>Qoşa?</th>
+                      <th class="no-print"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="lessonTbody">
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
-          <!-- Nəticə paneli -->
-          <div class="border-t border-slate-200 pt-4">
-            <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">
-              Nəticə: dərs cədvəlləri
-            </h4>
-            <p class="text-xs text-slate-500 mb-3">
-              Mümkün olan yerdə dərslər yerləşdirilir. Əgər hansısa sətir üçün uyğun slot tapılmasa,
-              altda “yerləşdirilməyənlər” siyahısında görünəcək.
-            </p>
-
-            <!-- Sinif tabları -->
-            <div id="class-tabs" class="flex flex-wrap gap-1 mb-3"></div>
-
-            <!-- Cədvəl preview -->
-            <div id="timetable-container"
-                 class="rounded-xl border border-slate-200 p-3 overflow-auto hidden">
+          <!-- SAĞ: Generator + nəticə -->
+          <div class="flex flex-col gap-3">
+            <div class="rounded-xl border border-slate-200 p-3 no-print">
+              <div class="section-title mb-2">Generator</div>
+              <div class="space-y-2 text-xs text-slate-500 dark:text-slate-400 mb-3">
+                <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
+                <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button id="btnGenerate"
+                        class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-white
+                               bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500 shadow-sm hover:shadow-md hover:brightness-110">
+                  ⚙️ Cədvəli qur
+                </button>
+                <button id="btnResetAll"
+                        class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-xs font-medium border border-slate-300
+                               hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  🧹 Hamısını təmizlə
+                </button>
+                <button id="btnPrint"
+                        class="inline-flex items-center justify-center rounded-xl px-3 py-2 text-xs font-medium border border-slate-300
+                               hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  🖨️ Çap / PDF
+                </button>
+              </div>
+              <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
+              <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
             </div>
 
-            <!-- Unplaced lessons -->
-            <div id="unplaced-container" class="mt-4 hidden">
-              <h5 class="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">
-                Yerləşdirilə bilməyən dərslər
-              </h5>
-              <ul id="unplaced-list" class="text-[11px] text-slate-600 dark:text-slate-300 list-disc pl-4 space-y-1"></ul>
+            <div class="rounded-xl border border-slate-200 p-3 min-h-[260px]" id="resultCard">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">Nəticə</div>
+                <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
+              </div>
+
+              <!-- Sinif tabları -->
+              <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
+
+              <!-- Cədvəl -->
+              <div id="timetableContainer" class="overflow-x-auto text-xs">
+                <div class="text-[12px] text-slate-500 dark:text-slate-400">
+                  Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
+                </div>
+              </div>
+
+              <!-- Yerləşdirilməyənlər -->
+              <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 hidden"></div>
+
+              <!-- Texniki xəbərdarlıqlar -->
+              <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Info -->
-    <section class="mt-10 relative z-[1]">
-      <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Qeyd</h2>
-      <div class="space-y-3 text-base leading-7 text-slate-700 dark:text-slate-300">
-        <p class="text-sm">
-          Bu generator Azərbaycan orta məktəblərinin tipik strukturu nəzərə alınaraq hazırlanıb:
-          1–11 sinif, həftə içi 5 gün, gündə maksimum 8 dərs saatı. Alqoritm hazırda sadə
-          “greedy” yanaşmadan istifadə edir və dərin optimallaşdırma (tam ASC Timetable səviyyəsində)
-          etmir, amma müəllimin eyni anda iki sinifdə olması, həftəlik / günlük limitlər və
-          gəlmə günləri məhdudiyyətlərini nəzərə alır.
+    <!-- Qısa məlumat bloku -->
+    <section class="mt-10">
+      <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Qısa izah</h2>
+      <div class="space-y-2 text-base leading-7 text-slate-700 dark:text-slate-300">
+        <p>
+          Generator Azərbaycan orta məktəbləri üçün tipik məhdudiyyətləri nəzərə alır:
+          müəllimlərin eyni saatda iki sinifə düşməməsi, siniflərin gündə saat limitləri,
+          ağır fənlərin 1-ci və sonuncu saatdan mümkün qədər uzaq saxlanması, eyni gündə eyni fənnin
+          həddindən artıq yığılmaması və s.
         </p>
-        <p class="text-sm">
-          Gələcəkdə əlavə məhdudiyyətlər (məsələn, ardıcıl dərslərdən qaçma, son saatdan qaçma,
-          ibtidai siniflərin səhər, yuxarı siniflərin daha gec saatlara yerləşdirilməsi və s.)
-          üzərində genişləndirmə etmək mümkündür.
+        <p>
+          Alqoritm klassik ASC Timetable həcmində optimizasiya etməsə də, bir neçə dəfə
+          təsadüfi kombinasiyalar quraraq ən çox dərsi yerləşdirən və az konfliktli variantı seçməyə çalışır.
+          Çıxan cədvəli birbaşa çap edib PDF kimi saxlaya bilərsən.
         </p>
       </div>
     </section>
+
+    <footer class="mt-12 border-t border-slate-200/70 dark:border-slate-700/60">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
+                  text-slate-600 dark:text-slate-400">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="footer-text text-center sm:text-left leading-6">
+            <span class="chunk">© <span id="year"></span> <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span></span>
+            <span class="chunk"> · Bütün hüquqlar qorunur</span>
+          </div>
+
+          <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <a href="/about.html"   class="hover:underline">Haqqımızda</a>
+            <a href="/terms.html"   class="hover:underline">Şərtlər</a>
+            <a href="/privacy.html" class="hover:underline">Məxfilik</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <!-- Footer -->
-  <footer class="mt-12 border-t border-slate-200/70 dark:border-slate-700/60">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm text-slate-600 dark:text-slate-400">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="footer-text text-center sm:text-left leading-6">
-          <span class="chunk">© <span id="year"></span> <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span></span>
-          <span class="chunk"> · Bütün hüquqlar qorunur</span>
-        </div>
-        <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-          <a href="/about.html"   class="hover:underline">Haqqımızda</a>
-          <a href="/terms.html"   class="hover:underline">Şərtlər</a>
-          <a href="/privacy.html" class="hover:underline">Məxfilik</a>
-        </nav>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JS -->
   <script>
-    /* ========== Tema (PP/KSQ ilə oxşar) ========== */
-    const settingsBtn = document.getElementById('btn-settings');
-    const settingsPanel = document.getElementById('settings-panel');
-    const darkToggle = document.getElementById('dark-toggle');
+    /* === Theme (PP/KSQ ilə eyni məntiq) === */
+    const $ = s => document.querySelector(s);
+    const settingsBtn = $('#btn-settings'),
+          panel = $('#settings-panel'),
+          darkToggle = $('#dark-toggle');
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const savedTheme = localStorage.getItem('theme');
-    const initialTheme = savedTheme ? savedTheme : (mq.matches ? 'dark' : 'light');
-
+    const saved = localStorage.getItem('theme');
+    const initialTheme = saved ? saved : (mq.matches ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
     if (darkToggle) darkToggle.checked = (initialTheme === 'dark');
     applyThemeAssets(initialTheme);
 
-    document.addEventListener('click', (e) => {
-      if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
-        settingsPanel.classList.add('hidden');
-      }
+    document.addEventListener('click', e => {
+      if (!panel.contains(e.target) && !settingsBtn.contains(e.target)) panel.classList.add('hidden');
     });
     settingsBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      settingsPanel.classList.toggle('hidden');
+      panel.classList.toggle('hidden');
     });
-    darkToggle?.addEventListener('change', (e) => {
+    darkToggle?.addEventListener('change', e => {
       const theme = e.target.checked ? 'dark' : 'light';
       document.documentElement.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('theme', theme);
       applyThemeAssets(theme);
     });
-    mq.addEventListener?.('change', (e) => {
+    mq.addEventListener?.('change', e => {
       if (!localStorage.getItem('theme')) {
         const theme = e.matches ? 'dark' : 'light';
         document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -473,439 +554,515 @@
       }
     });
     function applyThemeAssets(theme){
-      const logo = document.getElementById('site-logo');
+      const logo = $('#site-logo');
       if (logo) logo.src = theme === 'dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
     }
-    document.getElementById('year').textContent = new Date().getFullYear();
+    $('#year').textContent = new Date().getFullYear();
 
-    /* ========== Dərs cədvəli loqikası ========== */
+    /* ========== Timetable logic ========== */
+    const teacherTbody = document.getElementById('teacherTbody');
+    const classTbody = document.getElementById('classTbody');
+    const lessonTbody = document.getElementById('lessonTbody');
+    const btnAddTeacher = document.getElementById('btnAddTeacher');
+    const btnAddClass = document.getElementById('btnAddClass');
+    const btnAddLesson = document.getElementById('btnAddLesson');
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnResetAll = document.getElementById('btnResetAll');
+    const btnPrint = document.getElementById('btnPrint');
+    const globalError = document.getElementById('globalError');
+    const globalInfo  = document.getElementById('globalInfo');
+    const resultStats = document.getElementById('resultStats');
+    const timetableContainer = document.getElementById('timetableContainer');
+    const unplacedContainer = document.getElementById('unplacedContainer');
+    const softWarnings = document.getElementById('softWarnings');
+    const classTabs = document.getElementById('classTabs');
 
-    // Həftə günləri (daxili key + ekranda label)
-    const WEEK_DAYS = [
-      { key: 'Mon', label: 'B.e' },
-      { key: 'Tue', label: 'Ç.a' },
-      { key: 'Wed', label: 'Ç' },
-      { key: 'Thu', label: 'C.a' },
-      { key: 'Fri', label: 'C' },
-      // Şənbə lazım olsa:
-      // { key: 'Sat', label: 'Ş' },
-    ];
-    const MAX_PERIODS_PER_DAY = 8;
+    const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C','C.u'];
+    const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
 
-    // Nümunə müəllimlər – sən sonra JS-də bu massivə özlərini əlavə edə bilərsən
-    const teachers = [
-      {
-        id: 't1',
-        name: 'Aygün müəllimə',
-        subjects: ['Azərbaycan dili', 'Ədəbiyyat'],
-        maxPerDay: 6,
-        maxPerWeek: 30,
-        availableDays: WEEK_DAYS.map(d => d.key) // bütün günlər
-      },
-      {
-        id: 't2',
-        name: 'Rauf müəllim',
-        subjects: ['Riyaziyyat'],
-        maxPerDay: 5,
-        maxPerWeek: 25,
-        // Məs: yalnız Ç.a və C.a gələ bilər:
-        availableDays: ['Tue', 'Thu']
-      },
-      {
-        id: 't3',
-        name: 'Sevinc müəllimə',
-        subjects: ['İngilis dili'],
-        maxPerDay: 5,
-        maxPerWeek: 24,
-        availableDays: WEEK_DAYS.map(d => d.key)
-      }
-    ];
-
-    // State
-    const state = {
-      lessons: [],         // { id, classId, subject, teacherId, hoursPerWeek }
-      timetable: {},       // classId -> [day][slot] = {subject, teacherName}
-      unplaced: []         // dərslərdən yerləşdirilə bilməyənlər
-    };
-
-    const $ = (sel) => document.querySelector(sel);
-
-    /* ---------- Müəllim paneli ---------- */
-    function renderTeachers(){
-      const container = $('#teacher-list');
-      if (!container) return;
-
-      container.innerHTML = teachers.map(t => renderTeacherCard(t)).join('');
-
-      // Teacher day checkbox eventləri
-      container.querySelectorAll('.tt-day-checkbox').forEach(ch => {
-        ch.addEventListener('change', onTeacherDayChange);
-      });
-
-      // Dərs əlavə formundakı müəllim select-i doldur
-      const sel = $('#in-teacher');
-      if (sel) {
-        sel.innerHTML = teachers.map(t =>
-          `<option value="${t.id}">${t.name}</option>`
-        ).join('');
-      }
-    }
-
-    function renderTeacherCard(teacher){
-      const daysHtml = WEEK_DAYS.map(d => {
-        const checked = (teacher.availableDays || []).includes(d.key) ? 'checked' : '';
-        return `
-          <label class="tt-day-pill">
-            <input type="checkbox"
-                   class="tt-day-checkbox"
-                   data-teacher-id="${teacher.id}"
-                   data-day="${d.key}"
-                   ${checked}>
-            <span>${d.label}</span>
-          </label>
-        `;
-      }).join(' ');
-
-      return `
-        <div class="rounded-xl border border-slate-200 p-3 bg-white/80 dark:bg-slate-900/60">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
-            <div class="font-medium text-sm">${teacher.name}</div>
-            <div class="text-[11px] text-slate-500">
-              Günlük max: ${teacher.maxPerDay} · Həftəlik max: ${teacher.maxPerWeek}
-            </div>
-          </div>
-          <div class="text-[11px] text-slate-500 mb-2">
-            Fənlər: ${teacher.subjects.join(', ')}
-          </div>
-          <div>
-            <div class="text-[11px] text-slate-500 mb-1">Gəlmə günləri:</div>
-            <div class="flex flex-wrap gap-1">
-              ${daysHtml}
-            </div>
-          </div>
-        </div>
+    function addTeacherRow(initial={}) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="t-name" placeholder="Müəllim adı" value="${initial.name||''}"></td>
+        <td><input type="text" class="t-code" placeholder="Kod (məs: AZR)" value="${initial.code||''}"></td>
+        <td><input type="number" class="t-week" min="0" max="60" value="${initial.weeklyMax ?? 30}"></td>
+        <td><input type="number" class="t-day"  min="0" max="10" value="${initial.dailyMax ?? 6}"></td>
+        <td class="text-center"><input type="checkbox" class="t-avoid-first" ${initial.avoidFirst?'checked':''}></td>
+        <td class="text-center"><input type="checkbox" class="t-avoid-last" ${initial.avoidLast?'checked':''}></td>
+        <td class="no-print text-right">
+          <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
+        </td>
       `;
+      teacherTbody.appendChild(tr);
     }
 
-    function onTeacherDayChange(e){
-      const teacherId = e.target.dataset.teacherId;
-      const dayKey = e.target.dataset.day;
-      const teacher = teachers.find(t => String(t.id) === String(teacherId));
-      if (!teacher) return;
-
-      if (!teacher.availableDays) {
-        teacher.availableDays = WEEK_DAYS.map(d => d.key);
-      }
-
-      if (e.target.checked) {
-        if (!teacher.availableDays.includes(dayKey)) {
-          teacher.availableDays.push(dayKey);
-        }
-      } else {
-        teacher.availableDays = teacher.availableDays.filter(d => d !== dayKey);
-      }
+    function addClassRow(initial={}) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name||''}"></td>
+        <td>
+          <select class="c-level">
+            <option value="ibtidai" ${initial.level==='ibtidai'?'selected':''}>İbtidai (1-4)</option>
+            <option value="esas" ${initial.level==='esas'?'selected':''}>Əsas (5-8)</option>
+            <option value="yuxari" ${initial.level==='yuxari'?'selected':''}>Yuxarı (9-11)</option>
+          </select>
+        </td>
+        <td>
+          <select class="c-shift">
+            <option value="seher"  ${initial.shift==='seher'?'selected':''}>Səhər</option>
+            <option value="gunorta" ${initial.shift==='gunorta'?'selected':''}>Günorta</option>
+          </select>
+        </td>
+        <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
+        <td class="no-print text-right">
+          <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
+        </td>
+      `;
+      classTbody.appendChild(tr);
     }
 
-    /* ---------- Dərs sətirləri ---------- */
-    let lessonIdSeq = 1;
+    function addLessonRow(initial={}) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="l-class" placeholder="məs: 5A" value="${initial.className||''}"></td>
+        <td><input type="text" class="l-subj"  placeholder="məs: Riyaziyyat" value="${initial.subject||''}"></td>
+        <td><input type="text" class="l-teacher" placeholder="Kod və ya ad" value="${initial.teacher||''}"></td>
+        <td><input type="number" class="l-hours" min="1" max="40" value="${initial.hours ?? 2}"></td>
+        <td class="text-center"><input type="checkbox" class="l-heavy" ${initial.heavy?'checked':''}></td>
+        <td class="text-center"><input type="checkbox" class="l-double" ${initial.double?'checked':''}></td>
+        <td class="no-print text-right">
+          <button type="button" class="text-xs text-rose-500 hover:underline l-del">Sil</button>
+        </td>
+      `;
+      lessonTbody.appendChild(tr);
+    }
 
-    function addLessonFromForm(){
-      const classInput = $('#in-class');
-      const subjectInput = $('#in-subject');
-      const teacherSelect = $('#in-teacher');
-      const hoursInput = $('#in-hours');
-      const errors = $('#tt-errors');
+    btnAddTeacher.addEventListener('click', () => addTeacherRow({}));
+    btnAddClass.addEventListener('click', () => addClassRow({}));
+    btnAddLesson.addEventListener('click', () => addLessonRow({}));
 
-      const classId = (classInput.value || '').trim();
-      const subject = (subjectInput.value || '').trim();
-      const teacherId = teacherSelect?.value;
-      const hours = Number(hoursInput.value || 0);
-
-      errors.classList.add('hidden');
-      errors.textContent = '';
-
-      if (!classId || !subject || !teacherId || !hours || hours <= 0) {
-        errors.textContent = 'Zəhmət olmasa sinif, fənn, müəllim və həftəlik saat dəyərlərini düzgün doldurun.';
-        errors.classList.remove('hidden');
-        return;
+    teacherTbody.addEventListener('click', e => {
+      if (e.target.classList.contains('t-del')) {
+        e.target.closest('tr')?.remove();
       }
+    });
+    classTbody.addEventListener('click', e => {
+      if (e.target.classList.contains('c-del')) {
+        e.target.closest('tr')?.remove();
+      }
+    });
+    lessonTbody.addEventListener('click', e => {
+      if (e.target.classList.contains('l-del')) {
+        e.target.closest('tr')?.remove();
+      }
+    });
 
-      state.lessons.push({
-        id: 'L' + (lessonIdSeq++),
-        classId,
-        subject,
-        teacherId,
-        hoursPerWeek: hours
+    btnResetAll.addEventListener('click', () => {
+      teacherTbody.innerHTML = '';
+      classTbody.innerHTML = '';
+      lessonTbody.innerHTML = '';
+      timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Hələ cədvəl qurulmayıb.</div>';
+      classTabs.innerHTML = '';
+      unplacedContainer.classList.add('hidden');
+      unplacedContainer.textContent = '';
+      softWarnings.textContent = '';
+      resultStats.textContent = '';
+      globalError.classList.add('hidden');
+      globalError.textContent = '';
+      globalInfo.textContent = '';
+    });
+
+    btnPrint.addEventListener('click', () => {
+      window.print();
+    });
+
+    function readConfig() {
+      globalError.classList.add('hidden');
+      globalError.textContent = '';
+
+      const daysCount = parseInt(document.getElementById('daysCount').value,10) || 5;
+      const lessonsPerDay = parseInt(document.getElementById('lessonsPerDay').value,10) || 7;
+      const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
+      const optLimitSameSubject = document.getElementById('optLimitSameSubject').checked;
+
+      const teachers = [];
+      teacherTbody.querySelectorAll('tr').forEach(tr => {
+        const name = tr.querySelector('.t-name')?.value.trim();
+        const code = tr.querySelector('.t-code')?.value.trim();
+        if (!name && !code) return;
+        teachers.push({
+          id: teachers.length,
+          name: name || code,
+          code: code || name,
+          weeklyMax: Number(tr.querySelector('.t-week')?.value) || 0,
+          dailyMax: Number(tr.querySelector('.t-day')?.value) || 0,
+          avoidFirst: tr.querySelector('.t-avoid-first')?.checked || false,
+          avoidLast: tr.querySelector('.t-avoid-last')?.checked || false
+        });
       });
 
-      classInput.value = '';
-      subjectInput.value = '';
-      hoursInput.value = 1;
+      const classes = [];
+      classTbody.querySelectorAll('tr').forEach(tr => {
+        const name = tr.querySelector('.c-name')?.value.trim();
+        if (!name) return;
+        const level = tr.querySelector('.c-level')?.value || 'esas';
+        const shift = tr.querySelector('.c-shift')?.value || 'seher';
+        const maxDay = Number(tr.querySelector('.c-maxday')?.value) || 0;
+        classes.push({
+          id: classes.length,
+          name,
+          level,
+          shift,
+          maxPerDay: maxDay
+        });
+      });
 
-      renderLessonsTable();
-    }
+      const lessons = [];
+      lessonTbody.querySelectorAll('tr').forEach(tr => {
+        const className = tr.querySelector('.l-class')?.value.trim();
+        const subject   = tr.querySelector('.l-subj')?.value.trim();
+        const teacher   = tr.querySelector('.l-teacher')?.value.trim();
+        const hours     = Number(tr.querySelector('.l-hours')?.value) || 0;
+        if (!className || !subject || !teacher || hours <= 0) return;
+        lessons.push({
+          className,
+          subject,
+          teacherRef: teacher,
+          hours,
+          heavy: tr.querySelector('.l-heavy')?.checked || false,
+          double: tr.querySelector('.l-double')?.checked || false
+        });
+      });
 
-    function renderLessonsTable(){
-      const tbody = $('#lessons-table-body');
-      const countSpan = $('#lessons-count');
-      if (!tbody) return;
-
-      if (!state.lessons.length) {
-        tbody.innerHTML = `
-          <tr id="lessons-empty-row">
-            <td colspan="4" class="px-2 py-3 text-center text-slate-400 text-[11px]">
-              Hələ heç bir sətir əlavə olunmayıb.
-            </td>
-          </tr>
-        `;
-        countSpan.textContent = '0 sətir';
-        return;
+      if (!teachers.length || !classes.length || !lessons.length) {
+        throw new Error('Heç olmasa 1 müəllim, 1 sinif və 1 dərs əlavə etməlisən.');
+      }
+      if (lessonsPerDay > 8 || lessonsPerDay < 1) {
+        throw new Error('Gündə dərs saatı 1–8 aralığında olmalıdır.');
       }
 
-      tbody.innerHTML = state.lessons.map(l => {
-        const t = teachers.find(x => x.id === l.teacherId);
-        const teacherName = t ? t.name : l.teacherId;
-        return `
-          <tr>
-            <td class="px-2 py-1">${l.classId}</td>
-            <td class="px-2 py-1">${l.subject}</td>
-            <td class="px-2 py-1">${teacherName}</td>
-            <td class="px-2 py-1 text-center">${l.hoursPerWeek}</td>
-          </tr>
-        `;
-      }).join('');
-
-      countSpan.textContent = state.lessons.length + ' sətir';
+      return {
+        daysCount,
+        lessonsPerDay,
+        optHeavyAvoidEdges,
+        optLimitSameSubject,
+        teachers,
+        classes,
+        lessons
+      };
     }
 
-    function resetData(){
-      state.lessons = [];
-      state.timetable = {};
-      state.unplaced = [];
-      renderLessonsTable();
-      renderTimetableOutput();
-      $('#tt-errors').classList.add('hidden');
-      $('#tt-errors').textContent = '';
-    }
-
-    /* ---------- Generator (sadə greedy) ---------- */
-
-    function generateTimetable(){
-      const errors = $('#tt-errors');
-      errors.classList.add('hidden');
-      errors.textContent = '';
-
-      if (!state.lessons.length) {
-        errors.textContent = 'Əvvəlcə ən azı bir dərs sətiri əlavə edin.';
-        errors.classList.remove('hidden');
-        return;
+    function shuffle(arr) {
+      for (let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
       }
+    }
 
-      // Teacher availability default
+    // Səviyyə üzrə standart gündə max dərs
+    function defaultMaxPerDayByLevel(level){
+      if (level === 'ibtidai') return 6;
+      if (level === 'esas') return 7;
+      return 8;
+    }
+
+    function generateBlocks(config) {
+      const {lessons, classes, teachers} = config;
+      const classIndexByName = new Map();
+      classes.forEach(c => classIndexByName.set(c.name.trim(), c.id));
+      const teacherIndexByKey = new Map();
       teachers.forEach(t => {
-        if (!t.availableDays || !t.availableDays.length) {
-          t.availableDays = WEEK_DAYS.map(d => d.key);
-        }
+        teacherIndexByKey.set((t.code||'').trim(), t.id);
+        teacherIndexByKey.set((t.name||'').trim(), t.id);
       });
 
-      // Unique classlar
-      const classIds = Array.from(new Set(state.lessons.map(l => l.classId)));
+      const blocks = [];
+      const unknown = [];
 
-      // Timetable strukturlarını hazırla
-      const tt = {};     // classId -> [day][slot]
-      const tStats = {}; // teacherId -> stats
-
-      classIds.forEach(cid => {
-        tt[cid] = [];
-        for (let d = 0; d < WEEK_DAYS.length; d++) {
-          tt[cid][d] = new Array(MAX_PERIODS_PER_DAY).fill(null);
+      lessons.forEach(l => {
+        const cId = classIndexByName.get(l.className.trim());
+        const tId = teacherIndexByKey.get(l.teacherRef.trim());
+        if (cId == null || tId == null) {
+          unknown.push(l);
+          return;
         }
-      });
-
-      teachers.forEach(t => {
-        tStats[t.id] = {
-          weeklyCount: 0,
-          perDay: Array(WEEK_DAYS.length).fill(0),
-          slots: Array(WEEK_DAYS.length).fill(null).map(
-            () => new Array(MAX_PERIODS_PER_DAY).fill(false)
-          )
+        let remaining = l.hours;
+        const base = {
+          classId: cId,
+          teacherId: tId,
+          subject: l.subject,
+          heavy: !!l.heavy
         };
-      });
-
-      // Dərsləri slotlara parçala: hər 1 saat = 1 “unit”
-      const units = [];
-      for (const l of state.lessons) {
-        for (let i = 0; i < l.hoursPerWeek; i++) {
-          units.push({
-            lessonId: l.id,
-            classId: l.classId,
-            subject: l.subject,
-            teacherId: l.teacherId
-          });
+        if (l.double && remaining >= 2) {
+          while (remaining >= 2) {
+            blocks.push({...base, length:2});
+            remaining -= 2;
+          }
         }
-      }
-
-      // Daha çətin olanları önə çək: (məsələn, həftəlik saatı çox olan müəllim)
-      units.sort((a, b) => {
-        const tA = teachers.find(t => t.id === a.teacherId);
-        const tB = teachers.find(t => t.id === b.teacherId);
-        const wA = tA ? tA.maxPerWeek : 0;
-        const wB = tB ? tB.maxPerWeek : 0;
-        return wA - wB; // daha az kapasiteli müəllimləri önə çək
+        while (remaining > 0) {
+          blocks.push({...base, length:1});
+          remaining -= 1;
+        }
       });
+
+      // Çətin blokları əvvələ çək
+      blocks.sort((a,b)=>{
+        if (b.length !== a.length) return b.length - a.length;
+        if (b.heavy !== a.heavy) return (b.heavy?1:0) - (a.heavy?1:0);
+        return 0;
+      });
+
+      return {blocks, unknownUnmapped: unknown};
+    }
+
+    function attemptBuild(config, attemptIndex=0){
+      const {daysCount, lessonsPerDay, teachers, classes, optHeavyAvoidEdges, optLimitSameSubject} = config;
+      const {blocks} = generateBlocks(config);
+
+      shuffle(blocks); // hər cəhd üçün fərqli sıralama
+
+      const timetable = {};
+      classes.forEach(c=>{
+        const matrix = [];
+        for(let d=0; d<daysCount; d++){
+          const row = new Array(lessonsPerDay).fill(null);
+          matrix.push(row);
+        }
+        timetable[c.id] = matrix;
+      });
+
+      const teacherWeekly = new Array(teachers.length).fill(0);
+      const teacherDaily  = new Array(teachers.length).fill(null).map(()=>new Array(daysCount).fill(0));
+      const classDaily    = new Array(classes.length).fill(null).map(()=>new Array(daysCount).fill(0));
+      const classSubjPerDay = new Array(classes.length).fill(null).map(()=>Object.create(null));
 
       const unplaced = [];
+      const lastSlotIndex = lessonsPerDay - 1;
 
-      // Yardımçı: teacher və class üçün slot mümkünmü?
-      function canPlace(u, dayIndex, slotIndex){
-        const teacher = teachers.find(t => t.id === u.teacherId);
-        if (!teacher) return false;
+      function canPlace(block, day, slot, strict){
+        const {classId, teacherId, subject, length, heavy} = block;
+        if (slot + length - 1 >= lessonsPerDay) return false;
 
-        const dayKey = WEEK_DAYS[dayIndex].key;
-        if (!teacher.availableDays.includes(dayKey)) return false;
+        const matrix = timetable[classId];
+        for(let i=0;i<length;i++){
+          if (matrix[day][slot+i] != null) return false;
+        }
 
-        const stats = tStats[teacher.id];
-        if (stats.weeklyCount >= teacher.maxPerWeek) return false;
-        if (stats.perDay[dayIndex] >= teacher.maxPerDay) return false;
+        for(let i=0;i<length;i++){
+          for(const c of classes){
+            const m = timetable[c.id];
+            if (m[day][slot+i] && m[day][slot+i].block.teacherId === teacherId) return false;
+          }
+        }
 
-        // Müəllim həmin saat, həmin gündə başqa sinifdədir?
-        if (stats.slots[dayIndex][slotIndex]) return false;
+        const t = teachers[teacherId];
+        const weeklyMax = t.weeklyMax>0 ? t.weeklyMax : Infinity;
+        const dailyMax  = t.dailyMax>0  ? t.dailyMax  : Infinity;
+        if (teacherWeekly[teacherId] + length > weeklyMax) return false;
+        if (teacherDaily[teacherId][day] + length > dailyMax) return false;
 
-        // Sinif həmin gündə/həmin yerdə artıq dərsə malikdir?
-        if (tt[u.classId][dayIndex][slotIndex] !== null) return false;
+        const cls = classes[classId];
+        const maxDay = cls.maxPerDay>0 ? cls.maxPerDay : defaultMaxPerDayByLevel(cls.level);
+        if (classDaily[classId][day] + length > maxDay) return false;
 
+        if (strict){
+          if (optHeavyAvoidEdges && heavy){
+            if (slot === 0) return false;
+            if (slot + length - 1 === lastSlotIndex) return false;
+          }
+          if (t.avoidFirst && slot === 0) return false;
+          if (t.avoidLast && (slot + length - 1 === lastSlotIndex)) return false;
+
+          if (optLimitSameSubject){
+            const subjMap = classSubjPerDay[classId];
+            subjMap[subject] = subjMap[subject] || new Array(daysCount).fill(0);
+            if (subjMap[subject][day] + length > 2) return false;
+          }
+        }
         return true;
       }
 
-      function placeUnit(u){
-        // B.e → C ardıcıllıqla yoxla
-        for (let d = 0; d < WEEK_DAYS.length; d++){
-          for (let s = 0; s < MAX_PERIODS_PER_DAY; s++){
-            if (canPlace(u, d, s)){
-              const teacher = teachers.find(t => t.id === u.teacherId);
-              const stats = tStats[teacher.id];
+      function place(block, day, slot){
+        const {classId, teacherId, subject, length} = block;
+        const matrix = timetable[classId];
+        for(let i=0;i<length;i++){
+          matrix[day][slot+i] = {block, part:i};
+        }
+        teacherWeekly[teacherId] += length;
+        teacherDaily[teacherId][day] += length;
+        classDaily[classId][day] += length;
 
-              tt[u.classId][d][s] = {
-                subject: u.subject,
-                teacherName: teacher.name
-              };
-              stats.weeklyCount++;
-              stats.perDay[d]++;
-              stats.slots[d][s] = true;
-              return true;
-            }
+        const subjMap = classSubjPerDay[classId];
+        subjMap[subject] = subjMap[subject] || new Array(daysCount).fill(0);
+        subjMap[subject][day] += length;
+      }
+
+      function tryPlaceBlock(block){
+        const candidates = [];
+        for(let d=0; d<daysCount; d++){
+          for(let s=0; s<lessonsPerDay; s++){
+            candidates.push({d,s});
           }
+        }
+        shuffle(candidates);
+        // əvvəl strict
+        for(const {d,s} of candidates){
+          if (canPlace(block,d,s,true)) { place(block,d,s); return true; }
+        }
+        // sonra strict-siz (teacher istəklərini yumşaldırıq)
+        for(const {d,s} of candidates){
+          if (canPlace(block,d,s,false)) { place(block,d,s); return true; }
         }
         return false;
       }
 
-      for (const u of units){
-        const ok = placeUnit(u);
+      let placedCount = 0;
+      blocks.forEach(b=>{
+        const ok = tryPlaceBlock(b);
         if (!ok) {
-          unplaced.push(u);
+          unplaced.push(b);
+        } else {
+          placedCount += b.length;
         }
-      }
+      });
 
-      state.timetable = tt;
-      state.unplaced = unplaced;
-      renderTimetableOutput();
+      return {timetable, unplaced, placedCount};
     }
 
-    /* ---------- Nəticəni render et ---------- */
+    function buildBestTimetable(config){
+      const ATTEMPTS = 25;
+      let best = null;
 
-    function renderTimetableOutput(){
-      const container = $('#timetable-container');
-      const tabs = $('#class-tabs');
-      const unplacedBox = $('#unplaced-container');
-      const unplacedList = $('#unplaced-list');
-
-      const classIds = Object.keys(state.timetable);
-
-      if (!classIds.length){
-        container.classList.add('hidden');
-        tabs.innerHTML = '';
-        unplacedBox.classList.add('hidden');
-        return;
+      for(let i=0;i<ATTEMPTS;i++){
+        const res = attemptBuild(config, i);
+        if (!best || res.placedCount > best.placedCount ||
+            (res.placedCount === best.placedCount && res.unplaced.length < best.unplaced.length)) {
+          best = res;
+        }
       }
+      return best;
+    }
+
+    function renderTimetable(config, result){
+      const {classes, teachers, daysCount, lessonsPerDay} = config;
+      const {timetable, unplaced, placedCount} = result;
+
+      const daysLabels = (daysCount===5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0,daysCount);
 
       // Tabs
-      tabs.innerHTML = classIds.map((cid, idx) => `
-        <button class="tt-tab-btn ${idx === 0 ? 'active' : ''}"
-                data-class-id="${cid}">
-          ${cid}
-        </button>
-      `).join('');
-
-      tabs.querySelectorAll('.tt-tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          tabs.querySelectorAll('.tt-tab-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const cid = btn.dataset.classId;
-          renderClassTimetable(cid);
-        });
+      classTabs.innerHTML = '';
+      classes.forEach((c, idx)=>{
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tab-btn' + (idx===0 ? ' active':'');
+        btn.textContent = c.name;
+        btn.dataset.classId = c.id;
+        classTabs.appendChild(btn);
       });
 
-      // İlk sinif üçün render
-      renderClassTimetable(classIds[0]);
-      container.classList.remove('hidden');
-
-      // Unplaced
-      if (state.unplaced.length){
-        unplacedBox.classList.remove('hidden');
-        unplacedList.innerHTML = state.unplaced.map(u => {
-          const t = teachers.find(x => x.id === u.teacherId);
-          const name = t ? t.name : u.teacherId;
-          return `<li>${u.classId} · ${u.subject} · ${name}</li>`;
-        }).join('');
-      }else{
-        unplacedBox.classList.add('hidden');
-        unplacedList.innerHTML = '';
-      }
-    }
-
-    function renderClassTimetable(classId){
-      const container = $('#timetable-container');
-      const grid = state.timetable[classId];
-      if (!grid) {
-        container.innerHTML = '<div class="text-xs text-slate-500">Bu sinif üçün məlumat tapılmadı.</div>';
-        return;
+      function teacherLabel(tId){
+        const t = teachers[tId];
+        if (!t) return '';
+        if (t.code && t.name) return `${t.code}`;
+        return t.code || t.name || '';
       }
 
-      let html = '<div class="overflow-auto"><table class="tt-table w-full border-collapse text-xs">';
-      // Header
-      html += '<thead><tr><th>Saat</th>';
-      WEEK_DAYS.forEach(d => {
-        html += `<th>${d.label}</th>`;
-      });
-      html += '</tr></thead><tbody>';
-
-      for (let s = 0; s < MAX_PERIODS_PER_DAY; s++){
-        html += `<tr><th>${s+1}</th>`;
-        for (let d = 0; d < WEEK_DAYS.length; d++){
-          const cell = grid[d][s];
-          if (cell){
-            html += `<td><div class="font-medium">${cell.subject}</div><div class="text-[10px] text-slate-500">${cell.teacherName}</div></td>`;
-          }else{
-            html += `<td><span class="tt-slot-empty">—</span></td>`;
-          }
+      function renderForClass(classId){
+        const matrix = timetable[classId];
+        if (!matrix){
+          timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Bu sinif üçün cədvəl tapılmadı.</div>';
+          return;
         }
-        html += '</tr>';
+        let html = '<table class="tt-table"><thead><tr><th>Saat</th>';
+        daysLabels.forEach(d=>{ html += `<th>${d}</th>`; });
+        html += '</tr></thead><tbody>';
+
+        for(let s=0; s<lessonsPerDay; s++){
+          html += `<tr><th>${s+1}</th>`;
+          for(let d=0; d<daysCount; d++){
+            const cell = matrix[d][s];
+            if (!cell){
+              html += `<td><span class="tt-slot-muted">—</span></td>`;
+            } else if (cell.part === 0){
+              const b = cell.block;
+              const subj = b.subject;
+              const tLab = teacherLabel(b.teacherId);
+              const len = b.length;
+              let rowspan = 1;
+              if (len>1) rowspan = len;
+              html += `<td rowspan="${rowspan}"><div class="font-semibold">${subj}</div><div class="text-[10px] mt-0.5">${tLab}</div></td>`;
+            } else {
+              // qoşa dərsin 2-ci hissəsi rowspan-a görə boş qalır
+            }
+          }
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+        timetableContainer.innerHTML = html;
       }
 
-      html += '</tbody></table></div>';
-      container.innerHTML = html;
+      const totalRequiredHours = config.lessons.reduce((sum,l)=>sum+(Number(l.hours)||0),0);
+      const placedPercent = totalRequiredHours>0 ? ((placedCount/totalRequiredHours)*100).toFixed(1) : '0.0';
+
+      resultStats.textContent = `Yerləşdirilən saat: ${placedCount}/${totalRequiredHours} (${placedPercent}%) · Cəhd: 25`;
+
+      if (unplaced.length){
+        const lines = unplaced.map(b=>{
+          const cls = classes[b.classId]?.name || '?';
+          const t = teachers[b.teacherId];
+          const tLabel = t ? (t.code || t.name) : '?';
+          return `• ${cls} – ${b.subject} (${tLabel}), ${b.length} saat`;
+        });
+        unplacedContainer.classList.remove('hidden');
+        unplacedContainer.textContent = 'Yerləşdirilməyənlər:\n' + lines.join('\n');
+      } else {
+        unplacedContainer.classList.add('hidden');
+        unplacedContainer.textContent = '';
+      }
+
+      softWarnings.textContent =
+        'Qeyd: Müəllim istəkləri (1-ci / sonuncu saatdan qaçmaq) və ağır fənnin paylanması əvvəlcə sərt şəkildə nəzərə alınır, ' +
+        'yer tapılmadıqda isə yumşaldılır. ASC kimi ideal optimizasiya deyil, amma praktik cədvəl üçün kifayət edir.';
+
+      const firstClassId = classes[0]?.id;
+      if (firstClassId != null) renderForClass(firstClassId);
+
+      classTabs.addEventListener('click', e=>{
+        if (!e.target.classList.contains('tab-btn')) return;
+        classTabs.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        const cid = Number(e.target.dataset.classId);
+        renderForClass(cid);
+      }, {once:true});
     }
 
-    /* ---------- Init ---------- */
-    document.addEventListener('DOMContentLoaded', () => {
-      renderTeachers();
-      renderLessonsTable();
+    btnGenerate.addEventListener('click', () => {
+      try{
+        const config = readConfig();
+        globalError.classList.add('hidden');
+        globalError.textContent = '';
 
-      $('#btn-add-lesson')?.addEventListener('click', addLessonFromForm);
-      $('#btn-reset-data')?.addEventListener('click', resetData);
-      $('#btn-generate')?.addEventListener('click', generateTimetable);
+        globalInfo.textContent = 'Cədvəl qurulur… (bir neçə fərqli kombinasiyanı sınayır)';
+        setTimeout(()=>{
+          const result = buildBestTimetable(config);
+          renderTimetable(config, result);
+          globalInfo.textContent = 'Cədvəl quruldu. Zərurət olduqda əl ilə düzəliş etmək üçün PDF-ə çevirib printer üçün istifadə edə bilərsən.';
+        }, 10);
+      }catch(err){
+        globalError.textContent = err.message || String(err);
+        globalError.classList.remove('hidden');
+      }
     });
-  </script>
 
+    // Başlanğıcda 1-2 nümunə sətir (istəsən silərsən)
+    addTeacherRow({name:'Riyaziyyat müəllimi', code:'RİY', weeklyMax:24, dailyMax:6, avoidFirst:false, avoidLast:true});
+    addTeacherRow({name:'Azərbaycan dili müəllimi', code:'AZD', weeklyMax:24, dailyMax:6, avoidFirst:false, avoidLast:false});
+
+    addClassRow({name:'5A', level:'esas', shift:'seher'});
+    addClassRow({name:'6A', level:'esas', shift:'seher'});
+
+    addLessonRow({className:'5A', subject:'Riyaziyyat', teacher:'RİY', hours:4, heavy:true, double:true});
+    addLessonRow({className:'5A', subject:'Azərbaycan dili', teacher:'AZD', hours:3, heavy:false, double:false});
+  </script>
 </body>
 </html>

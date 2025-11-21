@@ -375,6 +375,20 @@ select.select-premium.fs-native{
   box-shadow:0 6px 16px rgba(30,58,138,.35);
 }
 .dark .ep-dl-btn:hover{ box-shadow:0 12px 26px rgba(30,58,138,.45); }
+/* Light/Dark üçün "Fayl yoxdur" qutusu */
+.no-files-box{
+  background: linear-gradient(135deg,#f9fafb,#e0f2fe);
+  border-color:#94a3b8 !important;
+  color:#0f172a !important;
+  box-shadow:0 10px 26px rgba(15,23,42,.10);
+}
+
+.dark .no-files-box{
+  background: rgba(15,23,42,.85);
+  border-color:rgba(148,163,184,.45) !important;
+  color:#e5e7eb !important;
+  box-shadow:0 14px 32px rgba(0,0,0,.55);
+}
 /* Kart daxilində tam mərkəz (loading / Fayl yoxdur və s.) */
 .panel-center-overlay{
   position:absolute;
@@ -753,8 +767,8 @@ function renderKSQ(){
     showCenter(
       'ksq-results-card',
       `
-      <div class="rounded-lg border border-dashed border-slate-300 px-6 py-4
-                  text-slate-500 text-center bg-white/80 dark:bg-slate-900/60">
+      <div class="no-files-box rounded-xl border border-dashed px-6 py-4
+                  text-sm font-medium text-center">
         Fayl yoxdur
       </div>
       `

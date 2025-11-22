@@ -673,10 +673,23 @@ function renderSelects(){
   const gradeEl = $('#grade'); gradeEl.innerHTML=''; addPlaceholder(gradeEl,'Sinfi seçin'); grades.forEach(g=>option(gradeEl,g,g)); gradeEl.value = state.grade ?? "";
   const subjEl = $('#subject'); subjEl.innerHTML=''; addPlaceholder(subjEl,'Fənni seçin'); if(state.grade){ subjectsFor(state.grade).forEach(s=>option(subjEl,s,s)); } subjEl.value = state.subject ?? "";
   const typeEl = $('#ksqType'); typeEl.innerHTML=''; addPlaceholder(typeEl,'Növü seçin'); option(typeEl,'KSQ','KSQ'); option(typeEl,'BSQ','BSQ'); typeEl.value = state.ksqType ?? "";
-  const idxEl = $('#examIndex'); idxEl.innerHTML=''; addPlaceholder(idxEl,'Nömrəni seçin');
-  if(state.ksqType==='KSQ'){ for(let i=1;i<=10;i++) option(idxEl,String(i),String(i)); }
-  else if(state.ksqType==='BSQ'){ ['1','2'].forEach(i=>option(idxEl,i,i)); }
-  idxEl.value = state.examIndex ?? ""; idxEl.disabled = !state.ksqType;
+const idxEl = $('#examIndex'); 
+idxEl.innerHTML = '';
+addPlaceholder(idxEl,'Nömrəni seçin');
+
+// KSQ üçün 1–15
+if (state.ksqType === 'KSQ') {
+  for (let i = 1; i <= 15; i++) {
+    option(idxEl, String(i), String(i));
+  }
+// BSQ üçün əvvəlki kimi 1–2
+} else if (state.ksqType === 'BSQ') {
+  ['1', '2'].forEach(i => option(idxEl, i, i));
+}
+
+idxEl.value = state.examIndex ?? "";
+idxEl.disabled = !state.ksqType;
+
   enhanceAllFancySelects();
 }
 

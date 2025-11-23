@@ -268,28 +268,34 @@ html{ scroll-padding-top: 92px; }      /* fallback */
     <!-- I yarımil -->
     <fieldset id="fs-t1" class="rounded-xl border border-slate-200 px-3 py-2 mt-4">
       <legend class="px-2 text-sm font-medium">I yarımil</legend>
-      <div class="grid grid-cols-2 gap-2 mt-1">
-        <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-        <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-        <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-        <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-        <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-        <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-      </div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+  <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
+  <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
+  <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
+  <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
+  <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
+  <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
+  <input id="t1-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
+  <input id="t1-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+</div>
+
       <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" class="mt-3" />
     </fieldset>
 
     <!-- II yarımil -->
     <fieldset id="fs-t2" class="rounded-xl border border-slate-200 px-3 py-2 mt-4">
       <legend class="px-2 text-sm font-medium">II yarımil</legend>
-      <div class="grid grid-cols-2 gap-2 mt-1">
-        <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-        <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-        <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-        <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-        <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-        <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-      </div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+  <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
+  <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
+  <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
+  <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
+  <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
+  <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
+  <input id="t2-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
+  <input id="t2-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+</div>
+
       <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" class="mt-3" />
     </fieldset>
     
@@ -515,12 +521,15 @@ $qsa('[data-mode]').forEach(btn => {
   }
 
   function resetCalc() {
-    ['t1', 't2'].forEach(p => {
-      ['1', '2', '3', '4', '5', '6'].forEach(n => {
-        const el = $id(`${p}-ksq${n}`); if (el) el.value = '';
-      });
-      const bsq = $id(`${p}-bsq`); if (bsq) bsq.value = '';
-    });
+['t1', 't2'].forEach(p => {
+  Array.from({ length: KSQ_COUNT }, (_, i) => i + 1).forEach(n => {
+    const el = $id(`${p}-ksq${n}`);
+    if (el) el.value = '';
+  });
+  const bsq = $id(`${p}-bsq`);
+  if (bsq) bsq.value = '';
+});
+
 
     err.classList.add('hidden'); err.textContent = '';
     warn.classList.add('hidden'); clearOutputs();
@@ -535,7 +544,9 @@ $qsa('[data-mode]').forEach(btn => {
 
   const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
   const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 41) ? 3 : 2;
-  const idsFor = prefix => ['1','2','3','4','5','6'].map(n => `${prefix}-ksq${n}`);
+const KSQ_COUNT = 8;
+const idsFor = prefix =>
+  Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
   const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
   function readTerm(prefix) {
@@ -555,7 +566,7 @@ $qsa('[data-mode]').forEach(btn => {
     }
 
     const kAvg = ksq.length ? avg(ksq) : 0;
-    warn.classList.toggle('hidden', ksq.length === 6 || ksq.length === 0);
+warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
     const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
     $id(outIds.total).textContent = total.toFixed(2);

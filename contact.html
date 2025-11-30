@@ -1,3 +1,174 @@
-<!doctype html><meta charset="utf-8"><title>Contact</title>
-<h1>Əlaqə</h1>
-<p>E-poçt: contact@ortamekteb.com</p>
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Əlaqə | EduPlan</title>
+  <meta name="description" content="EduPlan komandası ilə əlaqə. Təklif, irad, əməkdaşlıq və müəlliflik hüquqları ilə bağlı müraciətlər üçün e-poçt ünvanı və əlaqə formu.">
+  <meta name="keywords" content="EduPlan, əlaqə, contact, müəllim resursları, KSQ, BSQ, PP, təklif, irad">
+  <meta name="robots" content="index,follow">
+
+  <link rel="icon" href="favicon.ico" sizes="any"> 
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="favicon-48x48.png" sizes="48x48">
+  <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="android-chrome-512x512.png" sizes="512x512">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <style>
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      color: #0f172a;
+      background: #fff;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 24px 0 8px;
+    }
+    p, li {
+      line-height: 1.6;
+      color: #334155;
+    }
+    small {
+      color: #64748b;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+    @media (min-width: 720px) {
+      .grid-cols-2 {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      background: #fff;
+    }
+
+    /* Forma üçün sadə stil */
+    .field {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      font: inherit;
+      color: #0f172a;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    button {
+      display: inline-block;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Əlaqə</h1>
+    <p>
+      EduPlan komandası ilə <strong>təkliflər</strong>, <strong>iradlar</strong>, 
+      <strong>əməkdaşlıq</strong> və ya <strong>müəlliflik hüquqları</strong> ilə bağlı müraciətlər üçün
+      aşağıdakı əlaqə kanallarından istifadə edə bilərsiniz.
+    </p>
+
+    <div class="grid grid-cols-2">
+      <section class="card">
+        <h2>Ümumi əlaqə məlumatı</h2>
+        <p>
+          Əsas əlaqə vasitəmiz e-poçtdur. Mesajda mövzunu qısa şəkildə qeyd etməyiniz cavablandırma prosesini asanlaşdırır.
+        </p>
+        <p>
+          <strong>E-poçt:</strong><br>
+          <a href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
+        </p>
+        <p>
+          Hüquqi və ya müəlliflik hüquqları ilə bağlı müraciətlər üçün də eyni ünvanı istifadə edə bilərsiniz.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Mesaj göndər</h2>
+        <p style="font-size: 13px; margin-top: 0; color: #64748b;">
+          Qeyd: Bu forma göndərildikdə cihazınızın e-poçt tətbiqi açılacaq.
+        </p>
+        <form
+          action="mailto:eduplan.az@gmail.com"
+          method="POST"
+          enctype="text/plain"
+        >
+          <div class="field">
+            <label for="contact-name">Ad, soyad</label>
+            <input id="contact-name" name="Ad" type="text" required placeholder="Adınızı yazın">
+          </div>
+
+          <div class="field">
+            <label for="contact-email">E-poçt ünvanı</label>
+            <input id="contact-email" name="Email" type="email" required placeholder="example@mail.com">
+          </div>
+
+          <div class="field">
+            <label for="contact-subject">Mövzu</label>
+            <input id="contact-subject" name="Mövzu" type="text" placeholder="Məsələn: KSQ faylı ilə bağlı qeyd">
+          </div>
+
+          <div class="field">
+            <label for="contact-message">Mesaj</label>
+            <textarea id="contact-message" name="Mesaj" required placeholder="Mesajınızı yazın..."></textarea>
+          </div>
+
+          <button type="submit">Göndər</button>
+        </form>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

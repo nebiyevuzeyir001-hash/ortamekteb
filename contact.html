@@ -135,40 +135,70 @@
         </p>
       </section>
 
-      <section class="card">
-        <h2>Mesaj göndər</h2>
-        <p style="font-size: 13px; margin-top: 0; color: #64748b;">
-          Qeyd: Bu forma göndərildikdə cihazınızın e-poçt tətbiqi açılacaq.
-        </p>
-        <form
-          action="mailto:eduplan.az@gmail.com"
-          method="POST"
-          enctype="text/plain"
-        >
-          <div class="field">
-            <label for="contact-name">Ad, soyad</label>
-            <input id="contact-name" name="Ad" type="text" required placeholder="Adınızı yazın">
-          </div>
+<section class="card">
+  <h2>Mesaj göndər</h2>
+  <p style="font-size: 13px; margin-top: 0; color: #64748b;">
+    Qeyd: Bu forma göndərildikdə cihazınızın e-poçt tətbiqi açılacaq.
+  </p>
 
-          <div class="field">
-            <label for="contact-email">E-poçt ünvanı</label>
-            <input id="contact-email" name="Email" type="email" required placeholder="example@mail.com">
-          </div>
+  <!-- IMPORTANT: id əlavə etdik, action/method/enctype SİLİN -->
+  <form id="contact-form">
+    <div class="field">
+      <label for="contact-name">Ad, soyad</label>
+      <input id="contact-name" name="Ad" type="text" required placeholder="Adınızı yazın">
+    </div>
 
-          <div class="field">
-            <label for="contact-subject">Mövzu</label>
-            <input id="contact-subject" name="Mövzu" type="text" placeholder="Məsələn: KSQ faylı ilə bağlı qeyd">
-          </div>
+    <div class="field">
+      <label for="contact-email">E-poçt ünvanı</label>
+      <input id="contact-email" name="Email" type="email" required placeholder="example@mail.com">
+    </div>
 
-          <div class="field">
-            <label for="contact-message">Mesaj</label>
-            <textarea id="contact-message" name="Mesaj" required placeholder="Mesajınızı yazın..."></textarea>
-          </div>
+    <div class="field">
+      <label for="contact-subject">Mövzu</label>
+      <input id="contact-subject" name="Mövzu" type="text" placeholder="Məsələn: KSQ faylı ilə bağlı qeyd">
+    </div>
 
-          <button type="submit">Göndər</button>
-        </form>
-      </section>
+    <div class="field">
+      <label for="contact-message">Mesaj</label>
+      <textarea id="contact-message" name="Mesaj" required placeholder="Mesajınızı yazın..."></textarea>
+    </div>
+
+    <!-- type="button" və onclick əlavə etdik -->
+    <button type="button" onclick="sendContact()">Göndər</button>
+  </form>
+</section>
+
     </div>
   </main>
+<script>
+  function sendContact() {
+    const form = document.getElementById('contact-form');
+    if (!form.reportValidity()) {
+      // HTML5 required / email valideyşnini işə salır
+      return;
+    }
+
+    const name    = document.getElementById('contact-name').value.trim();
+    const email   = document.getElementById('contact-email').value.trim();
+    const subject = document.getElementById('contact-subject').value.trim() || 'Əlaqə formu';
+    const message = document.getElementById('contact-message').value.trim();
+
+    const bodyText =
+      'Ad: '   + name  + '\n' +
+      'Email: '+ email + '\n' +
+      'Mövzu: '+ subject + '\n\n' +
+      'Mesaj:\n' + message;
+
+    const mailto =
+      'mailto:eduplan.az@gmail.com'
+      + '?subject=' + encodeURIComponent('EduPlan əlaqə: ' + subject)
+      + '&body='    + encodeURIComponent(bodyText);
+
+    // form submit YOXDUR, sadəcə mailto açırıq – xəbərdarlıq çıxmamalıdır
+    window.location.href = mailto;
+  }
+</script>
+
 </body>
 </html>
+

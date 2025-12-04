@@ -177,38 +177,28 @@
       return;
     }
 
-    const name       = document.getElementById('contact-name').value.trim();
-    const email      = document.getElementById('contact-email').value.trim();
     const subjectRaw = document.getElementById('contact-subject').value.trim();
     const message    = document.getElementById('contact-message').value.trim();
 
     // Mövzu: formda nə yazmısansa, eynisi (boşdursa default)
-    const subject = subjectRaw || 'EduPlan əlaqə';
+    const subject  = subjectRaw || 'EduPlan əlaqə';
+    // Mesaj: YALNIZ textarea mətnidir
+    const bodyText = message;
 
-    // Mesaj: əsas body = textarea içində yazılan mətn
-    let bodyText = message;
-
-    // Altına opsional imza (istəməsən bu bloku silə bilərsən)
-    if (name || email) {
-      bodyText += '\n\n---\n';
-      if (name)  bodyText += 'Ad: ' + name + '\n';
-      if (email) bodyText += 'Email: ' + email + '\n';
-    }
-
-    // coming-soon-dakı kimi mailto linki
     const mailto =
       'mailto:eduplan.az@gmail.com'
       + '?subject=' + encodeURIComponent(subject)
       + '&body='    + encodeURIComponent(bodyText);
 
-    // Default mail proqramını açır (Outlook, Gmail app və s.)
     window.location.href = mailto;
   }
 </script>
 
 
+
 </body>
 </html>
+
 
 
 

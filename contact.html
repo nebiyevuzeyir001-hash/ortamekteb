@@ -168,17 +168,24 @@
   function sendContact() {
     const form = document.getElementById('contact-form');
     if (!form.reportValidity()) {
-      // required / email yoxlanışı
       return;
     }
 
+    const name       = document.getElementById('contact-name').value.trim();
     const subjectRaw = document.getElementById('contact-subject').value.trim();
     const message    = document.getElementById('contact-message').value.trim();
 
     // Mövzu: formda nə yazmısansa, eynisi (boşdursa default)
-    const subject  = subjectRaw || 'EduPlan əlaqə';
-    // Mesaj: YALNIZ textarea mətnidir
-    const bodyText = message;
+    const subject = subjectRaw || 'EduPlan əlaqə';
+
+    // Body:
+    // Mesaj
+    // ---
+    // Ad, soyad
+    let bodyText = message;
+    if (name) {
+      bodyText += '\n---\n' + name;
+    }
 
     const mailto =
       'mailto:eduplan.az@gmail.com'
@@ -191,8 +198,10 @@
 
 
 
+
 </body>
 </html>
+
 
 
 

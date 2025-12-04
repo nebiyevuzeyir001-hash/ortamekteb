@@ -137,9 +137,9 @@
 
 <section class="card">
   <h2>Mesaj göndər</h2>
-  <p style="font-size: 13px; margin-top: 0; color: #64748b;">
-    Qeyd: Bu forma göndərildikdə brauzerdə Gmail pəncərəsi açılacaq.
-  </p>
+<p style="font-size: 13px; margin-top: 0; color: #64748b;">
+  Qeyd: Bu forma göndərildikdə cihazınızın e-poçt tətbiqi açılacaq.
+</p>
 
   <form id="contact-form">
     <div class="field">
@@ -173,34 +173,42 @@
   function sendContact() {
     const form = document.getElementById('contact-form');
     if (!form.reportValidity()) {
-      return; // required / email validation
+      // required / email yoxlanışı
+      return;
     }
 
-    const name    = document.getElementById('contact-name').value.trim();
-    const email   = document.getElementById('contact-email').value.trim();
-    const subject = document.getElementById('contact-subject').value.trim() || 'Əlaqə formu';
-    const message = document.getElementById('contact-message').value.trim();
+    const name       = document.getElementById('contact-name').value.trim();
+    const email      = document.getElementById('contact-email').value.trim();
+    const subjectRaw = document.getElementById('contact-subject').value.trim();
+    const message    = document.getElementById('contact-message').value.trim();
 
-    const bodyText =
-      'Ad: '   + name  + '\n' +
-      'Email: ' + email + '\n' +
-      'Mövzu: ' + subject + '\n\n' +
-      'Mesaj:\n' + message;
+    // Mövzu: formda nə yazmısansa, eynisi (boşdursa default)
+    const subject = subjectRaw || 'EduPlan əlaqə';
 
-    // Birbaşa Gmail compose linki
-    const gmailUrl =
-      'https://mail.google.com/mail/?view=cm&fs=1' +
-      '&to='    + encodeURIComponent('eduplan.az@gmail.com') +
-      '&su='    + encodeURIComponent('EduPlan əlaqə: ' + subject) +
-      '&body='  + encodeURIComponent(bodyText);
+    // Mesaj: əsas body = textarea içində yazılan mətn
+    let bodyText = message;
 
-    // Yeni tabda açırıq (popup blocker pozmur, çünki birbaşa klik eventindən çağırılır)
-    window.open(gmailUrl, '_blank');
+    // Altına opsional imza (istəməsən bu bloku silə bilərsən)
+    if (name || email) {
+      bodyText += '\n\n---\n';
+      if (name)  bodyText += 'Ad: ' + name + '\n';
+      if (email) bodyText += 'Email: ' + email + '\n';
+    }
+
+    // coming-soon-dakı kimi mailto linki
+    const mailto =
+      'mailto:eduplan.az@gmail.com'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body='    + encodeURIComponent(bodyText);
+
+    // Default mail proqramını açır (Outlook, Gmail app və s.)
+    window.location.href = mailto;
   }
 </script>
 
 
 </body>
 </html>
+
 
 

@@ -1,10 +1,17 @@
 <!doctype html>
 <html lang="az">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Perspektiv (illik) planlaşdırma (PP) — Fənn üzrə illik planlar | EduPlan</title>
-<meta name="description" content="Fənn üzrə illik perspektiv plan (PP) faylları.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hazırlanır — EduPlan</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://www.eduplan.az/coming-soon.html" />
+  <meta name="language" content="az" />
+  <meta name="author" content="EduPlan.az" />
+
   <link rel="icon" href="favicon.ico" sizes="any"> 
   <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
@@ -16,778 +23,102 @@
 <link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
 <link rel="manifest" href="manifest.webmanifest">
 
-<link rel="canonical" href="https://www.eduplan.az/pp.html" />
-<meta name="keywords" content="Perspektiv plan, Perspektiv planlaşdırma, PP, illik plan, illik planlaşdırma, müəllim resursları, EduPlan, Azərbaycan məktəbləri" />
-<meta name="robots" content="index, follow" />
-<meta name="author" content="EduPlan.az" />
-<meta name="language" content="az" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hazırlanır — EduPlan">
+  <meta property="og:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
+  <meta property="og:url" content="https://www.eduplan.az/coming-soon.html">
+  <meta property="og:site_name" content="EduPlan">
+  <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
 
-<!-- Open Graph -->
-<meta property="og:title" content="Perspektiv (illik) planlaşdırma — EduPlan" />
-<meta property="og:description" content="Fənni seçin və illik PP fayllarını PDF/DOCX formatında yükləyin." />
-<meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg" />
-<meta property="og:url" content="https://www.eduplan.az/pp.html" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="EduPlan" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hazırlanır — EduPlan" />
+  <meta name="twitter:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq." />
+  <meta name="twitter:image" content="https://www.eduplan.az/assets/og-image.jpg" />
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Perspektiv (illik) planlaşdırma — EduPlan" />
-<meta name="twitter:description" content="Fənni seçin və illik PP fayllarını yükləyin." />
-<meta name="twitter:image" content="https://www.eduplan.az/assets/og-image.jpg" />
+  <!-- Styles / Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebPage",
-  "name":"Perspektiv (illik) planlaşdırma",
-  "url":"https://www.eduplan.az/pp.html",
-  "description":"Fənn üzrə illik Perspektiv plan (PP) faylları.",
-  "isPartOf":{"@type":"Website","name":"EduPlan","url":"https://www.eduplan.az/"},
-  "breadcrumb":{"@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://www.eduplan.az/"},
-    {"@type":"ListItem","position":2,"name":"Perspektiv (illik) planlaşdırma","item":"https://www.eduplan.az/pp.html"}
-  ]}
-}
-</script>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-/* === index.css-dən götürülənlər (PP paneli ilə 1:1) === */
-:root{
-  --bg-from:#f8fafc;--bg-to:#ffffff;--text:#0f172a;--card:#ffffff;--muted:#475569;--border:#e2e8f0;--tab-track:#eef2f6;--pill:#e9edf3;--pill-text:#334155;
-  --panel-min-h:320px;--panel-max-h:520px;
-  --panel-pad-top:8px;--panel-pad-bottom:8px;
-}
-.dark{--bg-from:#0b1220;--bg-to:#0a0f1a;--text:#e2e8f0;--card:#0f172a;--muted:#cbd5e1;--border:#334155;--tab-track:#111827;--pill:#0f172a;--pill-text:#cbd5e1}
-:where(html,body,main,header,footer,section){overflow-x:clip;min-width:0}
-html::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,var(--bg-from),var(--bg-to))}
-html{background:var(--bg-to)} html.dark{background:#0a0f1a}
-body{min-height:100svh;color:var(--text)}
-.bg-white{background-color:var(--card)!important;transition:box-shadow .2s}
-.bg-white:hover{box-shadow:0 6px 16px rgba(0,0,0,.12)} .dark .bg-white:hover{box-shadow:0 6px 16px rgba(255,255,255,.15)}
-.text-slate-900,.text-slate-800,.text-slate-700{color:var(--text)!important}
-.text-slate-600,.text-slate-500{color:var(--muted)!important}
-.border-slate-200{border-color:var(--border)!important}
-.backdrop-blur.bg-white\/70{background-color:color-mix(in srgb,var(--card) 70%,transparent)!important}
-select,input{background-color:var(--card)!important;color:var(--text)!important}
-#dark-toggle:checked+span{background:#334155} #dark-toggle:checked+span .dot{transform:translateX(16px)}
-.panel-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:var(--panel-min-h);border-radius:1rem}
-.panel-card> :nth-child(2){padding-top:var(--panel-pad-top)!important;padding-bottom:var(--panel-pad-bottom)!important}
-/* --- Scrollbar (orta qalınlıq) --- */
-:root { --sb-size: 12px; }        /* 10–14px arası rahatdır */
-@media (min-width: 1024px){
-  :root { --sb-size: 12px; }      /* istəsən 14px də edə bilərsən */
-}
-
-html, body{
-  /* Firefox */
-  scrollbar-width: auto;          /* thin deyil */
-  scrollbar-color: rgba(110,110,120,.45) transparent;
-}
-
-/* WebKit (Chrome/Edge/Safari) */
-::-webkit-scrollbar{
-  width: var(--sb-size);
-  height: var(--sb-size);
-}
-::-webkit-scrollbar-thumb{
-  background: rgba(110,110,120,.50);
-  border-radius: 9999px;
-  border: 3px solid transparent;      /* içini bir az “boş” göstərir */
-  background-clip: content-box;
-}
-::-webkit-scrollbar-thumb:hover{
-  background: rgba(110,110,120,.70);
-}
-::-webkit-scrollbar-track{ background: transparent; }
-
-/* Dark ton */
-.dark html, .dark body{
-  scrollbar-color: rgba(185,195,255,.35) transparent;
-}
-.dark ::-webkit-scrollbar-thumb{
-  background: rgba(185,195,255,.35);
-  border: 3px solid transparent;
-}
-.dark ::-webkit-scrollbar-thumb:hover{
-  background: rgba(185,195,255,.55);
-}
-
-
-/* Premium select + fancy menu (indexdəki ilə eyni) */
-.select-premium{appearance:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
-.select-premium:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
-.select-premium:focus{outline:0;border-color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
-select:invalid{color:#9aa4b2}
-.fs-wrap{position:relative;display:block;width:100%}
-/* Drop-up rejimi (yuxarı açılan menyu) */
-.fs-wrap.fs-drop-up .fs-menu{
-  top: auto;
-  bottom: calc(100% + 6px);
-  box-shadow: 0 -12px 28px rgba(0,0,0,.12);
-}
-
-.dark .fs-wrap.fs-drop-up .fs-menu{
-  box-shadow: 0 -16px 32px rgba(0,0,0,.45);
-}
-
-.fs-wrap.fs-drop-up .fs-btn::after{
-  /* translate artıq yuxarıdakı .fs-btn::after qaydasından gəlir,
-     biz sadəcə oxu çeviririk ki, mərkəzdə qalsın */
-  rotate: 180deg;
-}
-
-
-select.select-premium.fs-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
-.fs-btn{-webkit-appearance:none;appearance:none;width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 42px 10px 12px;line-height:1.25;text-align:left;font-size:.875rem;cursor:pointer;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--border) 35%,transparent),0 1px 0 rgba(0,0,0,.05);transition:border-color .18s,box-shadow .18s,transform .06s}
-.fs-btn:hover{border-color:color-mix(in srgb,var(--border) 55%,transparent)}
-.fs-btn:focus-visible{outline:0;box-shadow:0 0 0 1px color-mix(in srgb,var(--border) 45%,transparent),0 0 0 4px rgba(34,211,238,.25),0 6px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
-.fs-btn::after{content:"";position:absolute;right:12px;top:50%;translate:0 -50%;width:16px;height:16px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-size:16px;opacity:.9;pointer-events:none}
-.fs-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:70;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.12);max-height:260px;overflow:auto;padding:6px;display:none}
-.fs-wrap[aria-expanded="true"] .fs-menu{display:block}
-.fs-opt{padding:9px 10px;border-radius:10px;cursor:pointer;font-size:.875rem}
-.fs-opt.is-placeholder{color:#9aa4b2;font-style:italic}
-.fs-opt:hover{background:rgba(148,163,184,.12)}
-.dark .fs-btn{background:#0f172a;box-shadow:inset 0 0 0 1px #223049,0 1px 0 rgba(255,255,255,.04)}
-.dark .fs-btn::after{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>")}
-.dark .fs-menu{background:#0f172a;border-color:#253046;box-shadow:0 16px 32px rgba(0,0,0,.45)}
-.dark .fs-opt:hover{background:rgba(148,163,184,.15)}
-
-/* Boş hal — indexdəki kimi (mini card light, blur overlay dark) */
-.empty-light{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.empty-light .card{width:min(520px,100%);border-radius:16px;border:1px solid var(--border);background:var(--card);box-shadow:0 6px 16px rgba(0,0,0,.06);text-align:center;padding:22px 18px}
-.empty-light .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(147,51,234,.12),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid #e9eaf0;font-size:20px}
-.empty-light .title{font-weight:600;font-size:15px}
-.empty-light .desc{font-size:13px;color:var(--muted);margin-top:4px}
-.empty-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:transparent}
-.empty-overlay .inner{width:min(520px,100%);border-radius:16px;text-align:center;padding:22px 18px;background:rgba(2,6,23,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
-.empty-overlay .icon{width:44px;height:44px;border-radius:9999px;display:grid;place-items:center;margin:0 auto 8px;background:radial-gradient(closest-side,rgba(255,255,255,.14),transparent 70%),conic-gradient(from 180deg at 50% 50%,#22d3ee33,#a78bfa33,#22d3ee33);border:1px solid rgba(255,255,255,.22);font-size:20px}
-.dark .empty-light{display:none}
-/* Dark kontrast fixləri (pill/badge) */
-.dark #pp-count{background:rgba(148,163,184,.18)!important;border-color:rgba(148,163,184,.35)!important;color:#e5e7eb!important}
-.dark #pp-results .h-8.w-8.rounded-lg{background:linear-gradient(180deg,rgba(148,163,184,.20),rgba(148,163,184,.10))!important;border:1px solid rgba(148,163,184,.30)!important;color:#e5e7eb!important}
-/* PP pill — LIGHT rejim */
-#pp-results span.rounded-full.bg-slate-100{
-  background: rgba(148,163,184,.08) !important;
-  border-color: rgba(148,163,184,.45) !important;
-  color: #334155 !important;
-}
-
-/* LIGHT rejimdə PDF/DOCX fərqləndirilməsi */
-#pp-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
-  background: rgba(239,68,68,.10) !important;
-  border-color: rgba(239,68,68,.45) !important;
-  color: #7f1d1d !important;
-}
-#pp-results span.rounded-full.bg-slate-100[data-ext="DOCX"]{
-  background: rgba(59,130,246,.10) !important;
-  border-color: rgba(59,130,246,.45) !important;
-  color: #1e3a8a !important;
-}
-
-/* PP pill — DARK rejim */
-.dark #pp-results span.rounded-full.bg-slate-100{
-  background:rgba(148,163,184,.16)!important;
-  border-color:rgba(148,163,184,.38)!important;
-  color:#e5e7eb!important;
-}
-.dark #pp-results span.rounded-full.bg-slate-100[data-ext="PDF"]{
-  background: rgba(239,68,68,.18) !important;
-  border-color: rgba(239,68,68,.40) !important;
-}
-.dark #pp-results span.rounded-full.bg-slate-100[data-ext="DOCX"]{
-  background: rgba(59,130,246,.18) !important;
-  border-color: rgba(59,130,246,.40) !important;
-}
-
-
-/* Footer mətni: böyük qalsın, amma sıxmasın */
-.footer-text{
-  font-size: clamp(13.5px, 2.6vw, 15px); /* min 13.5px, max 15px */
-  line-height: 1.45;
-  white-space: normal;      /* lazım gəlsə qırılsın */
-  text-wrap: balance;       /* sətir tarazlığı */
-}
-/* Birlikdə qalmalı hissələr */
-.footer-text .chunk{ white-space: nowrap; }
-/* Fancy select overlap fix */
-.fs-wrap{ position: relative; }                    /* konteyneri mövqeləndiririk */
-.fs-wrap[aria-expanded="true"]{ z-index: 120; }    /* açıq olanda üstdə olsun */
-.fs-menu{ z-index: 120; }                          /* menyunun özü də üstdə olsun */
-/* === Download pill button (KSQ/BSQ ilə 1:1) === */
-.ep-dl-btn{
-  display:inline-flex; align-items:center; gap:.5rem;
-  padding:.6rem .95rem;
-  border-radius:9999px;
-  font-weight:600; font-size:.9rem; line-height:1;
-  color:#fff; background:#0f172a;                 /* tünd, vurğulu */
-  box-shadow:0 6px 16px rgba(2,6,23,.18);
-  transition:transform .15s, box-shadow .2s, filter .2s;
-}
-.ep-dl-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); box-shadow:0 10px 22px rgba(2,6,23,.24); }
-.ep-dl-btn:active{ transform:translateY(0); filter:brightness(0.98); }
-.ep-dl-btn svg{ width:18px; height:18px; flex:0 0 auto; }
-
-/* Dark rejim */
-.dark .ep-dl-btn{
-  background:#1e3a8a; /* indigo-800 */
-  box-shadow:0 6px 16px rgba(30,58,138,.35);
-}
-.dark .ep-dl-btn:hover{ box-shadow:0 12px 26px rgba(30,58,138,.45); }
-/* PP nəticə paneli – hər zaman eyni hündürlükdə olsun */
-#pp-results-card{
-  min-height: 320px;
-  display:flex;
-  flex-direction:column;
-}
-@media (min-width: 768px){
-  #pp-results-card{
-    min-height: 340px;
-  }
-}
-
-/* İç grid kartın hündürlüyünü doldursun */
-#pp-results{
-  flex:1;
-}
-/* Light/Dark üçün "Fayl yoxdur" qutusu */
-.no-files-box{
-  background: linear-gradient(135deg,#f9fafb,#e0f2fe);
-  border-color:#94a3b8 !important;
-  color:#0f172a !important;
-  box-shadow:0 10px 26px rgba(15,23,42,.10);
-}
-
-.dark .no-files-box{
-  background: rgba(15,23,42,.85);
-  border-color:rgba(148,163,184,.45) !important;
-  color:#e5e7eb !important;
-  box-shadow:0 14px 32px rgba(0,0,0,.55);
-}
-
-/* Kart daxilində tam mərkəz (loading / Fayl yoxdur və s.) */
-.panel-center-overlay{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  pointer-events:none;  /* klikləri altda qalan elementlərə ötürməsin deyə istəsən auto da edə bilərsən */
-}
-.panel-center-overlay > *{
-  pointer-events:auto; /* içindəki düymə/mətn normal işləsin */
-}
-.fs-btn{
-  position:relative;
-  /* qalan sənin mövcud stilin */
-}
-
-
-</style>
+  <style>
+    :root{
+      --bg-from:#0f172a; --bg-to:#111827; --card:#0b1020cc; --border:#233155; --glass:#0b1020cc;
+    }
+    .gradient-bg{
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.20), transparent 60%),
+                  radial-gradient(900px 500px at 110% 30%, rgba(167,139,250,.18), transparent 55%),
+                  linear-gradient(180deg, var(--bg-from), var(--bg-to));
+    }
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: var(--glass);
+      border: 1px solid var(--border);
+    }
+    .shine {
+      position: relative; overflow: hidden;
+    }
+    .shine::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
+      transform: translateX(-100%); animation: shine 2.2s infinite;
+    }
+    @keyframes shine { to { transform: translateX(100%);} }
+  </style>
 </head>
-<body class="min-h-screen text-slate-900 relative">
-<!-- dekor -->
-<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-  <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/50 to-emerald-200/50"></div>
-  <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/40 to-pink-200/40"></div>
-</div>
 
-<header class="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-slate-200">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-<div class="flex items-center gap-3">
-  <a href="/" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-indigo-400 rounded-xl">
-<img id="site-logo"
-     src="assets/ep-favicon-light.svg"
+<body class="min-h-screen gradient-bg text-slate-100 antialiased">
+  <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-2xl glass rounded-3xl p-8 sm:p-10 shadow-2xl">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="assets/ep-favicon-light.svg"
      class="h-9 w-9 overflow-hidden"
      alt="EduPlan" />
-    <span class="font-semibold tracking-tight group-hover:underline">EduPlan AZ</span>
-  </a>
-</div>
 
-     <div class="relative flex items-center gap-3" id="header-controls">
-        <button id="btn-settings" class="rounded-2xl border p-2 text-base leading-none"
-          aria-label="Settings" title="Settings">⚙️</button>
-        <!-- Settings popover -->
-<div id="settings-panel"
-     class="hidden fixed right-4 top-[72px] z-[80] w-64 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-    <div class="flex items-center justify-between">
-      <div class="text-sm">🌙 Qaranlıq rejim</div>
-      <label class="inline-flex items-center cursor-pointer">
-        <input id="dark-toggle" type="checkbox" class="sr-only">
-        <span class="w-10 h-6 bg-slate-200 rounded-full relative transition">
-          <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></span>
-        </span>
-      </label>
-    </div>
-  </div>
-</div>
-  </div>
-</header>
+        <span class="text-xl font-semibold tracking-tight">EduPlan</span>
+      </div>
 
-<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-  <section class="mb-6 sm:mb-8">
-<h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white">
-  Perspektiv (illik) planlaşdırma — PP faylları
-</h1>
-<p class="mt-2 text-slate-600 dark:text-slate-300">
-  Fənni seçin və tədris ili üzrə perspektiv plan (PP) fayllarını PDF / DOCX formatında yükləyin.
-</p>
-  </section>
+      <h1 class="text-3xl sm:text-4xl font-bold leading-tight">
+        Bölmə hazırlanır<span class="text-sky-400">.</span>
+      </h1>
+      <p class="mt-3 text-slate-300 leading-7">
+        Bu funksiya üzərində hazırda işləyirik. Məqsədimiz — müəllimlər üçün
+        daha sürətli, daha rahat və etibarlı bir təcrübə təqdim etməkdir.
+        <br class="hidden sm:block">Tezliklə istifadəyə veriləcək.
+      </p>
 
-  <section class="add-shadow">
-    <div class="rounded-2xl shadow-sm hover:shadow-md transition border bg-white panel-card">
-      <div class="p-4 border-b"><h3 class="font-semibold">Perspektiv (illik) planlaşdırma</h3></div>
-
-      <div class="px-4 pt-2 pb-4 grid lg:grid-cols-3 gap-6 items-stretch">
-        <!-- Sol filtr sütunu -->
-        <div class="relative z-[60] space-y-4 lg:min-h-[320px] lg:flex lg:flex-col lg:justify-center lg:-translate-y-4">
-          <div>
-            <label class="text-sm text-slate-700 block">Fənn</label>
-            <select id="ppSubject" class="select-premium w-full rounded-xl border px-3 py-2 text-sm bg-white mt-1"></select>
-          </div>
+      <!-- Status kartları -->
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Status</div>
+          <div class="mt-1 text-base font-medium">Aktiv inkişaf</div>
         </div>
-
-        <!-- Sağ nəticə kartı -->
-        <div class="lg:col-span-2 min-w-0">
-          <div id="pp-results-card" class="relative w-full rounded-xl border border-slate-200 bg-white text-sm overflow-clip">
-            <div id="pp-count-row" class="hidden items-center justify-end mb-3 px-4 pt-4">
-              <span id="pp-count" class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 border">0</span>
-            </div>
-            <div id="pp-results" class="grid sm:grid-cols-2 gap-3 p-4" aria-live="polite"></div>
-          </div>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Növbəti addım</div>
+          <div class="mt-1 text-base font-medium">İstifadəçi testləri</div>
+        </div>
+        <div class="shine rounded-2xl border border-slate-700/60 p-4">
+          <div class="text-sm text-slate-400">Buraxılış</div>
+          <div class="mt-1 text-base font-medium">Tezliklə</div>
         </div>
       </div>
-    </div>
-  </section>
-  <!--PP Məlumat-->
-<section class="mt-10 px-4 sm:px-6 lg:px-8 info-section relative z-[1]">
-  <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Məlumat</h2>
 
-  <div class="space-y-3 text-base leading-7">
-<p class="mt-4 leading-relaxed text-slate-700 dark:text-slate-300">
-  Perspektiv (illik) planlaşdırma (PP) fənn üzrə mövzuların, dərs saatlarının və qiymətləndirmə mərhələlərinin
-  tədris ili boyu ardıcıllıqla necə yerləşəcəyini göstərən sənəddir. Məqsəd kurikulum tələblərinə uyğun
-  bilik, bacarıq və kompetensiyaların sistemli şəkildə planlaşdırılmasıdır.
-</p>
+      <!-- Düymələr -->
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <a href="/" class="inline-flex items-center justify-center rounded-2xl px-5 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-semibold transition">
+          Ana səhifəyə qayıt
+        </a>
+        <a href="mailto:eduplan.az@gmail.com?subject=Bildiriş%20tələbi%20-%20EduPlan&body=Hazır%20olan%20kimi%20məni%20xəbərdar%20edin."
+           class="inline-flex items-center justify-center rounded-2xl px-5 py-3 border border-slate-700 hover:border-slate-600 text-slate-100 font-medium transition">
+          Hazır olanda xəbərdar et
+        </a>
+      </div>
 
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  PP mövzuları həftəlik bloklara bölərək tədris yükünü balanslayır, resurs ehtiyacını öncədən görməyə
-  kömək edir və müəllim üçün dərs ardıcıllığını aydınlaşdırır. Şagirdlər üçün isə gözləntiləri və
-  öyrənmə trayektoriyasını daha şəffaf edir.
-</p>
-
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  EduPlan.az faylları fənn, sinif və bölmə üzrə təsnifləşdirir. Fənni seçdikdən sonra uyğun PP
-  materiallarını bu səhifədəki paneldən birbaşa yükləyə bilərsiniz.
-</p>
-
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  Faylların böyük hissəsi <span class="font-medium">PDF</span> və <span class="font-medium">DOCX</span> formatındadır
-  və qeydiyyat tələb etmir — müəllimlər, şagirdlər və təhsil işçiləri üçün açıqdır.
-</p>
-
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  Materiallar müxtəlif mənbələrdən toplanır; format və strukturlarda cüzi fərqlər ola bilər.
-  Təqvimləşdirmə və saat bölgüsü məktəbin planına görə dəyişə bildiyindən təqdim olunan PP-lər nümunə
-  xarakteri daşıyır və mərhələli şəkildə yenilənir.
-</p>
-
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  Uyğunsuzluq və ya müəllif hüquqları ilə bağlı iradınız varsa,
-  <a class="underline decoration-slate-300 hover:decoration-slate-500" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
-  ünvanına yazın. Müraciətlər nəzərdən keçirilir və fayllar yenilənir.
-</p>
-
-<p class="mt-3 leading-relaxed text-slate-700 dark:text-slate-300">
-  Platforma pulsuzdur və yalnız tədris məqsədi daşıyır. Gələcəkdə funksiyalar genişləndiriləcək və PP
-  bazası artırılacaq.
-</p>
-
-  </div>
-</section>
-
-<footer class="mt-12 border-t border-slate-200/70 dark:border-slate-700/60">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-sm
-              text-slate-600 dark:text-slate-400">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-<div class="footer-text text-center sm:text-left leading-6">
-  <span class="chunk">© <span id="year"></span> <span class="font-medium text-slate-700 dark:text-slate-300">EduPlan AZ</span></span>
-  <span class="chunk"> · Bütün hüquqlar qorunur</span>
-</div>
-
-
-      <!-- Linklər mobil-də iki sətirə rahatca keçə bilsin -->
-      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <a href="/about.html"   class="hover:underline">Haqqımızda</a>
-        <a href="/terms.html"   class="hover:underline">Şərtlər</a>
-        <a href="/privacy.html" class="hover:underline">Məxfilik</a>
-      </nav>
+      <!-- Kiçik qeydlər -->
+      <p class="mt-6 text-sm text-slate-400">
+        * SEO üçün bu səhifə <code>noindex</code> ilə qorunur. Yalnız canlı buraxılışdan sonra indeksləmə açılacaq.
+      </p>
     </div>
   </div>
-</footer>
-
-
-</main>
-
-
-
-<script>
-/* === Theme (indexdəki kimi) === */
-const $=s=>document.querySelector(s);
-const settingsBtn=$('#btn-settings'),panel=$('#settings-panel'),darkToggle=$('#dark-toggle');
-const mq=window.matchMedia('(prefers-color-scheme: dark)');
-const saved=localStorage.getItem('theme');
-const initialTheme=saved?saved:(mq.matches?'dark':'light');
-document.documentElement.classList.toggle('dark', initialTheme==='dark');
-darkToggle.checked=(initialTheme==='dark');
-applyThemeAssets(initialTheme);
-document.addEventListener('click',e=>{if(!panel.contains(e.target)&&!settingsBtn.contains(e.target))panel.classList.add('hidden')});
-settingsBtn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('hidden')});
-darkToggle.addEventListener('change',e=>{const t=e.target.checked?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');localStorage.setItem('theme',t);applyThemeAssets(t);refreshEmptyPlaceholders()});
-mq.addEventListener?.('change',e=>{if(!localStorage.getItem('theme')){const t=e.matches?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark');darkToggle.checked=(t==='dark');applyThemeAssets(t);refreshEmptyPlaceholders()}})
-function applyThemeAssets(theme){ $('#site-logo').src = theme==='dark' ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg'; }
-
-/* === DATA === */
-const FEED_URL="https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
-const translations={subjects:{az:'Azərbaycan dili',lit:'Ədəbiyyat',science:'Təbiət',eng:'İngilis dili',rus:'Rus dili',math:'Riyaziyyat',physics:'Fizika',chemistry:'Kimya',biology:'Biologiya',az_history:'Azərbaycan tarixi',world_history:'Ümumi tarix',geography:'Coğrafiya',it:'İnformatika',life:'Həyat bilgisi',tech:'Texnologiya',art:'Təsviri incəsənət',music:'Musiqi',pe:'Fiziki tərbiyə',premilitary:'Çağırışaqədərki hazırlıq',preschool:'Məktəbəqədər hazırlıq'}};
-const state = {
-  ppSubject: null,
-  catalog: [],
-  isCatalogLoaded: false   // <-- YENİ
-};
-
-/* === Select qurulması === */
-function option(el,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;el.appendChild(o)}
-function addPlaceholder(selectEl,label){const o=document.createElement('option');o.value="";o.textContent=label;o.disabled=true;o.selected=true;o.hidden=true;selectEl.appendChild(o);selectEl.required=true}
-function enhanceFancySelect(select){
-  // artıq qurulubsa, əvvəlkini sök
-  if(select.dataset.fancyMounted==='1'){
-    const old = select.parentElement?.classList.contains('fs-wrap') ? select.parentElement : null;
-    if(old) old.replaceWith(select);
-    select.dataset.fancyMounted='0';
-  }
-
-  const wrap = document.createElement('div');
-  wrap.className = 'fs-wrap';
-  wrap.setAttribute('aria-expanded','false');
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'fs-btn';
-  btn.setAttribute('aria-haspopup','listbox');
-  btn.setAttribute('aria-expanded','false');
-  btn.textContent = select.options[select.selectedIndex]?.text ||
-                    select.getAttribute('placeholder') || 'Seçin';
-
-  const menu = document.createElement('div');
-  menu.className = 'fs-menu';
-  menu.setAttribute('role','listbox');
-
-  Array.from(select.options).forEach(o=>{
-    const item = document.createElement('div');
-    item.className = 'fs-opt' + (o.disabled && o.hidden ? ' is-placeholder' : '');
-    item.setAttribute('role','option');
-    item.setAttribute('aria-selected', String(o.selected));
-    item.textContent = o.text;
-
-    item.addEventListener('click', ()=>{
-      Array.from(select.options).forEach(op => op.selected = (op === o));
-      menu.querySelectorAll('[role="option"]').forEach(el => el.setAttribute('aria-selected','false'));
-      item.setAttribute('aria-selected','true');
-
-      select.value = o.value;
-      select.dispatchEvent(new Event('change',{bubbles:true}));
-
-      btn.textContent = o.text;
-      wrap.setAttribute('aria-expanded','false');
-      btn.setAttribute('aria-expanded','false');
-      wrap.classList.remove('fs-drop-up');
-    });
-
-    menu.appendChild(item);
-  });
-
-  // native select gizli qalsın
-  select.classList.add('fs-native');
-  select.tabIndex = -1;
-  select.setAttribute('aria-hidden','true');
-
-  // DOM-da yer dəyiş
-  select.parentNode.insertBefore(wrap, select);
-  wrap.appendChild(btn);
-  wrap.appendChild(select);
-  wrap.appendChild(menu);
-  select.dataset.fancyMounted='1';
-
-  btn.addEventListener('mousedown', e => e.preventDefault());
-
-  btn.addEventListener('click', e=>{
-    e.stopPropagation();
-    const alreadyOpen = wrap.getAttribute('aria-expanded') === 'true';
-
-    // əvvəlcə başqa açıq menyuları bağla
-    document.querySelectorAll('.fs-wrap[aria-expanded="true"]').forEach(w=>{
-      w.setAttribute('aria-expanded','false');
-      w.querySelector('.fs-btn')?.setAttribute('aria-expanded','false');
-      w.classList.remove('fs-drop-up');
-    });
-
-if(!alreadyOpen){
-  // indi açılacaq – əvvəl real menyu hündürlüyünü gizli ölç
-  const rect = wrap.getBoundingClientRect();
-
-  const prevDisplay    = menu.style.display;
-  const prevVisibility = menu.style.visibility;
-
-  menu.style.visibility = 'hidden';
-  menu.style.display    = 'block';
-
-  const rawHeight       = menu.scrollHeight || 0;
-  const MENU_MAX_HEIGHT = 260;
-  const visibleHeight   = Math.min(rawHeight, MENU_MAX_HEIGHT);
-  const menuHeight      = visibleHeight + 12;
-
-  menu.style.display    = prevDisplay;
-  menu.style.visibility = prevVisibility;
-
-  const spaceBelow = window.innerHeight - rect.bottom;
-  const spaceAbove = rect.top;
-
-  if (spaceBelow < menuHeight && spaceAbove > spaceBelow){
-    wrap.classList.add('fs-drop-up');
-  } else {
-    wrap.classList.remove('fs-drop-up');
-  }
-}
-
-
-
-    const willOpen = !alreadyOpen;
-    wrap.setAttribute('aria-expanded', String(willOpen));
-    btn.setAttribute('aria-expanded', String(willOpen));
-  });
-
-  document.addEventListener('click', ()=>{
-    wrap.setAttribute('aria-expanded','false');
-    btn.setAttribute('aria-expanded','false');
-    wrap.classList.remove('fs-drop-up');
-  });
-}
-
-function enhanceAllFancySelects(){document.querySelectorAll('select.select-premium').forEach(enhanceFancySelect)}
-(function renderSelect(){const ppEl=document.getElementById('ppSubject');ppEl.innerHTML='';addPlaceholder(ppEl,'Fənni seçin');Object.values(translations.subjects).forEach(s=>option(ppEl,s,s));ppEl.value=state.ppSubject??"";enhanceAllFancySelects()})();
-function renderLoadingBlock(title, subtitle) {
-  return `
-    <div class="w-full h-full grid place-items-center">
-      <div class="flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-300 text-center">
-        <div class="inline-flex h-11 w-11 items-center justify-center rounded-full
-                    bg-gradient-to-tr from-sky-500/10 via-indigo-500/10 to-violet-500/10
-                    border border-slate-200/70 dark:border-slate-600/70 shadow-sm">
-          <div class="h-4 w-4 rounded-full border-2 border-sky-400 dark:border-sky-300
-                      border-t-transparent animate-spin"></div>
-        </div>
-        <div class="text-sm font-semibold tracking-tight">
-          ${title}
-        </div>
-        <p class="text-xs text-slate-400 dark:text-slate-500">
-          ${subtitle}
-        </p>
-      </div>
-    </div>
-  `;
-}
-
-
-/* === Placeholder (indexdəki showEmpty/hideEmpty) === */
-function showEmpty(cardId,{icon='🗂️',title='',desc=''}) {
-  const card = document.getElementById(cardId);
-  if (!card || card.querySelector('.empty-overlay') || card.querySelector('.empty-light')) return;
-
-  const isDark = document.documentElement.classList.contains('dark');
-
-  if (isDark) {
-    const overlay = document.createElement('div');
-    overlay.className = 'empty-overlay';
-    overlay.innerHTML = `
-      <div class="w-full h-full grid place-items-center px-6">
-        <div class="inner">
-          <div class="icon">${icon}</div>
-          <div class="title">${title}</div>
-          <div class="desc">${desc}</div>
-        </div>
-      </div>`;
-    card.appendChild(overlay);
-  } else {
-    const box = document.createElement('div');
-    box.className = 'empty-light';
-    box.innerHTML = `
-      <div class="card">
-        <div class="icon">${icon}</div>
-        <div class="title">${title}</div>
-        <div class="desc">${desc}</div>
-      </div>`;
-    card.appendChild(box);
-  }
-}
-
-function hideEmpty(cardId){
-  const c = document.getElementById(cardId);
-  if (!c) return;
-
-  c.querySelector('.empty-overlay')?.remove();
-  c.querySelector('.empty-light')?.remove();
-  // Diqqət: min-height klasslarını artıq silmirik
-}
-function refreshEmptyPlaceholders(){if(!state.ppSubject){hideEmpty('pp-results-card');showEmpty('pp-results-card',{icon:'🗂️',title:'Zəhmət olmasa fənni seçin',desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'})}}
-// Kart daxilində tam mərkəz vəziyyət (loading / "Fayl yoxdur" və s.)
-function showCenter(cardId, innerHtml){
-  const card = document.getElementById(cardId);
-  if (!card) return;
-  hideCenter(cardId);
-  const overlay = document.createElement('div');
-  overlay.className = 'panel-center-overlay';
-  overlay.innerHTML = innerHtml;
-  card.appendChild(overlay);
-}
-function hideCenter(cardId){
-  const card = document.getElementById(cardId);
-  card?.querySelector('.panel-center-overlay')?.remove();
-}
-
-/* === PP render === */
-function buildTitle(it){const f=(it.ext||'FILE').toUpperCase();return `${it.subject} · PP · ${f}`}
-function renderPP(){
-  const wrap = $('#pp-results');
-  wrap.innerHTML = '';
-  hideCenter('pp-results-card');   // əvvəlki overlay-i sil
-
-  // Kataloq hələ yüklənməyibsə – loading tam mərkəzdə
-  if (!state.isCatalogLoaded) {
-    showCenter(
-      'pp-results-card',
-      renderLoadingBlock(
-        'Fayllar hazırlanır…',
-        'Zəhmət olmasa bir neçə saniyə gözləyin.'
-      )
-    );
-    return;
-  }
-
-  const list = state.catalog.filter(it =>
-    it.type === 'PP' && it.subject === state.ppSubject
-  );
-
-  $('#pp-count').textContent = list.length;
-
-  // Heç bir fayl yoxdursa – "Fayl yoxdur" tam mərkəzdə
-  if (!list.length) {
-    showCenter(
-      'pp-results-card',
-      `
-      <div class="no-files-box rounded-xl border border-dashed px-6 py-4
-                  text-sm font-medium text-center">
-        Fayl yoxdur
-      </div>
-      `
-    );
-    return;
-  }
-
-
-  // Fayllar var – normal grid
-  const grid = $('#pp-results');
-  const centerFew = (list.length > 0 && list.length <= 2);
-
-  grid.className = 'grid sm:grid-cols-2 gap-3 p-4'; // bazanı sıfırla
-  grid.classList.toggle('min-h-[240px]', centerFew);
-  grid.classList.toggle('place-content-center', centerFew);
-  grid.classList.toggle('justify-items-center', centerFew);
-
-  list.forEach(it => {
-    const card = document.createElement('div');
-    card.className = 'group rounded-xl p-[1px] bg-gradient-to-br from-slate-200 to-slate-100';
-    card.innerHTML = `
-      <div class="rounded-[11px] p-4 bg-white shadow-sm group-hover:shadow-md transition">
-        <div class="flex items-start gap-3">
-          <div class="h-8 w-8 rounded-lg bg-slate-100 grid place-items-center">📄</div>
-          <div class="flex-1">
-            <div class="text-sm font-medium break-words">${buildTitle(it)}</div>
-            <div class="mt-1">
-<span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] border"
-      data-ext="${(it.ext || 'FILE').toUpperCase()}">
-  ${(it.ext || 'FILE').toUpperCase()}
-</span>
-
-            </div>
-            <div class="mt-3">
-              <a href="${it.dl}" class="ep-dl-btn" download rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Yüklə
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>`;
-    grid.appendChild(card);
-  });
-}
-
-
-function toggleResults(){
-  const grid = $('#pp-results');
-  const count = $('#pp-count-row');
-
-  hideCenter('pp-results-card');  // overlay-i sıfırla
-
-  if(state.ppSubject){
-    hideEmpty('pp-results-card');
-    count?.classList.remove('hidden');
-    renderPP();
-  }else{
-    count?.classList.add('hidden');
-    grid.innerHTML = '';
-    showEmpty('pp-results-card',{
-      icon:'🗂️',
-      title:'Zəhmət olmasa fənni seçin',
-      desc:'Fənni seçdikdən sonra nəticələr burada görünəcək.'
-    });
-  }
-}
-
-/* === Feed === */
-async function loadAllFromMaterials(){
-  state.isCatalogLoaded = false;
-
-  try{
-    const res = await fetch(FEED_URL,{cache:'no-store'});
-    const catalog = await res.json();
-    state.catalog = Array.isArray(catalog) ? catalog : [];
-    state.isCatalogLoaded = true;
-    toggleResults();
-  }catch(e){
-    state.isCatalogLoaded = true;
-    if(state.ppSubject){
-      $('#pp-results').innerHTML =
-        `<div class="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
-          Xəta: ${e.message}
-        </div>`;
-    }
-  }
-}
-
-
-/* init */
-document.getElementById('year').textContent=new Date().getFullYear();
-refreshEmptyPlaceholders(); loadAllFromMaterials();
-document.getElementById('ppSubject').addEventListener('change',e=>{state.ppSubject=e.target.value||null;toggleResults()});
-
-
-</script>
 </body>
 </html>

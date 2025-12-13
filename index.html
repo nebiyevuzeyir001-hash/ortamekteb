@@ -808,6 +808,26 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 @media (min-width: 640px){
   .ep-footer .row > .ft-col { flex: 1 1 auto; min-width: 0; }
 }
+:root{
+  --hero-scale: 1.08;   /* 1.05–1.12 arası zövqə görə */
+}
+
+/* mobil-də çox şişməsin */
+@media (max-width: 640px){
+  :root{ --hero-scale: 1.03; }
+}
+
+/* HERO zoom */
+.hero-zoom{
+  transform: translateZ(0) scale(var(--hero-scale));
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* transform layout ölçüsünü böyütmür, ona görə aşağıdan nəfəs veririk */
+#hero{
+  padding-bottom: 64px;
+}
 
   </style>
 
@@ -854,7 +874,7 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
   </header>
 
 <section id="hero" class="relative">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16
+  <div class="hero-zoom mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16
               grid md:grid-cols-2 gap-8 items-center
               min-h-[calc(100svh-64px)]">
       <div>

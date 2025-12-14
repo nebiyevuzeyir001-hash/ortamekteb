@@ -26,7 +26,7 @@
   <meta name="application-name" content="EduPlan" />
   <meta name="apple-mobile-web-app-title" content="EduPlan" />
 
-  <!-- Theme color: JS ilə manual tema keçidində də yenilənəcək -->
+  <!-- Theme color (JS ilə dəyişəcək) -->
   <meta name="theme-color" content="#ffffff" id="theme-color" />
 
   <!-- Open Graph -->
@@ -67,7 +67,7 @@
   <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
   <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
 
-  <!-- Tema: FOUC olmaması üçün -->
+  <!-- Tema: FOUC olmaması üçün (Tailwind yüklənməmişdən əvvəl) -->
   <script>
     (function () {
       try {
@@ -85,17 +85,14 @@
     })();
   </script>
 
-  <!-- Tailwind CDN (darkMode = class) -->
+  <!-- ✅ Tailwind CDN: darkMode düzgün quruluş (class) -->
   <script>
-    window.tailwind = {
-      config: { darkMode: 'class' }
-    };
+    tailwind = window.tailwind || {};
+    tailwind.config = { darkMode: 'class' };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Mobil menyu üçün details/summary markerini gizlət */
-    summary::-webkit-details-marker { display: none; }
     /* Üfüqi scroll problemi olmasın */
     html, body { overflow-x: hidden; }
 
@@ -119,14 +116,13 @@
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header -->
+  <!-- Header (sadə: logo + tema düyməsi) -->
   <header class="sticky top-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
 
         <!-- Brand -->
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
-          <!-- Logo: JS-siz stabil (flash olmur) -->
           <img
             src="assets/ep-favicon-light.svg"
             alt="EduPlan"
@@ -145,57 +141,24 @@
           <span class="font-semibold tracking-tight">EduPlan AZ</span>
         </a>
 
-        <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-2 text-sm">
-          <a href="/ksq-bsq.html" class="rounded-xl px-3 py-2 hover:bg-slate-100/70 dark:hover:bg-white/5 transition">KSQ/BSQ</a>
-          <a href="/pp.html" class="rounded-xl px-3 py-2 hover:bg-slate-100/70 dark:hover:bg-white/5 transition">PP</a>
-          <a href="/calculator.html" class="rounded-xl px-3 py-2 hover:bg-slate-100/70 dark:hover:bg-white/5 transition">Kalkulyator</a>
-          <a href="/timetable.html" class="rounded-xl px-3 py-2 hover:bg-slate-100/70 dark:hover:bg-white/5 transition">Cədvəl</a>
-          <a href="/question-bank.html" class="rounded-xl px-3 py-2 hover:bg-slate-100/70 dark:hover:bg-white/5 transition">Sual bankı</a>
-        </nav>
-
-        <!-- Right controls -->
-        <div class="flex items-center gap-2">
-          <!-- Theme toggle -->
-          <button
-            id="theme-toggle"
-            type="button"
-            class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-white/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            aria-label="Tema dəyişdir"
-            aria-pressed="false"
-          >
-            <!-- Sun -->
-            <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <!-- Moon -->
-            <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-          </button>
-
-          <!-- Mobile menu (no JS) -->
-          <details class="md:hidden relative">
-            <summary class="cursor-pointer select-none inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-white/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                     aria-label="Menyu">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </summary>
-
-            <div class="absolute right-0 mt-3 w-60 rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/95 dark:bg-slate-950/95 backdrop-blur shadow-lg p-2">
-              <a href="/ksq-bsq.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">KSQ/BSQ</a>
-              <a href="/pp.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Perspektiv plan (PP)</a>
-              <a href="/calculator.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Bal kalkulyatoru</a>
-              <a href="/timetable.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Dərs cədvəli</a>
-              <a href="/question-bank.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Sual bankı</a>
-              <div class="my-2 h-px bg-slate-200/70 dark:bg-slate-800/70"></div>
-              <a href="/about.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Haqqımızda</a>
-              <a href="/contact.html" class="block rounded-xl px-3 py-2 hover:bg-slate-100 dark:hover:bg-white/5">Əlaqə</a>
-            </div>
-          </details>
-        </div>
+        <!-- Theme toggle -->
+        <button
+          id="theme-toggle"
+          type="button"
+          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-white/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          aria-label="Tema dəyişdir"
+          aria-pressed="false"
+        >
+          <!-- Sun -->
+          <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <!-- Moon -->
+          <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </button>
 
       </div>
     </div>
@@ -208,6 +171,7 @@
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug text-balance max-w-[36ch]">
           Müəllimlər üçün rəqəmsal resurs platforması
         </h1>
+
         <p class="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-[58ch]">
           Azərbaycan məktəbləri üçün uyğunlaşdırılıb: KSQ/BSQ faylları, Perspektiv planlar (PP), bal kalkulyatoru,
           dərs cədvəli və sual bankı — hamısı bir yerdə.
@@ -228,11 +192,6 @@
             <span>PDF/DOCX</span>
           </li>
         </ul>
-
-        <!-- Qeyd (yığcam, professional) -->
-        <p class="mt-5 text-sm text-slate-500 dark:text-slate-400">
-          Qeydiyyat tələb olunmur · Pulsuz istifadə
-        </p>
       </div>
 
       <!-- Feature cards -->
@@ -357,7 +316,7 @@
     </div>
   </footer>
 
-  <!-- Minimal JS: year + theme toggle -->
+  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -386,18 +345,24 @@
         }
       }
 
-      // ilkin UI sync (tema artıq head-də tətbiq edilib)
+      // ilkin UI sync
       applyTheme(getTheme(), false);
 
+      // Toggle
       btn && btn.addEventListener('click', function () {
         const next = (getTheme() === 'dark') ? 'light' : 'dark';
         applyTheme(next, true);
       });
 
-      // system tema dəyişəndə (yalnız user seçimi yoxdursa)
-      mq && mq.addEventListener && mq.addEventListener('change', function (e) {
+      // System theme dəyişəndə (yalnız user seçimi yoxdursa)
+      const onSystemChange = function (e) {
         if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
-      });
+      };
+
+      if (mq) {
+        if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+        else if (mq.addListener) mq.addListener(onSystemChange);
+      }
     })();
   </script>
 </body>

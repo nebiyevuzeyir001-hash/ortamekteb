@@ -741,17 +741,11 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
   color: var(--muted);
 }
 .site-footer .footer-inner{
-  max-width: 96rem;   /* 80rem idi */
+  max-width: none;
   margin-inline: auto;
-  padding: 16px 16px;
+  padding: 0; /* padding artıq Tailwind-dən gəlir */
 }
 
-@media (min-width: 640px){
-  .site-footer .footer-inner{ padding-left: 24px; padding-right: 24px; }
-}
-@media (min-width: 1024px){
-  .site-footer .footer-inner{ padding-left: 32px; padding-right: 32px; }
-}
 
 .site-footer .footer-topline{
   border-top: 1px solid var(--border);
@@ -981,7 +975,7 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
 
 
 <footer class="site-footer mt-12">
-  <div class="footer-inner">
+<div class="footer-inner mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="footer-topline"></div>
 
     <div class="footer-row">

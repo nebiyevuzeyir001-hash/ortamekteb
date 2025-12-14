@@ -26,9 +26,8 @@
   <meta name="application-name" content="EduPlan" />
   <meta name="apple-mobile-web-app-title" content="EduPlan" />
 
-  <!-- Theme color (browser UI) -->
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+  <!-- Theme color: JS ilə manual tema keçidində də yenilənəcək -->
+  <meta name="theme-color" content="#ffffff" id="theme-color" />
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="EduPlan" />
@@ -64,27 +63,32 @@
   }
   </script>
 
-  <!-- Prefetch (əgər resurslarınız Drive üzərindədirsə faydalıdır) -->
+  <!-- Prefetch -->
   <link rel="dns-prefetch" href="https://drive.usercontent.google.com">
   <link rel="preconnect" href="https://drive.usercontent.google.com" crossorigin>
 
-  <!-- Theme: FOUC olmaması üçün (səhifə yüklənməmişdən əvvəl) -->
+  <!-- Tema: FOUC olmaması üçün -->
   <script>
     (function () {
       try {
         const saved = localStorage.getItem('theme');
         const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved || (systemDark ? 'dark' : 'light');
-        document.documentElement.classList.toggle('dark', theme === 'dark');
+        const theme = (saved === 'dark' || saved === 'light') ? saved : (systemDark ? 'dark' : 'light');
+
+        const root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.dataset.theme = theme;
+
+        const meta = document.getElementById('theme-color');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
       } catch (e) {}
     })();
   </script>
 
   <!-- Tailwind CDN (darkMode = class) -->
   <script>
-    tailwind = window.tailwind || {};
-    tailwind.config = {
-      darkMode: 'class'
+    window.tailwind = {
+      config: { darkMode: 'class' }
     };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -94,12 +98,16 @@
     summary::-webkit-details-marker { display: none; }
     /* Üfüqi scroll problemi olmasın */
     html, body { overflow-x: hidden; }
+
+    /* Native UI (form/scrollbar) tema uyğunluğu */
+    :root { color-scheme: light; }
+    html.dark { color-scheme: dark; }
   </style>
 </head>
 
 <body class="min-h-screen text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
-  <!-- Skip link (accessibility) -->
+  <!-- Skip link -->
   <a href="#main"
      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
     Kontentə keç
@@ -118,11 +126,19 @@
 
         <!-- Brand -->
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          <!-- Logo: JS-siz stabil (flash olmur) -->
           <img
-            id="site-logo"
             src="assets/ep-favicon-light.svg"
             alt="EduPlan"
-            class="h-9 w-9"
+            class="h-9 w-9 dark:hidden"
+            width="36"
+            height="36"
+          />
+          <img
+            src="assets/ep-favicon-dark.svg"
+            alt=""
+            aria-hidden="true"
+            class="h-9 w-9 hidden dark:block"
             width="36"
             height="36"
           />
@@ -213,25 +229,9 @@
           </li>
         </ul>
 
-        <!-- CTA -->
-        <div class="mt-8 flex flex-col sm:flex-row gap-3">
-          <a href="/ksq-bsq.html"
-             class="inline-flex items-center justify-center rounded-2xl px-5 py-3 font-semibold text-white shadow-sm
-                    bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 hover:brightness-110 transition
-                    focus:outline-none focus:ring-2 focus:ring-indigo-400">
-            KSQ/BSQ bölməsinə keç
-          </a>
-          <a href="/calculator.html"
-             class="inline-flex items-center justify-center rounded-2xl px-5 py-3 font-semibold
-                    border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5
-                    hover:bg-white dark:hover:bg-white/10 transition
-                    focus:outline-none focus:ring-2 focus:ring-indigo-400">
-            Bal kalkulyatoru
-          </a>
-        </div>
-
-        <p class="mt-4 text-sm text-slate-500 dark:text-slate-400">
-          Qeydiyyat tələb olunmur · Pulsuz istifadə · Mobil və masaüstü optimallaşdırılıb
+        <!-- Qeyd (yığcam, professional) -->
+        <p class="mt-5 text-sm text-slate-500 dark:text-slate-400">
+          Qeydiyyat tələb olunmur · Pulsuz istifadə
         </p>
       </div>
 
@@ -357,49 +357,46 @@
     </div>
   </footer>
 
-  <!-- Minimal JS: year + theme toggle + logo swap -->
+  <!-- Minimal JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
 
       const btn = document.getElementById('theme-toggle');
-      const logo = document.getElementById('site-logo');
+      const meta = document.getElementById('theme-color');
+      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
 
-      function setLogo(isDark) {
-        if (!logo) return;
-        logo.src = isDark ? 'assets/ep-favicon-dark.svg' : 'assets/ep-favicon-light.svg';
-      }
+      const hasUserPref = () => {
+        try { return !!localStorage.getItem('theme'); } catch (e) { return false; }
+      };
+
+      const getTheme = () => (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 
       function applyTheme(theme, persist) {
         const isDark = theme === 'dark';
         document.documentElement.classList.toggle('dark', isDark);
-        btn && btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        setLogo(isDark);
+        document.documentElement.dataset.theme = theme;
+
+        if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+
         if (persist) {
           try { localStorage.setItem('theme', theme); } catch (e) {}
         }
       }
 
-      // Init (storage > system)
-      let saved = null;
-      try { saved = localStorage.getItem('theme'); } catch (e) {}
-      const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initial = saved || (systemDark ? 'dark' : 'light');
-      applyTheme(initial, false);
+      // ilkin UI sync (tema artıq head-də tətbiq edilib)
+      applyTheme(getTheme(), false);
 
-      // Toggle
       btn && btn.addEventListener('click', function () {
-        const isDarkNow = document.documentElement.classList.contains('dark');
-        applyTheme(isDarkNow ? 'light' : 'dark', true);
+        const next = (getTheme() === 'dark') ? 'light' : 'dark';
+        applyTheme(next, true);
       });
 
-      // System changes (yalnız user seçimi yoxdursa)
-      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+      // system tema dəyişəndə (yalnız user seçimi yoxdursa)
       mq && mq.addEventListener && mq.addEventListener('change', function (e) {
-        let hasUserPref = false;
-        try { hasUserPref = !!localStorage.getItem('theme'); } catch (err) {}
-        if (!hasUserPref) applyTheme(e.matches ? 'dark' : 'light', false);
+        if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
       });
     })();
   </script>

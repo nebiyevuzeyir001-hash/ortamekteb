@@ -735,99 +735,68 @@ html, body{
 }
 html, body { margin: 0; }
 body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
-/* === Unified Footer (lock style) === */
-.ep-footer{
-  border-top: 1px solid var(--border) !important;
-  color: var(--muted) !important;
-  background: transparent !important;
+/* ===== Footer (calculator-dakı kimi, amma yalnız footer üçün) ===== */
+.site-footer{
+  background: transparent;
+  color: var(--muted);
 }
-.ep-footer .wrap{
-  max-width: 100%; /* max-w-7xl */
+
+.site-footer .footer-inner{
+  max-width: 80rem;                 /* Tailwind max-w-7xl = 80rem */
   margin-inline: auto;
-  padding: 1rem 1rem; /* sm:px-6 lg:px-8 py-4 üçün sabitlik */
+  padding: 16px 16px;
 }
+
 @media (min-width: 640px){
-  .ep-footer .wrap{ padding-left: 1.5rem; padding-right: 1.5rem; }
+  .site-footer .footer-inner{ padding-left: 24px; padding-right: 24px; }
 }
 @media (min-width: 1024px){
-  .ep-footer .wrap{ padding-left: 2rem; padding-right: 2rem; }
+  .site-footer .footer-inner{ padding-left: 32px; padding-right: 32px; }
 }
-.ep-footer .row{
-  display: flex; flex-direction: column; gap: .75rem;
+
+.site-footer .footer-topline{
+  border-top: 1px solid var(--border);
+  opacity: .9;
 }
+
+.site-footer .footer-row{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  padding: 16px 0;
+}
+
 @media (min-width: 640px){
-  .ep-footer .row{ flex-direction: row; align-items: center; justify-content: space-between; }
-}
-.ep-footer .brand{
-  color: var(--text) !important; /* hər yerdə eyni ton */
-  font-weight: 500;
-}
-.ep-footer a{
-  color: inherit; text-decoration: none;
-}
-.ep-footer a:hover{
-  text-decoration: underline;
+  .site-footer .footer-row{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+  }
 }
 
-/* Dark tənzimləmələri */
-.dark .ep-footer{
-  border-top-color: #334155 !important; /* var(--border) ilə uyğundur */
-  color: #94a3b8 !important;            /* linklər də eyni tonu miras alır */
-}
-.dark .ep-footer .brand{
-  color: #e2e8f0 !important;
-}
-/* === Footer anti-wrap (hamı səhifə üçün) === */
-.ep-footer .row{ row-gap:.75rem; column-gap:1rem; }
-
-
-/* Footer — mobil dostu ölçü və qırılma */
-.ft-text{
-  font-size: clamp(13.5px, 2.8vw, 15px); /* minimum 13.5px, maksimum 15px */
+/* sol yazı */
+.site-footer .footer-text{
+  font-size: clamp(13.5px, 2.6vw, 15px);
   line-height: 1.45;
-  white-space: normal;
   text-wrap: balance;
-  overflow: visible;
-  text-overflow: clip;
-  word-break: keep-all;
+  color: var(--muted);
 }
-
-
-/* parçalanmamalı hissələr üçün */
-.ft-chunk{ white-space: nowrap; }
-
-@media (max-width: 360px){
-  .ep-footer .wrap{ padding: .75rem .75rem; }
-  .ft-text{ font-size: 12px; line-height: 1.35; }
-  .ep-footer nav a{ font-size: 12px; }
+.site-footer .footer-text .brand{
+  color: var(--text);
+  font-weight: 600;
 }
+.site-footer .footer-text .chunk{ white-space: nowrap; }
 
-
-
-/* nav-ın texti itələməməsi üçün – geniş ekranda yer bölüşdürsün */
-@media (min-width: 640px){
-  .ep-footer .row > .ft-col { flex: 1 1 auto; min-width: 0; }
+/* linklər */
+.site-footer nav a{
+  color: inherit;
+  text-decoration: none;
 }
-:root{
-  --hero-scale: 1.08;   /* 1.05–1.12 arası zövqə görə */
-}
+.site-footer nav a:hover{ text-decoration: underline; }
 
-/* mobil-də çox şişməsin */
-@media (max-width: 640px){
-  :root{ --hero-scale: 1.03; }
-}
-
-/* HERO zoom */
-.hero-zoom{
-  transform: translateZ(0) scale(var(--hero-scale));
-  transform-origin: center;
-  will-change: transform;
-}
-
-/* transform layout ölçüsünü böyütmür, ona görə aşağıdan nəfəs veririk */
-#hero{
-  padding-bottom: 64px;
-}
+/* dark-da bir az yumşaq */
+.dark .site-footer .footer-topline{ border-top-color: #334155; }
 
   </style>
 
@@ -1012,29 +981,26 @@ body { padding-bottom: 20px; } /* istəsən 24px də edə bilərsən */
   </main>
 
 
-<footer class="ep-footer mt-12">
-  <div class="wrap">
-    <div class="row">
-<div class="ft-col text-center sm:text-left leading-6 whitespace-normal">
-  <span class="ft-text">
-    <span class="ft-chunk">© <span id="year"></span> <span class="brand">EduPlan AZ</span></span>
-    &nbsp;·&nbsp;
-    <span class="ft-chunk">Bütün hüquqlar qorunur</span>
-  </span>
-</div>
+<footer class="site-footer mt-12">
+  <div class="footer-inner">
+    <div class="footer-topline"></div>
 
+    <div class="footer-row">
+      <div class="text-center sm:text-left footer-text">
+        <span class="chunk">© <span id="year"></span> <span class="brand">EduPlan AZ</span></span>
+        <span class="chunk"> · Bütün hüquqlar qorunur</span>
+      </div>
 
-
-      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
         <a href="/about.html">Haqqımızda</a>
         <a href="/contact.html">Əlaqə</a>
         <a href="/terms.html">Şərtlər</a>
         <a href="/privacy.html">Məxfilik</a>
       </nav>
-
     </div>
   </div>
 </footer>
+
 
 
 
@@ -1299,7 +1265,6 @@ document.getElementById('ppSubject')?.addEventListener('change', e=>{
 
 
 (function init(){
-  document.getElementById('year').textContent = new Date().getFullYear();
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
   setActiveTab('ksq', { scroll: false });

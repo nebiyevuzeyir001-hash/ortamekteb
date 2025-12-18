@@ -100,6 +100,29 @@
 
     /* Fixed header olan saytda anchor scroll zamanı üstü örtməsin */
     html { scroll-padding-top: 80px; }
+
+    /* ✅ Hover kölgəsi: light-da necədirsə dark-da da EYNİ “hiss” ilə görünsün */
+    .card-surface {
+      transition: box-shadow 200ms ease, transform 200ms ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+    .card-surface:hover {
+      box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.12),
+        0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+    html.dark .card-surface {
+      /* dark fonda kölgə “itmir” deyə: qara kölgə + çox nazik açıq kontur */
+      box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+    html.dark .card-surface:hover {
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.55),
+        0 4px 12px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
   </style>
 </head>
 
@@ -199,7 +222,7 @@
       <div class="grid gap-4">
         <div class="grid sm:grid-cols-2 gap-4">
           <a href="/ksq-bsq.html"
-             class="group rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-5 shadow-sm hover:shadow-md transition">
+             class="card-surface group rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-5 transition">
             <div class="flex items-start gap-3">
               <div class="h-10 w-10 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">📄</div>
               <div>
@@ -212,7 +235,7 @@
           </a>
 
           <a href="/pp.html"
-             class="group rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-5 shadow-sm hover:shadow-md transition">
+             class="card-surface group rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-5 transition">
             <div class="flex items-start gap-3">
               <div class="h-10 w-10 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">🗓️</div>
               <div>
@@ -227,19 +250,19 @@
 
         <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
           <a href="/calculator.html"
-             class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 shadow-sm hover:shadow-md transition flex items-center gap-3">
+             class="card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center gap-3">
             <span class="h-9 w-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">🧮</span>
             <span class="font-medium">Bal kalkulyatoru</span>
           </a>
 
           <a href="/timetable.html"
-             class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 shadow-sm hover:shadow-md transition flex items-center gap-3">
+             class="card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center gap-3">
             <span class="h-9 w-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">📅</span>
             <span class="font-medium">Dərs cədvəli</span>
           </a>
 
           <a href="/question-bank.html"
-             class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 shadow-sm hover:shadow-md transition flex items-center gap-3">
+             class="card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center gap-3">
             <span class="h-9 w-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">📚</span>
             <span class="font-medium">Sual bankı</span>
           </a>

@@ -230,7 +230,7 @@
           </fieldset>
 
           <!-- Actions -->
-          <div class="flex flex-col sm:flex-row gap-3">
+          <div id="calc-actions" class="flex flex-col sm:flex-row gap-3">
             <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
               Hesabla
             </button>
@@ -408,12 +408,15 @@
       const fsT1 = $id('fs-t1');
       const fsT2 = $id('fs-t2');
 
-      function scrollToWithHeader(el) {
-        if (!el) return;
-        const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+      const actions = $id('calc-actions');
+      
+function scrollToWithHeader(el, extraOffset = 0) {
+  if (!el) return;
+  const headerH = document.querySelector('header')?.offsetHeight || 0;
+  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
 
       function setBtnActive(btn, act) {
         // base -> active
@@ -572,8 +575,12 @@
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        out.classList.remove('hidden');
-        scrollToWithHeader(out);
+out.classList.remove('hidden');
+
+const actionsH = actions?.offsetHeight || 0;
+// output yuxarıda düymələr üçün yer buraxsın deyə əlavə offset veririk
+scrollToWithHeader(out, actionsH + 12);
+
 
         // illik yalnız hər ikisi rəqəm olarsa
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {

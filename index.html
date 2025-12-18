@@ -98,13 +98,7 @@
     :root { color-scheme: light; }
     html.dark { color-scheme: dark; }
   </style>
-  <style>
-  header {
-    position: static !important;
-    top: auto !important;
-    z-index: auto !important;
-  }
-</style>
+
 
 </head>
 
@@ -117,13 +111,13 @@
   </a>
 
   <!-- Background blobs -->
-<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
   <!-- Header (logo + tema düyməsi) -->
-  <header class="!static border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
+<header class="border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
 

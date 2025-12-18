@@ -85,20 +85,25 @@
     })();
   </script>
 
-  <!-- ✅ Tailwind CDN (v3) + darkMode: class -->
-  <script>
-    tailwind.config = { darkMode: 'class' }
-  </script>
+  <!-- ✅ Tailwind CDN (ƏVVƏL script, SONRA config) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
 
   <style>
     html, body { overflow-x: hidden; }
     :root { color-scheme: light; }
     html.dark { color-scheme: dark; }
+
+    /* Fixed header olan saytda anchor scroll zamanı üstü örtməsin */
+    html { scroll-padding-top: 80px; }
   </style>
 </head>
 
-<body class="min-h-screen text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+<body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
   <!-- Skip link -->
   <a href="#main"
@@ -112,8 +117,8 @@
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header (logo + tema düyməsi) -->
-  <header class="sticky top-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
+  <!-- Header (fixed: scroll zamanı sabit qalır) -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
 
@@ -164,7 +169,7 @@
   <section class="relative">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid md:grid-cols-2 gap-10 items-center min-h-[calc(100vh-64px)]">
       <div>
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug text-balance max-w-[36ch]">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug max-w-[36ch]">
           Müəllimlər üçün rəqəmsal resurs platforması
         </h1>
 
@@ -341,16 +346,13 @@
         }
       }
 
-      // ilkin UI sync
       applyTheme(getTheme(), false);
 
-      // Toggle
       btn && btn.addEventListener('click', function () {
         const next = (getTheme() === 'dark') ? 'light' : 'dark';
         applyTheme(next, true);
       });
 
-      // System theme dəyişəndə (yalnız user seçimi yoxdursa)
       const onSystemChange = function (e) {
         if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
       };

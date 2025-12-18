@@ -417,7 +417,21 @@ function scrollToWithHeader(el, extraOffset = 0) {
   window.scrollTo({ top: y, behavior: 'smooth' });
 }
 
+function scrollToStable(el, extraOffset = 0) {
+  if (!el) return;
 
+  // mobil klaviaturanı bağla
+  try { document.activeElement?.blur?.(); } catch (e) {}
+
+  // layout + viewport stabilləşsin (xüsusən ilk dəfə Enter zamanı)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollToWithHeader(el, extraOffset);
+    });
+  });
+}
+
+      
       function setBtnActive(btn, act) {
         // base -> active
         const addA = ['ring-2','ring-indigo-400/30','border-indigo-400','bg-white/80','dark:bg-slate-900/60'];
@@ -541,9 +555,11 @@ function scrollToWithHeader(el, extraOffset = 0) {
         const el = $id(id);
         el?.addEventListener('keydown', e => {
           if (e.key === 'Enter') {
-            e.preventDefault();
-            btnCalc.click();
-          }
+  e.preventDefault();
+  e.target.blur();     // klaviatura bağlansın
+  btnCalc.click();
+}
+
         });
       });
 
@@ -577,9 +593,9 @@ function scrollToWithHeader(el, extraOffset = 0) {
 
 out.classList.remove('hidden');
 
-const actionsH = actions?.offsetHeight || 0;
-// output yuxarıda düymələr üçün yer buraxsın deyə əlavə offset veririk
-scrollToWithHeader(out, actionsH + 22);
+// həmişə düymələr görünsün deyə actions-a scroll edirik
+scrollToStable(actions || out, 22);
+
 
 
         // illik yalnız hər ikisi rəqəm olarsa

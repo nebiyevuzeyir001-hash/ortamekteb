@@ -13,10 +13,8 @@
 
   <title>Dərs cədvəli hazırlayıcı — EduPlan</title>
 
-  <!-- Theme color (JS ilə dəyişəcək) -->
   <meta name="theme-color" content="#ffffff" id="theme-color" />
 
-  <!-- OG -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Dərs cədvəli hazırlayıcı — EduPlan" />
   <meta property="og:description" content="Müəllim və sinif məlumatlarını daxil edin, sistem avtomatik dərs cədvəli hazırlasın." />
@@ -24,7 +22,6 @@
   <meta property="og:url" content="https://www.eduplan.az/timetable.html" />
   <meta property="og:site_name" content="EduPlan" />
 
-  <!-- Favicons / PWA -->
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
@@ -66,22 +63,25 @@
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* primary button gradient (calculator ilə eyni) */
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ==== Form controls (fix: dark dropdown readability + select height match) ==== */
+    /* ==== Form controls ==== */
     :root{
-      --ep-field-h: 42px;     /* üst panel üçün */
-      --ep-field-h-sm: 36px;  /* cədvəl içi üçün */
+      --ep-field-h: 42px;
+      --ep-field-h-sm: 36px;
+
+      /* NEW: premium radius */
+      --ep-radius-lg: 1rem;
+      --ep-radius-sm: .95rem;
     }
 
     input[type="text"], input[type="number"], select {
       width: 100%;
-      border-radius: 0.75rem;
+      border-radius: var(--ep-radius-lg);
       border: 1px solid rgba(226,232,240,.75);
       background-color: rgba(255,255,255,.6);
-      padding: .55rem .75rem;
+      padding: .55rem .85rem; /* soldan daha rahat */
       font-size: 13px;
       line-height: 1.25;
       min-height: var(--ep-field-h);
@@ -102,7 +102,6 @@
       box-shadow: 0 0 0 3px rgba(99,102,241,.22);
     }
 
-    /* Select: eyni hündürlük + custom ox (arrow) */
     select{
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -117,13 +116,11 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
-    /* FIX: Dark mode-da açılan option-lar görünmürdü → option-ları həmişə oxunaqlı et */
     select option, select optgroup{
       color: #0f172a;
       background-color: #ffffff;
     }
 
-    /* Checkbox rəngi (daha stabil görünüş) */
     input[type="checkbox"]{ accent-color: rgb(99,102,241); }
 
     /* Layout */
@@ -164,13 +161,25 @@
     html.dark table.config-table th{ color: rgb(148 163 184); }
     table.config-table td{ padding: 4px 6px; vertical-align: top; }
 
-    /* table içində bir az daha kompakt */
     table.config-table input, table.config-table select{
       padding: .45rem .6rem;
-      border-radius: .75rem;
+      border-radius: var(--ep-radius-sm);
       min-height: var(--ep-field-h-sm);
       font-size: 12.5px;
     }
+
+    /* ===== Teacher table: sütun balansı ===== */
+    #teacherTable{ table-layout: fixed; min-width: 980px; }
+    #teacherTable th{ white-space: normal; line-height: 1.15; }
+
+    #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 240px; }
+    #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 120px; }
+    #teacherTable th:nth-child(3), #teacherTable td:nth-child(3){ width: 110px; }
+    #teacherTable th:nth-child(4), #teacherTable td:nth-child(4){ width: 95px; }
+    #teacherTable th:nth-child(5), #teacherTable td:nth-child(5){ width: 90px; }
+    #teacherTable th:nth-child(6), #teacherTable td:nth-child(6){ width: 110px; }
+    #teacherTable th:nth-child(7), #teacherTable td:nth-child(7){ width: 240px; }
+    #teacherTable th:nth-child(8), #teacherTable td:nth-child(8){ width: 56px; }
 
     /* Tabs */
     .tab-btn{
@@ -228,7 +237,6 @@
     }
     html.dark .tt-slot-muted{ color: rgb(100 116 139); }
 
-    /* Unplaced container newline */
     #unplacedContainer{ white-space: pre-line; }
 
     /* Print – yalnız cədvəl qalsın */
@@ -237,35 +245,127 @@
       main{ padding: 0 !important; max-width: none !important; }
       body{ background: white !important; }
     }
+
+    /* ===== Custom select (premium dropdown) ===== */
+    .ep-native-select{
+      position:absolute !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+      width:1px !important;
+      height:1px !important;
+      left:-9999px !important;
+    }
+
+    .ep-select{ position:relative; width:100%; }
+    .ep-select-btn{
+      width:100%;
+      min-height: var(--ep-field-h);
+      border-radius: var(--ep-radius-lg);
+      border: 1px solid rgba(226,232,240,.75);
+      background: rgba(255,255,255,.65);
+      padding: .55rem .95rem; /* “5 gün” soldan rahat */
+      font-size: 13px;
+      line-height: 1.25;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      cursor:pointer;
+      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+    .ep-select-btn:hover{ background: rgba(255,255,255,.78); }
+    .ep-select-btn:active{ transform: translateY(1px); }
+    .ep-select-btn:focus{
+      outline:none;
+      border-color: rgb(99,102,241);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.22);
+    }
+
+    html.dark .ep-select-btn{
+      border-color: rgba(30,41,59,.7);
+      background: rgba(255,255,255,.05);
+      color: rgb(226,232,240);
+    }
+
+    .ep-select-sm .ep-select-btn{
+      min-height: var(--ep-field-h-sm);
+      padding: .45rem .8rem;
+      font-size: 12.5px;
+      border-radius: var(--ep-radius-sm);
+    }
+
+    .ep-select-menu{
+      position:absolute;
+      inset-inline:0;
+      top: calc(100% + .35rem);
+      z-index: 80;
+      border-radius: 1rem;
+      border: 1px solid rgba(226,232,240,.9);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      padding: .35rem;
+      box-shadow: 0 18px 55px rgba(2,6,23,.18);
+      display:none;
+      max-height: 260px;
+      overflow:auto;
+    }
+    html.dark .ep-select-menu{
+      border-color: rgba(51,65,85,.9);
+      background: rgba(2,6,23,.92);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+    .ep-select.open .ep-select-menu{ display:block; }
+
+    .ep-select-item{
+      width:100%;
+      border:0;
+      background: transparent;
+      color: inherit;
+      border-radius: .85rem;
+      padding: .55rem .75rem;
+      font-size: 13px;
+      text-align:left;
+      cursor:pointer;
+      transition: background-color .12s ease;
+    }
+    .ep-select-sm .ep-select-item{ font-size: 12.5px; padding: .5rem .7rem; }
+    .ep-select-item:hover{ background: rgba(99,102,241,.10); }
+    html.dark .ep-select-item:hover{ background: rgba(129,140,248,.14); }
+
+    .ep-select-item[aria-selected="true"]{
+      background: rgba(99,102,241,.16);
+      font-weight: 600;
+    }
+    html.dark .ep-select-item[aria-selected="true"]{
+      background: rgba(129,140,248,.18);
+    }
+
+    /* dropdown aşağı açılarkən kəsilməsin (xüsusən class table içində) */
+    .ep-overflow-y-visible{ overflow-y: visible; }
   </style>
 </head>
 
 <body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
-  <!-- Skip link -->
   <a href="#main"
      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
     Kontentə keç
   </a>
 
-  <!-- Background blobs (calculator ilə eyni) -->
   <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header (calculator ilə eyni) -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
-        <!-- Brand -->
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
           <img src="assets/ep-favicon-light.svg" alt="EduPlan" class="h-9 w-9 dark:hidden" width="36" height="36" />
           <img src="assets/ep-favicon-dark.svg" alt="" aria-hidden="true" class="h-9 w-9 hidden dark:block" width="36" height="36" />
           <span class="font-semibold tracking-tight">EduPlan AZ</span>
         </a>
 
-        <!-- Theme toggle -->
         <button
           id="theme-toggle"
           type="button"
@@ -273,12 +373,10 @@
           aria-label="Tema dəyişdir"
           aria-pressed="false"
         >
-          <!-- Sun -->
           <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <!-- Moon -->
           <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
           </svg>
@@ -287,9 +385,7 @@
     </div>
   </header>
 
-  <!-- Main -->
   <main id="main" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-    <!-- Page intro -->
     <section class="py-6 sm:py-8">
       <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Dərs cədvəli hazırlayıcı</h1>
       <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
@@ -297,8 +393,7 @@
       </p>
     </section>
 
-    <!-- Builder -->
-    <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden">
+    <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
       <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
         <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
       </div>
@@ -362,10 +457,10 @@
                     <tr>
                       <th>Ad, soyad</th>
                       <th>Kod</th>
-                      <th>Həftəlik max</th>
-                      <th>Gündə max</th>
-                      <th>1-ci saatı sevmir</th>
-                      <th>Sonuncu saatı sevmir</th>
+                      <th>Həftəlik<span class="block">max</span></th>
+                      <th>Gündə<span class="block">max</span></th>
+                      <th>1-ci saatı<span class="block">sevmir</span></th>
+                      <th>Sonuncu saatı<span class="block">sevmir</span></th>
                       <th>Gəlmə günləri</th>
                       <th class="no-print"></th>
                     </tr>
@@ -389,7 +484,7 @@
                 Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
               </div>
 
-              <div class="overflow-x-auto">
+              <div class="overflow-x-auto ep-overflow-y-visible">
                 <table class="config-table" id="classTable">
                   <thead>
                     <tr>
@@ -440,7 +535,6 @@
 
           <!-- SAĞ: hazırlayıcı + nəticə -->
           <div class="flex flex-col gap-4">
-            <!-- Actions -->
             <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
               <div class="section-title mb-2">Hazırlayıcı</div>
 
@@ -470,27 +564,21 @@
               <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
             </div>
 
-            <!-- Result -->
             <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
               <div class="flex items-center justify-between mb-3">
                 <div class="section-title">Nəticə</div>
                 <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
               </div>
 
-              <!-- Sinif tabları -->
               <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
 
-              <!-- Cədvəl -->
               <div id="timetableContainer" class="overflow-x-auto text-xs">
                 <div class="text-[12px] text-slate-500 dark:text-slate-400">
                   Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
                 </div>
               </div>
 
-              <!-- Yerləşdirilməyənlər -->
               <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 dark:text-amber-400 hidden"></div>
-
-              <!-- Texniki xəbərdarlıqlar -->
               <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
             </div>
           </div>
@@ -498,7 +586,6 @@
       </div>
     </section>
 
-    <!-- Info (calculator "Məlumat" blokuna uyğun) -->
     <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
       <h2 class="text-2xl sm:text-3xl font-semibold">Qısa izah</h2>
 
@@ -513,7 +600,6 @@
     </section>
   </main>
 
-  <!-- Footer (calculator ilə eyni) -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -529,7 +615,6 @@
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle (calculator ilə eyni) -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -604,6 +689,100 @@
       const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
 
+      /* ===== Premium custom select ===== */
+      const __epSelectInstances = new Set();
+
+      function makePrettySelect(selectEl, opts = {}) {
+        if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
+
+        const size = opts.size === 'sm' ? 'sm' : 'md';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'ep-select' + (size === 'sm' ? ' ep-select-sm' : '');
+
+        selectEl.parentNode.insertBefore(wrap, selectEl);
+        wrap.appendChild(selectEl);
+
+        selectEl.classList.add('ep-native-select');
+        selectEl.dataset.epPrettySelect = '1';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ep-select-btn';
+        btn.setAttribute('aria-haspopup', 'listbox');
+        btn.setAttribute('aria-expanded', 'false');
+
+        const menu = document.createElement('div');
+        menu.className = 'ep-select-menu';
+        menu.setAttribute('role', 'listbox');
+
+        wrap.appendChild(btn);
+        wrap.appendChild(menu);
+
+        function close() {
+          wrap.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+        function open() {
+          __epSelectInstances.forEach(inst => { if (inst !== api) inst.close(); });
+          wrap.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+        function toggle() {
+          wrap.classList.contains('open') ? close() : open();
+        }
+
+        function render() {
+          const selected = selectEl.options[selectEl.selectedIndex];
+          const label = selected ? selected.textContent : '';
+
+          btn.innerHTML = `
+            <span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true" style="flex:0 0 auto;opacity:.9">
+              <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+
+          menu.innerHTML = '';
+          Array.from(selectEl.options).forEach((opt, idx) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'ep-select-item';
+            item.textContent = opt.textContent;
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', idx === selectEl.selectedIndex ? 'true' : 'false');
+
+            item.addEventListener('click', () => {
+              selectEl.selectedIndex = idx;
+              selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+              render();
+              close();
+            });
+
+            menu.appendChild(item);
+          });
+        }
+
+        btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+        btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+        // click outside -> close
+        function onDocDown(e){
+          if (!wrap.contains(e.target)) close();
+        }
+        document.addEventListener('mousedown', onDocDown);
+
+        selectEl.addEventListener('change', render);
+
+        const api = { close, wrap };
+        __epSelectInstances.add(api);
+
+        render();
+      }
+
+      // Top panel select (Həftəlik iş günü)
+      makePrettySelect(document.getElementById('daysCount'), { size: 'md' });
+
       function addTeacherRow(initial = {}) {
         const tr = document.createElement('tr');
 
@@ -661,6 +840,10 @@
           </td>
         `;
         classTbody.appendChild(tr);
+
+        // premium dropdown-lar
+        makePrettySelect(tr.querySelector('.c-level'), { size: 'sm' });
+        makePrettySelect(tr.querySelector('.c-shift'), { size: 'sm' });
       }
 
       function addLessonRow(initial = {}) {

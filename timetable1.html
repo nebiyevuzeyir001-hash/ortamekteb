@@ -70,60 +70,163 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ==== Form controls (fix: dark dropdown readability + select height match) ==== */
+    /* ===== Premium surfaces (bütün bloklar üçün) ===== */
     :root{
-      --ep-field-h: 42px;     /* üst panel üçün */
-      --ep-field-h-sm: 36px;  /* cədvəl içi üçün */
+      --ep-field-h: 44px;     /* üst panel */
+      --ep-field-h-sm: 36px;  /* cədvəl içi */
+
+      --ep-radius-xl: 1.5rem;   /* 24px */
+      --ep-radius-lg: 1.25rem;  /* 20px */
+
+      --ep-border: rgba(226,232,240,.78);
+      --ep-border-dark: rgba(51,65,85,.85);
+
+      --ep-shadow: 0 1px 0 rgba(15,23,42,.04), 0 18px 60px -45px rgba(2,6,23,.22);
+      --ep-shadow-dark: 0 1px 0 rgba(255,255,255,.04), 0 22px 70px -55px rgba(0,0,0,.75);
+
+      --ep-surface-1: rgba(255,255,255,.78);
+      --ep-surface-2: rgba(255,255,255,.58);
+
+      --ep-surface-dark-1: rgba(15,23,42,.62);
+      --ep-surface-dark-2: rgba(15,23,42,.40);
     }
 
-    input[type="text"], input[type="number"], select {
+    /* böyük “container” bloklar (Builder, Info və s.) */
+    body .ep-shell{
+      position: relative;
+      border-radius: var(--ep-radius-xl);
+      border: 1px solid var(--ep-border);
+      background: linear-gradient(180deg, var(--ep-surface-1) 0%, var(--ep-surface-2) 100%);
+      box-shadow: var(--ep-shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+    html.dark body .ep-shell{
+      border-color: var(--ep-border-dark);
+      background: linear-gradient(180deg, var(--ep-surface-dark-1) 0%, var(--ep-surface-dark-2) 100%);
+      box-shadow: var(--ep-shadow-dark);
+    }
+
+    /* iç “kart” bloklar (Məktəb parametrləri, Müəllimlər, Siniflər, Nəticə...) */
+    body .ep-panel{
+      position: relative;
+      border-radius: var(--ep-radius-lg);
+      border: 1px solid var(--ep-border);
+      background: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.55) 100%);
+      box-shadow: 0 1px 0 rgba(15,23,42,.03), 0 14px 45px -40px rgba(2,6,23,.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    html.dark body .ep-panel{
+      border-color: rgba(51,65,85,.75);
+      background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(255,255,255,.035) 100%);
+      box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 16px 55px -45px rgba(0,0,0,.65);
+    }
+
+    /* üst işıq effekti (premium hiss) */
+    body .ep-shell::before,
+    body .ep-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: inherit;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 260px at 15% 0%, rgba(99,102,241,.14), transparent 60%),
+        radial-gradient(700px 240px at 85% -10%, rgba(147,51,234,.10), transparent 55%);
+      opacity:.85;
+    }
+    html.dark body .ep-shell::before,
+    html.dark body .ep-panel::before{
+      opacity:.95;
+    }
+
+    .section-title{
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color: rgb(100 116 139);
+    }
+    html.dark .section-title{ color: rgb(148 163 184); }
+
+    /* ===== Form controls (select + input taraz + dark dropdown) ===== */
+    body input[type="text"],
+    body input[type="number"],
+    body select{
+      box-sizing: border-box;
       width: 100%;
-      border-radius: 0.75rem;
-      border: 1px solid rgba(226,232,240,.75);
-      background-color: rgba(255,255,255,.6);
-      padding: .55rem .75rem;
+      height: var(--ep-field-h);
+      border-radius: 0.95rem;
+      border: 1px solid rgba(226,232,240,.82);
+      background-color: rgba(255,255,255,.72);
+      padding: .62rem 1rem;             /* soldan daha rahat (5 gün problemi) */
       font-size: 13px;
-      line-height: 1.25;
-      min-height: var(--ep-field-h);
+      line-height: 1.2;
       outline: none;
-      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .1s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
     }
 
-    html.dark input[type="text"], html.dark input[type="number"], html.dark select {
-      border-color: rgba(30,41,59,.7);
-      background-color: rgba(255,255,255,.05);
+    html.dark body input[type="text"],
+    html.dark body input[type="number"],
+    html.dark body select{
+      border-color: rgba(51,65,85,.85);
+      background-color: rgba(2,6,23,.28);
       color: rgb(226,232,240);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
 
-    input[type="text"]::placeholder, input[type="number"]::placeholder { color: rgb(148,163,184); }
-
-    input[type="text"]:focus, input[type="number"]:focus, select:focus{
-      border-color: rgb(99,102,241);
-      box-shadow: 0 0 0 3px rgba(99,102,241,.22);
+    body input[type="text"]::placeholder,
+    body input[type="number"]::placeholder{
+      color: rgb(148,163,184);
     }
 
-    /* Select: eyni hündürlük + custom ox (arrow) */
-    select{
+    body input[type="text"]:focus,
+    body input[type="number"]:focus,
+    body select:focus{
+      border-color: rgba(99,102,241,.9);
+      box-shadow: 0 0 0 4px rgba(99,102,241,.22);
+    }
+
+    body input[type="text"]:hover,
+    body input[type="number"]:hover,
+    body select:hover{
+      border-color: rgba(148,163,184,.95);
+    }
+    html.dark body input[type="text"]:hover,
+    html.dark body input[type="number"]:hover,
+    html.dark body select:hover{
+      border-color: rgba(100,116,139,.95);
+    }
+
+    /* Select: custom arrow + sağ boşluq */
+    body select{
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      padding-right: 2.25rem;
+      padding-right: 2.7rem; /* ox üçün yer */
       background-repeat: no-repeat;
-      background-position: right .75rem center;
-      background-size: 1rem 1rem;
+      background-position: right 1rem center;
+      background-size: 1.05rem 1.05rem;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
-    html.dark select{
+    html.dark body select{
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
-    /* FIX: Dark mode-da açılan option-lar görünmürdü → option-ları həmişə oxunaqlı et */
-    select option, select optgroup{
+    /* Dropdown option-lar (Chrome/Edge-də yaxşı işləyir; Safari native ola bilər) */
+    body select option, body select optgroup{
       color: #0f172a;
       background-color: #ffffff;
     }
+    html.dark body select option, html.dark body select optgroup{
+      color: #e2e8f0;
+      background-color: #0b1220;
+    }
 
-    /* Checkbox rəngi (daha stabil görünüş) */
+    /* Checkbox: stabil və premium */
     input[type="checkbox"]{ accent-color: rgb(99,102,241); }
 
     /* Layout */
@@ -137,25 +240,16 @@
       .timetable-layout{ grid-template-columns: 1fr; }
     }
 
-    .section-title{
-      font-size:.8rem;
-      font-weight:700;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      color: rgb(100 116 139);
-    }
-    html.dark .section-title{ color: rgb(148 163 184); }
-
     /* Config table */
     table.config-table{
       width:100%;
       border-collapse:separate;
-      border-spacing:0 6px;
+      border-spacing:0 8px; /* bir az daha nəfəs */
       font-size:.78rem;
     }
     table.config-table th{
       text-align:left;
-      font-weight:600;
+      font-weight:700;
       color: rgb(100 116 139);
       padding: 4px 6px;
       font-size: .72rem;
@@ -164,33 +258,53 @@
     html.dark table.config-table th{ color: rgb(148 163 184); }
     table.config-table td{ padding: 4px 6px; vertical-align: top; }
 
-    /* table içində bir az daha kompakt */
+    /* row “pill” görünüş (premium) */
+    table.config-table tbody td{
+      background: rgba(15,23,42,.02);
+    }
+    html.dark table.config-table tbody td{
+      background: rgba(255,255,255,.03);
+    }
+    table.config-table tbody tr td:first-child{
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+    table.config-table tbody tr td:last-child{
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* table içində kompakt controls */
     table.config-table input, table.config-table select{
-      padding: .45rem .6rem;
-      border-radius: .75rem;
-      min-height: var(--ep-field-h-sm);
+      height: var(--ep-field-h-sm);
       font-size: 12.5px;
+      padding: .45rem .85rem;
+      border-radius: .85rem;
+    }
+    table.config-table select{
+      padding-right: 2.25rem;
+      background-position: right .8rem center;
     }
 
     /* Tabs */
     .tab-btn{
       border-radius: 9999px;
-      padding: .3rem .8rem;
+      padding: .32rem .85rem;
       font-size: .78rem;
       border: 1px solid transparent;
       background: transparent;
       cursor: pointer;
       white-space: nowrap;
-      transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
     }
-    .tab-btn:hover{ background: rgba(15,23,42,.04); }
+    .tab-btn:hover{ background: rgba(15,23,42,.04); transform: translateY(-1px); }
     html.dark .tab-btn:hover{ background: rgba(255,255,255,.06); }
 
     .tab-btn.active{
       border-color: rgba(99,102,241,.55);
       background: rgba(99,102,241,.10);
       color: rgb(67 56 202);
-      font-weight: 600;
+      font-weight: 700;
     }
     html.dark .tab-btn.active{
       border-color: rgba(129,140,248,.55);
@@ -208,7 +322,7 @@
     }
     .tt-table th, .tt-table td{
       border: 1px solid rgba(226,232,240,.75);
-      padding: .35rem .45rem;
+      padding: .38rem .48rem;
       text-align:center;
     }
     html.dark .tt-table th, html.dark .tt-table td{
@@ -216,11 +330,11 @@
     }
     .tt-table th{
       background: rgba(148,163,184,.14);
-      font-weight: 700;
+      font-weight: 800;
       font-size: .75rem;
     }
     html.dark .tt-table th{
-      background: rgba(15,23,42,.7);
+      background: rgba(2,6,23,.35);
     }
     .tt-slot-muted{
       color: rgb(148 163 184);
@@ -236,6 +350,12 @@
       header, .no-print, footer { display:none !important; }
       main{ padding: 0 !important; max-width: none !important; }
       body{ background: white !important; }
+      .ep-shell, .ep-panel{
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .ep-shell::before, .ep-panel::before{ display:none !important; }
     }
   </style>
 </head>
@@ -298,7 +418,7 @@
     </section>
 
     <!-- Builder -->
-    <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden">
+    <section class="ep-shell shadow-sm">
       <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
         <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
       </div>
@@ -308,7 +428,7 @@
           <!-- SOL: Konfiqurasiya -->
           <div class="space-y-4">
             <!-- Məktəb parametrləri -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="ep-panel p-4">
               <div class="section-title mb-2">Məktəb parametrləri</div>
 
               <div class="grid grid-cols-2 gap-3 text-sm">
@@ -343,7 +463,7 @@
             </div>
 
             <!-- Müəllimlər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="ep-panel p-4">
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Müəllimlər</div>
                 <button type="button" id="btnAddTeacher"
@@ -376,7 +496,7 @@
             </div>
 
             <!-- Siniflər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="ep-panel p-4">
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Siniflər</div>
                 <button type="button" id="btnAddClass"
@@ -406,7 +526,7 @@
             </div>
 
             <!-- Dərslər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="ep-panel p-4">
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Fənn / dərs saatları</div>
                 <button type="button" id="btnAddLesson"
@@ -441,7 +561,7 @@
           <!-- SAĞ: hazırlayıcı + nəticə -->
           <div class="flex flex-col gap-4">
             <!-- Actions -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
+            <div class="ep-panel p-4 no-print">
               <div class="section-title mb-2">Hazırlayıcı</div>
 
               <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
@@ -471,7 +591,7 @@
             </div>
 
             <!-- Result -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
+            <div class="ep-panel p-4 min-h-[260px]" id="resultCard">
               <div class="flex items-center justify-between mb-3">
                 <div class="section-title">Nəticə</div>
                 <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
@@ -498,8 +618,8 @@
       </div>
     </section>
 
-    <!-- Info (calculator "Məlumat" blokuna uyğun) -->
-    <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+    <!-- Info -->
+    <section class="mt-10 ep-shell p-6 sm:p-10">
       <h2 class="text-2xl sm:text-3xl font-semibold">Qısa izah</h2>
 
       <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
@@ -513,7 +633,7 @@
     </section>
   </main>
 
-  <!-- Footer (calculator ilə eyni) -->
+  <!-- Footer -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -529,7 +649,7 @@
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle (calculator ilə eyni) -->
+  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');

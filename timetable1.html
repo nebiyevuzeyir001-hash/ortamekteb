@@ -295,15 +295,13 @@
       padding: .35rem;
       box-shadow: 0 18px 55px rgba(2,6,23,.18);
       display:none;
-      max-height: 260px;
-      overflow:auto;
+      overflow: visible;
     }
     html.dark .ep-select-menu{
       border-color: rgba(51,65,85,.9);
       background: rgba(2,6,23,.92);
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
-    .ep-select-menu.drop-up{ top: auto; bottom: calc(100% + .35rem); }
     .ep-select.open .ep-select-menu{ display:block; }
 
     .ep-select-item{
@@ -710,10 +708,7 @@
         }
         function open() {
           __epSelectInstances.forEach(inst => { if (inst !== api) inst.close(); });
-          const menuHeight = Math.min(menu.scrollHeight || 0, 260);
-          const rect = wrap.getBoundingClientRect();
-          const needDropUp = (rect.bottom + menuHeight + 12) > window.innerHeight;
-          menu.classList.toggle('drop-up', needDropUp);
+          menu.classList.remove('drop-up');
           wrap.classList.add('open');
           btn.setAttribute('aria-expanded', 'true');
         }

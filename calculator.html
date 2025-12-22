@@ -55,7 +55,7 @@
     })();
   </script>
 
-  <!-- ✅ Tailwind CDN -->
+  <!-- ✅ Tailwind CDN (ƏVVƏL script, SONRA config) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class' };
@@ -67,69 +67,36 @@
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* kart hover kölgəsi */
+    /* kart hover kölgəsi (ana səhifə ilə eyni “hiss”) */
     .card-surface { transition: box-shadow 200ms ease, transform 200ms ease; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
     .card-surface:hover { box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.08); }
     html.dark .card-surface { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03); }
     html.dark .card-surface:hover { box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06); }
 
-    /* input-lar */
+    /* input-lar (ana səhifənin üslubuna uyğun) */
     input[type="number"]{
       width:100%;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(226,232,240,.8);
-      background: rgba(255,255,255,.75);
-      padding: .7rem .95rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(226,232,240,.7);
+      background: rgba(255,255,255,.6);
+      padding: .65rem .9rem;
       font-size: 14px;
       outline: none;
     }
     html.dark input[type="number"]{
-      border-color: rgba(51,65,85,.85);
-      background: rgba(15,23,42,.35);
+      border-color: rgba(30,41,59,.7);
+      background: rgba(255,255,255,.05);
       color: rgb(226,232,240);
     }
     input[type="number"]::placeholder{ color: rgb(148,163,184); }
     input[type="number"]:focus{
       border-color: rgb(99,102,241);
-      box-shadow: 0 0 0 3px rgba(99,102,241,.22);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.25);
     }
 
     /* primary button gradient */
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
-
-    /* ✅ FIELDSET / LEGEND FIX (dördbucaqlı problemi burada həll olunur) */
-    .ep-fieldset{
-      border: 1px solid rgba(226,232,240,.75);
-      border-radius: 1.25rem;
-      padding: 1.25rem 1rem 1rem;
-      background: rgba(255,255,255,.65);
-      backdrop-filter: blur(10px);
-    }
-    html.dark .ep-fieldset{
-      border-color: rgba(51,65,85,.75);
-      background: rgba(15,23,42,.30);
-    }
-
-    .ep-legend{
-      padding: .18rem .75rem;
-      margin-left: .25rem;
-      font-weight: 700;
-      font-size: .875rem;
-      line-height: 1.25rem;
-      border-radius: 9999px;
-
-      /* border xəttini “kəsmək” üçün arxa fon OPAQ-a yaxın olmalıdır */
-      background: rgba(255,255,255,.98);
-      color: rgb(15,23,42);
-    }
-    html.dark .ep-legend{
-      background: rgba(2,6,23,.92);
-      color: rgb(226,232,240);
-    }
-
-    /* legend-in default layout qəribəliklərini yumşaldır */
-    .ep-fieldset > legend { float: unset; }
   </style>
 </head>
 
@@ -147,27 +114,31 @@
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header -->
+  <!-- Header (ana səhifə ilə eyni) -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
+        <!-- Brand -->
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
           <img src="assets/ep-favicon-light.svg" alt="EduPlan" class="h-9 w-9 dark:hidden" width="36" height="36" />
           <img src="assets/ep-favicon-dark.svg" alt="" aria-hidden="true" class="h-9 w-9 hidden dark:block" width="36" height="36" />
           <span class="font-semibold tracking-tight">EduPlan AZ</span>
         </a>
 
+        <!-- Theme toggle -->
         <button
           id="theme-toggle"
           type="button"
-          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-slate-200/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-white/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
           aria-label="Tema dəyişdir"
           aria-pressed="false"
         >
+          <!-- Sun -->
           <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
+          <!-- Moon -->
           <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
           </svg>
@@ -178,6 +149,7 @@
 
   <!-- Main -->
   <main id="main" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Page intro -->
     <section class="py-6 sm:py-8">
       <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
       <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[70ch]">
@@ -192,7 +164,7 @@
       </div>
 
       <div class="p-6">
-        <!-- Empty state -->
+        <!-- Empty state (rejim seçilməyibsə) -->
         <div id="empty-state" class="relative mb-6">
           <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
             <div class="text-lg font-semibold">Rejimi seçin</div>
@@ -206,13 +178,13 @@
         <div class="grid gap-2">
           <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200/80 dark:hover:bg-slate-900/60 transition" data-mode="t1" aria-pressed="false">
+            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t1" aria-pressed="false">
               I yarımil
             </button>
-            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200/80 dark:hover:bg-slate-900/60 transition" data-mode="t2" aria-pressed="false">
+            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t2" aria-pressed="false">
               II yarımil
             </button>
-            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200/80 dark:hover:bg-slate-900/60 transition" data-mode="both" aria-pressed="false">
+            <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="both" aria-pressed="false">
               Hər ikisi
             </button>
           </div>
@@ -221,9 +193,9 @@
         <!-- Forms -->
         <div class="mt-6 grid gap-6">
           <!-- I term -->
-          <fieldset id="fs-t1" class="hidden ep-fieldset">
-            <legend class="ep-legend">I yarımil</legend>
-            <div class="mt-4 grid grid-cols-2 gap-2">
+          <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <legend class="px-2 text-sm font-semibold">I yarımil</legend>
+            <div class="mt-2 grid grid-cols-2 gap-2">
               <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
               <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
               <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
@@ -239,9 +211,9 @@
           </fieldset>
 
           <!-- II term -->
-          <fieldset id="fs-t2" class="hidden ep-fieldset">
-            <legend class="ep-legend">II yarımil</legend>
-            <div class="mt-4 grid grid-cols-2 gap-2">
+          <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <legend class="px-2 text-sm font-semibold">II yarımil</legend>
+            <div class="mt-2 grid grid-cols-2 gap-2">
               <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
               <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
               <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
@@ -261,7 +233,7 @@
             <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
               Hesabla
             </button>
-            <button id="btn-reset" type="button" class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-slate-200/80 dark:hover:bg-slate-900/60 transition">
+            <button id="btn-reset" type="button" class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
               Sıfırla
             </button>
           </div>
@@ -316,7 +288,7 @@
       </div>
     </section>
 
-    <!-- Info -->
+    <!-- Info (ana səhifə “Haqqında” blokuna uyğun) -->
     <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
       <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
@@ -354,7 +326,7 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer (ana səhifə ilə eyni) -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -363,7 +335,6 @@
 
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         <a class="hover:underline underline-offset-4" href="/about.html">Haqqımızda</a>
-        <a class="hover:underline underline-offset-4" href="/copyright.html">Müəllif hüquqları</a>
         <a class="hover:underline underline-offset-4" href="/contact.html">Əlaqə</a>
         <a class="hover:underline underline-offset-4" href="/terms.html">Şərtlər</a>
         <a class="hover:underline underline-offset-4" href="/privacy.html">Məxfilik</a>
@@ -371,7 +342,7 @@
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle -->
+  <!-- JS: year + theme toggle (ana səhifə ilə eyni) -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -400,13 +371,16 @@
         }
       }
 
+      // ilkin UI sync
       applyTheme(getTheme(), false);
 
+      // Toggle
       btn && btn.addEventListener('click', function () {
         const next = (getTheme() === 'dark') ? 'light' : 'dark';
         applyTheme(next, true);
       });
 
+      // System theme dəyişəndə (yalnız user seçimi yoxdursa)
       const onSystemChange = function (e) {
         if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
       };
@@ -418,7 +392,7 @@
     })();
   </script>
 
-  <!-- Calculator logic -->
+  <!-- Calculator logic (sənin əvvəlki backend saxlanılıb) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -434,26 +408,31 @@
       const fsT2 = $id('fs-t2');
 
       const actions = $id('calc-actions');
+      
+function scrollToWithHeader(el, extraOffset = 0) {
+  if (!el) return;
+  const headerH = document.querySelector('header')?.offsetHeight || 0;
+  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
 
-      function scrollToWithHeader(el, extraOffset = 0) {
-        if (!el) return;
-        const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+function scrollToStable(el, extraOffset = 0) {
+  if (!el) return;
 
-      function scrollToStable(el, extraOffset = 0) {
-        if (!el) return;
-        try { document.activeElement?.blur?.(); } catch (e) {}
+  // mobil klaviaturanı bağla
+  try { document.activeElement?.blur?.(); } catch (e) {}
 
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            scrollToWithHeader(el, extraOffset);
-          });
-        });
-      }
+  // layout + viewport stabilləşsin (xüsusən ilk dəfə Enter zamanı)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollToWithHeader(el, extraOffset);
+    });
+  });
+}
 
+      
       function setBtnActive(btn, act) {
+        // base -> active
         const addA = ['ring-2','ring-indigo-400/30','border-indigo-400','bg-white/80','dark:bg-slate-900/60'];
         const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
 
@@ -540,6 +519,7 @@
 
         const kAvg = ksq.length ? avg(ksq) : 0;
 
+        // xəbərdarlıq: qismən doldurulubsa
         warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -574,10 +554,11 @@
         const el = $id(id);
         el?.addEventListener('keydown', e => {
           if (e.key === 'Enter') {
-            e.preventDefault();
-            e.target.blur();
-            btnCalc.click();
-          }
+  e.preventDefault();
+  e.target.blur();     // klaviatura bağlansın
+  btnCalc.click();
+}
+
         });
       });
 
@@ -593,6 +574,7 @@
 
         let t1 = null, t2 = null;
 
+        // I yarımil
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
           if (typeof r1 === 'number') t1 = r1;
@@ -600,6 +582,7 @@
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
+        // II yarımil
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
           if (typeof r2 === 'number') t2 = r2;
@@ -607,9 +590,14 @@
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        out.classList.remove('hidden');
-        scrollToStable(actions || out, 8);
+out.classList.remove('hidden');
 
+// həmişə düymələr görünsün deyə actions-a scroll edirik
+scrollToStable(actions || out, 8);
+
+
+
+        // illik yalnız hər ikisi rəqəm olarsa
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -622,6 +610,7 @@
         }
       });
 
+      // yuxarıdan başlasın
       (function init() {
         if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         window.scrollTo(0,0);

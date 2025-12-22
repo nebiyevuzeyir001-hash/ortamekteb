@@ -81,10 +81,10 @@
       border-radius: var(--ep-radius-lg);
       border: 1px solid rgba(226,232,240,.75);
       background-color: rgba(255,255,255,.6);
-      padding: .55rem .85rem; /* soldan daha rahat */
+      padding: .62rem .92rem; /* daha balanslı */
       font-size: 13px;
-      line-height: 1.25;
-      min-height: var(--ep-field-h);
+      line-height: 1.35;
+      min-height: calc(var(--ep-field-h) + 2px);
       outline: none;
       transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
     }
@@ -125,13 +125,10 @@
 
     /* Layout */
     .timetable-layout{
-      display:grid;
-      grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
-      gap: 1.25rem;
-      align-items: start;
-    }
-    @media (max-width: 1023px){
-      .timetable-layout{ grid-template-columns: 1fr; }
+      display:flex;
+      flex-direction:column;
+      gap: 1.5rem;
+      align-items: stretch;
     }
 
     .section-title{
@@ -169,17 +166,17 @@
     }
 
     /* ===== Teacher table: sütun balansı ===== */
-    #teacherTable{ table-layout: fixed; min-width: 980px; }
+    #teacherTable{ table-layout: auto; min-width: 100%; }
     #teacherTable th{ white-space: normal; line-height: 1.15; }
 
-    #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 240px; }
-    #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 120px; }
-    #teacherTable th:nth-child(3), #teacherTable td:nth-child(3){ width: 110px; }
-    #teacherTable th:nth-child(4), #teacherTable td:nth-child(4){ width: 95px; }
-    #teacherTable th:nth-child(5), #teacherTable td:nth-child(5){ width: 90px; }
-    #teacherTable th:nth-child(6), #teacherTable td:nth-child(6){ width: 110px; }
-    #teacherTable th:nth-child(7), #teacherTable td:nth-child(7){ width: 240px; }
-    #teacherTable th:nth-child(8), #teacherTable td:nth-child(8){ width: 56px; }
+    #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 18%; }
+    #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 12%; }
+    #teacherTable th:nth-child(3), #teacherTable td:nth-child(3){ width: 12%; }
+    #teacherTable th:nth-child(4), #teacherTable td:nth-child(4){ width: 10%; }
+    #teacherTable th:nth-child(5), #teacherTable td:nth-child(5){ width: 10%; }
+    #teacherTable th:nth-child(6), #teacherTable td:nth-child(6){ width: 10%; }
+    #teacherTable th:nth-child(7), #teacherTable td:nth-child(7){ width: 24%; }
+    #teacherTable th:nth-child(8), #teacherTable td:nth-child(8){ width: 4%; }
 
     /* Tabs */
     .tab-btn{
@@ -400,187 +397,183 @@
 
       <div class="p-6">
         <div class="timetable-layout">
-          <!-- SOL: Konfiqurasiya -->
-          <div class="space-y-4">
-            <!-- Məktəb parametrləri -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-              <div class="section-title mb-2">Məktəb parametrləri</div>
+          <!-- Məktəb parametrləri -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="section-title mb-2">Məktəb parametrləri</div>
 
-              <div class="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Həftəlik iş günü</label>
-                  <select id="daysCount">
-                    <option value="5">5 gün (B.e–C.u)</option>
-                    <option value="6">6 gün (B.e–Ş)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
-                  <input id="lessonsPerDay" type="number" min="1" max="8" value="7" />
-                </div>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Həftəlik iş günü</label>
+                <select id="daysCount">
+                  <option value="5">5 gün (B.e–C.u)</option>
+                  <option value="6">6 gün (B.e–Ş)</option>
+                </select>
               </div>
-
-              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
-                <label class="inline-flex items-start gap-2">
-                  <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
-                  <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
-                </label>
-                <label class="inline-flex items-start gap-2">
-                  <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
-                  <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın</span>
-                </label>
-              </div>
-
-              <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
-                İbtidai üçün gündə 6, əsas üçün 7, yuxarı üçün 8 dərs limiti standart kimi tətbiq olunur
-                (sinif cədvəlində ayrıca dəyişmək mümkündür).
+              <div>
+                <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
+                <input id="lessonsPerDay" type="number" min="1" max="8" value="7" />
               </div>
             </div>
 
-            <!-- Müəllimlər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="section-title">Müəllimlər</div>
-                <button type="button" id="btnAddTeacher"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  ➕ Əlavə et
-                </button>
-              </div>
-
-              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                Hər müəllim üçün həftəlik və gündəlik maksimum saat, gəlmə günləri və 1-ci / sonuncu saatdan qaçmaq istəyi.
-              </div>
-
-              <div class="overflow-x-auto">
-                <table class="config-table" id="teacherTable">
-                  <thead>
-                    <tr>
-                      <th>Ad, soyad</th>
-                      <th>Kod</th>
-                      <th>Həftəlik<span class="block">max</span></th>
-                      <th>Gündə<span class="block">max</span></th>
-                      <th>1-ci saatı<span class="block">sevmir</span></th>
-                      <th>Sonuncu saatı<span class="block">sevmir</span></th>
-                      <th>Gəlmə günləri</th>
-                      <th class="no-print"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="teacherTbody"></tbody>
-                </table>
-              </div>
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+              <label class="inline-flex items-start gap-2">
+                <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
+                <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
+              </label>
+              <label class="inline-flex items-start gap-2">
+                <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
+                <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın</span>
+              </label>
             </div>
 
-            <!-- Siniflər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="section-title">Siniflər</div>
-                <button type="button" id="btnAddClass"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  ➕ Əlavə et
-                </button>
-              </div>
-
-              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
-              </div>
-
-              <div class="overflow-x-auto ep-overflow-y-visible">
-                <table class="config-table" id="classTable">
-                  <thead>
-                    <tr>
-                      <th>Sinif</th>
-                      <th>Səviyyə</th>
-                      <th>Növbə</th>
-                      <th>Gündə max dərs</th>
-                      <th class="no-print"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="classTbody"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Dərslər -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="section-title">Fənn / dərs saatları</div>
-                <button type="button" id="btnAddLesson"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  ➕ Əlavə et
-                </button>
-              </div>
-
-              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                Hər sətir: sinif + fənn + müəllim + həftəlik saat. “Qoşa” seçsən, imkan daxilində ardıcıl yerləşdirəcək.
-              </div>
-
-              <div class="overflow-x-auto max-h-80">
-                <table class="config-table" id="lessonTable">
-                  <thead>
-                    <tr>
-                      <th>Sinif</th>
-                      <th>Fənn</th>
-                      <th>Müəllim kodu/adı</th>
-                      <th>Həftəlik saat</th>
-                      <th>Ağır?</th>
-                      <th>Qoşa?</th>
-                      <th class="no-print"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="lessonTbody"></tbody>
-                </table>
-              </div>
+            <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
+              İbtidai üçün gündə 6, əsas üçün 7, yuxarı üçün 8 dərs limiti standart kimi tətbiq olunur
+              (sinif cədvəlində ayrıca dəyişmək mümkündür).
             </div>
           </div>
 
-          <!-- SAĞ: hazırlayıcı + nəticə -->
-          <div class="flex flex-col gap-4">
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
-              <div class="section-title mb-2">Hazırlayıcı</div>
-
-              <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
-                <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
-                <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
-              </div>
-
-              <div class="flex flex-wrap gap-2">
-                <button id="btnGenerate"
-                        class="ep-btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition">
-                  ⚙️ Cədvəli qur
-                </button>
-
-                <button id="btnResetAll"
-                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  🧹 Hamısını təmizlə
-                </button>
-
-                <button id="btnPrint"
-                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  🖨️ Çap / PDF
-                </button>
-              </div>
-
-              <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
-              <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
+          <!-- Müəllimlər -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="section-title">Müəllimlər</div>
+              <button type="button" id="btnAddTeacher"
+                      class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                ➕ Əlavə et
+              </button>
             </div>
 
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
-              <div class="flex items-center justify-between mb-3">
-                <div class="section-title">Nəticə</div>
-                <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
-              </div>
-
-              <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
-
-              <div id="timetableContainer" class="overflow-x-auto text-xs">
-                <div class="text-[12px] text-slate-500 dark:text-slate-400">
-                  Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
-                </div>
-              </div>
-
-              <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 dark:text-amber-400 hidden"></div>
-              <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+              Hər müəllim üçün həftəlik və gündəlik maksimum saat, gəlmə günləri və 1-ci / sonuncu saatdan qaçmaq istəyi.
             </div>
+
+            <div class="overflow-visible">
+              <table class="config-table" id="teacherTable">
+                <thead>
+                  <tr>
+                    <th>Ad, soyad</th>
+                    <th>Kod</th>
+                    <th>Həftəlik<span class="block">max</span></th>
+                    <th>Gündə<span class="block">max</span></th>
+                    <th>1-ci saatı<span class="block">sevmir</span></th>
+                    <th>Sonuncu saatı<span class="block">sevmir</span></th>
+                    <th>Gəlmə günləri</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="teacherTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Siniflər -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="section-title">Siniflər</div>
+              <button type="button" id="btnAddClass"
+                      class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                ➕ Əlavə et
+              </button>
+            </div>
+
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+              Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
+            </div>
+
+            <div class="overflow-x-auto ep-overflow-y-visible">
+              <table class="config-table" id="classTable">
+                <thead>
+                  <tr>
+                    <th>Sinif</th>
+                    <th>Səviyyə</th>
+                    <th>Növbə</th>
+                    <th>Gündə max dərs</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="classTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Dərslər -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="section-title">Fənn / dərs saatları</div>
+              <button type="button" id="btnAddLesson"
+                      class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                ➕ Əlavə et
+              </button>
+            </div>
+
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+              Hər sətir: sinif + fənn + müəllim + həftəlik saat. “Qoşa” seçsən, imkan daxilində ardıcıl yerləşdirəcək.
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="config-table" id="lessonTable">
+                <thead>
+                  <tr>
+                    <th>Sinif</th>
+                    <th>Fənn</th>
+                    <th>Müəllim kodu/adı</th>
+                    <th>Həftəlik saat</th>
+                    <th>Ağır?</th>
+                    <th>Qoşa?</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="lessonTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Hazırlayıcı -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
+            <div class="section-title mb-2">Hazırlayıcı</div>
+
+            <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
+              <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
+              <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button id="btnGenerate"
+                      class="ep-btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition">
+                ⚙️ Cədvəli qur
+              </button>
+
+              <button id="btnResetAll"
+                      class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                🧹 Hamısını təmizlə
+              </button>
+
+              <button id="btnPrint"
+                      class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                🖨️ Çap / PDF
+              </button>
+            </div>
+
+            <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
+            <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
+          </div>
+
+          <!-- Nəticə -->
+          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
+            <div class="flex items-center justify-between mb-3">
+              <div class="section-title">Nəticə</div>
+              <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
+            </div>
+
+            <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
+
+            <div id="timetableContainer" class="overflow-x-auto text-xs">
+              <div class="text-[12px] text-slate-500 dark:text-slate-400">
+                Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
+              </div>
+            </div>
+
+            <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 dark:text-amber-400 hidden"></div>
+            <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
           </div>
         </div>
       </div>

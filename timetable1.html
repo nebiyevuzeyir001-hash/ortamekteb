@@ -57,6 +57,9 @@
     tailwind.config = { darkMode: 'class' };
   </script>
 
+  <!-- Excel export (SheetJS) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
+
   <style>
     html, body { overflow-x: hidden; }
     :root { color-scheme: light; }
@@ -151,7 +154,7 @@
     table.config-table td{
       padding: 4px 6px;
       vertical-align: top;
-      overflow: visible; /* dropdown kəsilməsin */
+      overflow: visible;
     }
 
     table.config-table input, table.config-table select{
@@ -166,7 +169,7 @@
     #teacherTable{
       table-layout: fixed;
       width: 100%;
-      min-width: 0; /* əvvəl 980px idi -> scroll yaradırdı */
+      min-width: 0;
     }
     #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 22%; }
     #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 9%; }
@@ -265,13 +268,6 @@
 
     #unplacedContainer{ white-space: pre-line; }
 
-    /* Print – yalnız cədvəl qalsın */
-    @media print{
-      header, .no-print, footer { display:none !important; }
-      main{ padding: 0 !important; max-width: none !important; }
-      body{ background: white !important; }
-    }
-
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
       position:absolute !important;
@@ -289,9 +285,9 @@
       border-radius: var(--ep-radius-lg);
       border: 1px solid rgba(226,232,240,.75);
       background: rgba(255,255,255,.65);
-      padding: .62rem 1rem;           /* “g” kəsilməsin */
+      padding: .62rem 1rem;   /* “g” kəsilməsin */
       font-size: 13px;
-      line-height: 1.35;              /* “5 gün” descender fix */
+      line-height: 1.35;      /* descender fix */
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -333,7 +329,6 @@
       padding: .35rem;
       box-shadow: 0 18px 55px rgba(2,6,23,.18);
       display:none;
-
       max-height: 260px;
       overflow:auto;
     }
@@ -379,11 +374,15 @@
     .ep-center{ min-width:0; }
 
     .ep-ad{
-      min-height: 680px;
       border-radius: 22px;
       border: 1px solid rgba(226,232,240,.5);
       background: rgba(255,255,255,.35);
       box-shadow: 0 10px 30px rgba(2,6,23,.06);
+
+      /* NEW: scroll ilə birlikdə gəlsin */
+      position: sticky;
+      top: 88px; /* header(64) + boşluq */
+      height: 720px;
     }
     html.dark .ep-ad{
       border-color: rgba(51,65,85,.6);
@@ -396,7 +395,6 @@
       .ep-ad{ display:none; }
     }
 
-    /* Mobil/kiçik ekranlarda cədvəllər sıxlaşsın (scroll çıxmasın deyə) */
     @media (max-width: 900px){
       table.config-table{ font-size: .76rem; }
       table.config-table th{ font-size: .68rem; }
@@ -446,10 +444,11 @@
     </div>
   </header>
 
-  <!-- NOTE: max-w-7xl çıxarıldı ki, sağ/sol reklam üçün yer qalsın -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 py-10">
     <div class="ep-shell">
-      <aside class="ep-ad no-print" aria-label="Reklam sahəsi (sol)"></aside>
+      <aside class="ep-ad" aria-label="Reklam sahəsi (sol)">
+        <div class="p-4 text-xs text-slate-500 dark:text-slate-400">Reklam (sol)</div>
+      </aside>
 
       <div class="ep-center">
         <section class="py-6 sm:py-8">
@@ -464,7 +463,6 @@
             <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
           </div>
 
-          <!-- BÜTÜN BLOKLAR ARTQIQ ALT-ALTA -->
           <div class="p-6 space-y-4">
 
             <!-- 1) Məktəb parametrləri -->
@@ -507,7 +505,7 @@
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Müəllimlər</div>
                 <button type="button" id="btnAddTeacher"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                        class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
                   ➕ Əlavə et
                 </button>
               </div>
@@ -516,7 +514,6 @@
                 Hər müəllim üçün həftəlik və gündəlik maksimum saat, gəlmə günləri və 1-ci / sonuncu saatdan qaçmaq istəyi.
               </div>
 
-              <!-- scroll wrapper ləğv edildi -->
               <table class="config-table" id="teacherTable">
                 <thead>
                   <tr>
@@ -527,7 +524,7 @@
                     <th>1-ci saatı<span class="block">sevmir</span></th>
                     <th>Sonuncu saatı<span class="block">sevmir</span></th>
                     <th>Gəlmə günləri</th>
-                    <th class="no-print"></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="teacherTbody"></tbody>
@@ -539,7 +536,7 @@
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Siniflər</div>
                 <button type="button" id="btnAddClass"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                        class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
                   ➕ Əlavə et
                 </button>
               </div>
@@ -548,7 +545,6 @@
                 Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
               </div>
 
-              <!-- scroll wrapper ləğv edildi (dropdown açılarkən scroll yaranmasın) -->
               <table class="config-table" id="classTable">
                 <thead>
                   <tr>
@@ -556,7 +552,7 @@
                     <th>Səviyyə</th>
                     <th>Növbə</th>
                     <th>Gündə max dərs</th>
-                    <th class="no-print"></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="classTbody"></tbody>
@@ -568,7 +564,7 @@
               <div class="flex items-center justify-between mb-2">
                 <div class="section-title">Fənn / dərs saatları</div>
                 <button type="button" id="btnAddLesson"
-                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                        class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
                   ➕ Əlavə et
                 </button>
               </div>
@@ -577,7 +573,6 @@
                 Hər sətir: sinif + fənn + müəllim + həftəlik saat. “Qoşa” seçsən, imkan daxilində ardıcıl yerləşdirəcək.
               </div>
 
-              <!-- əvvəl max-h-80 idi -> 3-4 sətirdən sonra scroll yaradırdı, indi ləğv -->
               <table class="config-table" id="lessonTable">
                 <thead>
                   <tr>
@@ -587,7 +582,7 @@
                     <th>Həftəlik saat</th>
                     <th>Ağır?</th>
                     <th>Qoşa?</th>
-                    <th class="no-print"></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="lessonTbody"></tbody>
@@ -595,7 +590,7 @@
             </div>
 
             <!-- 5) Hazırlayıcı -->
-            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
               <div class="section-title mb-2">Hazırlayıcı</div>
 
               <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
@@ -614,9 +609,9 @@
                   🧹 Hamısını təmizlə
                 </button>
 
-                <button id="btnPrint"
+                <button id="btnDownload"
                         class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                  🖨️ Çap / PDF
+                  ⬇️ Yüklə (.xlsx)
                 </button>
               </div>
 
@@ -631,7 +626,7 @@
                 <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
               </div>
 
-              <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
+              <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs"></div>
 
               <div id="timetableContainer" class="overflow-x-auto text-xs">
                 <div class="text-[12px] text-slate-500 dark:text-slate-400">
@@ -677,7 +672,9 @@
 
       </div>
 
-      <aside class="ep-ad no-print" aria-label="Reklam sahəsi (sağ)"></aside>
+      <aside class="ep-ad" aria-label="Reklam sahəsi (sağ)">
+        <div class="p-4 text-xs text-slate-500 dark:text-slate-400">Reklam (sağ)</div>
+      </aside>
     </div>
   </main>
 
@@ -740,7 +737,7 @@
 
       const btnGenerate = document.getElementById('btnGenerate');
       const btnResetAll = document.getElementById('btnResetAll');
-      const btnPrint = document.getElementById('btnPrint');
+      const btnDownload = document.getElementById('btnDownload');
 
       const globalError = document.getElementById('globalError');
       const globalInfo  = document.getElementById('globalInfo');
@@ -751,9 +748,14 @@
       const softWarnings = document.getElementById('softWarnings');
       const classTabs = document.getElementById('classTabs');
 
+      const daysCountSelect = document.getElementById('daysCount');
+
       const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C','C.u'];
       const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
+
+      // son nəticəni saxlamaq üçün
+      window.__epLast = null;
 
       /* ===== Premium custom select ===== */
       const __epSelectInstances = new Set();
@@ -846,18 +848,43 @@
       }
 
       // Top panel select (Həftəlik iş günü)
-      makePrettySelect(document.getElementById('daysCount'), { size: 'md' });
+      makePrettySelect(daysCountSelect, { size: 'md' });
+
+      function currentDaysCount(){
+        return parseInt(daysCountSelect.value, 10) || 5;
+      }
+
+      // NEW: 5 gün seçiləndə Ş görünməsin
+      function syncTeacherDayVisibility(daysCount){
+        teacherTbody.querySelectorAll('.t-daylbl[data-d]').forEach(lbl => {
+          const idx = parseInt(lbl.dataset.d, 10);
+          const cb = lbl.querySelector('input[type="checkbox"]');
+          if (idx >= daysCount) {
+            lbl.style.display = 'none';
+            if (cb) cb.checked = false;
+          } else {
+            lbl.style.display = 'inline-flex';
+          }
+        });
+      }
+
+      daysCountSelect.addEventListener('change', () => {
+        syncTeacherDayVisibility(currentDaysCount());
+      });
 
       function addTeacherRow(initial = {}) {
         const tr = document.createElement('tr');
 
+        const dc = currentDaysCount();
+        const defaultAvail = Array.from({ length: dc }, (_, i) => i);
+
         const available = Array.isArray(initial.availableDays) && initial.availableDays.length
           ? initial.availableDays
-          : [0,1,2,3,4,5];
+          : defaultAvail;
 
         const daysHtml = DAY_LABELS_FULL.map((lbl, idx) => {
           const checked = available.includes(idx) ? 'checked' : '';
-          return `<label>
+          return `<label class="t-daylbl" data-d="${idx}">
                     <input type="checkbox" class="t-avday" data-d="${idx}" ${checked}>
                     <span>${lbl}</span>
                   </label>`;
@@ -875,11 +902,14 @@
               ${daysHtml}
             </div>
           </td>
-          <td class="no-print text-right">
+          <td class="text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
           </td>
         `;
         teacherTbody.appendChild(tr);
+
+        // 5 gün olduqda Ş-i gizlət
+        syncTeacherDayVisibility(dc);
       }
 
       function addClassRow(initial = {}) {
@@ -900,7 +930,7 @@
             </select>
           </td>
           <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
-          <td class="no-print text-right">
+          <td class="text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
           </td>
         `;
@@ -919,7 +949,7 @@
           <td><input type="number" class="l-hours" min="1" max="40" value="${initial.hours ?? 2}"></td>
           <td class="text-center"><input type="checkbox" class="l-heavy" ${initial.heavy ? 'checked' : ''}></td>
           <td class="text-center"><input type="checkbox" class="l-double" ${initial.double ? 'checked' : ''}></td>
-          <td class="no-print text-right">
+          <td class="text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline l-del">Sil</button>
           </td>
         `;
@@ -953,15 +983,14 @@
         globalError.classList.add('hidden');
         globalError.textContent = '';
         globalInfo.textContent = '';
+        window.__epLast = null;
       });
-
-      btnPrint.addEventListener('click', () => window.print());
 
       function readConfig() {
         globalError.classList.add('hidden');
         globalError.textContent = '';
 
-        const daysCount = parseInt(document.getElementById('daysCount').value, 10) || 5;
+        const daysCount = currentDaysCount();
         const lessonsPerDay = parseInt(document.getElementById('lessonsPerDay').value, 10) || 7;
 
         const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
@@ -981,6 +1010,10 @@
               if (!Number.isNaN(idx)) availableDays.push(idx);
             }
           });
+
+          // NEW: 5 gün seçiləndə Ş-i avtomatik çıxart
+          availableDays = availableDays.filter(d => d < daysCount);
+
           if (!availableDays.length) {
             availableDays = Array.from({ length: daysCount }, (_, i) => i);
           }
@@ -1236,6 +1269,13 @@
         return best;
       }
 
+      function teacherLabel(teachers, tId) {
+        const t = teachers[tId];
+        if (!t) return '';
+        if (t.code && t.name) return `${t.code}`;
+        return t.code || t.name || '';
+      }
+
       function renderTimetable(config, result) {
         const { classes, teachers, daysCount, lessonsPerDay } = config;
         const { timetable, unplaced, placedCount } = result;
@@ -1251,13 +1291,6 @@
           btn.dataset.classId = c.id;
           classTabs.appendChild(btn);
         });
-
-        function teacherLabel(tId) {
-          const t = teachers[tId];
-          if (!t) return '';
-          if (t.code && t.name) return `${t.code}`;
-          return t.code || t.name || '';
-        }
 
         function renderForClass(classId) {
           const matrix = timetable[classId];
@@ -1279,7 +1312,7 @@
               } else if (cell.part === 0) {
                 const b = cell.block;
                 const subj = b.subject;
-                const tLab = teacherLabel(b.teacherId);
+                const tLab = teacherLabel(teachers, b.teacherId);
                 const rowspan = b.length > 1 ? b.length : 1;
                 html += `<td rowspan="${rowspan}">
                           <div class="font-semibold">${subj}</div>
@@ -1316,7 +1349,7 @@
 
         softWarnings.textContent =
           'Qeyd: Müəllim istəkləri (1-ci / sonuncu saatdan qaçmaq), ağır fənnin paylanması və müəllimin gəlmə günləri əvvəlcə sərt şəkildə nəzərə alınır, ' +
-          'yer tapılmadıqda isə bəzi istəklər yumşaldılır (gəlmə günləri saxlanılır). Ideal optimizasiya deyil, amma praktik cədvəl üçün kifayət edir.';
+          'yer tapılmadıqda isə bəzi istəklər yumşaldılır (gəlmə günləri saxlanılır).';
 
         const firstClassId = classes[0]?.id;
         if (firstClassId != null) renderForClass(firstClassId);
@@ -1328,6 +1361,9 @@
           btn.classList.add('active');
           renderForClass(Number(btn.dataset.classId));
         };
+
+        // NEW: son nəticəni saxla (yükləmə üçün)
+        window.__epLast = { config, result, createdAt: Date.now() };
       }
 
       btnGenerate.addEventListener('click', () => {
@@ -1340,13 +1376,130 @@
           setTimeout(() => {
             const result = buildBestTimetable(config);
             renderTimetable(config, result);
-            globalInfo.textContent = 'Cədvəl quruldu. Zərurət olduqda PDF-ə çevirib printer üçün istifadə edə bilərsən.';
+            globalInfo.textContent = 'Cədvəl quruldu. İndi “Yüklə (.xlsx)” düyməsi ilə bütün siniflərin cədvəlini endirə bilərsiniz.';
           }, 10);
         } catch (err) {
           globalError.textContent = err.message || String(err);
           globalError.classList.remove('hidden');
         }
       });
+
+      function downloadAsXlsx() {
+        try {
+          globalError.classList.add('hidden');
+          globalError.textContent = '';
+
+          const last = window.__epLast;
+          if (!last || !last.config || !last.result || !last.result.timetable) {
+            throw new Error('Əvvəlcə cədvəli qurun, sonra yükləyin.');
+          }
+          if (typeof XLSX === 'undefined') {
+            throw new Error('Yükləmə modulu (XLSX) yüklənmədi. İnternet bağlantısını yoxlayın.');
+          }
+
+          const { config, result } = last;
+          const { classes, teachers, daysCount, lessonsPerDay } = config;
+          const { timetable, unplaced, placedCount } = result;
+
+          const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
+
+          const wb = XLSX.utils.book_new();
+
+          // Xülasə sheet
+          const totalRequiredHours = config.lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
+          const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
+
+          const summaryAoA = [
+            ['EduPlan — Dərs cədvəli'],
+            [''],
+            ['Gün sayı', daysCount],
+            ['Gündə dərs (max)', config.lessonsPerDay],
+            ['Yerləşdirilən saat', `${placedCount}/${totalRequiredHours} (${placedPercent}%)`],
+            ['Cəhd sayı', 25],
+            [''],
+            ['Yerləşdirilməyənlər']
+          ];
+
+          if (unplaced && unplaced.length) {
+            unplaced.forEach(b => {
+              const cls = classes[b.classId]?.name || '?';
+              const t = teachers[b.teacherId];
+              const tLabel = t ? (t.code || t.name) : '?';
+              summaryAoA.push([`${cls} – ${b.subject} (${tLabel}), ${b.length} saat`]);
+            });
+          } else {
+            summaryAoA.push(['Hamısı yerləşdirildi ✅']);
+          }
+
+          const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
+          wsSummary['!cols'] = [{ wch: 48 }, { wch: 22 }];
+          XLSX.utils.book_append_sheet(wb, wsSummary, 'Xülasə');
+
+          // Hər sinif üçün ayrı sheet (hamısı eyni faylda)
+          classes.forEach(cls => {
+            const matrix = timetable[cls.id];
+            if (!matrix) return;
+
+            const aoa = [];
+            aoa.push(['Saat', ...daysLabels]);
+
+            // merges (qoşa dərs üçün vertikal merge)
+            const merges = [];
+
+            for (let s = 0; s < lessonsPerDay; s++) {
+              const row = [s + 1];
+              for (let d = 0; d < daysCount; d++) {
+                const cell = matrix[d][s];
+                if (!cell) {
+                  row.push('—');
+                } else if (cell.part === 0) {
+                  const b = cell.block;
+                  const tLab = teacherLabel(teachers, b.teacherId);
+                  row.push(`${b.subject}\n${tLab}`);
+
+                  if (b.length && b.length > 1) {
+                    merges.push({
+                      s: { r: 1 + s, c: 1 + d },
+                      e: { r: 1 + s + (b.length - 1), c: 1 + d }
+                    });
+                  }
+                } else {
+                  // merged olacaq hissə -> boş
+                  row.push('');
+                }
+              }
+              aoa.push(row);
+            }
+
+            const ws = XLSX.utils.aoa_to_sheet(aoa);
+            ws['!merges'] = merges;
+
+            // kolon enləri
+            const cols = [{ wch: 6 }];
+            for (let i = 0; i < daysCount; i++) cols.push({ wch: 20 });
+            ws['!cols'] = cols;
+
+            // sheet adı 31 simvoldan çox olmasın
+            let sheetName = (cls.name || 'Sinif').toString().slice(0, 31);
+            if (!sheetName) sheetName = 'Sinif';
+
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+          });
+
+          const pad2 = (n) => String(n).padStart(2, '0');
+          const now = new Date();
+          const stamp = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
+          const filename = `ders-cedveli_${stamp}.xlsx`;
+
+          XLSX.writeFile(wb, filename);
+          globalInfo.textContent = 'Fayl hazırlandı və endirmə başladıldı.';
+        } catch (err) {
+          globalError.textContent = err.message || String(err);
+          globalError.classList.remove('hidden');
+        }
+      }
+
+      btnDownload.addEventListener('click', downloadAsXlsx);
 
       // Başlanğıc nümunələr (istəsən sil)
       addTeacherRow({ name: 'Riyaziyyat müəllimi', code: 'RİY', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: true, availableDays: [0,1,2,3,4] });
@@ -1357,6 +1510,9 @@
 
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'RİY', hours: 4, heavy: true, double: true });
       addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'AZD', hours: 3, heavy: false, double: false });
+
+      // ilkin state üçün Ş-i gizlət (default 5 gün)
+      syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>
 </body>

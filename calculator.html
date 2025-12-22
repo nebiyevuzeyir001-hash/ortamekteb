@@ -193,11 +193,9 @@
         <!-- Forms -->
         <div class="mt-6 grid gap-6">
           <!-- I term -->
-          <fieldset id="fs-t1" aria-label="I yarımil" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-slate-50/60 dark:bg-white/5 p-4">
-            <!-- ✅ legend YOXDUR: çərçivə kəsilməsin -->
-            <div class="mb-2 text-sm font-semibold text-slate-800 dark:text-slate-100">I yarımil</div>
-
-            <div class="grid grid-cols-2 gap-2">
+          <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-slate-50/60 dark:bg-white/5 p-4">
+            <legend class="px-2 text-sm font-semibold bg-transparent dark:bg-[#0b1220]">I yarımil</legend>
+            <div class="mt-2 grid grid-cols-2 gap-2">
               <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
               <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
               <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
@@ -207,18 +205,15 @@
               <input id="t1-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
               <input id="t1-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
             </div>
-
             <div class="mt-3">
               <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" />
             </div>
           </fieldset>
 
           <!-- II term -->
-          <fieldset id="fs-t2" aria-label="II yarımil" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-slate-50/60 dark:bg-white/5 p-4">
-            <!-- ✅ legend YOXDUR: çərçivə kəsilməsin -->
-            <div class="mb-2 text-sm font-semibold text-slate-800 dark:text-slate-100">II yarımil</div>
-
-            <div class="grid grid-cols-2 gap-2">
+          <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-slate-50/60 dark:bg-white/5 p-4">
+            <legend class="px-2 text-sm font-semibold bg-transparent dark:bg-[#0b1220]">II yarımil</legend>
+            <div class="mt-2 grid grid-cols-2 gap-2">
               <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
               <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
               <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
@@ -228,7 +223,6 @@
               <input id="t2-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
               <input id="t2-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
             </div>
-
             <div class="mt-3">
               <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" />
             </div>
@@ -415,25 +409,31 @@
       const fsT2 = $id('fs-t2');
 
       const actions = $id('calc-actions');
+      
+function scrollToWithHeader(el, extraOffset = 0) {
+  if (!el) return;
+  const headerH = document.querySelector('header')?.offsetHeight || 0;
+  const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
 
-      function scrollToWithHeader(el, extraOffset = 0) {
-        if (!el) return;
-        const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+function scrollToStable(el, extraOffset = 0) {
+  if (!el) return;
 
-      function scrollToStable(el, extraOffset = 0) {
-        if (!el) return;
-        try { document.activeElement?.blur?.(); } catch (e) {}
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            scrollToWithHeader(el, extraOffset);
-          });
-        });
-      }
+  // mobil klaviaturanı bağla
+  try { document.activeElement?.blur?.(); } catch (e) {}
 
+  // layout + viewport stabilləşsin (xüsusən ilk dəfə Enter zamanı)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollToWithHeader(el, extraOffset);
+    });
+  });
+}
+
+      
       function setBtnActive(btn, act) {
+        // base -> active
         const addA = ['ring-2','ring-indigo-400/30','border-indigo-400','bg-white/80','dark:bg-slate-900/60'];
         const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
 
@@ -520,6 +520,7 @@
 
         const kAvg = ksq.length ? avg(ksq) : 0;
 
+        // xəbərdarlıq: qismən doldurulubsa
         warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -554,10 +555,11 @@
         const el = $id(id);
         el?.addEventListener('keydown', e => {
           if (e.key === 'Enter') {
-            e.preventDefault();
-            e.target.blur();
-            btnCalc.click();
-          }
+  e.preventDefault();
+  e.target.blur();     // klaviatura bağlansın
+  btnCalc.click();
+}
+
         });
       });
 
@@ -573,6 +575,7 @@
 
         let t1 = null, t2 = null;
 
+        // I yarımil
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
           if (typeof r1 === 'number') t1 = r1;
@@ -580,6 +583,7 @@
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
+        // II yarımil
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
           if (typeof r2 === 'number') t2 = r2;
@@ -587,9 +591,14 @@
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        out.classList.remove('hidden');
-        scrollToStable(actions || out, 8);
+out.classList.remove('hidden');
 
+// həmişə düymələr görünsün deyə actions-a scroll edirik
+scrollToStable(actions || out, 8);
+
+
+
+        // illik yalnız hər ikisi rəqəm olarsa
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -602,6 +611,7 @@
         }
       });
 
+      // yuxarıdan başlasın
       (function init() {
         if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         window.scrollTo(0,0);

@@ -57,8 +57,34 @@
     tailwind.config = { darkMode: 'class' };
   </script>
 
-  <!-- Excel export (SheetJS) -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
+  <!-- XLSX lazy loader (Yüklə düyməsi üçün) -->
+  <script>
+    (function () {
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.async = true;
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('Script yüklənmədi: ' + src));
+          document.head.appendChild(s);
+        });
+      }
+
+      window.__loadXLSX = function () {
+        if (window.XLSX) return Promise.resolve();
+        if (window.__xlsxPromise) return window.__xlsxPromise;
+
+        window.__xlsxPromise = loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js')
+          .catch(() => loadScript('https://unpkg.com/xlsx@0.19.3/dist/xlsx.full.min.js'));
+
+        return window.__xlsxPromise;
+      };
+
+      // arxa planda cəhd etsin (bloklamasın)
+      window.__loadXLSX().catch(() => {});
+    })();
+  </script>
 
   <style>
     html, body { overflow-x: hidden; }
@@ -76,13 +102,6 @@
 
       --ep-radius-lg: 1rem;
       --ep-radius-sm: .95rem;
-
-      /* Tap.az kimi yerləşim üçün */
-      --ep-center: 1100px;     /* mərkəz kontent max eni */
-      --ep-ad-w: 220px;        /* reklam eni */
-      --ep-ad-gap: 16px;       /* kontentlə reklam arası boşluq */
-      --ep-ad-top: 88px;       /* header altından start */
-      --ep-ad-bottom-gap: 20px;
     }
 
     input[type="text"], input[type="number"], select {
@@ -172,7 +191,7 @@
       line-height: 1.35;
     }
 
-    /* Teacher table */
+    /* ===== Teacher table ===== */
     #teacherTable{ table-layout: fixed; width: 100%; min-width: 0; }
     #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 22%; }
     #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 9%; }
@@ -260,16 +279,19 @@
       font-weight: 700;
       font-size: .75rem;
     }
-    html.dark .tt-table th{
-      background: rgba(15,23,42,.7);
-    }
-    .tt-slot-muted{
-      color: rgb(148 163 184);
-      font-style: italic;
-    }
+    html.dark .tt-table th{ background: rgba(15,23,42,.7); }
+
+    .tt-slot-muted{ color: rgb(148 163 184); font-style: italic; }
     html.dark .tt-slot-muted{ color: rgb(100 116 139); }
 
     #unplacedContainer{ white-space: pre-line; }
+
+    /* Print – yalnız cədvəl qalsın */
+    @media print{
+      header, .no-print, footer { display:none !important; }
+      main{ padding: 0 !important; max-width: none !important; }
+      body{ background: white !important; }
+    }
 
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
@@ -362,54 +384,64 @@
       background: rgba(99,102,241,.16);
       font-weight: 600;
     }
-    html.dark .ep-select-item[aria-selected="true"]{
-      background: rgba(129,140,248,.18);
-    }
+    html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
-    /* ===== Tap.az kimi: sağ/sol reklamlar (sabit) ===== */
-    .ep-side-ad{
-      display:none; /* default gizli */
-      position: fixed;
-      top: var(--ep-ad-top);
-      width: var(--ep-ad-w);
-      height: calc(100vh - var(--ep-ad-top) - var(--ep-ad-bottom-gap));
+    /* ===== Sağ/sol şaquli banner yerləri (Tap.az kimi scroll-da sabit) ===== */
+    .ep-shell{
+      display:grid;
+      grid-template-columns: minmax(180px, 260px) minmax(0, 1100px) minmax(180px, 260px);
+      gap: 24px;
+      align-items:start;
+      width:100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .ep-center{ min-width:0; }
+
+    .ep-ad{
+      position: sticky;
+      top: 88px; /* header 64 + boşluq */
+      height: min(600px, calc(100vh - 104px));
       border-radius: 22px;
       border: 1px solid rgba(226,232,240,.5);
       background: rgba(255,255,255,.35);
       box-shadow: 0 10px 30px rgba(2,6,23,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       overflow:hidden;
-      z-index: 20; /* header 50, altında qalsın */
     }
-    html.dark .ep-side-ad{
+    .ep-ad .ep-ad-label{
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(15,23,42,.55);
+      background: rgba(255,255,255,.45);
+      border: 1px dashed rgba(148,163,184,.6);
+      padding: 10px 14px;
+      border-radius: 14px;
+    }
+    html.dark .ep-ad{
       border-color: rgba(51,65,85,.6);
       background: rgba(255,255,255,.03);
       box-shadow: 0 18px 60px rgba(0,0,0,.25);
     }
-
-    /* Bu yerləşim yalnız çox geniş ekranda problemsiz görünür */
-    @media (min-width: 1580px){
-      .ep-side-ad{ display:block; }
-      .ep-side-ad.left{
-        left: calc(50% - (var(--ep-center) / 2) - var(--ep-ad-gap) - var(--ep-ad-w));
-      }
-      .ep-side-ad.right{
-        left: calc(50% + (var(--ep-center) / 2) + var(--ep-ad-gap));
-      }
+    html.dark .ep-ad .ep-ad-label{
+      color: rgba(226,232,240,.65);
+      background: rgba(2,6,23,.25);
+      border-color: rgba(148,163,184,.25);
     }
 
-    /* Mobil/kiçik ekranlarda cədvəllər sıxlaşsın */
+    @media (max-width: 1280px){
+      .ep-shell{ grid-template-columns: 1fr; }
+      .ep-ad{ display:none; }
+    }
+
     @media (max-width: 900px){
       table.config-table{ font-size: .76rem; }
       table.config-table th{ font-size: .68rem; }
       table.config-table input, table.config-table select{ font-size: 12px; }
       .t-days{ gap: 5px; }
-    }
-
-    /* Print – reklam və üst elementlər görünməsin */
-    @media print{
-      header, footer, .no-print, .ep-side-ad { display:none !important; }
-      main{ padding: 0 !important; max-width: none !important; }
-      body{ background: white !important; }
     }
   </style>
 </head>
@@ -454,233 +486,244 @@
     </div>
   </header>
 
-  <!-- Tap.az kimi sabit reklam blokları (məzmun yoxdur, siz reklam kodu qoyacaqsınız) -->
-  <aside class="ep-side-ad left no-print" aria-label="Reklam sahəsi"></aside>
-  <aside class="ep-side-ad right no-print" aria-label="Reklam sahəsi"></aside>
+  <!-- Lazımsız boşluq olmasın deyə: pt-10 pb-6 -->
+  <main id="main" class="px-4 sm:px-6 lg:px-8 pt-10 pb-6">
+    <div class="ep-shell">
+      <aside class="ep-ad no-print" aria-label="Reklam">
+        <div class="ep-ad-label">Reklam</div>
+      </aside>
 
-  <main id="main" class="px-4 sm:px-6 lg:px-8 py-10">
-    <div class="mx-auto" style="max-width: var(--ep-center);">
-
-      <section class="py-6 sm:py-8">
-        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Dərs cədvəli hazırlayıcı</h1>
-        <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
-          Orta məktəblər üçün dərs cədvəli: müəllim, sinif və fənn məlumatlarını daxil edin, sistem tipik məhdudiyyətlərlə avtomatik cədvəl qursun.
-        </p>
-      </section>
-
-      <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
-        <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
-          <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
-        </div>
-
-        <div class="p-6 space-y-4">
-
-          <!-- 1) Məktəb parametrləri -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-            <div class="section-title mb-2">Məktəb parametrləri</div>
-
-            <div class="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Həftəlik iş günü</label>
-                <select id="daysCount">
-                  <option value="5">5 gün (B.e–C.u)</option>
-                  <option value="6">6 gün (B.e–Ş)</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
-                <input id="lessonsPerDay" type="number" min="1" max="8" value="7" />
-              </div>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
-              <label class="inline-flex items-start gap-2">
-                <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
-                <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
-              </label>
-              <label class="inline-flex items-start gap-2">
-                <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
-                <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın</span>
-              </label>
-            </div>
-
-            <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
-              İbtidai üçün gündə 6, əsas üçün 7, yuxarı üçün 8 dərs limiti standart kimi tətbiq olunur
-              (sinif cədvəlində ayrıca dəyişmək mümkündür).
-            </div>
-          </div>
-
-          <!-- 2) Müəllimlər -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="section-title">Müəllimlər</div>
-              <button type="button" id="btnAddTeacher"
-                      class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                ➕ Əlavə et
-              </button>
-            </div>
-
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-              Hər müəllim üçün həftəlik və gündəlik maksimum saat, gəlmə günləri və 1-ci / sonuncu saatdan qaçmaq istəyi.
-            </div>
-
-            <table class="config-table" id="teacherTable">
-              <thead>
-                <tr>
-                  <th>Ad, soyad</th>
-                  <th>Kod</th>
-                  <th>Həftəlik<span class="block">max</span></th>
-                  <th>Gündə<span class="block">max</span></th>
-                  <th>1-ci saatı<span class="block">sevmir</span></th>
-                  <th>Sonuncu saatı<span class="block">sevmir</span></th>
-                  <th>Gəlmə günləri</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="teacherTbody"></tbody>
-            </table>
-          </div>
-
-          <!-- 3) Siniflər -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="section-title">Siniflər</div>
-              <button type="button" id="btnAddClass"
-                      class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                ➕ Əlavə et
-              </button>
-            </div>
-
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-              Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
-            </div>
-
-            <table class="config-table" id="classTable">
-              <thead>
-                <tr>
-                  <th>Sinif</th>
-                  <th>Səviyyə</th>
-                  <th>Növbə</th>
-                  <th>Gündə max dərs</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="classTbody"></tbody>
-            </table>
-          </div>
-
-          <!-- 4) Fənn / dərs saatları -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="section-title">Fənn / dərs saatları</div>
-              <button type="button" id="btnAddLesson"
-                      class="inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                ➕ Əlavə et
-              </button>
-            </div>
-
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-              Hər sətir: sinif + fənn + müəllim + həftəlik saat. “Qoşa” seçsən, imkan daxilində ardıcıl yerləşdirəcək.
-            </div>
-
-            <table class="config-table" id="lessonTable">
-              <thead>
-                <tr>
-                  <th>Sinif</th>
-                  <th>Fənn</th>
-                  <th>Müəllim kodu/adı</th>
-                  <th>Həftəlik saat</th>
-                  <th>Ağır?</th>
-                  <th>Qoşa?</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="lessonTbody"></tbody>
-            </table>
-          </div>
-
-          <!-- 5) Hazırlayıcı -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-            <div class="section-title mb-2">Hazırlayıcı</div>
-
-            <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
-              <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
-              <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <button id="btnGenerate" type="button"
-                      class="ep-btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition">
-                ⚙️ Cədvəli qur
-              </button>
-
-              <button id="btnResetAll" type="button"
-                      class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                🧹 Hamısını təmizlə
-              </button>
-
-              <!-- FIX: type="button" əlavə olundu ki, heç vaxt submit kimi davranmasın -->
-              <button id="btnDownload" type="button"
-                      class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                ⬇️ Yüklə (.xlsx)
-              </button>
-            </div>
-
-            <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
-            <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
-          </div>
-
-          <!-- 6) Nəticə -->
-          <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
-            <div class="flex items-center justify-between mb-3">
-              <div class="section-title">Nəticə</div>
-              <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
-            </div>
-
-            <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs"></div>
-
-            <div id="timetableContainer" class="overflow-x-auto text-xs">
-              <div class="text-[12px] text-slate-500 dark:text-slate-400">
-                Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
-              </div>
-            </div>
-
-            <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 dark:text-amber-400 hidden"></div>
-            <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
-        <h2 class="text-2xl sm:text-3xl font-semibold">Qısa izah</h2>
-
-        <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
-          <p>
-            Hazırlayıcı Azərbaycan orta məktəbləri üçün tipik məhdudiyyətləri nəzərə alır:
-            müəllimlərin eyni saatda iki sinifə düşməməsi, siniflərin gündə saat limitləri,
-            ağır fənlərin 1-ci və sonuncu saatdan mümkün qədər uzaq saxlanması, eyni gündə eyni fənnin
-            həddindən artıq yığılmaması, eləcə də müəllimin həftənin yalnız seçilmiş günlərində gələ bilməsi və s.
+      <div class="ep-center">
+        <section class="py-6 sm:py-8">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Dərs cədvəli hazırlayıcı</h1>
+          <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[75ch]">
+            Orta məktəblər üçün dərs cədvəli: müəllim, sinif və fənn məlumatlarını daxil edin, sistem tipik məhdudiyyətlərlə avtomatik cədvəl qursun.
           </p>
-        </div>
-      </section>
+        </section>
 
-      <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-          <div>
-            © <span id="year"></span> <span class="font-semibold text-slate-900 dark:text-slate-100">EduPlan AZ</span> · Bütün hüquqlar qorunur
+        <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
+          <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
+            <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
           </div>
 
-          <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <a class="hover:underline underline-offset-4" href="/about.html">Haqqımızda</a>
-            <a class="hover:underline underline-offset-4" href="/copyright.html">Müəllif hüquqları</a>
-            <a class="hover:underline underline-offset-4" href="/contact.html">Əlaqə</a>
-            <a class="hover:underline underline-offset-4" href="/terms.html">Şərtlər</a>
-            <a class="hover:underline underline-offset-4" href="/privacy.html">Məxfilik</a>
-          </nav>
-        </div>
-      </footer>
+          <div class="p-6 space-y-4">
 
+            <!-- 1) Məktəb parametrləri -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="section-title mb-2">Məktəb parametrləri</div>
+
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Həftəlik iş günü</label>
+                  <select id="daysCount">
+                    <option value="5">5 gün (B.e–C.u)</option>
+                    <option value="6">6 gün (B.e–Ş)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
+                  <input id="lessonsPerDay" type="number" min="1" max="8" value="7" />
+                </div>
+              </div>
+
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+                <label class="inline-flex items-start gap-2">
+                  <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
+                  <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
+                </label>
+                <label class="inline-flex items-start gap-2">
+                  <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
+                  <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın</span>
+                </label>
+              </div>
+
+              <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
+                İbtidai üçün gündə 6, əsas üçün 7, yuxarı üçün 8 dərs limiti standart kimi tətbiq olunur
+                (sinif cədvəlində ayrıca dəyişmək mümkündür).
+              </div>
+            </div>
+
+            <!-- 2) Müəllimlər -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">Müəllimlər</div>
+                <button type="button" id="btnAddTeacher"
+                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  ➕ Əlavə et
+                </button>
+              </div>
+
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                Hər müəllim üçün həftəlik və gündəlik maksimum saat, gəlmə günləri və 1-ci / sonuncu saatdan qaçmaq istəyi.
+              </div>
+
+              <table class="config-table" id="teacherTable">
+                <thead>
+                  <tr>
+                    <th>Ad, soyad</th>
+                    <th>Kod</th>
+                    <th>Həftəlik<span class="block">max</span></th>
+                    <th>Gündə<span class="block">max</span></th>
+                    <th>1-ci saatı<span class="block">sevmir</span></th>
+                    <th>Sonuncu saatı<span class="block">sevmir</span></th>
+                    <th>Gəlmə günləri</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="teacherTbody"></tbody>
+              </table>
+            </div>
+
+            <!-- 3) Siniflər -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">Siniflər</div>
+                <button type="button" id="btnAddClass"
+                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  ➕ Əlavə et
+                </button>
+              </div>
+
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
+              </div>
+
+              <table class="config-table" id="classTable">
+                <thead>
+                  <tr>
+                    <th>Sinif</th>
+                    <th>Səviyyə</th>
+                    <th>Növbə</th>
+                    <th>Gündə max dərs</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="classTbody"></tbody>
+              </table>
+            </div>
+
+            <!-- 4) Fənn / dərs saatları -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="section-title">Fənn / dərs saatları</div>
+                <button type="button" id="btnAddLesson"
+                        class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  ➕ Əlavə et
+                </button>
+              </div>
+
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                Hər sətir: sinif + fənn + müəllim + həftəlik saat. “Qoşa” seçsən, imkan daxilində ardıcıl yerləşdirəcək.
+              </div>
+
+              <table class="config-table" id="lessonTable">
+                <thead>
+                  <tr>
+                    <th>Sinif</th>
+                    <th>Fənn</th>
+                    <th>Müəllim kodu/adı</th>
+                    <th>Həftəlik saat</th>
+                    <th>Ağır?</th>
+                    <th>Qoşa?</th>
+                    <th class="no-print"></th>
+                  </tr>
+                </thead>
+                <tbody id="lessonTbody"></tbody>
+              </table>
+            </div>
+
+            <!-- 5) Hazırlayıcı -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
+              <div class="section-title mb-2">Hazırlayıcı</div>
+
+              <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
+                <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
+                <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button id="btnGenerate"
+                        class="ep-btn-primary inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition">
+                  ⚙️ Cədvəli qur
+                </button>
+
+                <button id="btnResetAll"
+                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  🧹 Hamısını təmizlə
+                </button>
+
+                <button id="btnDownload"
+                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  ⬇️ Yüklə (.xlsx)
+                </button>
+
+                <button id="btnPrint"
+                        class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                  🖨️ Çap / PDF
+                </button>
+              </div>
+
+              <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
+              <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
+            </div>
+
+            <!-- 6) Nəticə -->
+            <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
+              <div class="flex items-center justify-between mb-3">
+                <div class="section-title">Nəticə</div>
+                <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
+              </div>
+
+              <div id="classTabs" class="flex flex-wrap gap-1 mb-3 text-xs no-print"></div>
+
+              <div id="timetableContainer" class="overflow-x-auto text-xs">
+                <div class="text-[12px] text-slate-500 dark:text-slate-400">
+                  Hələ cədvəl qurulmayıb. Məlumatları daxil etdikdən sonra <strong>“Cədvəli qur”</strong> düyməsini sıxın.
+                </div>
+              </div>
+
+              <div id="unplacedContainer" class="mt-3 text-[11px] text-amber-600 dark:text-amber-400 hidden"></div>
+              <div id="softWarnings" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+          <h2 class="text-2xl sm:text-3xl font-semibold">Qısa izah</h2>
+
+          <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
+            <p>
+              Hazırlayıcı Azərbaycan orta məktəbləri üçün tipik məhdudiyyətləri nəzərə alır:
+              müəllimlərin eyni saatda iki sinifə düşməməsi, siniflərin gündə saat limitləri,
+              ağır fənlərin 1-ci və sonuncu saatdan mümkün qədər uzaq saxlanması, eyni gündə eyni fənnin
+              həddindən artıq yığılmaması, eləcə də müəllimin həftənin yalnız seçilmiş günlərində gələ bilməsi və s.
+            </p>
+          </div>
+        </section>
+
+        <!-- Lazımsız boşluq azalsın deyə mt-10 -> mt-6, py-8 -> py-6 -->
+        <footer class="mt-6 border-t border-slate-200/70 dark:border-slate-800/70">
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+            <div>
+              © <span id="year"></span> <span class="font-semibold text-slate-900 dark:text-slate-100">EduPlan AZ</span> · Bütün hüquqlar qorunur
+            </div>
+
+            <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+              <a class="hover:underline underline-offset-4" href="/about.html">Haqqımızda</a>
+              <a class="hover:underline underline-offset-4" href="/copyright.html">Müəllif hüquqları</a>
+              <a class="hover:underline underline-offset-4" href="/contact.html">Əlaqə</a>
+              <a class="hover:underline underline-offset-4" href="/terms.html">Şərtlər</a>
+              <a class="hover:underline underline-offset-4" href="/privacy.html">Məxfilik</a>
+            </nav>
+          </div>
+        </footer>
+
+      </div>
+
+      <aside class="ep-ad no-print" aria-label="Reklam">
+        <div class="ep-ad-label">Reklam</div>
+      </aside>
     </div>
   </main>
 
@@ -743,6 +786,7 @@
 
       const btnGenerate = document.getElementById('btnGenerate');
       const btnResetAll = document.getElementById('btnResetAll');
+      const btnPrint = document.getElementById('btnPrint');
       const btnDownload = document.getElementById('btnDownload');
 
       const globalError = document.getElementById('globalError');
@@ -760,7 +804,7 @@
       const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
 
-      // son nəticəni saxlamaq üçün
+      // Son nəticəni saxlamaq üçün (xlsx export)
       window.__epLast = null;
 
       /* ===== Premium custom select ===== */
@@ -802,9 +846,7 @@
           wrap.classList.add('open');
           btn.setAttribute('aria-expanded', 'true');
         }
-        function toggle() {
-          wrap.classList.contains('open') ? close() : open();
-        }
+        function toggle() { wrap.classList.contains('open') ? close() : open(); }
 
         function render() {
           const selected = selectEl.options[selectEl.selectedIndex];
@@ -840,9 +882,7 @@
         btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
         btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
-        function onDocDown(e){
-          if (!wrap.contains(e.target)) close();
-        }
+        function onDocDown(e){ if (!wrap.contains(e.target)) close(); }
         document.addEventListener('mousedown', onDocDown);
 
         selectEl.addEventListener('change', render);
@@ -853,14 +893,13 @@
         render();
       }
 
-      // Top panel select (Həftəlik iş günü)
       makePrettySelect(daysCountSelect, { size: 'md' });
 
       function currentDaysCount(){
         return parseInt(daysCountSelect.value, 10) || 5;
       }
 
-      // 5 gün seçiləndə Ş görünməsin
+      // 5 gün olanda Ş checkbox-u gizlə (və seçilibsə söndür)
       function syncTeacherDayVisibility(daysCount){
         teacherTbody.querySelectorAll('.t-daylbl[data-d]').forEach(lbl => {
           const idx = parseInt(lbl.dataset.d, 10);
@@ -883,7 +922,6 @@
 
         const dc = currentDaysCount();
         const defaultAvail = Array.from({ length: dc }, (_, i) => i);
-
         const available = Array.isArray(initial.availableDays) && initial.availableDays.length
           ? initial.availableDays
           : defaultAvail;
@@ -908,13 +946,11 @@
               ${daysHtml}
             </div>
           </td>
-          <td class="text-right">
+          <td class="no-print text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
           </td>
         `;
         teacherTbody.appendChild(tr);
-
-        // 5 gün olduqda Ş-i gizlət
         syncTeacherDayVisibility(dc);
       }
 
@@ -936,7 +972,7 @@
             </select>
           </td>
           <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
-          <td class="text-right">
+          <td class="no-print text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
           </td>
         `;
@@ -955,7 +991,7 @@
           <td><input type="number" class="l-hours" min="1" max="40" value="${initial.hours ?? 2}"></td>
           <td class="text-center"><input type="checkbox" class="l-heavy" ${initial.heavy ? 'checked' : ''}></td>
           <td class="text-center"><input type="checkbox" class="l-double" ${initial.double ? 'checked' : ''}></td>
-          <td class="text-right">
+          <td class="no-print text-right">
             <button type="button" class="text-xs text-rose-500 hover:underline l-del">Sil</button>
           </td>
         `;
@@ -992,6 +1028,13 @@
         window.__epLast = null;
       });
 
+      btnPrint.addEventListener('click', () => window.print());
+
+      function showError(msg){
+        globalError.textContent = msg;
+        globalError.classList.remove('hidden');
+      }
+
       function readConfig() {
         globalError.classList.add('hidden');
         globalError.textContent = '';
@@ -1017,12 +1060,8 @@
             }
           });
 
-          // 5 gün seçiləndə Ş-i avtomatik çıxart
           availableDays = availableDays.filter(d => d < daysCount);
-
-          if (!availableDays.length) {
-            availableDays = Array.from({ length: daysCount }, (_, i) => i);
-          }
+          if (!availableDays.length) availableDays = Array.from({ length: daysCount }, (_, i) => i);
 
           teachers.push({
             id: teachers.length,
@@ -1368,7 +1407,7 @@
           renderForClass(Number(btn.dataset.classId));
         };
 
-        // son nəticəni saxla (yükləmə üçün)
+        // xlsx üçün saxla
         window.__epLast = { config, result, createdAt: Date.now() };
       }
 
@@ -1382,130 +1421,126 @@
           setTimeout(() => {
             const result = buildBestTimetable(config);
             renderTimetable(config, result);
-            globalInfo.textContent = 'Cədvəl quruldu. İndi “Yüklə (.xlsx)” düyməsi ilə bütün siniflərin cədvəlini endirə bilərsiniz.';
+            globalInfo.textContent = 'Cədvəl quruldu. İndi “Yüklə (.xlsx)” ilə endirə bilərsiniz.';
           }, 10);
         } catch (err) {
-          globalError.textContent = err.message || String(err);
-          globalError.classList.remove('hidden');
+          showError(err.message || String(err));
         }
       });
 
       function downloadAsXlsx() {
-        try {
-          globalError.classList.add('hidden');
-          globalError.textContent = '';
+        globalError.classList.add('hidden');
+        globalError.textContent = '';
 
-          const last = window.__epLast;
-          if (!last || !last.config || !last.result || !last.result.timetable) {
-            throw new Error('Əvvəlcə cədvəli qurun, sonra yükləyin.');
-          }
-          if (typeof XLSX === 'undefined') {
-            throw new Error('Yükləmə modulu (XLSX) yüklənmədi. İnternet bağlantısını yoxlayın.');
-          }
+        const last = window.__epLast;
+        if (!last || !last.config || !last.result || !last.result.timetable) {
+          showError('Əvvəlcə cədvəli qurun, sonra yükləyin.');
+          return;
+        }
 
-          const { config, result } = last;
-          const { classes, teachers, daysCount, lessonsPerDay } = config;
-          const { timetable, unplaced, placedCount } = result;
+        globalInfo.textContent = 'Yükləmə hazırlanır…';
 
-          const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
+        (window.__loadXLSX ? window.__loadXLSX() : Promise.reject(new Error('XLSX loader tapılmadı')))
+          .then(() => {
+            if (typeof XLSX === 'undefined') throw new Error('Yükləmə modulu (XLSX) yüklənmədi. İnternet bağlantısını yoxlayın.');
 
-          const wb = XLSX.utils.book_new();
+            const { config, result } = last;
+            const { classes, teachers, daysCount, lessonsPerDay } = config;
+            const { timetable, unplaced, placedCount } = result;
 
-          // Xülasə sheet
-          const totalRequiredHours = config.lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
-          const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
+            const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
 
-          const summaryAoA = [
-            ['EduPlan — Dərs cədvəli'],
-            [''],
-            ['Gün sayı', daysCount],
-            ['Gündə dərs (max)', config.lessonsPerDay],
-            ['Yerləşdirilən saat', `${placedCount}/${totalRequiredHours} (${placedPercent}%)`],
-            ['Cəhd sayı', 25],
-            [''],
-            ['Yerləşdirilməyənlər']
-          ];
+            const wb = XLSX.utils.book_new();
 
-          if (unplaced && unplaced.length) {
-            unplaced.forEach(b => {
-              const cls = classes[b.classId]?.name || '?';
-              const t = teachers[b.teacherId];
-              const tLabel = t ? (t.code || t.name) : '?';
-              summaryAoA.push([`${cls} – ${b.subject} (${tLabel}), ${b.length} saat`]);
-            });
-          } else {
-            summaryAoA.push(['Hamısı yerləşdirildi ✅']);
-          }
+            const totalRequiredHours = config.lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
+            const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
 
-          const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
-          wsSummary['!cols'] = [{ wch: 48 }, { wch: 22 }];
-          XLSX.utils.book_append_sheet(wb, wsSummary, 'Xülasə');
+            const summaryAoA = [
+              ['EduPlan — Dərs cədvəli'],
+              [''],
+              ['Gün sayı', daysCount],
+              ['Gündə dərs (max)', config.lessonsPerDay],
+              ['Yerləşdirilən saat', `${placedCount}/${totalRequiredHours} (${placedPercent}%)`],
+              ['Cəhd sayı', 25],
+              [''],
+              ['Yerləşdirilməyənlər']
+            ];
 
-          // Hər sinif üçün ayrı sheet (hamısı eyni faylda)
-          classes.forEach(cls => {
-            const matrix = timetable[cls.id];
-            if (!matrix) return;
-
-            const aoa = [];
-            aoa.push(['Saat', ...daysLabels]);
-
-            // merges (qoşa dərs üçün vertikal merge)
-            const merges = [];
-
-            for (let s = 0; s < lessonsPerDay; s++) {
-              const row = [s + 1];
-              for (let d = 0; d < daysCount; d++) {
-                const cell = matrix[d][s];
-                if (!cell) {
-                  row.push('—');
-                } else if (cell.part === 0) {
-                  const b = cell.block;
-                  const tLab = teacherLabel(teachers, b.teacherId);
-                  row.push(`${b.subject}\n${tLab}`);
-
-                  if (b.length && b.length > 1) {
-                    merges.push({
-                      s: { r: 1 + s, c: 1 + d },
-                      e: { r: 1 + s + (b.length - 1), c: 1 + d }
-                    });
-                  }
-                } else {
-                  // merged olacaq hissə -> boş
-                  row.push('');
-                }
-              }
-              aoa.push(row);
+            if (unplaced && unplaced.length) {
+              unplaced.forEach(b => {
+                const cls = classes[b.classId]?.name || '?';
+                const t = teachers[b.teacherId];
+                const tLabel = t ? (t.code || t.name) : '?';
+                summaryAoA.push([`${cls} – ${b.subject} (${tLabel}), ${b.length} saat`]);
+              });
+            } else {
+              summaryAoA.push(['Hamısı yerləşdirildi ✅']);
             }
 
-            const ws = XLSX.utils.aoa_to_sheet(aoa);
-            ws['!merges'] = merges;
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
+            wsSummary['!cols'] = [{ wch: 48 }, { wch: 22 }];
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Xülasə');
 
-            // kolon enləri
-            const cols = [{ wch: 6 }];
-            for (let i = 0; i < daysCount; i++) cols.push({ wch: 20 });
-            ws['!cols'] = cols;
+            classes.forEach(cls => {
+              const matrix = timetable[cls.id];
+              if (!matrix) return;
 
-            // sheet adı 31 simvoldan çox olmasın
-            let sheetName = (cls.name || 'Sinif').toString().slice(0, 31);
-            if (!sheetName) sheetName = 'Sinif';
+              const aoa = [];
+              aoa.push(['Saat', ...daysLabels]);
 
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+              const merges = [];
+
+              for (let s = 0; s < lessonsPerDay; s++) {
+                const row = [s + 1];
+                for (let d = 0; d < daysCount; d++) {
+                  const cell = matrix[d][s];
+                  if (!cell) {
+                    row.push('—');
+                  } else if (cell.part === 0) {
+                    const b = cell.block;
+                    const tLab = teacherLabel(teachers, b.teacherId);
+                    row.push(`${b.subject}\n${tLab}`);
+
+                    if (b.length && b.length > 1) {
+                      merges.push({
+                        s: { r: 1 + s, c: 1 + d },
+                        e: { r: 1 + s + (b.length - 1), c: 1 + d }
+                      });
+                    }
+                  } else {
+                    row.push('');
+                  }
+                }
+                aoa.push(row);
+              }
+
+              const ws = XLSX.utils.aoa_to_sheet(aoa);
+              ws['!merges'] = merges;
+
+              const cols = [{ wch: 6 }];
+              for (let i = 0; i < daysCount; i++) cols.push({ wch: 20 });
+              ws['!cols'] = cols;
+
+              let sheetName = (cls.name || 'Sinif').toString().slice(0, 31);
+              if (!sheetName) sheetName = 'Sinif';
+
+              XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            });
+
+            const pad2 = (n) => String(n).padStart(2, '0');
+            const now = new Date();
+            const stamp = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
+            const filename = `ders-cedveli_${stamp}.xlsx`;
+
+            XLSX.writeFile(wb, filename);
+            globalInfo.textContent = 'Fayl hazırlandı və endirmə başladıldı.';
+          })
+          .catch((err) => {
+            showError(err.message || String(err));
+            globalInfo.textContent = '';
           });
-
-          const pad2 = (n) => String(n).padStart(2, '0');
-          const now = new Date();
-          const stamp = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
-          const filename = `ders-cedveli_${stamp}.xlsx`;
-
-          XLSX.writeFile(wb, filename);
-          globalInfo.textContent = 'Fayl hazırlandı və endirmə başladıldı.';
-        } catch (err) {
-          globalError.textContent = err.message || String(err);
-          globalError.classList.remove('hidden');
-        }
       }
 
-      // FIX: klik handler qalır, indi düymə type=button olduğu üçün “boş klik” olmamalıdır
       btnDownload.addEventListener('click', downloadAsXlsx);
 
       // Başlanğıc nümunələr (istəsən sil)
@@ -1518,7 +1553,7 @@
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'RİY', hours: 4, heavy: true, double: true });
       addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'AZD', hours: 3, heavy: false, double: false });
 
-      // ilkin state üçün Ş-i gizlət (default 5 gün)
+      // ilkin state
       syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>

@@ -386,7 +386,7 @@
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
-    /* ===== Sağ/sol şaquli banner yerləri (Tap.az kimi scroll-da sabit) ===== */
+    /* ===== Sağ/sol şaquli banner yerləri (SƏHİFƏ İLƏ BİRLİKDƏ SCROLL OLSUN) ===== */
     .ep-shell{
       display:grid;
       grid-template-columns: minmax(180px, 260px) minmax(0, 1100px) minmax(180px, 260px);
@@ -398,17 +398,22 @@
     }
     .ep-center{ min-width:0; }
 
+    /* ƏVVƏL sticky idi -> indi normal axında qalır, səhifə ilə birlikdə scroll olur */
     .ep-ad{
-      position: sticky;
-      top: 88px; /* header 64 + boşluq */
-      height: min(600px, calc(100vh - 104px));
+      position: relative;   /* sticky YOX */
+      top: auto;            /* sticky YOX */
+      height: auto;         /* limit YOX */
+      min-height: 600px;    /* sadəcə yer saxlasın (reklam banner üçün) */
+
       border-radius: 22px;
       border: 1px solid rgba(226,232,240,.5);
       background: rgba(255,255,255,.35);
       box-shadow: 0 10px 30px rgba(2,6,23,.06);
+
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
+      padding-top: 28px;
       overflow:hidden;
     }
     .ep-ad .ep-ad-label{

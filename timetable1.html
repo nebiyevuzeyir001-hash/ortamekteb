@@ -92,9 +92,6 @@
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* Sağ/sol vizual bərabərlik üçün (scrollbar təsiri aradan qalxır) */
-    html { scrollbar-gutter: stable both-edges; }
-
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
@@ -389,93 +386,55 @@
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
-    /* ===== Premium Ads Layout (160x600) ===== */
-    :root{
-      --ep-side: clamp(200px, 16vw, 260px);
-      --ep-gap: 24px;
-
-      --ep-ad-top: 92px;     /* fixed header 64px + boşluq */
-      --ep-banner-w: 160px;
-      --ep-banner-h: 600px;
-    }
-
+    /* ===== Sağ/sol şaquli banner yerləri (SƏHİFƏ İLƏ BİRLİKDƏ SCROLL OLSUN) ===== */
     .ep-shell{
       display:grid;
-      grid-template-columns: var(--ep-side) minmax(0, 1100px) var(--ep-side);
-      gap: var(--ep-gap);
-      align-items:start;      /* uzanma olmasın */
+      grid-template-columns: minmax(180px, 260px) minmax(0, 1100px) minmax(180px, 260px);
+      gap: 24px;
+      align-items:start;
       width:100%;
       max-width: 1600px;
       margin: 0 auto;
     }
-
     .ep-center{ min-width:0; }
 
+    /* ƏVVƏL sticky idi -> indi normal axında qalır, səhifə ilə birlikdə scroll olur */
     .ep-ad{
-      position: sticky;
-      top: var(--ep-ad-top);
-      align-self: start;
+      position: relative;   /* sticky YOX */
+      top: auto;            /* sticky YOX */
+      height: auto;         /* limit YOX */
+      min-height: 600px;    /* sadəcə yer saxlasın (reklam banner üçün) */
 
-      border-radius: 24px;
-      border: 1px solid rgba(226,232,240,.55);
-      background: linear-gradient(180deg, rgba(255,255,255,.40), rgba(255,255,255,.22));
-      box-shadow: 0 18px 60px rgba(2,6,23,.10);
-      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      border: 1px solid rgba(226,232,240,.5);
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 10px 30px rgba(2,6,23,.06);
 
-      padding: 14px;
-      overflow: hidden;
-    }
-    html.dark .ep-ad{
-      border-color: rgba(51,65,85,.65);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: 0 18px 70px rgba(0,0,0,.35);
-    }
-
-    .ep-ad-head{
       display:flex;
+      align-items:flex-start;
       justify-content:center;
-      margin-bottom: 12px;
-    }
-
-    .ep-ad .ep-ad-label{
-      font-size: 11px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: rgba(15,23,42,.62);
-      background: rgba(255,255,255,.55);
-      border: 1px dashed rgba(148,163,184,.55);
-      padding: 8px 12px;
-      border-radius: 999px;
-    }
-    html.dark .ep-ad .ep-ad-label{
-      color: rgba(226,232,240,.75);
-      background: rgba(2,6,23,.28);
-      border-color: rgba(148,163,184,.25);
-    }
-
-    .ep-ad-slot{
-      height: var(--ep-banner-h); /* 600px */
-      border-radius: 18px;
-      border: 1px solid rgba(226,232,240,.45);
-      background: rgba(255,255,255,.18);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      padding-top: 28px;
       overflow:hidden;
     }
-    html.dark .ep-ad-slot{
-      border-color: rgba(51,65,85,.75);
-      background: rgba(255,255,255,.04);
+    .ep-ad .ep-ad-label{
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(15,23,42,.55);
+      background: rgba(255,255,255,.45);
+      border: 1px dashed rgba(148,163,184,.6);
+      padding: 10px 14px;
+      border-radius: 14px;
     }
-
-    /* Container-ları 160x600-ə sabitlə */
-    .ep-ad-slot > div{
-      width: var(--ep-banner-w);
-      height: var(--ep-banner-h);
-      max-width: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    html.dark .ep-ad{
+      border-color: rgba(51,65,85,.6);
+      background: rgba(255,255,255,.03);
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    }
+    html.dark .ep-ad .ep-ad-label{
+      color: rgba(226,232,240,.65);
+      background: rgba(2,6,23,.25);
+      border-color: rgba(148,163,184,.25);
     }
 
     @media (max-width: 1280px){
@@ -532,17 +491,30 @@
     </div>
   </header>
 
+  <!-- Lazımsız boşluq olmasın deyə: pt-10 pb-6 -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-10 pb-6">
     <div class="ep-shell">
-      <!-- SOL REKLAM -->
-      <aside class="ep-ad no-print" aria-label="Reklam">
-        <div class="ep-ad-head">
-          <div class="ep-ad-label">Reklam</div>
-        </div>
-        <div class="ep-ad-slot">
-          <div class="qqDdzn412693"></div>
-        </div>
-      </aside>
+<aside class="ep-ad no-print" aria-label="Reklam">
+  <div class="YSAkKt412693"></div>
+  <script>
+    window.k_init = window.k_init || [];
+    k_init.push({
+        id: 'YSAkKt412693',
+        type: 'bn',
+        domain: 'hdbkome.com',
+        refresh: false,
+        next: 0
+    });
+
+    var s = document.createElement('script');
+    s.setAttribute('async', true);
+    s.setAttribute('charset', 'utf-8');
+    s.setAttribute('data-cfasync', false);
+    s.src = 'https://hdbkome.com/7ertd01t.js';
+    document.head && document.head.appendChild(s);
+  </script>
+</aside>
+
 
       <div class="ep-center">
         <section class="py-6 sm:py-8">
@@ -753,6 +725,7 @@
           </div>
         </section>
 
+        <!-- Lazımsız boşluq azalsın deyə mt-10 -> mt-6, py-8 -> py-6 -->
         <footer class="mt-6 border-t border-slate-200/70 dark:border-slate-800/70">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <div>
@@ -771,15 +744,27 @@
 
       </div>
 
-      <!-- SAĞ REKLAM -->
-      <aside class="ep-ad no-print" aria-label="Reklam">
-        <div class="ep-ad-head">
-          <div class="ep-ad-label">Reklam</div>
-        </div>
-        <div class="ep-ad-slot">
-          <div class="qTTQRG412694"></div>
-        </div>
-      </aside>
+<aside class="ep-ad no-print" aria-label="Reklam">
+  <div class="nsbHsr412694"></div>
+  <script>
+    window.k_init = window.k_init || [];
+    k_init.push({
+        id: 'nsbHsr412694',
+        type: 'bn',
+        domain: 'hdbkome.com',
+        refresh: false,
+        next: 0
+    });
+
+    var s = document.createElement('script');
+    s.setAttribute('async', true);
+    s.setAttribute('charset', 'utf-8');
+    s.setAttribute('data-cfasync', false);
+    s.src = 'https://hdbkome.com/36trtda7.js';
+    document.head && document.head.appendChild(s);
+  </script>
+</aside>
+
     </div>
   </main>
 
@@ -1613,37 +1598,5 @@
       syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>
-
-  <!-- Ads init (2 banner üçün) -->
-  <script>
-    (function () {
-      window.k_init = window.k_init || [];
-
-      function initAd(id, src) {
-        window.k_init.push({
-          id: id,
-          type: 'bn',
-          domain: 'hdbkome.com',
-          refresh: false,
-          next: 0
-        });
-
-        // eyni src təkrar yüklənməsin
-        if (document.querySelector('script[data-ep-ad="' + src + '"]')) return;
-
-        var s = document.createElement('script');
-        s.setAttribute('async', true);
-        s.setAttribute('charset', 'utf-8');
-        s.setAttribute('data-cfasync', 'false');
-        s.setAttribute('data-ep-ad', src);
-        s.src = src;
-        (document.head || document.documentElement).appendChild(s);
-      }
-
-      initAd('qqDdzn412693', 'https://hdbkome.com/36hz2e75.js');
-      initAd('qTTQRG412694', 'https://hdbkome.com/0h42kg0b.js');
-    })();
-  </script>
-
 </body>
 </html>

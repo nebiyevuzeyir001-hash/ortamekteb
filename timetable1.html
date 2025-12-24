@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="kadam-verification" content="kadam4bfbb7c9b0ad110830479bce422d6ef9" />
+
   <link rel="canonical" href="https://www.eduplan.az/timetable.html" />
   <meta name="description" content="Azərbaycan orta məktəbləri üçün onlayn Dərs cədvəli hazırlayıcı — müəllim, sinif və fənn məlumatlarını daxil edin, sistem avtomatik cədvəl qursun.">
   <meta name="robots" content="index, follow" />
@@ -386,10 +386,10 @@
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
-    /* ===== Sağ/sol şaquli banner yerləri (SƏHİFƏ İLƏ BİRLİKDƏ SCROLL OLSUN) ===== */
+    /* ===== Sağ/sol BOŞ reklam yerləri (çərçivəsiz) ===== */
     .ep-shell{
       display:grid;
-      grid-template-columns: minmax(180px, 260px) minmax(0, 1100px) minmax(180px, 260px);
+      grid-template-columns: 160px minmax(0, 1100px) 160px; /* boşluq dolmasın */
       gap: 24px;
       align-items:start;
       width:100%;
@@ -398,48 +398,16 @@
     }
     .ep-center{ min-width:0; }
 
-    /* ƏVVƏL sticky idi -> indi normal axında qalır, səhifə ilə birlikdə scroll olur */
-    .ep-ad{
-      position: relative;   /* sticky YOX */
-      top: auto;            /* sticky YOX */
-      height: auto;         /* limit YOX */
-      min-height: 600px;    /* sadəcə yer saxlasın (reklam banner üçün) */
-
-      border-radius: 22px;
-      border: 1px solid rgba(226,232,240,.5);
-      background: rgba(255,255,255,.35);
-      box-shadow: 0 10px 30px rgba(2,6,23,.06);
-
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding-top: 28px;
-      overflow:hidden;
-    }
-    .ep-ad .ep-ad-label{
-      font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: rgba(15,23,42,.55);
-      background: rgba(255,255,255,.45);
-      border: 1px dashed rgba(148,163,184,.6);
-      padding: 10px 14px;
-      border-radius: 14px;
-    }
-    html.dark .ep-ad{
-      border-color: rgba(51,65,85,.6);
-      background: rgba(255,255,255,.03);
-      box-shadow: 0 18px 60px rgba(0,0,0,.25);
-    }
-    html.dark .ep-ad .ep-ad-label{
-      color: rgba(226,232,240,.65);
-      background: rgba(2,6,23,.25);
-      border-color: rgba(148,163,184,.25);
+    /* Tam boş slot: nə border, nə bg, nə label — sadəcə ölçü */
+    .ep-ad-slot{
+      width: 160px;
+      height: 600px;
+      display:block;
     }
 
     @media (max-width: 1280px){
       .ep-shell{ grid-template-columns: 1fr; }
-      .ep-ad{ display:none; }
+      .ep-ad-slot{ display:none; }
     }
 
     @media (max-width: 900px){
@@ -491,30 +459,10 @@
     </div>
   </header>
 
-  <!-- Lazımsız boşluq olmasın deyə: pt-10 pb-6 -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-10 pb-6">
     <div class="ep-shell">
-<aside class="ep-ad no-print" aria-label="Reklam">
-  <div class="YSAkKt412693"></div>
-  <script>
-    window.k_init = window.k_init || [];
-    k_init.push({
-        id: 'YSAkKt412693',
-        type: 'bn',
-        domain: 'hdbkome.com',
-        refresh: false,
-        next: 0
-    });
-
-    var s = document.createElement('script');
-    s.setAttribute('async', true);
-    s.setAttribute('charset', 'utf-8');
-    s.setAttribute('data-cfasync', false);
-    s.src = 'https://hdbkome.com/7ertd01t.js';
-    document.head && document.head.appendChild(s);
-  </script>
-</aside>
-
+      <!-- SOL: boş reklam yeri (160x600) -->
+      <aside class="ep-ad-slot no-print" aria-label="Reklam (sol)"></aside>
 
       <div class="ep-center">
         <section class="py-6 sm:py-8">
@@ -725,7 +673,6 @@
           </div>
         </section>
 
-        <!-- Lazımsız boşluq azalsın deyə mt-10 -> mt-6, py-8 -> py-6 -->
         <footer class="mt-6 border-t border-slate-200/70 dark:border-slate-800/70">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <div>
@@ -744,27 +691,8 @@
 
       </div>
 
-<aside class="ep-ad no-print" aria-label="Reklam">
-  <div class="nsbHsr412694"></div>
-  <script>
-    window.k_init = window.k_init || [];
-    k_init.push({
-        id: 'nsbHsr412694',
-        type: 'bn',
-        domain: 'hdbkome.com',
-        refresh: false,
-        next: 0
-    });
-
-    var s = document.createElement('script');
-    s.setAttribute('async', true);
-    s.setAttribute('charset', 'utf-8');
-    s.setAttribute('data-cfasync', false);
-    s.src = 'https://hdbkome.com/36trtda7.js';
-    document.head && document.head.appendChild(s);
-  </script>
-</aside>
-
+      <!-- SAĞ: boş reklam yeri (160x600) -->
+      <aside class="ep-ad-slot no-print" aria-label="Reklam (sağ)"></aside>
     </div>
   </main>
 
@@ -845,10 +773,8 @@
       const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
 
-      // Son nəticəni saxlamaq üçün (xlsx export)
       window.__epLast = null;
 
-      /* ===== Premium custom select ===== */
       const __epSelectInstances = new Set();
 
       function makePrettySelect(selectEl, opts = {}) {
@@ -940,7 +866,6 @@
         return parseInt(daysCountSelect.value, 10) || 5;
       }
 
-      // 5 gün olanda Ş checkbox-u gizlə (və seçilibsə söndür)
       function syncTeacherDayVisibility(daysCount){
         teacherTbody.querySelectorAll('.t-daylbl[data-d]').forEach(lbl => {
           const idx = parseInt(lbl.dataset.d, 10);
@@ -1448,7 +1373,6 @@
           renderForClass(Number(btn.dataset.classId));
         };
 
-        // xlsx üçün saxla
         window.__epLast = { config, result, createdAt: Date.now() };
       }
 
@@ -1584,7 +1508,6 @@
 
       btnDownload.addEventListener('click', downloadAsXlsx);
 
-      // Başlanğıc nümunələr (istəsən sil)
       addTeacherRow({ name: 'Riyaziyyat müəllimi', code: 'RİY', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: true, availableDays: [0,1,2,3,4] });
       addTeacherRow({ name: 'Azərbaycan dili müəllimi', code: 'AZD', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: false, availableDays: [0,1,2,3,4] });
 
@@ -1594,7 +1517,6 @@
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'RİY', hours: 4, heavy: true, double: true });
       addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'AZD', hours: 3, heavy: false, double: false });
 
-      // ilkin state
       syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>

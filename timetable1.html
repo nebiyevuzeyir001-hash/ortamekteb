@@ -101,6 +101,16 @@
 
       --ep-radius-lg: 1rem;
       --ep-radius-sm: .95rem;
+
+      /* ===== Universal reklam relsləri üçün ən optimal default =====
+         - eni: dar bannerlərdən (160px) başlayıb böyük ekranda 300px-ə qədər yüksəlir
+         - hündürlük: tipik vertikal banner üçün min 600px saxlayır (reklam yoxdursa belə yer qalır)
+      */
+      --ep-rail-w: clamp(160px, 14vw, 300px);
+      --ep-rail-min-h: 600px;
+      --ep-rail-gap: 24px;
+      --ep-center-max: 1100px;
+      --ep-shell-max: 1600px;
     }
 
     input[type="text"], input[type="number"], select {
@@ -385,26 +395,34 @@
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
-    /* ===== Sağ/sol BOŞ reklam yerləri (çərçivəsiz) ===== */
+    /* ===== Sağ/sol BOŞ reklam yerləri (universal, çərçivəsiz) ===== */
     .ep-shell{
       display:grid;
-      grid-template-columns: 160px minmax(0, 1100px) 160px; /* boşluq dolmasın */
-      gap: 24px;
+      grid-template-columns: var(--ep-rail-w) minmax(0, var(--ep-center-max)) var(--ep-rail-w);
+      gap: var(--ep-rail-gap);
       align-items:start;
       width:100%;
-      max-width: 1600px;
+      max-width: var(--ep-shell-max);
       margin: 0 auto;
     }
     .ep-center{ min-width:0; }
 
-    /* Tam boş slot: nə border, nə bg, nə label — sadəcə ölçü */
+    /* Reklam slotu: çərçivə yoxdur, amma yer saxlayır */
     .ep-ad-slot{
-      width: 160px;
-      height: 600px;
-      display:block;
+      width: 100%;
+      min-height: var(--ep-rail-min-h);
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .ep-ad-slot > div{
+      width:100%;
+      max-width: 100%;
     }
 
-    @media (max-width: 1280px){
+    /* Laptop/telefon üçün relsləri gizlət (mərkəz rahat olsun) */
+    @media (max-width: 1024px){
       .ep-shell{ grid-template-columns: 1fr; }
       .ep-ad-slot{ display:none; }
     }
@@ -460,29 +478,36 @@
 
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-10 pb-6">
     <div class="ep-shell">
-<!-- SOL: 160x600 -->
-<aside class="ep-ad-slot no-print" aria-label="Reklam (sol)">
-  <div class="ANBRKK412693"></div>
-  <script>
-    window.k_init = window.k_init || [];
-    k_init.push({
-      id: 'ANBRKK412693',
-      type: 'bn',
-      domain: 'hdbkome.com',
-      refresh: false,
-      next: 0
-    });
 
-    (function () {
-      var s = document.createElement('script');
-      s.setAttribute('async', true);
-      s.setAttribute('charset', 'utf-8');
-      s.setAttribute('data-cfasync', false);
-      s.src = 'https://hdbkome.com/t2b0dy26.js';
-      document.head && document.head.appendChild(s);
-    })();
-  </script>
-</aside>
+      <!-- SOL reklam slotu -->
+      <aside class="ep-ad-slot no-print" aria-label="Reklam (sol)">
+        <div class="ANBRKK412693"></div>
+        <script>
+          window.k_init = window.k_init || [];
+          k_init.push({
+            id: 'ANBRKK412693',
+            type: 'bn',
+            domain: 'hdbkome.com',
+            refresh: false,
+            next: 0
+          });
+
+          (function () {
+            // eyni src təkrar əlavə olunmasın
+            var src = 'https://hdbkome.com/t2b0dy26.js';
+            if (document.querySelector('script[data-ep-ad-src="' + src + '"]')) return;
+
+            var s = document.createElement('script');
+            s.setAttribute('async', true);
+            s.setAttribute('charset', 'utf-8');
+            s.setAttribute('data-cfasync', false);
+            s.setAttribute('data-ep-ad-src', src);
+            s.src = src;
+            document.head && document.head.appendChild(s);
+          })();
+        </script>
+      </aside>
+
       <div class="ep-center">
         <section class="py-6 sm:py-8">
           <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Dərs cədvəli hazırlayıcı</h1>
@@ -707,32 +732,38 @@
             </nav>
           </div>
         </footer>
-
       </div>
 
-<!-- SAĞ: 160x600 -->
-<aside class="ep-ad-slot no-print" aria-label="Reklam (sağ)">
-  <div class="fNtZYB412694"></div>
-  <script>
-    window.k_init = window.k_init || [];
-    k_init.push({
-      id: 'fNtZYB412694',
-      type: 'bn',
-      domain: 'hdbkome.com',
-      refresh: false,
-      next: 0
-    });
+      <!-- SAĞ reklam slotu -->
+      <aside class="ep-ad-slot no-print" aria-label="Reklam (sağ)">
+        <div class="fNtZYB412694"></div>
+        <script>
+          window.k_init = window.k_init || [];
+          k_init.push({
+            id: 'fNtZYB412694',
+            type: 'bn',
+            domain: 'hdbkome.com',
+            refresh: false,
+            next: 0
+          });
 
-    (function () {
-      var s = document.createElement('script');
-      s.setAttribute('async', true);
-      s.setAttribute('charset', 'utf-8');
-      s.setAttribute('data-cfasync', false);
-      s.src = 'https://hdbkome.com/nfbtdtrz.js';
-      document.head && document.head.appendChild(s);
-    })();
-  </script>
-</aside>    </div>
+          (function () {
+            // eyni src təkrar əlavə olunmasın
+            var src = 'https://hdbkome.com/nfbtdtrz.js';
+            if (document.querySelector('script[data-ep-ad-src="' + src + '"]')) return;
+
+            var s = document.createElement('script');
+            s.setAttribute('async', true);
+            s.setAttribute('charset', 'utf-8');
+            s.setAttribute('data-cfasync', false);
+            s.setAttribute('data-ep-ad-src', src);
+            s.src = src;
+            document.head && document.head.appendChild(s);
+          })();
+        </script>
+      </aside>
+
+    </div>
   </main>
 
   <script>
@@ -1547,6 +1578,7 @@
 
       btnDownload.addEventListener('click', downloadAsXlsx);
 
+      // Başlanğıc nümunələr (istəsən sil)
       addTeacherRow({ name: 'Riyaziyyat müəllimi', code: 'RİY', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: true, availableDays: [0,1,2,3,4] });
       addTeacherRow({ name: 'Azərbaycan dili müəllimi', code: 'AZD', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: false, availableDays: [0,1,2,3,4] });
 
@@ -1556,6 +1588,7 @@
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'RİY', hours: 4, heavy: true, double: true });
       addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'AZD', hours: 3, heavy: false, double: false });
 
+      // ilkin state
       syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>

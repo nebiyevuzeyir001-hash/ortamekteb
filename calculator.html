@@ -98,18 +98,19 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ===== Sağ/sol BOŞ reklam yerləri (timetable ilə eyni) ===== */
+    /* ===== Reklam relsləri: boş olanda yer tutmasın, reklam gələndə avtomatik açılsın ===== */
     :root{
-      --ep-rail-w: clamp(300px, 14vw, 300px);
+      --ep-rail-w: clamp(240px, 18vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
       --ep-center-max: 1100px;
       --ep-shell-max: 1600px;
     }
 
+    /* Default: reklam YOX kimi layout (kənarlarda elastik boşluq) */
     .ep-shell{
       display:grid;
-      grid-template-columns: var(--ep-rail-w) minmax(0, var(--ep-center-max)) var(--ep-rail-w);
+      grid-template-columns: 1fr minmax(0, var(--ep-center-max)) 1fr;
       gap: var(--ep-rail-gap);
       align-items:start;
       width:100%;
@@ -118,24 +119,42 @@
     }
     .ep-center{ min-width:0; }
 
-    /* Reklam slotu: çərçivə yoxdur, amma yer saxlayır */
+    /* Reklam slotu default gizli: boş olanda heç yer tutmasın */
     .ep-ad-slot{
+      display:none;
       width: 100%;
       min-height: var(--ep-rail-min-h);
-      display:flex;
       align-items:flex-start;
       justify-content:center;
       overflow:hidden;
+      position: sticky;
+      top: 16px;
+      height: fit-content;
     }
     .ep-ad-slot > div{
       width:100%;
       max-width: 100%;
     }
 
-    /* Laptop/telefon üçün relsləri gizlət */
-    @media (max-width: 640px){
-      .ep-shell{ grid-template-columns: 1fr; }
-      .ep-ad-slot{ display:none; }
+    /* Reklam varsa slotları göstər */
+    .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
+    .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
+
+    /* Reklam varsa grid sütunlarını aç */
+    .ep-shell.has-left-ad.has-right-ad{
+      grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
+    }
+    .ep-shell.has-left-ad:not(.has-right-ad){
+      grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) 1fr;
+    }
+    .ep-shell.has-right-ad:not(.has-left-ad){
+      grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
+    }
+
+    /* Laptop/telefon: yan reklamları gizlət (kontent boğulmasın) */
+    @media (max-width: 1024px){
+      .ep-shell{ grid-template-columns: 1fr; max-width: 100%; }
+      .ep-ad-slot{ display:none !important; }
     }
 
     /* Print zamanı reklamları gizlət */
@@ -192,13 +211,13 @@
     </div>
   </header>
 
-  <!-- Main (timetable-dəki kimi sağ/sol boş reklam yerləri ilə) -->
+  <!-- Main -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-4 pb-0">
-    <div class="ep-shell">
+    <div class="ep-shell" id="ep-shell">
 
       <!-- SOL reklam slotu -->
-      <aside class="ep-ad-slot no-print" aria-label="Reklam (sol)">
-
+      <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
+        <!-- Reklam gələndə buraya inject edin (iframe, ins, div və s.) -->
       </aside>
 
       <!-- MƏRKƏZ kontent -->
@@ -385,8 +404,8 @@
       </div>
 
       <!-- SAĞ reklam slotu -->
-      <aside class="ep-ad-slot no-print" aria-label="Reklam (sağ)">
-
+      <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
+        <!-- Reklam gələndə buraya inject edin (iframe, ins, div və s.) -->
       </aside>
 
     </div>
@@ -455,6 +474,37 @@
         if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
         else if (mq.addListener) mq.addListener(onSystemChange);
       }
+    })();
+  </script>
+
+  <!-- ✅ Reklam gələndə avtomatik layout daraltsın -->
+  <script>
+    (function () {
+      const shell = document.getElementById('ep-shell') || document.querySelector('.ep-shell');
+      if (!shell) return;
+
+      const left = shell.querySelector('[data-ad-slot="left"]');
+      const right = shell.querySelector('[data-ad-slot="right"]');
+
+      const hasContent = (el) => {
+        if (!el) return false;
+        return Array.from(el.childNodes).some(n => {
+          if (n.nodeType === Node.ELEMENT_NODE) return true;
+          if (n.nodeType === Node.TEXT_NODE) return n.textContent.trim().length > 0;
+          return false;
+        });
+      };
+
+      const update = () => {
+        shell.classList.toggle('has-left-ad', hasContent(left));
+        shell.classList.toggle('has-right-ad', hasContent(right));
+      };
+
+      update();
+
+      const obs = new MutationObserver(update);
+      if (left) obs.observe(left, { childList: true, subtree: true });
+      if (right) obs.observe(right, { childList: true, subtree: true });
     })();
   </script>
 

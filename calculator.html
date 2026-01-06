@@ -73,7 +73,7 @@
     html.dark .card-surface { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03); }
     html.dark .card-surface:hover { box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06); }
 
-    /* input-lar (ana səhifənin üslubuna uyğun) */
+    /* input-lar */
     input[type="number"]{
       width:100%;
       border-radius: 0.75rem;
@@ -98,79 +98,74 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ===== Reklam relsləri + paralel layout (header ilə eyni) ===== */
+    /* ===== Parallellik üçün "frame" (header max-w-7xl + px-4/sm:px-6/lg:px-8) ===== */
     :root{
-      /* Header max-w-7xl = 80rem => adi halda bununla paralel olacaq */
-      --ep-frame-max: 80rem;
-
-      /* Reklam olanda ümumi shell genişlənir */
-      --ep-shell-max: 1700px;
-
-      /* Reklam relslərinin eni */
+      --ep-frame-max: 80rem;     /* max-w-7xl */
+      --ep-shell-max: 1700px;    /* reklam olanda genişlənəcək */
       --ep-rail-w: clamp(260px, 16vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
-
-      /* Mərkəz kontentin max eni (reklam olanda daralacaq) */
-      --ep-center-max: 1220px;
+      --ep-center-max: 1220px;   /* reklam olanda mərkəz sütun max eni */
     }
 
-    /* Default (reklam YOX): 1 sütun, header/footer ilə paralel */
-    .ep-shell{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 0;
-      align-items:start;
-      width:100%;
+    .ep-frame{
+      width: 100%;
       max-width: var(--ep-frame-max);
       margin: 0 auto;
-      transition: max-width .22s ease, gap .22s ease;
+      padding-left: 16px;  /* px-4 */
+      padding-right: 16px; /* px-4 */
+      transition: max-width .22s ease, padding .22s ease;
+    }
+    @media (min-width: 640px){ /* sm */
+      .ep-frame{ padding-left: 24px; padding-right: 24px; } /* px-6 */
+    }
+    @media (min-width: 1024px){ /* lg */
+      .ep-frame{ padding-left: 32px; padding-right: 32px; } /* px-8 */
     }
 
-    .ep-center{ min-width:0; }
-
-    /* reklamsız halda ep-center 1-ci sütunda olsun */
-    .ep-shell:not(.has-left-ad):not(.has-right-ad) .ep-center{
-      grid-column: 1;
+    /* Reklam gələndə frame genişlənir (reklamlar üçün yer açılır) */
+    .ep-frame.has-ads{
+      max-width: var(--ep-shell-max);
     }
 
-    /* reklam slotlarının grid yerləşimi */
+    /* ===== Shell ===== */
+    .ep-shell{
+      display: grid;
+      grid-template-columns: 1fr; /* default: reklam YOX */
+      gap: 0;
+      align-items: start;
+      width: 100%;
+    }
+
+    .ep-center{ min-width: 0; }
+
+    /* reklam slotları */
     .ep-ad-left{ grid-column: 1; }
     .ep-ad-right{ grid-column: 3; }
 
-    /* Reklam slotu default gizli */
     .ep-ad-slot{
-      display:none;
+      display: none;
       width: 100%;
       min-height: var(--ep-rail-min-h);
-      align-items:flex-start;
-      justify-content:center;
-      overflow:hidden;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
 
       position: sticky;
-      top: 88px; /* fixed header (64px) + rahat boşluq */
+      top: 88px; /* header(64px)+boşluq */
       height: fit-content;
     }
     .ep-ad-slot > div{ width:100%; max-width:100%; }
 
-    /* Reklam gələndə: shell genişlənsin + 3 sütunlu grid olsun */
+    /* Reklam varsa shell 3 sütuna keçir */
     .ep-shell.has-left-ad,
     .ep-shell.has-right-ad{
-      max-width: var(--ep-shell-max);
       gap: var(--ep-rail-gap);
     }
 
-    /* reklam varsa ep-center 2-ci sütuna keçsin */
-    .ep-shell.has-left-ad .ep-center,
-    .ep-shell.has-right-ad .ep-center{
-      grid-column: 2;
-    }
-
-    /* Reklam varsa slotları göstər */
     .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
     .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
 
-    /* Reklam varsa grid sütunları */
     .ep-shell.has-left-ad.has-right-ad{
       grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
@@ -181,15 +176,14 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
-    /* Laptop/telefon: yan reklamları gizlət, 1 sütun */
+    /* Laptop/telefon: yan reklamları gizlət, hər şey 1 sütun */
     @media (max-width: 1024px){
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); } /* mobil-də genişlənməsin */
       .ep-shell{
         grid-template-columns: 1fr !important;
-        max-width: var(--ep-frame-max) !important;
         gap: 0 !important;
       }
       .ep-ad-slot{ display:none !important; }
-      .ep-center{ grid-column: 1 !important; }
     }
 
     /* Print zamanı reklamları gizlət */
@@ -213,7 +207,7 @@
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header (ana səhifə ilə eyni) -->
+  <!-- Header -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
@@ -247,202 +241,203 @@
   </header>
 
   <!-- Main -->
-  <main id="main" class="px-4 sm:px-6 lg:px-8 pt-4 pb-0">
-    <div class="ep-shell" id="ep-shell">
+  <main id="main" class="pt-4 pb-0">
+    <!-- ✅ Bu frame reklamsız halda header ilə 100% paraleldir -->
+    <div class="ep-frame" id="ep-frame">
+      <div class="ep-shell" id="ep-shell">
 
-      <!-- SOL reklam slotu -->
-      <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
-        <!-- SOL reklam kodu bura -->
-      </aside>
+        <!-- SOL reklam slotu -->
+        <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
+          <!-- SOL reklam kodu bura -->
+        </aside>
 
-      <!-- MƏRKƏZ kontent -->
-      <div class="ep-center">
-        <div class="mx-auto max-w-7xl py-0">
+        <!-- MƏRKƏZ kontent -->
+        <div class="ep-center">
+          <div class="py-0">
 
-          <!-- Page intro -->
-          <section class="py-6 sm:py-8">
-            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
-            <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[70ch]">
-              I/II yarımil və illik nəticələri sürətli və dəqiq hesablamaq üçün sadə kalkulyator.
-            </p>
-          </section>
+            <!-- Page intro -->
+            <section class="py-6 sm:py-8">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
+              <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[70ch]">
+                I/II yarımil və illik nəticələri sürətli və dəqiq hesablamaq üçün sadə kalkulyator.
+              </p>
+            </section>
 
-          <!-- Calculator panel -->
-          <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
-            <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
-              <div class="font-semibold">🧮 Bal kalkulyatoru</div>
-            </div>
-
-            <div class="p-6">
-              <!-- Empty state (rejim seçilməyibsə) -->
-              <div id="empty-state" class="relative mb-6">
-                <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
-                  <div class="text-lg font-semibold">Rejimi seçin</div>
-                  <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                    I yarımil, II yarımil və ya “Hər ikisi” seçdikdən sonra xanalar aktiv olacaq.
-                  </div>
-                </div>
+            <!-- Calculator panel -->
+            <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
+              <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
+                <div class="font-semibold">🧮 Bal kalkulyatoru</div>
               </div>
 
-              <!-- Mode -->
-              <div class="grid gap-2">
-                <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t1" aria-pressed="false">
-                    I yarımil
-                  </button>
-                  <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t2" aria-pressed="false">
-                    II yarımil
-                  </button>
-                  <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="both" aria-pressed="false">
-                    Hər ikisi
-                  </button>
-                </div>
-              </div>
-
-              <!-- Forms -->
-              <div class="mt-6 grid gap-6">
-                <!-- I term -->
-                <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                  <legend class="px-2 text-sm font-semibold">I yarımil</legend>
-                  <div class="mt-2 grid grid-cols-2 gap-2">
-                    <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-                    <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-                    <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-                    <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-                    <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-                    <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-                    <input id="t1-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
-                    <input id="t1-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+              <div class="p-6">
+                <!-- Empty state (rejim seçilməyibsə) -->
+                <div id="empty-state" class="relative mb-6">
+                  <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
+                    <div class="text-lg font-semibold">Rejimi seçin</div>
+                    <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                      I yarımil, II yarımil və ya “Hər ikisi” seçdikdən sonra xanalar aktiv olacaq.
+                    </div>
                   </div>
-                  <div class="mt-3">
-                    <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" />
-                  </div>
-                </fieldset>
-
-                <!-- II term -->
-                <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                  <legend class="px-2 text-sm font-semibold">II yarımil</legend>
-                  <div class="mt-2 grid grid-cols-2 gap-2">
-                    <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-                    <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-                    <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-                    <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-                    <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-                    <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-                    <input id="t2-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
-                    <input id="t2-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
-                  </div>
-                  <div class="mt-3">
-                    <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" />
-                  </div>
-                </fieldset>
-
-                <!-- Actions -->
-                <div id="calc-actions" class="flex flex-col sm:flex-row gap-3">
-                  <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
-                    Hesabla
-                  </button>
-                  <button id="btn-reset" type="button" class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                    Sıfırla
-                  </button>
                 </div>
 
-                <!-- Errors -->
-                <div id="calc-error" class="hidden text-sm text-rose-500"></div>
+                <!-- Mode -->
+                <div class="grid gap-2">
+                  <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t1" aria-pressed="false">
+                      I yarımil
+                    </button>
+                    <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="t2" aria-pressed="false">
+                      II yarımil
+                    </button>
+                    <button type="button" class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition" data-mode="both" aria-pressed="false">
+                      Hər ikisi
+                    </button>
+                  </div>
+                </div>
 
-                <!-- Output -->
-                <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
-                  <div class="text-sm text-slate-500 dark:text-slate-300">
-                    Nəticələr
+                <!-- Forms -->
+                <div class="mt-6 grid gap-6">
+                  <!-- I term -->
+                  <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                    <legend class="px-2 text-sm font-semibold">I yarımil</legend>
+                    <div class="mt-2 grid grid-cols-2 gap-2">
+                      <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
+                      <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
+                      <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
+                      <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
+                      <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
+                      <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
+                      <input id="t1-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
+                      <input id="t1-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+                    </div>
+                    <div class="mt-3">
+                      <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" />
+                    </div>
+                  </fieldset>
+
+                  <!-- II term -->
+                  <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                    <legend class="px-2 text-sm font-semibold">II yarımil</legend>
+                    <div class="mt-2 grid grid-cols-2 gap-2">
+                      <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
+                      <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
+                      <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
+                      <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
+                      <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
+                      <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
+                      <input id="t2-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
+                      <input id="t2-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+                    </div>
+                    <div class="mt-3">
+                      <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" />
+                    </div>
+                  </fieldset>
+
+                  <!-- Actions -->
+                  <div id="calc-actions" class="flex flex-col sm:flex-row gap-3">
+                    <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
+                      Hesabla
+                    </button>
+                    <button id="btn-reset" type="button" class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                      Sıfırla
+                    </button>
                   </div>
 
-                  <div class="mt-4 grid sm:grid-cols-3 gap-3">
-                    <div id="out-t1-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                      <div class="text-slate-500 dark:text-slate-400 text-sm">I yarımil</div>
-                      <div class="mt-1 text-2xl font-bold" id="out-t1">—</div>
-                      <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                        KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span>
+                  <!-- Errors -->
+                  <div id="calc-error" class="hidden text-sm text-rose-500"></div>
+
+                  <!-- Output -->
+                  <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
+                    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
+
+                    <div class="mt-4 grid sm:grid-cols-3 gap-3">
+                      <div id="out-t1-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">I yarımil</div>
+                        <div class="mt-1 text-2xl font-bold" id="out-t1">—</div>
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                          KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span>
+                        </div>
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
+                          Qiymət: <span class="font-semibold" id="out-t1-grade">—</span>
+                        </div>
                       </div>
-                      <div class="text-xs text-slate-600 dark:text-slate-300">
-                        Qiymət: <span class="font-semibold" id="out-t1-grade">—</span>
+
+                      <div id="out-t2-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">II yarımil</div>
+                        <div class="mt-1 text-2xl font-bold" id="out-t2">—</div>
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                          KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span>
+                        </div>
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
+                          Qiymət: <span class="font-semibold" id="out-t2-grade">—</span>
+                        </div>
+                      </div>
+
+                      <div id="out-year-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
+                        <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">Hesab: (I + II) / 2</div>
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
+                          Qiymət: <span class="font-semibold" id="out-year-grade">—</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div id="out-t2-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                      <div class="text-slate-500 dark:text-slate-400 text-sm">II yarımil</div>
-                      <div class="mt-1 text-2xl font-bold" id="out-t2">—</div>
-                      <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                        KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span>
-                      </div>
-                      <div class="text-xs text-slate-600 dark:text-slate-300">
-                        Qiymət: <span class="font-semibold" id="out-t2-grade">—</span>
-                      </div>
+                    <div id="calc-warn" class="hidden mt-3 text-xs text-amber-600 dark:text-amber-400">
+                      * Boş buraxılan KSQ-lar hesablanmaya qatılmadı.
                     </div>
-
-                    <div id="out-year-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                      <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
-                      <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
-                      <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">Hesab: (I + II) / 2</div>
-                      <div class="text-xs text-slate-600 dark:text-slate-300">
-                        Qiymət: <span class="font-semibold" id="out-year-grade">—</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div id="calc-warn" class="hidden mt-3 text-xs text-amber-600 dark:text-amber-400">
-                    * Boş buraxılan KSQ-lar hesablanmaya qatılmadı.
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <!-- Info -->
-          <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
-            <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
+            <!-- Info -->
+            <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+              <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
-            <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
-              <p>
-                Bal kalkulyatoru KSQ və BSQ nəticələrinə əsaslanaraq yarımil və illik qiymətləri avtomatik hesablayır.
-                Alqoritm <strong>KSQ 40% + BSQ 60%</strong> çəkisinə əsaslanır və bütün hesablamalar brauzerdə aparılır.
-              </p>
+              <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
+                <p>
+                  Bal kalkulyatoru KSQ və BSQ nəticələrinə əsaslanaraq yarımil və illik qiymətləri avtomatik hesablayır.
+                  Alqoritm <strong>KSQ 40% + BSQ 60%</strong> çəkisinə əsaslanır və bütün hesablamalar brauzerdə aparılır.
+                </p>
 
-              <p>
-                İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir.
-                KSQ sahələrinə daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəyə daha çox təsir edir.
-                “Hər ikisi” rejimində iki yarımilin ortası illik bal kimi göstərilir.
-              </p>
+                <p>
+                  İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir.
+                  KSQ sahələrinə daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəyə daha çox təsir edir.
+                  “Hər ikisi” rejimində iki yarımilin ortası illik bal kimi göstərilir.
+                </p>
 
-              <p>
-                KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir. BSQ sahəsi mütləqdir və
-                0–100 aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
-              </p>
+                <p>
+                  KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir. BSQ sahəsi mütləqdir və
+                  0–100 aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
+                </p>
 
-              <p>
-                Nəticələr 2–5 qiymət şkalasında təqdim olunur: 81–100 → 5, 61–80 → 4, 41–60 → 3, 0–40 → 2.
-              </p>
+                <p>
+                  Nəticələr 2–5 qiymət şkalasında təqdim olunur: 81–100 → 5, 61–80 → 4, 41–60 → 3, 0–40 → 2.
+                </p>
 
-              <p>
-                Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
-                Səhifə yenilənərsə dəyərlər sıfırlanır.
-              </p>
+                <p>
+                  Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
+                  Səhifə yenilənərsə dəyərlər sıfırlanır.
+                </p>
 
-              <p>
-                Təklif və rəy üçün:
-                <a class="underline underline-offset-4 hover:opacity-80" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
-              </p>
-            </div>
-          </section>
+                <p>
+                  Təklif və rəy üçün:
+                  <a class="underline underline-offset-4 hover:opacity-80" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
+                </p>
+              </div>
+            </section>
 
+          </div>
         </div>
+
+        <!-- SAĞ reklam slotu -->
+        <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
+          <!-- SAĞ reklam kodu bura -->
+        </aside>
+
       </div>
-
-      <!-- SAĞ reklam slotu -->
-      <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
-        <!-- SAĞ reklam kodu bura -->
-      </aside>
-
     </div>
   </main>
 
@@ -491,16 +486,13 @@
         }
       }
 
-      // ilkin UI sync
       applyTheme(getTheme(), false);
 
-      // Toggle
       btn && btn.addEventListener('click', function () {
         const next = (getTheme() === 'dark') ? 'light' : 'dark';
         applyTheme(next, true);
       });
 
-      // System theme dəyişəndə (yalnız user seçimi yoxdursa)
       const onSystemChange = function (e) {
         if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
       };
@@ -512,11 +504,12 @@
     })();
   </script>
 
-  <!-- ✅ Reklam gələndə avtomatik layout daraltsın -->
+  <!-- ✅ Reklam gələndə avtomatik: frame genişlənir + shell daralır -->
   <script>
     (function () {
+      const frame = document.getElementById('ep-frame');
       const shell = document.getElementById('ep-shell');
-      if (!shell) return;
+      if (!frame || !shell) return;
 
       const left = shell.querySelector('[data-ad-slot="left"]');
       const right = shell.querySelector('[data-ad-slot="right"]');
@@ -531,8 +524,13 @@
       };
 
       const update = () => {
-        shell.classList.toggle('has-left-ad', hasContent(left));
-        shell.classList.toggle('has-right-ad', hasContent(right));
+        const hasLeft = hasContent(left);
+        const hasRight = hasContent(right);
+        shell.classList.toggle('has-left-ad', hasLeft);
+        shell.classList.toggle('has-right-ad', hasRight);
+
+        const hasAds = hasLeft || hasRight;
+        frame.classList.toggle('has-ads', hasAds);
       };
 
       update();
@@ -569,9 +567,7 @@
 
       function scrollToStable(el, extraOffset = 0) {
         if (!el) return;
-
         try { document.activeElement?.blur?.(); } catch (e) {}
-
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             scrollToWithHeader(el, extraOffset);
@@ -665,7 +661,6 @@
         }
 
         const kAvg = ksq.length ? avg(ksq) : 0;
-
         warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -734,7 +729,6 @@
         }
 
         out.classList.remove('hidden');
-
         scrollToStable(actions || out, 8);
 
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {

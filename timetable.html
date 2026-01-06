@@ -681,14 +681,238 @@
           </section>
 
           <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
-            <h2 class="text-2xl sm:text-3xl font-semibold">Qısa izah</h2>
+            <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
-            <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
+            <div class="mt-5 space-y-6 text-base leading-7 text-slate-700 dark:text-slate-200">
               <p>
-                Hazırlayıcı Azərbaycan orta məktəbləri üçün tipik məhdudiyyətləri nəzərə alır:
-                müəllimlərin eyni saatda iki sinifə düşməməsi, siniflərin gündə saat limitləri,
-                ağır fənlərin 1-ci və sonuncu saatdan mümkün qədər uzaq saxlanması, eyni gündə eyni fənnin
-                həddindən artıq yığılmaması, eləcə də müəllimin həftənin yalnız seçilmiş günlərində gələ bilməsi və s.
+                Bu səhifədəki <strong>“🧩 Məktəb konfiqurasiyası və hazırlayıcı”</strong> bloku
+                dərs cədvəlini <strong>tamamilə brauzerdə</strong> qurmaq üçün hazırlanıb:
+                siz müəllim/sinif/fənn məlumatlarını daxil edirsiniz, sistem isə konfliktləri minimuma endirərək
+                cədvəli avtomatik yığmağa çalışır.
+              </p>
+
+              <div class="rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
+                <div class="font-semibold text-slate-900 dark:text-slate-100">İş prinsipi (qısa axın)</div>
+                <ol class="mt-2 list-decimal pl-6 space-y-1">
+                  <li><strong>Məktəb parametrləri</strong> — həftə günü sayı və gündə maksimum saatı seç.</li>
+                  <li><strong>Müəllimlər</strong> — hər müəllimin limitlərini və gəlmə günlərini yaz.</li>
+                  <li><strong>Siniflər</strong> — sinif siyahısını (səviyyə, növbə, gündə limit) daxil et.</li>
+                  <li><strong>Fənn / dərs saatları</strong> — “sinif + fənn + müəllim + həftəlik saat” sətrlərini əlavə et.</li>
+                  <li><strong>⚙️ Cədvəli qur</strong> — sistem 25 fərqli cəhd edərək ən yaxşı nəticəni seçir.</li>
+                  <li><strong>Nəticə</strong> — sinif tablarını dəyişərək cədvəli yoxla, lazım olsa parametrləri düzəlt və yenidən qur.</li>
+                </ol>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">1) Məktəb parametrləri nə edir?</h3>
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Həftəlik iş günü (5/6)</strong> cədvəlin sütun sayını müəyyən edir:
+                    5 gün seçəndə <em>Şənbə</em> (Ş) gizlənir və müəllimlərin “Ş” günü avtomatik deaktiv edilir.
+                  </li>
+                  <li>
+                    <strong>Gündə dərs saatı (max)</strong> hər sinif üçün matrisin (gün × saat) ölçüsünü təyin edir.
+                    Məsələn 7 seçsəniz, hər gün 1–7 saat aralığı yaranır.
+                  </li>
+                  <li>
+                    <strong>Ağır fənlər 1-ci/sonuncu saatda olmasın</strong> — bu seçim aktivdirsə,
+                    “Ağır?” işarələdiyiniz dərslər əvvəlcə <strong>1-ci və sonuncu</strong> saata qoyulmur (yumşaq qayda).
+                  </li>
+                  <li>
+                    <strong>Eyni gündə eyni fənn 2 dəfədən çox təkrarlanmasın</strong> — aktivdirsə,
+                    bir sinifdə eyni fənnin bir gündə toplamı <strong>2 saatdan çox</strong> olmamağa çalışılır (yumşaq qayda).
+                  </li>
+                </ul>
+
+                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                  Qeyd: Bu iki seçim <strong>yumşaq məhdudiyyət</strong> kimidir —
+                  sistem əvvəlcə onları ciddi saxlayır, yer tapılmasa sonradan yumşaldır (aşağıda izah var).
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">2) Müəllimlər bölməsi necə istifadə olunur?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Ad, soyad</strong> və <strong>Kod</strong>: dərs sətrlərində müəllimi tapmaq üçün
+                    sistem müəllimi <strong>kodla və ya adla</strong> uyğunlaşdırır. Praktik üsul:
+                    hər müəllimə qısa kod ver (məs: <code class="px-1 rounded bg-slate-100/80 dark:bg-white/10">RİY</code>).
+                  </li>
+                  <li>
+                    <strong>Həftəlik max</strong> və <strong>Gündə max</strong>: müəllimin həftəlik/gündəlik dərs limitidir.
+                    <strong>0</strong> yazılsa (və ya boş qalsa) sistem bunu “limitsiz” kimi qəbul edir.
+                  </li>
+                  <li>
+                    <strong>1-ci saatı sevmir</strong> / <strong>Sonuncu saatı sevmir</strong>:
+                    sistem əvvəlcə bu istəkləri qoruyaraq yerləşdirməyə çalışır, alınmasa yumşalda bilər (yumşaq qayda).
+                  </li>
+                  <li>
+                    <strong>Gəlmə günləri</strong>:
+                    müəllimin dərsinin hansı günlərdə ola biləcəyini göstərir. Heç nə seçməsən,
+                    sistem <strong>hamı günlər</strong> kimi qəbul edir.
+                    Vacib: “gəlmə günləri” <strong>sərt məhdudiyyətdir</strong> — yumşaldılmır.
+                  </li>
+                </ul>
+
+                <div class="mt-3 rounded-xl border border-amber-200/70 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/10 p-3 text-sm">
+                  <div class="font-semibold text-amber-900 dark:text-amber-200">Diqqət (uyğunlaşdırma)</div>
+                  <p class="mt-1">
+                    “Fənn / dərs saatları” bölməsində müəllimi <strong>kod və ya ad</strong> ilə yazanda,
+                    bu dəyər müəllim cədvəlindəki kod/ad ilə <strong>eyni yazılışda</strong> olmalıdır
+                    (sistem yalnız boşluqları kəsir, avtomatik düzəliş etmir).
+                    Məsələn <code class="px-1 rounded bg-white/60 dark:bg-white/10">RİY</code> ilə
+                    <code class="px-1 rounded bg-white/60 dark:bg-white/10">riy</code> fərqli sayılır.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">3) Siniflər bölməsi necə işləyir?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Sinif</strong> (məs: 5A) — “Fənn / dərs saatları” sətirlərində də eyni adla yazılmalıdır.
+                  </li>
+                  <li>
+                    <strong>Səviyyə</strong> gündə standart limiti təsir edir:
+                    <strong>İbtidai → 6</strong>, <strong>Əsas → 7</strong>, <strong>Yuxarı → 8</strong>.
+                    Əgər “Gündə max dərs” sahəsinə rəqəm yazsan, həmin sinif üçün bu limit override olunur.
+                  </li>
+                  <li>
+                    <strong>Növbə</strong> (Səhər/Günorta) hazırda <strong>informasiya üçündür</strong> —
+                    alqoritm növbəyə görə ayrıca məhdudiyyət tətbiq etmir.
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">4) Fənn / dərs saatları: ən vacib hissə</h3>
+
+                <p class="mt-2">
+                  Bu cədvəldəki hər sətir bir “tədris tapşırığıdır”:
+                  <strong>hansı sinifə</strong>, <strong>hansı fənn</strong>, <strong>hansı müəllim</strong> və
+                  <strong>həftədə neçə saat</strong>.
+                </p>
+
+                <ul class="mt-3 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Həftəlik saat</strong> daxil etdikdə sistem bunu “bloklara” parçalayır və yerləşdirir.
+                  </li>
+                  <li>
+                    <strong>Qoşa?</strong> seçilibsə və saat sayı ≥ 2-dirsə:
+                    sistem həmin dərsi <strong>2 saatlıq bloklar</strong> kimi yerləşdirməyə çalışır.
+                    Məsələn 5 saat → 2+2+1 bloklara bölünür.
+                    Qoşa bloklar eyni gün <strong>ardıcıl iki saata</strong> düşür (cədvəldə hüceyrə 2 sətir boyu uzanır).
+                  </li>
+                  <li>
+                    <strong>Ağır?</strong> seçilibsə:
+                    “Ağır fənlər 1-ci/sonuncu saatda olmasın” parametri aktiv olanda
+                    sistem əvvəlcə ağır fənni 1-ci/sonuncu saata salmamağa çalışır.
+                  </li>
+                </ul>
+
+                <div class="mt-3 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
+                  <div class="font-semibold text-slate-900 dark:text-slate-100">Vacib</div>
+                  <p class="mt-1">
+                    Sinif adı və müəllim kod/adı uyğun gəlməsə, sistem həmin sətri cədvələ çevirə bilməz
+                    (yəni <em>dərs “itmiş” kimi görünə bilər</em>). Buna görə sinif adlarını və müəllim kodlarını
+                    bütün yerlərdə eyni yaz.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">5) “Cədvəli qur” düyməsi arxada nə edir?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    Sistem hər sinif üçün <strong>(gün × saat)</strong> matris yaradır və dərs bloklarını ora yerləşdirir.
+                  </li>
+                  <li>
+                    <strong>25 cəhd</strong> edir (random kombinasiyalar): hər cəhddə blokların və slotların sırası qarışdırılır,
+                    sonra ən çox saat yerləşdirən nəticə seçilir.
+                  </li>
+                  <li>
+                    Hər blok üçün sistem əvvəlcə <strong>sərt + yumşaq</strong> qaydalarla yer axtarır,
+                    tapılmasa <strong>yumşaq qaydaları zəiflədərək</strong> yenə axtarır.
+                  </li>
+                </ul>
+
+                <div class="mt-3 grid gap-3 md:grid-cols-2">
+                  <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
+                    <div class="font-semibold text-slate-900 dark:text-slate-100">Sərt məhdudiyyətlər (pozulmur)</div>
+                    <ul class="mt-1 list-disc pl-6 space-y-1">
+                      <li>Müəllim eyni saatda iki sinifdə ola bilməz.</li>
+                      <li>Müəllimin gəlmə günləri (seçilən günlərdən kənara çıxmır).</li>
+                      <li>Müəllimin həftəlik/gündəlik maksimum saat limiti.</li>
+                      <li>Sinfin gündə maksimum dərs limiti (sinifdə yazılan və ya səviyyə standartı).</li>
+                      <li>Eyni slotda üst-üstə düşmə (hüceyrə doludursa yerləşdirilmir).</li>
+                    </ul>
+                  </div>
+
+                  <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
+                    <div class="font-semibold text-slate-900 dark:text-slate-100">Yumşaq məhdudiyyətlər (lazım olsa yumşaldılır)</div>
+                    <ul class="mt-1 list-disc pl-6 space-y-1">
+                      <li>Ağır fənnin 1-ci/sonuncu saata düşməməsi.</li>
+                      <li>Müəllimin 1-ci saatı / sonuncu saatı sevməməsi.</li>
+                      <li>Eyni fənnin bir gündə 2 dəfədən çox təkrarlanmaması.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">6) Nəticəni necə oxumaq lazımdır?</h3>
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Sinif tabları</strong> — hər sinif üçün ayrıca cədvəl göstərilir.
+                  </li>
+                  <li>
+                    Cədvəldə sətirlər <strong>saat</strong>, sütunlar isə <strong>günlərdir</strong>.
+                    Boş hüceyrələr <span class="italic">—</span> kimi göstərilir.
+                  </li>
+                  <li>
+                    Qoşa dərslər (2 saat) <strong>rowspan</strong> ilə 2 sətir boyu bir hüceyrə kimi görünür.
+                  </li>
+                  <li>
+                    <strong>Yerləşdirilməyənlər</strong> görünərsə, həmin bloklara yer tapılmayıb deməkdir
+                    (adətən limitlər çox sərtdir və ya saatlar çoxdur).
+                  </li>
+                  <li>
+                    <strong>Yerləşdirilən saat</strong> statistikası:
+                    yerləşdirilən ümumi saat / tələb olunan ümumi saat (faizlə) göstərilir.
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tez-tez rast gəlinən problemlər və həll yolları</h3>
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Çox “Yerləşdirilməyənlər” çıxır</strong> →
+                    <em>Gündə dərs saatı (max)</em> artır, siniflərin <em>Gündə max dərs</em> limitini yüksəlt,
+                    müəllim limitlərini (həftəlik/gündəlik max) düzəlt və ya saatları böl (qoşanı söndür).
+                  </li>
+                  <li>
+                    <strong>Müəyyən dərslər ümumiyyətlə görünmür</strong> →
+                    sinif adı və müəllim kod/adı uyğunluğunu yoxla (yazılış eyni olmalıdır).
+                  </li>
+                  <li>
+                    <strong>Müəllim müəyyən günlərdə dərs ala bilmir</strong> →
+                    müəllimin “Gəlmə günləri”nə həmin günü əlavə et (bu sərt qaydadır).
+                  </li>
+                  <li>
+                    <strong>Ağır fənn 1-ci/sonuncu saata düşür</strong> →
+                    bu, adətən yer qalmayanda yumşalma nəticəsidir; ya limiti artır, ya da “Ağır fənlər...” seçimini söndür.
+                  </li>
+                </ul>
+              </div>
+
+              <p class="text-sm text-slate-600 dark:text-slate-300">
+                Qeyd: Bu alqoritm “ən yaxşı cədvəli” zəmanətli tapmır, amma 25 fərqli cəhd ilə praktik olaraq
+                konfliktləri azaltmağa çalışır. Daha “səliqəli” nəticə üçün limitləri realist qurmaq və
+                kod/ad uyğunluğunu qorumaq ən vacibdir.
               </p>
             </div>
           </section>

@@ -67,7 +67,7 @@
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* ✅ index ilə eyni hover “hiss” */
+    /* ✅ index faylı ilə 1:1 eyni hover “hiss” */
     .card-surface {
       transition: box-shadow 200ms ease, transform 200ms ease;
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
@@ -79,14 +79,14 @@
     }
     html.dark .card-surface {
       box-shadow:
-        0 1px 2px rgba(0,0,0,.35),
-        0 0 0 1px rgba(255,255,255,.03);
+        0 1px 2px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
     }
     html.dark .card-surface:hover {
       box-shadow:
-        0 12px 30px rgba(0,0,0,.55),
-        0 4px 12px rgba(0,0,0,.35),
-        0 0 0 1px rgba(255,255,255,.06);
+        0 12px 30px rgba(0, 0, 0, 0.55),
+        0 4px 12px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
     }
 
     /* input-lar */
@@ -132,30 +132,24 @@
       padding-right: 16px; /* px-4 */
       transition: max-width .22s ease, padding .22s ease;
     }
-    @media (min-width: 640px){ /* sm */
+    @media (min-width: 640px){
       .ep-frame{ padding-left: 24px; padding-right: 24px; } /* px-6 */
     }
-    @media (min-width: 1024px){ /* lg */
+    @media (min-width: 1024px){
       .ep-frame{ padding-left: 32px; padding-right: 32px; } /* px-8 */
     }
 
-    /* Reklam gələndə frame genişlənir (reklamlar üçün yer açılır) */
-    .ep-frame.has-ads{
-      max-width: var(--ep-shell-max);
-    }
+    .ep-frame.has-ads{ max-width: var(--ep-shell-max); }
 
-    /* ===== Shell ===== */
     .ep-shell{
       display: grid;
-      grid-template-columns: 1fr; /* default: reklam YOX */
+      grid-template-columns: 1fr;
       gap: 0;
       align-items: start;
       width: 100%;
     }
-
     .ep-center{ min-width: 0; }
 
-    /* reklam slotları */
     .ep-ad-left{ grid-column: 1; }
     .ep-ad-right{ grid-column: 3; }
 
@@ -168,12 +162,11 @@
       overflow: hidden;
 
       position: sticky;
-      top: 88px; /* header(64px)+boşluq */
+      top: 88px;
       height: fit-content;
     }
     .ep-ad-slot > div{ width:100%; max-width:100%; }
 
-    /* Reklam varsa shell 3 sütuna keçir */
     .ep-shell.has-left-ad,
     .ep-shell.has-right-ad{
       gap: var(--ep-rail-gap);
@@ -192,9 +185,8 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
-    /* Laptop/telefon: yan reklamları gizlət, hər şey 1 sütun */
     @media (max-width: 1024px){
-      .ep-frame.has-ads{ max-width: var(--ep-frame-max); } /* mobil-də genişlənməsin */
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
       .ep-shell{
         grid-template-columns: 1fr !important;
         gap: 0 !important;
@@ -202,7 +194,6 @@
       .ep-ad-slot{ display:none !important; }
     }
 
-    /* Print zamanı reklamları gizlət */
     @media print{
       .no-print{ display:none !important; }
     }
@@ -211,30 +202,25 @@
 
 <body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
-  <!-- Skip link -->
   <a href="#main"
      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
     Kontentə keç
   </a>
 
-  <!-- Background blobs -->
   <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
-        <!-- Brand -->
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
           <img src="assets/ep-favicon-light.svg" alt="EduPlan" class="h-9 w-9 dark:hidden" width="36" height="36" />
           <img src="assets/ep-favicon-dark.svg" alt="" aria-hidden="true" class="h-9 w-9 hidden dark:block" width="36" height="36" />
           <span class="font-semibold tracking-tight">EduPlan AZ</span>
         </a>
 
-        <!-- Theme toggle -->
         <button
           id="theme-toggle"
           type="button"
@@ -242,12 +228,10 @@
           aria-label="Tema dəyişdir"
           aria-pressed="false"
         >
-          <!-- Sun -->
           <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
             <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <!-- Moon -->
           <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
           </svg>
@@ -256,22 +240,17 @@
     </div>
   </header>
 
-  <!-- Main -->
   <main id="main" class="pt-4 pb-0">
-    <!-- ✅ Bu frame reklamsız halda header ilə 100% paraleldir -->
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
-        <!-- SOL reklam slotu -->
         <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
           <!-- SOL reklam kodu bura -->
         </aside>
 
-        <!-- MƏRKƏZ kontent -->
         <div class="ep-center">
           <div class="py-0">
 
-            <!-- Page intro -->
             <section class="py-6 sm:py-8">
               <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
               <p class="mt-2 text-slate-600 dark:text-slate-300 max-w-[70ch]">
@@ -279,14 +258,12 @@
               </p>
             </section>
 
-            <!-- Calculator panel -->
             <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
               <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
                 <div class="font-semibold">🧮 Bal kalkulyatoru</div>
               </div>
 
               <div class="p-6">
-                <!-- Empty state (rejim seçilməyibsə) -->
                 <div id="empty-state" class="relative mb-6">
                   <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
                     <div class="text-lg font-semibold">Rejimi seçin</div>
@@ -296,13 +273,13 @@
                   </div>
                 </div>
 
-                <!-- Mode -->
+                <!-- ✅ Mode (index-dəki kartlar kimi 1:1) -->
                 <div class="grid gap-2">
                   <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
                   <div class="grid grid-cols-3 gap-2">
                     <button
                       type="button"
-                      class="mode-btn card-surface w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      class="mode-btn card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center justify-center text-sm font-medium"
                       data-mode="t1"
                       aria-pressed="false"
                     >
@@ -310,7 +287,7 @@
                     </button>
                     <button
                       type="button"
-                      class="mode-btn card-surface w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      class="mode-btn card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center justify-center text-sm font-medium"
                       data-mode="t2"
                       aria-pressed="false"
                     >
@@ -318,7 +295,7 @@
                     </button>
                     <button
                       type="button"
-                      class="mode-btn card-surface w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      class="mode-btn card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center justify-center text-sm font-medium"
                       data-mode="both"
                       aria-pressed="false"
                     >
@@ -327,9 +304,7 @@
                   </div>
                 </div>
 
-                <!-- Forms -->
                 <div class="mt-6 grid gap-6">
-                  <!-- I term -->
                   <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="px-2 text-sm font-semibold">I yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
@@ -347,7 +322,6 @@
                     </div>
                   </fieldset>
 
-                  <!-- II term -->
                   <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="px-2 text-sm font-semibold">II yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
@@ -365,24 +339,23 @@
                     </div>
                   </fieldset>
 
-                  <!-- Actions -->
                   <div id="calc-actions" class="flex flex-col sm:flex-row gap-3">
                     <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
                       Hesabla
                     </button>
+
+                    <!-- ✅ Reset (index kartı kimi 1:1, hover:bg yoxdur) -->
                     <button
                       id="btn-reset"
                       type="button"
-                      class="card-surface w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 px-4 py-3 font-semibold transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      class="card-surface w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur px-4 py-3 font-semibold transition"
                     >
                       Sıfırla
                     </button>
                   </div>
 
-                  <!-- Errors -->
                   <div id="calc-error" class="hidden text-sm text-rose-500"></div>
 
-                  <!-- Output -->
                   <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
                     <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
 
@@ -427,7 +400,6 @@
               </div>
             </section>
 
-            <!-- Info -->
             <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
               <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
@@ -467,7 +439,6 @@
           </div>
         </div>
 
-        <!-- SAĞ reklam slotu -->
         <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
           <!-- SAĞ reklam kodu bura -->
         </aside>
@@ -476,7 +447,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -492,7 +462,6 @@
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -539,7 +508,6 @@
     })();
   </script>
 
-  <!-- ✅ Reklam gələndə avtomatik: frame genişlənir + shell daralır -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -576,7 +544,6 @@
     })();
   </script>
 
-  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;

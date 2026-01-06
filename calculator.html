@@ -98,6 +98,56 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
+    /* ============================================================
+       ✅ LIGHT MODE HOVER/FOKUS GÖRÜNÜRLÜYÜ (mode-btn + sıfırla)
+       ============================================================ */
+    .mode-btn, #btn-reset{
+      cursor: pointer;
+      transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease,
+        border-color 160ms ease,
+        filter 160ms ease;
+      will-change: transform, box-shadow;
+    }
+
+    /* Light: hover çox aydın olsun */
+    html:not(.dark) .mode-btn:hover,
+    html:not(.dark) #btn-reset:hover{
+      border-color: rgba(99,102,241,.55);     /* indigo border */
+      background: rgba(255,255,255,.95);
+      box-shadow: 0 12px 28px rgba(15,23,42,.12), 0 3px 10px rgba(15,23,42,.08);
+      transform: translateY(-1px);
+    }
+    html:not(.dark) .mode-btn:active,
+    html:not(.dark) #btn-reset:active{
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(15,23,42,.11), 0 2px 6px rgba(15,23,42,.07);
+    }
+
+    /* Dark: əvvəl də görünürdü, yenə də bir az “snap” */
+    html.dark .mode-btn:hover,
+    html.dark #btn-reset:hover{
+      border-color: rgba(129,140,248,.35);
+      transform: translateY(-1px);
+    }
+
+    /* Keyboard focus-visible: aydın ring */
+    .mode-btn:focus-visible,
+    #btn-reset:focus-visible{
+      outline: none;
+    }
+    html:not(.dark) .mode-btn:focus-visible,
+    html:not(.dark) #btn-reset:focus-visible{
+      border-color: rgba(99,102,241,.75);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.26), 0 12px 28px rgba(15,23,42,.12), 0 3px 10px rgba(15,23,42,.08);
+    }
+    html.dark .mode-btn:focus-visible,
+    html.dark #btn-reset:focus-visible{
+      box-shadow: 0 0 0 3px rgba(129,140,248,.22);
+    }
+
     /* ===== Parallellik üçün "frame" (header max-w-7xl + px-4/sm:px-6/lg:px-8) ===== */
     :root{
       --ep-frame-max: 80rem;     /* max-w-7xl */
@@ -576,7 +626,7 @@
       }
 
       function setBtnActive(btn, act) {
-        const addA = ['ring-2','ring-indigo-400/30','border-indigo-400','bg-white/80','dark:bg-slate-900/60'];
+        const addA = ['ring-2','ring-indigo-500/45','border-indigo-500','bg-white/80','dark:bg-slate-900/60'];
         const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
 
         if (act) {

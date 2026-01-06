@@ -98,40 +98,47 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ===== Reklam relsləri: boş olanda mərkəz solda qaçmasın + daha geniş kontent ===== */
+    /* ===== Reklam relsləri + paralel layout (header ilə eyni) ===== */
     :root{
+      /* Header max-w-7xl = 80rem => adi halda bununla paralel olacaq */
+      --ep-frame-max: 80rem;
+
+      /* Reklam olanda ümumi shell genişlənir */
+      --ep-shell-max: 1700px;
+
+      /* Reklam relslərinin eni */
       --ep-rail-w: clamp(260px, 16vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
 
-      /* 2-ci səhifədən bir az geniş */
+      /* Mərkəz kontentin max eni (reklam olanda daralacaq) */
       --ep-center-max: 1220px;
-
-      --ep-shell-max: 1700px;
     }
 
-    /* Default (reklam YOX): 1fr | center | 1fr => kontent mərkəzdə */
+    /* Default (reklam YOX): 1 sütun, header/footer ilə paralel */
     .ep-shell{
       display:grid;
-      grid-template-columns: 1fr minmax(0, var(--ep-center-max)) 1fr;
-      gap: var(--ep-rail-gap);
+      grid-template-columns: 1fr;
+      gap: 0;
       align-items:start;
       width:100%;
-      max-width: var(--ep-shell-max);
+      max-width: var(--ep-frame-max);
       margin: 0 auto;
+      transition: max-width .22s ease, gap .22s ease;
     }
 
-    /* ✅ ƏN VACİB DÜZƏLİŞ: ep-center həmişə 2-ci sütunda qalsın */
-    .ep-center{
-      min-width:0;
-      grid-column: 2;
+    .ep-center{ min-width:0; }
+
+    /* reklamsız halda ep-center 1-ci sütunda olsun */
+    .ep-shell:not(.has-left-ad):not(.has-right-ad) .ep-center{
+      grid-column: 1;
     }
 
-    /* reklam slotlarının grid yerləşimi (sütunlar sabit qalsın) */
+    /* reklam slotlarının grid yerləşimi */
     .ep-ad-left{ grid-column: 1; }
     .ep-ad-right{ grid-column: 3; }
 
-    /* Reklam slotu default gizli (boş olanda görünməsin) */
+    /* Reklam slotu default gizli */
     .ep-ad-slot{
       display:none;
       width: 100%;
@@ -141,16 +148,29 @@
       overflow:hidden;
 
       position: sticky;
-      top: 16px;
+      top: 88px; /* fixed header (64px) + rahat boşluq */
       height: fit-content;
     }
     .ep-ad-slot > div{ width:100%; max-width:100%; }
+
+    /* Reklam gələndə: shell genişlənsin + 3 sütunlu grid olsun */
+    .ep-shell.has-left-ad,
+    .ep-shell.has-right-ad{
+      max-width: var(--ep-shell-max);
+      gap: var(--ep-rail-gap);
+    }
+
+    /* reklam varsa ep-center 2-ci sütuna keçsin */
+    .ep-shell.has-left-ad .ep-center,
+    .ep-shell.has-right-ad .ep-center{
+      grid-column: 2;
+    }
 
     /* Reklam varsa slotları göstər */
     .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
     .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
 
-    /* Reklam varsa grid sütunlarını rail ölçüsünə keçir */
+    /* Reklam varsa grid sütunları */
     .ep-shell.has-left-ad.has-right-ad{
       grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
@@ -161,21 +181,15 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
-    /* Laptop/telefon: yan reklamları gizlət, kontent 1 sütun */
+    /* Laptop/telefon: yan reklamları gizlət, 1 sütun */
     @media (max-width: 1024px){
       .ep-shell{
-        grid-template-columns: 1fr;
-        max-width: 100%;
+        grid-template-columns: 1fr !important;
+        max-width: var(--ep-frame-max) !important;
+        gap: 0 !important;
       }
-      .ep-center{ grid-column: 1; }
       .ep-ad-slot{ display:none !important; }
-    }
-
-    /* Telefon: (səndə əvvəl 640 idi, amma 1024 artıq həll edir) */
-    @media (max-width: 640px){
-      .ep-shell{ grid-template-columns: 1fr; }
-      .ep-center{ grid-column: 1; }
-      .ep-ad-slot{ display:none !important; }
+      .ep-center{ grid-column: 1 !important; }
     }
 
     /* Print zamanı reklamları gizlət */
@@ -232,13 +246,13 @@
     </div>
   </header>
 
-  <!-- Main (reklam relsləri ilə) -->
+  <!-- Main -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-4 pb-0">
     <div class="ep-shell" id="ep-shell">
 
       <!-- SOL reklam slotu -->
       <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
-        <!-- reklam gələndə bura düşəcək -->
+        <!-- SOL reklam kodu bura -->
       </aside>
 
       <!-- MƏRKƏZ kontent -->
@@ -384,7 +398,7 @@
             </div>
           </section>
 
-          <!-- Info (ana səhifə “Haqqında” blokuna uyğun) -->
+          <!-- Info -->
           <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
             <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
@@ -426,13 +440,13 @@
 
       <!-- SAĞ reklam slotu -->
       <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
-        <!-- reklam gələndə bura düşəcək -->
+        <!-- SAĞ reklam kodu bura -->
       </aside>
 
     </div>
   </main>
 
-  <!-- Footer (ana səhifə ilə eyni) -->
+  <!-- Footer -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -448,7 +462,7 @@
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle (ana səhifə ilə eyni) -->
+  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -529,7 +543,7 @@
     })();
   </script>
 
-  <!-- Calculator logic (sənin əvvəlki backend saxlanılıb) -->
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -556,10 +570,8 @@
       function scrollToStable(el, extraOffset = 0) {
         if (!el) return;
 
-        // mobil klaviaturanı bağla
         try { document.activeElement?.blur?.(); } catch (e) {}
 
-        // layout + viewport stabilləşsin (xüsusən ilk dəfə Enter zamanı)
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             scrollToWithHeader(el, extraOffset);
@@ -568,7 +580,6 @@
       }
 
       function setBtnActive(btn, act) {
-        // base -> active
         const addA = ['ring-2','ring-indigo-400/30','border-indigo-400','bg-white/80','dark:bg-slate-900/60'];
         const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
 
@@ -655,7 +666,6 @@
 
         const kAvg = ksq.length ? avg(ksq) : 0;
 
-        // xəbərdarlıq: qismən doldurulubsa
         warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -691,7 +701,7 @@
         el?.addEventListener('keydown', e => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            e.target.blur();     // klaviatura bağlansın
+            e.target.blur();
             btnCalc.click();
           }
         });
@@ -709,7 +719,6 @@
 
         let t1 = null, t2 = null;
 
-        // I yarımil
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
           if (typeof r1 === 'number') t1 = r1;
@@ -717,7 +726,6 @@
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        // II yarımil
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
           if (typeof r2 === 'number') t2 = r2;
@@ -727,10 +735,8 @@
 
         out.classList.remove('hidden');
 
-        // həmişə düymələr görünsün deyə actions-a scroll edirik
         scrollToStable(actions || out, 8);
 
-        // illik yalnız hər ikisi rəqəm olarsa
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -743,7 +749,6 @@
         }
       });
 
-      // yuxarıdan başlasın
       (function init() {
         if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         window.scrollTo(0,0);

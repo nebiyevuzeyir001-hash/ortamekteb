@@ -98,16 +98,19 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ===== Reklam relsləri: boş olanda yer tutmasın, reklam gələndə avtomatik açılsın ===== */
+    /* ===== Reklam relsləri: boş olanda mərkəz solda qaçmasın + daha geniş kontent ===== */
     :root{
-      --ep-rail-w: clamp(240px, 18vw, 300px);
+      --ep-rail-w: clamp(260px, 16vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
-      --ep-center-max: 1100px;
-      --ep-shell-max: 1600px;
+
+      /* 2-ci səhifədən bir az geniş */
+      --ep-center-max: 1220px;
+
+      --ep-shell-max: 1700px;
     }
 
-    /* Default: reklam YOX kimi layout (kənarlarda elastik boşluq) */
+    /* Default (reklam YOX): 1fr | center | 1fr => kontent mərkəzdə */
     .ep-shell{
       display:grid;
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) 1fr;
@@ -117,9 +120,18 @@
       max-width: var(--ep-shell-max);
       margin: 0 auto;
     }
-    .ep-center{ min-width:0; }
 
-    /* Reklam slotu default gizli: boş olanda heç yer tutmasın */
+    /* ✅ ƏN VACİB DÜZƏLİŞ: ep-center həmişə 2-ci sütunda qalsın */
+    .ep-center{
+      min-width:0;
+      grid-column: 2;
+    }
+
+    /* reklam slotlarının grid yerləşimi (sütunlar sabit qalsın) */
+    .ep-ad-left{ grid-column: 1; }
+    .ep-ad-right{ grid-column: 3; }
+
+    /* Reklam slotu default gizli (boş olanda görünməsin) */
     .ep-ad-slot{
       display:none;
       width: 100%;
@@ -127,20 +139,18 @@
       align-items:flex-start;
       justify-content:center;
       overflow:hidden;
+
       position: sticky;
       top: 16px;
       height: fit-content;
     }
-    .ep-ad-slot > div{
-      width:100%;
-      max-width: 100%;
-    }
+    .ep-ad-slot > div{ width:100%; max-width:100%; }
 
     /* Reklam varsa slotları göstər */
     .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
     .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
 
-    /* Reklam varsa grid sütunlarını aç */
+    /* Reklam varsa grid sütunlarını rail ölçüsünə keçir */
     .ep-shell.has-left-ad.has-right-ad{
       grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
@@ -151,9 +161,20 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
-    /* Laptop/telefon: yan reklamları gizlət (kontent boğulmasın) */
+    /* Laptop/telefon: yan reklamları gizlət, kontent 1 sütun */
     @media (max-width: 1024px){
-      .ep-shell{ grid-template-columns: 1fr; max-width: 100%; }
+      .ep-shell{
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+      .ep-center{ grid-column: 1; }
+      .ep-ad-slot{ display:none !important; }
+    }
+
+    /* Telefon: (səndə əvvəl 640 idi, amma 1024 artıq həll edir) */
+    @media (max-width: 640px){
+      .ep-shell{ grid-template-columns: 1fr; }
+      .ep-center{ grid-column: 1; }
       .ep-ad-slot{ display:none !important; }
     }
 
@@ -211,13 +232,13 @@
     </div>
   </header>
 
-  <!-- Main -->
+  <!-- Main (reklam relsləri ilə) -->
   <main id="main" class="px-4 sm:px-6 lg:px-8 pt-4 pb-0">
     <div class="ep-shell" id="ep-shell">
 
       <!-- SOL reklam slotu -->
       <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
-        <!-- Reklam gələndə buraya inject edin (iframe, ins, div və s.) -->
+        <!-- reklam gələndə bura düşəcək -->
       </aside>
 
       <!-- MƏRKƏZ kontent -->
@@ -405,7 +426,7 @@
 
       <!-- SAĞ reklam slotu -->
       <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
-        <!-- Reklam gələndə buraya inject edin (iframe, ins, div və s.) -->
+        <!-- reklam gələndə bura düşəcək -->
       </aside>
 
     </div>
@@ -480,7 +501,7 @@
   <!-- ✅ Reklam gələndə avtomatik layout daraltsın -->
   <script>
     (function () {
-      const shell = document.getElementById('ep-shell') || document.querySelector('.ep-shell');
+      const shell = document.getElementById('ep-shell');
       if (!shell) return;
 
       const left = shell.querySelector('[data-ad-slot="left"]');

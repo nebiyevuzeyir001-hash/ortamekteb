@@ -56,35 +56,6 @@
     tailwind.config = { darkMode: 'class' };
   </script>
 
-  <!-- XLSX lazy loader (Yüklə düyməsi üçün) -->
-  <script>
-    (function () {
-      function loadScript(src) {
-        return new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = src;
-          s.async = true;
-          s.onload = () => resolve();
-          s.onerror = () => reject(new Error('Script yüklənmədi: ' + src));
-          document.head.appendChild(s);
-        });
-      }
-
-      window.__loadXLSX = function () {
-        if (window.XLSX) return Promise.resolve();
-        if (window.__xlsxPromise) return window.__xlsxPromise;
-
-        window.__xlsxPromise = loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js')
-          .catch(() => loadScript('https://unpkg.com/xlsx@0.19.3/dist/xlsx.full.min.js'));
-
-        return window.__xlsxPromise;
-      };
-
-      // arxa planda cəhd etsin (bloklamasın)
-      window.__loadXLSX().catch(() => {});
-    })();
-  </script>
-
   <style>
     html, body { overflow-x: hidden; }
     :root { color-scheme: light; }
@@ -298,13 +269,6 @@
     html.dark .tt-slot-muted{ color: rgb(100 116 139); }
 
     #unplacedContainer{ white-space: pre-line; }
-
-    /* Print – yalnız cədvəl qalsın */
-    @media print{
-      header, .no-print, footer { display:none !important; }
-      main{ padding: 0 !important; max-width: none !important; }
-      body{ background: white !important; }
-    }
 
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
@@ -691,16 +655,6 @@
                           class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
                     🧹 Hamısını təmizlə
                   </button>
-
-                  <button id="btnDownload"
-                          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                    ⬇️ Yüklə (.xlsx)
-                  </button>
-
-                  <button id="btnPrint"
-                          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
-                    🖨️ Çap / PDF
-                  </button>
                 </div>
 
                 <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
@@ -865,8 +819,6 @@
 
       const btnGenerate = document.getElementById('btnGenerate');
       const btnResetAll = document.getElementById('btnResetAll');
-      const btnPrint = document.getElementById('btnPrint');
-      const btnDownload = document.getElementById('btnDownload');
 
       const globalError = document.getElementById('globalError');
       const globalInfo  = document.getElementById('globalInfo');
@@ -882,8 +834,6 @@
       const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C','C.u'];
       const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
-
-      window.__epLast = null;
 
       const __epSelectInstances = new Set();
 
@@ -1101,10 +1051,7 @@
         globalError.classList.add('hidden');
         globalError.textContent = '';
         globalInfo.textContent = '';
-        window.__epLast = null;
       });
-
-      btnPrint.addEventListener('click', () => window.print());
 
       function showError(msg){
         globalError.textContent = msg;
@@ -1482,8 +1429,6 @@
           btn.classList.add('active');
           renderForClass(Number(btn.dataset.classId));
         };
-
-        window.__epLast = { config, result, createdAt: Date.now() };
       }
 
       btnGenerate.addEventListener('click', () => {
@@ -1496,127 +1441,13 @@
           setTimeout(() => {
             const result = buildBestTimetable(config);
             renderTimetable(config, result);
-            globalInfo.textContent = 'Cədvəl quruldu. İndi “Yüklə (.xlsx)” ilə endirə bilərsiniz.';
+            globalInfo.textContent = 'Cədvəl quruldu.';
           }, 10);
         } catch (err) {
           showError(err.message || String(err));
+          globalInfo.textContent = '';
         }
       });
-
-      function downloadAsXlsx() {
-        globalError.classList.add('hidden');
-        globalError.textContent = '';
-
-        const last = window.__epLast;
-        if (!last || !last.config || !last.result || !last.result.timetable) {
-          showError('Əvvəlcə cədvəli qurun, sonra yükləyin.');
-          return;
-        }
-
-        globalInfo.textContent = 'Yükləmə hazırlanır…';
-
-        (window.__loadXLSX ? window.__loadXLSX() : Promise.reject(new Error('XLSX loader tapılmadı')))
-          .then(() => {
-            if (typeof XLSX === 'undefined') throw new Error('Yükləmə modulu (XLSX) yüklənmədi. İnternet bağlantısını yoxlayın.');
-
-            const { config, result } = last;
-            const { classes, teachers, daysCount, lessonsPerDay } = config;
-            const { timetable, unplaced, placedCount } = result;
-
-            const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
-
-            const wb = XLSX.utils.book_new();
-
-            const totalRequiredHours = config.lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
-            const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
-
-            const summaryAoA = [
-              ['EduPlan — Dərs cədvəli'],
-              [''],
-              ['Gün sayı', daysCount],
-              ['Gündə dərs (max)', config.lessonsPerDay],
-              ['Yerləşdirilən saat', `${placedCount}/${totalRequiredHours} (${placedPercent}%)`],
-              ['Cəhd sayı', 25],
-              [''],
-              ['Yerləşdirilməyənlər']
-            ];
-
-            if (unplaced && unplaced.length) {
-              unplaced.forEach(b => {
-                const cls = classes[b.classId]?.name || '?';
-                const t = teachers[b.teacherId];
-                const tLabel = t ? (t.code || t.name) : '?';
-                summaryAoA.push([`${cls} – ${b.subject} (${tLabel}), ${b.length} saat`]);
-              });
-            } else {
-              summaryAoA.push(['Hamısı yerləşdirildi ✅']);
-            }
-
-            const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
-            wsSummary['!cols'] = [{ wch: 48 }, { wch: 22 }];
-            XLSX.utils.book_append_sheet(wb, wsSummary, 'Xülasə');
-
-            classes.forEach(cls => {
-              const matrix = timetable[cls.id];
-              if (!matrix) return;
-
-              const aoa = [];
-              aoa.push(['Saat', ...daysLabels]);
-
-              const merges = [];
-
-              for (let s = 0; s < lessonsPerDay; s++) {
-                const row = [s + 1];
-                for (let d = 0; d < daysCount; d++) {
-                  const cell = matrix[d][s];
-                  if (!cell) {
-                    row.push('—');
-                  } else if (cell.part === 0) {
-                    const b = cell.block;
-                    const tLab = teacherLabel(teachers, b.teacherId);
-                    row.push(`${b.subject}\n${tLab}`);
-
-                    if (b.length && b.length > 1) {
-                      merges.push({
-                        s: { r: 1 + s, c: 1 + d },
-                        e: { r: 1 + s + (b.length - 1), c: 1 + d }
-                      });
-                    }
-                  } else {
-                    row.push('');
-                  }
-                }
-                aoa.push(row);
-              }
-
-              const ws = XLSX.utils.aoa_to_sheet(aoa);
-              ws['!merges'] = merges;
-
-              const cols = [{ wch: 6 }];
-              for (let i = 0; i < daysCount; i++) cols.push({ wch: 20 });
-              ws['!cols'] = cols;
-
-              let sheetName = (cls.name || 'Sinif').toString().slice(0, 31);
-              if (!sheetName) sheetName = 'Sinif';
-
-              XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            });
-
-            const pad2 = (n) => String(n).padStart(2, '0');
-            const now = new Date();
-            const stamp = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
-            const filename = `ders-cedveli_${stamp}.xlsx`;
-
-            XLSX.writeFile(wb, filename);
-            globalInfo.textContent = 'Fayl hazırlandı və endirmə başladıldı.';
-          })
-          .catch((err) => {
-            showError(err.message || String(err));
-            globalInfo.textContent = '';
-          });
-      }
-
-      btnDownload.addEventListener('click', downloadAsXlsx);
 
       // Başlanğıc nümunələr (istəsən sil)
       addTeacherRow({ name: 'Riyaziyyat müəllimi', code: 'RİY', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: true, availableDays: [0,1,2,3,4] });

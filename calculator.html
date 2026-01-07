@@ -67,7 +67,7 @@
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* kart hover kölgəsi (lazım olsa istifadə edərsən) */
+    /* kart hover kölgəsi (ana səhifə ilə eyni “hiss”) */
     .card-surface { transition: box-shadow 200ms ease, transform 200ms ease; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
     .card-surface:hover { box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.08); }
     html.dark .card-surface { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03); }
@@ -123,11 +123,15 @@
       .ep-frame{ padding-left: 32px; padding-right: 32px; } /* px-8 */
     }
 
-    .ep-frame.has-ads{ max-width: var(--ep-shell-max); }
+    /* Reklam gələndə frame genişlənir (reklamlar üçün yer açılır) */
+    .ep-frame.has-ads{
+      max-width: var(--ep-shell-max);
+    }
 
+    /* ===== Shell ===== */
     .ep-shell{
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; /* default: reklam YOX */
       gap: 0;
       align-items: start;
       width: 100%;
@@ -135,6 +139,7 @@
 
     .ep-center{ min-width: 0; }
 
+    /* reklam slotları */
     .ep-ad-left{ grid-column: 1; }
     .ep-ad-right{ grid-column: 3; }
 
@@ -147,13 +152,16 @@
       overflow: hidden;
 
       position: sticky;
-      top: 88px;
+      top: 88px; /* header(64px)+boşluq */
       height: fit-content;
     }
     .ep-ad-slot > div{ width:100%; max-width:100%; }
 
+    /* Reklam varsa shell 3 sütuna keçir */
     .ep-shell.has-left-ad,
-    .ep-shell.has-right-ad{ gap: var(--ep-rail-gap); }
+    .ep-shell.has-right-ad{
+      gap: var(--ep-rail-gap);
+    }
 
     .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
     .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
@@ -168,8 +176,9 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
+    /* Laptop/telefon: yan reklamları gizlət, hər şey 1 sütun */
     @media (max-width: 1024px){
-      .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); } /* mobil-də genişlənməsin */
       .ep-shell{
         grid-template-columns: 1fr !important;
         gap: 0 !important;
@@ -177,6 +186,7 @@
       .ep-ad-slot{ display:none !important; }
     }
 
+    /* Print zamanı reklamları gizlət */
     @media print{
       .no-print{ display:none !important; }
     }
@@ -232,6 +242,7 @@
 
   <!-- Main -->
   <main id="main" class="pt-4 pb-0">
+    <!-- ✅ Bu frame reklamsız halda header ilə 100% paraleldir -->
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
@@ -275,7 +286,7 @@
                   <div class="grid grid-cols-3 gap-2">
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-50 hover:border-slate-300/70 dark:hover:bg-slate-900/60 transition"
                       data-mode="t1"
                       aria-pressed="false"
                     >
@@ -283,7 +294,7 @@
                     </button>
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-50 hover:border-slate-300/70 dark:hover:bg-slate-900/60 transition"
                       data-mode="t2"
                       aria-pressed="false"
                     >
@@ -291,7 +302,7 @@
                     </button>
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-white/80 dark:hover:bg-slate-900/60 transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-50 hover:border-slate-300/70 dark:hover:bg-slate-900/60 transition"
                       data-mode="both"
                       aria-pressed="false"
                     >
@@ -343,12 +354,10 @@
                     <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
                       Hesabla
                     </button>
-
-                    <!-- ✅ Hover tam timetable-dəki “Hamısını təmizlə” kimi -->
                     <button
                       id="btn-reset"
                       type="button"
-                      class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition"
+                      class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-slate-50 hover:border-slate-300/70 dark:hover:bg-slate-900/60 transition"
                     >
                       Sıfırla
                     </button>

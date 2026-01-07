@@ -70,16 +70,16 @@
       --ep-radius-lg: 1rem;
       --ep-radius-sm: .95rem;
 
-      /* ✅ Reklam relsləri (ARTIRILDI) */
-      --ep-rail-w: clamp(260px, 16vw, 300px); /* əvvəl: 160px... */
+      /* ===== Reklam relsləri ===== */
+      --ep-rail-w: clamp(160px, 14vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
 
-      /* ✅ Mərkəz sütunun max eni (ARTIRILDI) */
-      --ep-center-max: 1220px; /* əvvəl: 1100px */
+      /* Mərkəz sütunun max eni (reklam olanda) */
+      --ep-center-max: 1100px;
 
-      /* ✅ Reklam olanda səhifənin max eni (ARTIRILDI) */
-      --ep-shell-max: 1700px; /* əvvəl: 1600px */
+      /* Reklam olanda səhifənin max eni */
+      --ep-shell-max: 1600px;
 
       /* Header max-w-7xl = 80rem */
       --ep-frame-max: 80rem;
@@ -373,20 +373,20 @@
       padding-right: 16px; /* px-4 */
       transition: max-width .22s ease, padding .22s ease;
     }
-    @media (min-width: 640px){
+    @media (min-width: 640px){ /* sm:px-6 */
       .ep-frame{ padding-left: 24px; padding-right: 24px; }
     }
-    @media (min-width: 1024px){
+    @media (min-width: 1024px){ /* lg:px-8 */
       .ep-frame{ padding-left: 32px; padding-right: 32px; }
     }
 
     .ep-frame.has-ads{
-      max-width: var(--ep-shell-max);
+      max-width: var(--ep-shell-max); /* reklam varsa genişlət */
     }
 
     .ep-shell{
       display:grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr;  /* default: reklam YOX */
       gap: 0;
       align-items:start;
       width:100%;
@@ -394,7 +394,7 @@
     .ep-center{ min-width:0; }
 
     .ep-ad-slot{
-      display:none;
+      display:none;                 /* default: görünməsin, yer saxlamasın */
       width: 100%;
       min-height: var(--ep-rail-min-h);
       align-items:flex-start;
@@ -427,7 +427,7 @@
 
     /* Laptop/telefon: relslər gizlənsin */
     @media (max-width: 1024px){
-      .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); } /* mobil-də genişlənmə */
       .ep-shell{
         grid-template-columns: 1fr !important;
         gap: 0 !important;
@@ -440,10 +440,6 @@
       table.config-table th{ font-size: .68rem; }
       table.config-table input, table.config-table select{ font-size: 12px; }
       .t-days{ gap: 5px; }
-    }
-
-    @media print{
-      .no-print{ display:none !important; }
     }
   </style>
 </head>
@@ -472,7 +468,7 @@
         <button
           id="theme-toggle"
           type="button"
-          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-white/80 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
           aria-label="Tema dəyişdir"
           aria-pressed="false"
         >
@@ -489,6 +485,7 @@
   </header>
 
   <main id="main" class="pt-4 pb-0">
+    <!-- ✅ Reklamsız halda header ilə paralel -->
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
@@ -552,7 +549,7 @@
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Müəllimlər</div>
                   <button type="button" id="btnAddTeacher"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -583,7 +580,7 @@
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Siniflər</div>
                   <button type="button" id="btnAddClass"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -611,7 +608,7 @@
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Fənn / dərs saatları</div>
                   <button type="button" id="btnAddLesson"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -655,7 +652,7 @@
                   </button>
 
                   <button id="btnResetAll"
-                          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-white/80 dark:hover:bg-slate-900/60 transition">
+                          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     🧹 Hamısını təmizlə
                   </button>
                 </div>
@@ -981,12 +978,6 @@
   <!-- Timetable logic -->
   <script>
     (function () {
-      // UX: səhifə refresh edəndə yuxarıdan başlasın
-      (function initScroll() {
-        try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
-        window.scrollTo(0, 0);
-      })();
-
       const teacherTbody = document.getElementById('teacherTbody');
       const classTbody = document.getElementById('classTbody');
       const lessonTbody = document.getElementById('lessonTbody');
@@ -1225,6 +1216,7 @@
       });
 
       btnResetAll.addEventListener('click', () => {
+        // running solve varsa ləğv et
         __stopRequested = true;
         __runId++;
         __solverRunning = false;
@@ -1339,6 +1331,7 @@
           classes,
           lessons,
 
+          // solver internal cache (hər run-da doldurulur)
           _blocks: null,
           _targetHours: 0
         };
@@ -1386,18 +1379,21 @@
             heavy: !!l.heavy
           };
 
+          // Qoşa dərslər: 2-lik bloklar
           if (l.double && remaining >= 2) {
             while (remaining >= 2) {
               blocks.push({ ...base, length: 2 });
               remaining -= 2;
             }
           }
+          // Qalan 1-liklər
           while (remaining > 0) {
             blocks.push({ ...base, length: 1 });
             remaining -= 1;
           }
         });
 
+        // Daha çətin bloklar əvvəl (uzun + ağır)
         blocks.sort((a, b) => {
           if (b.length !== a.length) return b.length - a.length;
           if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
@@ -1414,6 +1410,7 @@
       function prepareSolve(config){
         const { blocks, unknownUnmapped } = generateBlocks(config);
 
+        // ✅ uyğun gəlməyən sətirlər varsa əvvəlcədən dayandır (yoxsa sonsuz axtarışa düşər)
         if (unknownUnmapped && unknownUnmapped.length){
           const lines = unknownUnmapped.map(l => `• ${l.className} – ${l.subject} (${l.teacherRef})`);
           throw new Error(
@@ -1424,6 +1421,7 @@
         config._blocks = blocks;
         config._targetHours = blocks.reduce((s, b) => s + b.length, 0);
 
+        // ✅ sürətli “zəmanətli mümkünsüz” yoxlamalar
         const teacherHours = new Array(config.teachers.length).fill(0);
         const classHours = new Array(config.classes.length).fill(0);
 
@@ -1473,6 +1471,7 @@
           ? config._blocks
           : generateBlocks(config).blocks;
 
+        // hər cəhddə sıranı random etmək üçün kopya
         const blocks = baseBlocks.slice();
         shuffle(blocks);
 
@@ -1503,10 +1502,12 @@
           const t = teachers[teacherId];
           if (!t) return false;
 
+          // sərt: gəlmə günləri
           if (Array.isArray(t.availableDays) && t.availableDays.length) {
             if (!t.availableDays.includes(day)) return false;
           }
 
+          // sərt: eyni slotda müəllim konflikt olmasın (digər siniflər)
           for (let i = 0; i < length; i++) {
             for (const c of classes) {
               const m = timetable[c.id];
@@ -1514,15 +1515,18 @@
             }
           }
 
+          // sərt: müəllim limitləri
           const weeklyMax = t.weeklyMax > 0 ? t.weeklyMax : Infinity;
           const dailyMax  = t.dailyMax > 0 ? t.dailyMax : Infinity;
           if (teacherWeekly[teacherId] + length > weeklyMax) return false;
           if (teacherDaily[teacherId][day] + length > dailyMax) return false;
 
+          // sərt: sinif gündəlik limit
           const cls = classes[classId];
           const maxDay = cls.maxPerDay > 0 ? cls.maxPerDay : defaultMaxPerDayByLevel(cls.level);
           if (classDaily[classId][day] + length > maxDay) return false;
 
+          // yumşaq qaydalar (strict stage)
           if (strict) {
             if (optHeavyAvoidEdges && heavy) {
               if (slot === 0) return false;
@@ -1562,9 +1566,11 @@
           }
           shuffle(candidates);
 
+          // 1) əvvəl strict
           for (const { d, s } of candidates) {
             if (canPlace(block, d, s, true)) { place(block, d, s); return true; }
           }
+          // 2) sonra soft-ları yumşalt
           for (const { d, s } of candidates) {
             if (canPlace(block, d, s, false)) { place(block, d, s); return true; }
           }
@@ -1585,7 +1591,7 @@
         const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
         const startedAt = performance.now();
 
-        const BATCH = 300; // (səndə olan kimi saxladım)
+        const BATCH = 300; // “cihaz gücü nəzərə alınmasın” dedin — batch-i yüksək saxladım
 
         let attempts = 0;
         let best = null;
@@ -1613,6 +1619,7 @@
 
             if (isBetter(res, best)) best = res;
 
+            // ✅ 100% həll tapıldısa dərhal çıx
             if (res.placedCount >= target) {
               best = res;
               best.solved = true;
@@ -1620,6 +1627,7 @@
             }
           }
 
+          // Progress
           const bestPlaced = best ? best.placedCount : 0;
           const pct = target > 0 ? ((bestPlaced / target) * 100).toFixed(1) : '0.0';
           const elapsed = ((performance.now() - startedAt) / 1000).toFixed(1);
@@ -1629,6 +1637,7 @@
               `Axtarış davam edir… Cəhd: ${attempts.toLocaleString('az-AZ')} · Ən yaxşı: ${bestPlaced}/${target} (${pct}%) · ${elapsed}s`;
           }
 
+          // UI donmasın deyə yield (amma limit yoxdur — sadəcə “freeze” etməsin)
           await new Promise(r => requestAnimationFrame(r));
         }
       }
@@ -1735,6 +1744,7 @@
       }
 
       btnGenerate.addEventListener('click', async () => {
+        // Əgər artıq axtarış gedirsə — klik “dayandır” kimi işləsin
         if (__solverRunning) {
           __stopRequested = true;
           if (globalInfo) globalInfo.textContent = 'Dayandırılır…';
@@ -1758,6 +1768,7 @@
 
           const result = await buildUntilSolved(config, () => __stopRequested || myRun !== __runId);
 
+          // reset / yeni run olduysa nəticəni göstərmə
           if (myRun !== __runId) return;
 
           renderTimetable(config, result);
@@ -1798,6 +1809,7 @@
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'FİR', hours: 4, heavy: true, double: true });
       addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'MƏZ', hours: 3, heavy: false, double: false });
 
+      // ilkin state
       syncTeacherDayVisibility(currentDaysCount());
     })();
   </script>

@@ -639,7 +639,10 @@
 
                 <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
                   <p>1) Müəllim, sinif və fənn məlumatlarını doldur.</p>
-                  <p>2) “Cədvəli qur” düyməsini sıx — sistem bir neçə dəfə cəhd edərək konfliktləri minimuma endirməyə çalışacaq.</p>
+                  <p>2) “Cədvəli qur” düyməsini sıx — sistem tam həll tapana qədər fərqli kombinasiyalar sınayacaq.</p>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                    Proses zamanı düymə “🛑 Dayandır” olur — istəsən axtarışı istənilən vaxt dayandıra bilərsən.
+                  </p>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
@@ -698,9 +701,14 @@
                   <li><strong>Müəllimlər</strong> — hər müəllimin limitlərini və gəlmə günlərini yaz.</li>
                   <li><strong>Siniflər</strong> — sinif siyahısını (səviyyə, növbə, gündə limit) daxil et.</li>
                   <li><strong>Fənn / dərs saatları</strong> — “sinif + fənn + müəllim + həftəlik saat” sətrlərini əlavə et.</li>
-                  <li><strong>⚙️ Cədvəli qur</strong> — sistem 25 fərqli cəhd edərək ən yaxşı nəticəni seçir.</li>
+                  <li><strong>⚙️ Cədvəli qur</strong> — sistem <strong>tam həll tapılanadək</strong> fərqli kombinasiyalar sınayır.</li>
                   <li><strong>Nəticə</strong> — sinif tablarını dəyişərək cədvəli yoxla, lazım olsa parametrləri düzəlt və yenidən qur.</li>
                 </ol>
+
+                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                  Proses zamanı ekranda <strong>cəhd sayı</strong> və <strong>ən yaxşı tapılan nəticə</strong> (faizlə) göstərilir.
+                  İstəsəniz <strong>🛑 Dayandır</strong> düyməsi ilə axtarışı dayandırıb həmin “ən yaxşı” nəticəyə baxa bilərsiniz.
+                </p>
               </div>
 
               <div>
@@ -726,7 +734,7 @@
 
                 <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
                   Qeyd: Bu iki seçim <strong>yumşaq məhdudiyyət</strong> kimidir —
-                  sistem əvvəlcə onları ciddi saxlayır, yer tapılmasa sonradan yumşaldır (aşağıda izah var).
+                  sistem əvvəlcə onları qorumağa çalışır, yer tapılmasa sonradan yumşalda bilər.
                 </p>
               </div>
 
@@ -735,9 +743,9 @@
 
                 <ul class="mt-2 list-disc pl-6 space-y-1">
                   <li>
-                    <strong>Ad, soyad</strong> və <strong>Kod</strong>: dərs sətrlərində müəllimi tapmaq üçün
-                    sistem müəllimi <strong>kodla və ya adla</strong> uyğunlaşdırır. Praktik üsul:
-                    hər müəllimə qısa kod ver (məs: <code class="px-1 rounded bg-slate-100/80 dark:bg-white/10">RİY</code>).
+                    <strong>Ad, soyad</strong> və <strong>Kod</strong>:
+                    “Fənn / dərs saatları” bölməsində müəllimi tapmaq üçün sistem müəllimi <strong>kodla və ya adla</strong> uyğunlaşdırır.
+                    Praktik üsul: hər müəllimə qısa kod verin (məs: <code class="px-1 rounded bg-slate-100/80 dark:bg-white/10">RİY</code>).
                   </li>
                   <li>
                     <strong>Həftəlik max</strong> və <strong>Gündə max</strong>: müəllimin həftəlik/gündəlik dərs limitidir.
@@ -751,7 +759,7 @@
                     <strong>Gəlmə günləri</strong>:
                     müəllimin dərsinin hansı günlərdə ola biləcəyini göstərir. Heç nə seçməsən,
                     sistem <strong>hamı günlər</strong> kimi qəbul edir.
-                    Vacib: “gəlmə günləri” <strong>sərt məhdudiyyətdir</strong> — yumşaldılmır.
+                    Vacib: “gəlmə günləri” <strong>sərt məhdudiyyətdir</strong> — pozulmur.
                   </li>
                 </ul>
 
@@ -760,7 +768,7 @@
                   <p class="mt-1">
                     “Fənn / dərs saatları” bölməsində müəllimi <strong>kod və ya ad</strong> ilə yazanda,
                     bu dəyər müəllim cədvəlindəki kod/ad ilə <strong>eyni yazılışda</strong> olmalıdır
-                    (sistem yalnız boşluqları kəsir, avtomatik düzəliş etmir).
+                    (sistem yalnız boşluqları kəsir).
                     Məsələn <code class="px-1 rounded bg-white/60 dark:bg-white/10">RİY</code> ilə
                     <code class="px-1 rounded bg-white/60 dark:bg-white/10">riy</code> fərqli sayılır.
                   </p>
@@ -803,7 +811,6 @@
                     <strong>Qoşa?</strong> seçilibsə və saat sayı ≥ 2-dirsə:
                     sistem həmin dərsi <strong>2 saatlıq bloklar</strong> kimi yerləşdirməyə çalışır.
                     Məsələn 5 saat → 2+2+1 bloklara bölünür.
-                    Qoşa bloklar eyni gün <strong>ardıcıl iki saata</strong> düşür (cədvəldə hüceyrə 2 sətir boyu uzanır).
                   </li>
                   <li>
                     <strong>Ağır?</strong> seçilibsə:
@@ -811,15 +818,6 @@
                     sistem əvvəlcə ağır fənni 1-ci/sonuncu saata salmamağa çalışır.
                   </li>
                 </ul>
-
-                <div class="mt-3 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
-                  <div class="font-semibold text-slate-900 dark:text-slate-100">Vacib</div>
-                  <p class="mt-1">
-                    Sinif adı və müəllim kod/adı uyğun gəlməsə, sistem həmin sətri cədvələ çevirə bilməz
-                    (yəni <em>dərs “itmiş” kimi görünə bilər</em>). Buna görə sinif adlarını və müəllim kodlarını
-                    bütün yerlərdə eyni yaz.
-                  </p>
-                </div>
               </div>
 
               <div>
@@ -827,61 +825,18 @@
 
                 <ul class="mt-2 list-disc pl-6 space-y-1">
                   <li>
-                    Sistem hər sinif üçün <strong>(gün × saat)</strong> matris yaradır və dərs bloklarını ora yerləşdirir.
+                    Sistem “dərs bloklarını” müxtəlif ardıcıllıqlarda və slot kombinasiyalarında yerləşdirməyə çalışır.
                   </li>
                   <li>
-                    <strong>25 cəhd</strong> edir (random kombinasiyalar): hər cəhddə blokların və slotların sırası qarışdırılır,
-                    sonra ən çox saat yerləşdirən nəticə seçilir.
+                    <strong>Sərt məhdudiyyətlər</strong> (müəllim konfliktləri, gəlmə günləri, limitlər, sinif tutumu) pozulmur.
                   </li>
                   <li>
-                    Hər blok üçün sistem əvvəlcə <strong>sərt + yumşaq</strong> qaydalarla yer axtarır,
-                    tapılmasa <strong>yumşaq qaydaları zəiflədərək</strong> yenə axtarır.
-                  </li>
-                </ul>
-
-                <div class="mt-3 grid gap-3 md:grid-cols-2">
-                  <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
-                    <div class="font-semibold text-slate-900 dark:text-slate-100">Sərt məhdudiyyətlər (pozulmur)</div>
-                    <ul class="mt-1 list-disc pl-6 space-y-1">
-                      <li>Müəllim eyni saatda iki sinifdə ola bilməz.</li>
-                      <li>Müəllimin gəlmə günləri (seçilən günlərdən kənara çıxmır).</li>
-                      <li>Müəllimin həftəlik/gündəlik maksimum saat limiti.</li>
-                      <li>Sinfin gündə maksimum dərs limiti (sinifdə yazılan və ya səviyyə standartı).</li>
-                      <li>Eyni slotda üst-üstə düşmə (hüceyrə doludursa yerləşdirilmir).</li>
-                    </ul>
-                  </div>
-
-                  <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/50 dark:bg-white/5 p-3 text-sm">
-                    <div class="font-semibold text-slate-900 dark:text-slate-100">Yumşaq məhdudiyyətlər (lazım olsa yumşaldılır)</div>
-                    <ul class="mt-1 list-disc pl-6 space-y-1">
-                      <li>Ağır fənnin 1-ci/sonuncu saata düşməməsi.</li>
-                      <li>Müəllimin 1-ci saatı / sonuncu saatı sevməməsi.</li>
-                      <li>Eyni fənnin bir gündə 2 dəfədən çox təkrarlanmaması.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">6) Nəticəni necə oxumaq lazımdır?</h3>
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>Sinif tabları</strong> — hər sinif üçün ayrıca cədvəl göstərilir.
+                    <strong>Yumşaq məhdudiyyətlər</strong> (ağır fənn kənar saatlar, 1-ci/sonuncu saat istəkləri, eyni fənnin gündə 2-dən çox olmaması)
+                    əvvəlcə qorunur, yer tapılmasa yumşaldıla bilər.
                   </li>
                   <li>
-                    Cədvəldə sətirlər <strong>saat</strong>, sütunlar isə <strong>günlərdir</strong>.
-                    Boş hüceyrələr <span class="italic">—</span> kimi göstərilir.
-                  </li>
-                  <li>
-                    Qoşa dərslər (2 saat) <strong>rowspan</strong> ilə 2 sətir boyu bir hüceyrə kimi görünür.
-                  </li>
-                  <li>
-                    <strong>Yerləşdirilməyənlər</strong> görünərsə, həmin bloklara yer tapılmayıb deməkdir
-                    (adətən limitlər çox sərtdir və ya saatlar çoxdur).
-                  </li>
-                  <li>
-                    <strong>Yerləşdirilən saat</strong> statistikası:
-                    yerləşdirilən ümumi saat / tələb olunan ümumi saat (faizlə) göstərilir.
+                    Tam həll tapılanadək axtarış davam edir. Konfiqurasiya həqiqətən mümkünsüzdürsə axtarış da uzana bilər —
+                    bu halda <strong>🛑 Dayandır</strong> düyməsi ilə prosesi dayandırıb ən yaxşı tapılmış nəticəni görə bilərsiniz.
                   </li>
                 </ul>
               </div>
@@ -890,29 +845,24 @@
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tez-tez rast gəlinən problemlər və həll yolları</h3>
                 <ul class="mt-2 list-disc pl-6 space-y-1">
                   <li>
+                    <strong>“Sinif/müəllim tapılmadı” xətası</strong> →
+                    sinif adlarını və müəllim kod/adını bütün yerlərdə eyni yazın.
+                  </li>
+                  <li>
                     <strong>Çox “Yerləşdirilməyənlər” çıxır</strong> →
-                    <em>Gündə dərs saatı (max)</em> artır, siniflərin <em>Gündə max dərs</em> limitini yüksəlt,
-                    müəllim limitlərini (həftəlik/gündəlik max) düzəlt və ya saatları böl (qoşanı söndür).
+                    sinif/müəllim limitlərini yoxlayın, sinif tutumunu artırın (gündə max), müəllim gəlmə günlərini genişləndirin,
+                    qoşa dərsləri azaltmağı düşünün.
                   </li>
                   <li>
-                    <strong>Müəyyən dərslər ümumiyyətlə görünmür</strong> →
-                    sinif adı və müəllim kod/adı uyğunluğunu yoxla (yazılış eyni olmalıdır).
-                  </li>
-                  <li>
-                    <strong>Müəllim müəyyən günlərdə dərs ala bilmir</strong> →
-                    müəllimin “Gəlmə günləri”nə həmin günü əlavə et (bu sərt qaydadır).
-                  </li>
-                  <li>
-                    <strong>Ağır fənn 1-ci/sonuncu saata düşür</strong> →
-                    bu, adətən yer qalmayanda yumşalma nəticəsidir; ya limiti artır, ya da “Ağır fənlər...” seçimini söndür.
+                    <strong>Axtarış çox uzanır</strong> →
+                    çox vaxt bu ya konfiqurasiyanın mümkünsüz olmasına, ya da limitlərin həddən artıq sərt olmasına işarə edir.
                   </li>
                 </ul>
               </div>
 
               <p class="text-sm text-slate-600 dark:text-slate-300">
-                Qeyd: Bu alqoritm “ən yaxşı cədvəli” zəmanətli tapmır, amma 25 fərqli cəhd ilə praktik olaraq
-                konfliktləri azaltmağa çalışır. Daha “səliqəli” nəticə üçün limitləri realist qurmaq və
-                kod/ad uyğunluğunu qorumaq ən vacibdir.
+                Qeyd: Bu alqoritm brauzerdə işləyir və “tam həll tapılanadək” axtarış aparır. Real məktəb cədvəllərində ən stabil nəticə üçün
+                kod/ad uyğunluğunu qorumaq və limitləri realist qurmaq ən vacibdir.
               </p>
             </div>
           </section>
@@ -1056,6 +1006,14 @@
       const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
 
       const __epSelectInstances = new Set();
+
+      // ===== Solve state (sonsuz cəhd) =====
+      const GENERATE_LABEL = '⚙️ Cədvəli qur';
+      const STOP_LABEL = '🛑 Dayandır';
+
+      let __solverRunning = false;
+      let __stopRequested = false;
+      let __runId = 0;
 
       function makePrettySelect(selectEl, opts = {}) {
         if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
@@ -1259,6 +1217,12 @@
       });
 
       btnResetAll.addEventListener('click', () => {
+        // running solve varsa ləğv et
+        __stopRequested = true;
+        __runId++;
+        __solverRunning = false;
+        if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
+
         teacherTbody.innerHTML = '';
         classTbody.innerHTML = '';
         lessonTbody.innerHTML = '';
@@ -1366,7 +1330,11 @@
           optLimitSameSubject,
           teachers,
           classes,
-          lessons
+          lessons,
+
+          // solver internal cache (hər run-da doldurulur)
+          _blocks: null,
+          _targetHours: 0
         };
       }
 
@@ -1412,18 +1380,21 @@
             heavy: !!l.heavy
           };
 
+          // Qoşa dərslər: 2-lik bloklar
           if (l.double && remaining >= 2) {
             while (remaining >= 2) {
               blocks.push({ ...base, length: 2 });
               remaining -= 2;
             }
           }
+          // Qalan 1-liklər
           while (remaining > 0) {
             blocks.push({ ...base, length: 1 });
             remaining -= 1;
           }
         });
 
+        // Daha çətin bloklar əvvəl (uzun + ağır)
         blocks.sort((a, b) => {
           if (b.length !== a.length) return b.length - a.length;
           if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
@@ -1433,10 +1404,76 @@
         return { blocks, unknownUnmapped: unknown };
       }
 
+      function sumRequiredHours(lessons){
+        return lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
+      }
+
+      function prepareSolve(config){
+        const { blocks, unknownUnmapped } = generateBlocks(config);
+
+        // ✅ uyğun gəlməyən sətirlər varsa əvvəlcədən dayandır (yoxsa sonsuz axtarışa düşər)
+        if (unknownUnmapped && unknownUnmapped.length){
+          const lines = unknownUnmapped.map(l => `• ${l.className} – ${l.subject} (${l.teacherRef})`);
+          throw new Error(
+            'Bəzi dərslər üçün sinif və ya müəllim tapılmadı (yazılışları yoxlayın):\n' + lines.join('\n')
+          );
+        }
+
+        config._blocks = blocks;
+        config._targetHours = blocks.reduce((s, b) => s + b.length, 0);
+
+        // ✅ sürətli “zəmanətli mümkünsüz” yoxlamalar
+        const teacherHours = new Array(config.teachers.length).fill(0);
+        const classHours = new Array(config.classes.length).fill(0);
+
+        blocks.forEach(b => {
+          teacherHours[b.teacherId] += b.length;
+          classHours[b.classId] += b.length;
+        });
+
+        teacherHours.forEach((h, tId) => {
+          const t = config.teachers[tId];
+          if (!t) return;
+          const label = t.code || t.name || `#${tId}`;
+
+          if (t.weeklyMax > 0 && h > t.weeklyMax) {
+            throw new Error(`Mümkünsüz konfiqurasiya: "${label}" müəlliminə ${h} saat düşür, amma həftəlik max ${t.weeklyMax}-dır.`);
+          }
+
+          if (t.dailyMax > 0) {
+            const daysAvail = (Array.isArray(t.availableDays) && t.availableDays.length)
+              ? t.availableDays.length
+              : config.daysCount;
+            const cap = t.dailyMax * daysAvail;
+            if (h > cap) {
+              throw new Error(`Mümkünsüz konfiqurasiya: "${label}" müəlliminə ${h} saat düşür, amma gündə max ${t.dailyMax} və gəlmə günləri ${daysAvail} → maksimum ${cap} saat.`);
+            }
+          }
+        });
+
+        classHours.forEach((h, cId) => {
+          const c = config.classes[cId];
+          if (!c) return;
+          const maxDay = c.maxPerDay > 0 ? c.maxPerDay : defaultMaxPerDayByLevel(c.level);
+          const cap = maxDay * config.daysCount;
+
+          if (h > cap) {
+            throw new Error(`Mümkünsüz konfiqurasiya: "${c.name}" sinfində ${h} saat var, amma tutum ${cap}-dır (gündə ${maxDay} × ${config.daysCount} gün).`);
+          }
+        });
+
+        return config;
+      }
+
       function attemptBuild(config) {
         const { daysCount, lessonsPerDay, teachers, classes, optHeavyAvoidEdges, optLimitSameSubject } = config;
-        const { blocks } = generateBlocks(config);
 
+        const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
+          ? config._blocks
+          : generateBlocks(config).blocks;
+
+        // hər cəhddə sıranı random etmək üçün kopya
+        const blocks = baseBlocks.slice();
         shuffle(blocks);
 
         const timetable = {};
@@ -1466,10 +1503,12 @@
           const t = teachers[teacherId];
           if (!t) return false;
 
+          // sərt: gəlmə günləri
           if (Array.isArray(t.availableDays) && t.availableDays.length) {
             if (!t.availableDays.includes(day)) return false;
           }
 
+          // sərt: eyni slotda müəllim konflikt olmasın (digər siniflər)
           for (let i = 0; i < length; i++) {
             for (const c of classes) {
               const m = timetable[c.id];
@@ -1477,15 +1516,18 @@
             }
           }
 
+          // sərt: müəllim limitləri
           const weeklyMax = t.weeklyMax > 0 ? t.weeklyMax : Infinity;
           const dailyMax  = t.dailyMax > 0 ? t.dailyMax : Infinity;
           if (teacherWeekly[teacherId] + length > weeklyMax) return false;
           if (teacherDaily[teacherId][day] + length > dailyMax) return false;
 
+          // sərt: sinif gündəlik limit
           const cls = classes[classId];
           const maxDay = cls.maxPerDay > 0 ? cls.maxPerDay : defaultMaxPerDayByLevel(cls.level);
           if (classDaily[classId][day] + length > maxDay) return false;
 
+          // yumşaq qaydalar (strict stage)
           if (strict) {
             if (optHeavyAvoidEdges && heavy) {
               if (slot === 0) return false;
@@ -1500,6 +1542,7 @@
               if (subjMap[subject][day] + length > 2) return false;
             }
           }
+
           return true;
         }
 
@@ -1524,9 +1567,11 @@
           }
           shuffle(candidates);
 
+          // 1) əvvəl strict
           for (const { d, s } of candidates) {
             if (canPlace(block, d, s, true)) { place(block, d, s); return true; }
           }
+          // 2) sonra soft-ları yumşalt
           for (const { d, s } of candidates) {
             if (canPlace(block, d, s, false)) { place(block, d, s); return true; }
           }
@@ -1543,18 +1588,59 @@
         return { timetable, unplaced, placedCount };
       }
 
-      function buildBestTimetable(config) {
-        const ATTEMPTS = 25;
+      async function buildUntilSolved(config, shouldStop){
+        const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
+        const startedAt = performance.now();
+
+        const BATCH = 300; // “cihaz gücü nəzərə alınmasın” dedin — batch-i yüksək saxladım
+
+        let attempts = 0;
         let best = null;
 
-        for (let i = 0; i < ATTEMPTS; i++) {
-          const res = attemptBuild(config);
-          if (!best || res.placedCount > best.placedCount ||
-              (res.placedCount === best.placedCount && res.unplaced.length < best.unplaced.length)) {
-            best = res;
-          }
+        function isBetter(a, b){
+          if (!b) return true;
+          if (a.placedCount !== b.placedCount) return a.placedCount > b.placedCount;
+          return (a.unplaced?.length || 0) < (b.unplaced?.length || 0);
         }
-        return best;
+
+        while (true) {
+          for (let i = 0; i < BATCH; i++) {
+            if (shouldStop && shouldStop()) {
+              if (!best) best = { timetable: {}, unplaced: [], placedCount: 0 };
+              best.stopped = true;
+              best.attemptsUsed = attempts;
+              best.targetHours = target;
+              return best;
+            }
+
+            attempts++;
+            const res = attemptBuild(config);
+            res.attemptsUsed = attempts;
+            res.targetHours = target;
+
+            if (isBetter(res, best)) best = res;
+
+            // ✅ 100% həll tapıldısa dərhal çıx
+            if (res.placedCount >= target) {
+              best = res;
+              best.solved = true;
+              return best;
+            }
+          }
+
+          // Progress
+          const bestPlaced = best ? best.placedCount : 0;
+          const pct = target > 0 ? ((bestPlaced / target) * 100).toFixed(1) : '0.0';
+          const elapsed = ((performance.now() - startedAt) / 1000).toFixed(1);
+
+          if (globalInfo) {
+            globalInfo.textContent =
+              `Axtarış davam edir… Cəhd: ${attempts.toLocaleString('az-AZ')} · Ən yaxşı: ${bestPlaced}/${target} (${pct}%) · ${elapsed}s`;
+          }
+
+          // UI donmasın deyə yield (amma limit yoxdur — sadəcə “freeze” etməsin)
+          await new Promise(r => requestAnimationFrame(r));
+        }
       }
 
       function teacherLabel(teachers, tId) {
@@ -1617,11 +1703,18 @@
           timetableContainer.innerHTML = html;
         }
 
-        const totalRequiredHours = config.lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
-        const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
-        resultStats.textContent = `Yerləşdirilən saat: ${placedCount}/${totalRequiredHours} (${placedPercent}%) · Cəhd: 25`;
+        const totalRequiredHours =
+          Number(result.targetHours) ||
+          Number(config._targetHours) ||
+          sumRequiredHours(config.lessons);
 
-        if (unplaced.length) {
+        const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
+        const attemptsUsed = result.attemptsUsed ?? 0;
+
+        resultStats.textContent =
+          `Yerləşdirilən saat: ${placedCount}/${totalRequiredHours} (${placedPercent}%) · Cəhd: ${attemptsUsed.toLocaleString('az-AZ')}`;
+
+        if (unplaced && unplaced.length) {
           const lines = unplaced.map(b => {
             const cls = classes[b.classId]?.name || '?';
             const t = teachers[b.teacherId];
@@ -1636,8 +1729,8 @@
         }
 
         softWarnings.textContent =
-          'Qeyd: Müəllim istəkləri (1-ci / sonuncu saatdan qaçmaq), ağır fənnin paylanması və müəllimin gəlmə günləri əvvəlcə sərt şəkildə nəzərə alınır, ' +
-          'yer tapılmadıqda isə bəzi istəklər yumşaldılır (gəlmə günləri saxlanılır).';
+          'Qeyd: Müəllim istəkləri (1-ci / sonuncu saatdan qaçmaq), ağır fənnin paylanması və eyni fənnin gündə 2-dən çox olmaması əvvəlcə sərt şəkildə nəzərə alınır, ' +
+          'yer tapılmadıqda isə bu istəklər yumşaldılır (gəlmə günləri və limitlər saxlanılır).';
 
         const firstClassId = classes[0]?.id;
         if (firstClassId != null) renderForClass(firstClassId);
@@ -1651,21 +1744,59 @@
         };
       }
 
-      btnGenerate.addEventListener('click', () => {
+      btnGenerate.addEventListener('click', async () => {
+        // Əgər artıq axtarış gedirsə — klik “dayandır” kimi işləsin
+        if (__solverRunning) {
+          __stopRequested = true;
+          if (globalInfo) globalInfo.textContent = 'Dayandırılır…';
+          return;
+        }
+
+        const myRun = ++__runId;
+        __solverRunning = true;
+        __stopRequested = false;
+
+        if (btnGenerate) btnGenerate.textContent = STOP_LABEL;
+
         try {
-          const config = readConfig();
+          let config = readConfig();
+          config = prepareSolve(config);
+
           globalError.classList.add('hidden');
           globalError.textContent = '';
 
-          globalInfo.textContent = 'Cədvəl qurulur… (bir neçə fərqli kombinasiyanı sınayır)';
-          setTimeout(() => {
-            const result = buildBestTimetable(config);
-            renderTimetable(config, result);
-            globalInfo.textContent = 'Cədvəl quruldu.';
-          }, 10);
+          if (globalInfo) globalInfo.textContent = 'Axtarış başlayır… (tam həll tapılanadək cəhd ediləcək)';
+
+          const result = await buildUntilSolved(config, () => __stopRequested || myRun !== __runId);
+
+          // reset / yeni run olduysa nəticəni göstərmə
+          if (myRun !== __runId) return;
+
+          renderTimetable(config, result);
+
+          const target = Number(result.targetHours) || Number(config._targetHours) || sumRequiredHours(config.lessons);
+          const bestPlaced = result.placedCount || 0;
+          const pct = target > 0 ? ((bestPlaced / target) * 100).toFixed(1) : '0.0';
+
+          if (result.solved) {
+            if (globalInfo) globalInfo.textContent =
+              `Cədvəl 100% quruldu. (Cəhd: ${(result.attemptsUsed || 0).toLocaleString('az-AZ')})`;
+          } else if (result.stopped) {
+            if (globalInfo) globalInfo.textContent =
+              `Dayandırıldı. Ən yaxşı nəticə: ${bestPlaced}/${target} (${pct}%).`;
+          } else {
+            if (globalInfo) globalInfo.textContent = 'Cədvəl quruldu.';
+          }
         } catch (err) {
+          if (myRun !== __runId) return;
           showError(err.message || String(err));
-          globalInfo.textContent = '';
+          if (globalInfo) globalInfo.textContent = '';
+        } finally {
+          if (myRun === __runId) {
+            __solverRunning = false;
+            __stopRequested = false;
+            if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
+          }
         }
       });
 

@@ -1801,13 +1801,13 @@
 
       // Başlanğıc nümunələr (istəsən sil)
       addTeacherRow({ name: 'Əhmədov Firdovsi', code: 'FİR', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: true, availableDays: [0,1,2,3,4] });
-      addTeacherRow({ name: 'Məmmədov İsfəndiyar', code: 'İSF', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: false, availableDays: [0,1,2,3,4] });
+      addTeacherRow({ name: 'İsfəndiyarlı Məzahir', code: 'MƏZ', weeklyMax: 24, dailyMax: 6, avoidFirst: false, avoidLast: false, availableDays: [0,1,2,3,4] });
 
       addClassRow({ name: '5A', level: 'esas', shift: 'seher' });
       addClassRow({ name: '6A', level: 'esas', shift: 'seher' });
 
       addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'FİR', hours: 4, heavy: true, double: true });
-      addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'İSF', hours: 3, heavy: false, double: false });
+      addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'MƏZ', hours: 3, heavy: false, double: false });
 
       // ilkin state
       syncTeacherDayVisibility(currentDaysCount());

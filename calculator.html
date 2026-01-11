@@ -429,12 +429,14 @@
                 </p>
 
                 <p>
-                  KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir. BSQ sahəsi mütləqdir və
-                  0–100 aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
+                  KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir.
+                  <strong>BSQ daxil edilməzsə</strong>, nəticə <strong>KSQ-ların ədədi ortası</strong> kimi hesablanır.
+                  BSQ daxil edilərsə, <strong>0–100</strong> aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
                 <p>
-                  Nəticələr 2–5 qiymət şkalasında təqdim olunur: 81–100 → 5, 61–80 → 4, 41–60 → 3, 0–40 → 2.
+                  Nəticələr 2–5 qiymət şkalasında təqdim olunur:
+                  81–100 → 5, 61–80 → 4, 31–60 → 3, 0–30 → 2.
                 </p>
 
                 <p>
@@ -654,7 +656,10 @@
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 41) ? 3 : 2;
+
+      // ✅ Yeni qiymət bölgüsü:
+      // 2: 0-30, 3: 31-60, 4: 61-80, 5: 81-100
+      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
 
       function clearOutputs() {
         [
@@ -672,16 +677,32 @@
 
       function computeTerm(prefix, outIds) {
         const { ksq, bsq } = readTerm(prefix);
+
+        // heç nə daxil edilməyibsə
         if (ksq.length === 0 && bsq === null) return null;
 
-        if (bsq === null || bsq < 0 || bsq > 100) {
+        const kAvg = ksq.length ? avg(ksq) : 0;
+
+        // xəbərdarlıq: bəzi KSQ-lar boşdursa
+        warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
+
+        // ✅ DÜZƏLİŞ #1:
+        // KSQ var, BSQ yoxdursa -> nəticə KSQ ortasıdır (xəta vermə)
+        if (bsq === null) {
+          const total = +kAvg.toFixed(2);
+          $id(outIds.total).textContent = total.toFixed(2);
+          $id(outIds.ksq).textContent   = kAvg.toFixed(2);
+          $id(outIds.bsq).textContent   = '—';
+          $id(outIds.grade).textContent = to5(total);
+          return total;
+        }
+
+        // BSQ daxil edilibsə, range yoxlanışı
+        if (bsq < 0 || bsq > 100) {
           err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
           err.classList.remove('hidden');
           return { error:true };
         }
-
-        const kAvg = ksq.length ? avg(ksq) : 0;
-        warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
         $id(outIds.total).textContent = total.toFixed(2);

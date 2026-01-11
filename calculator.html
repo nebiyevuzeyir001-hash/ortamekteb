@@ -598,6 +598,49 @@
         });
       }
 
+      // ✅ YALNIZ lazım olanda (görünmürsə) minimum scroll: xəta görünən olsun kifayətdir
+      function ensureVisibleIfNeeded(el) {
+        if (!el) return;
+
+        const headerH = document.querySelector('header')?.offsetHeight || 0;
+        const pad = 12;
+
+        const topLimit = headerH + pad;            // header-dən aşağı
+        const bottomLimit = window.innerHeight - pad; // ekranın altından yuxarı
+
+        const r = el.getBoundingClientRect();
+
+        // element ekranda ən azı bir hissəsi görünürsə — scroll etmə
+        const isPartlyVisible = (r.bottom > topLimit) && (r.top < bottomLimit);
+        if (isPartlyVisible) return;
+
+        let delta = 0;
+
+        // element tam aşağıdadırsa — minimum scroll: top ekrana girsin
+        if (r.top >= bottomLimit) {
+          delta = (r.top - bottomLimit) + pad;
+        }
+        // element tam yuxarıdadırsa — minimum scroll: bottom ekrana girsin (header-in altı)
+        else if (r.bottom <= topLimit) {
+          delta = (r.bottom - topLimit) - pad;
+        } else {
+          // nadir hal: yenə də yuxarı limitə yaxınlaşdır
+          delta = (r.top - topLimit);
+        }
+
+        window.scrollTo({ top: window.scrollY + delta, behavior: 'smooth' });
+      }
+
+      function ensureVisibleStable(el) {
+        if (!el) return;
+        try { document.activeElement?.blur?.(); } catch (e) {}
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            ensureVisibleIfNeeded(el);
+          });
+        });
+      }
+
       function setBtnActive(btn, act) {
         const addA = ['ring-2','ring-indigo-500/45','border-indigo-500','bg-white/80','dark:bg-slate-900/60'];
         const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
@@ -688,7 +731,7 @@
           warn.classList.add('hidden'); // əvvəlki warn qalmasın
           err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.';
           err.classList.remove('hidden');
-          return { error:true };
+          return { error:true, code:'KSQ_REQUIRED' };
         }
 
         const kAvg = ksq.length ? avg(ksq) : 0;
@@ -711,7 +754,7 @@
           warn.classList.add('hidden');
           err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
           err.classList.remove('hidden');
-          return { error:true };
+          return { error:true, code:'BSQ_RANGE' };
         }
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -770,8 +813,12 @@
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
           if (r1 && typeof r1 === 'object' && r1.error) {
             out.classList.add('hidden');
-            // ✅ EYNİ scroll davranışı: normalda necə scroll edirsə, xəta da elə (actions-a)
-            scrollToStable(actions || err, 8);
+
+            // ✅ Yalnız "ən azı 1 KSQ" xətası üçün:
+            // Xəta ekranda görünmürsə, minimum scroll et (görünsün kifayətdir).
+            if (r1.code === 'KSQ_REQUIRED') ensureVisibleStable(err);
+            else scrollToStable(actions || err, 8);
+
             return;
           }
           if (typeof r1 === 'number') t1 = r1;
@@ -783,8 +830,11 @@
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
           if (r2 && typeof r2 === 'object' && r2.error) {
             out.classList.add('hidden');
-            // ✅ EYNİ scroll davranışı: normalda necə scroll edirsə, xəta da elə (actions-a)
-            scrollToStable(actions || err, 8);
+
+            // ✅ Yalnız "ən azı 1 KSQ" xətası üçün minimum scroll
+            if (r2.code === 'KSQ_REQUIRED') ensureVisibleStable(err);
+            else scrollToStable(actions || err, 8);
+
             return;
           }
           if (typeof r2 === 'number') t2 = r2;

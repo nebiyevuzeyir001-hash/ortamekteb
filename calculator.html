@@ -685,6 +685,7 @@
         // ✅ Yeni tələb:
         // BSQ daxil edilib, amma KSQ-lardan heç biri daxil edilməyibsə -> xəta
         if (bsq !== null && ksq.length === 0) {
+          warn.classList.add('hidden'); // əvvəlki warn qalmasın
           err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.';
           err.classList.remove('hidden');
           return { error:true };
@@ -707,6 +708,7 @@
 
         // BSQ daxil edilibsə, range yoxlanışı
         if (bsq < 0 || bsq > 100) {
+          warn.classList.add('hidden');
           err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
           err.classList.remove('hidden');
           return { error:true };
@@ -768,7 +770,8 @@
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
           if (r1 && typeof r1 === 'object' && r1.error) {
             out.classList.add('hidden');
-            scrollToWithHeader(err);
+            // ✅ EYNİ scroll davranışı: normalda necə scroll edirsə, xəta da elə (actions-a)
+            scrollToStable(actions || err, 8);
             return;
           }
           if (typeof r1 === 'number') t1 = r1;
@@ -780,7 +783,8 @@
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
           if (r2 && typeof r2 === 'object' && r2.error) {
             out.classList.add('hidden');
-            scrollToWithHeader(err);
+            // ✅ EYNİ scroll davranışı: normalda necə scroll edirsə, xəta da elə (actions-a)
+            scrollToStable(actions || err, 8);
             return;
           }
           if (typeof r2 === 'number') t2 = r2;

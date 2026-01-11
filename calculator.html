@@ -431,7 +431,8 @@
                 <p>
                   KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir.
                   <strong>BSQ daxil edilməzsə</strong>, nəticə <strong>KSQ-ların ədədi ortası</strong> kimi hesablanır.
-                  BSQ daxil edilərsə, <strong>0–100</strong> aralığında olmalıdır. Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
+                  <strong>BSQ daxil edilərsə</strong>, <strong>ən azı 1 KSQ</strong> daxil edilməlidir və BSQ <strong>0–100</strong> aralığında olmalıdır.
+                  Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
                 <p>
@@ -681,12 +682,19 @@
         // heç nə daxil edilməyibsə
         if (ksq.length === 0 && bsq === null) return null;
 
+        // ✅ Yeni tələb:
+        // BSQ daxil edilib, amma KSQ-lardan heç biri daxil edilməyibsə -> xəta
+        if (bsq !== null && ksq.length === 0) {
+          err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.';
+          err.classList.remove('hidden');
+          return { error:true };
+        }
+
         const kAvg = ksq.length ? avg(ksq) : 0;
 
         // xəbərdarlıq: bəzi KSQ-lar boşdursa
         warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
 
-        // ✅ DÜZƏLİŞ #1:
         // KSQ var, BSQ yoxdursa -> nəticə KSQ ortasıdır (xəta vermə)
         if (bsq === null) {
           const total = +kAvg.toFixed(2);
@@ -749,6 +757,7 @@
         if (!mode) {
           err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
           err.classList.remove('hidden');
+          out.classList.add('hidden');
           scrollToWithHeader(document.querySelector('[data-mode="t1"]'));
           return;
         }
@@ -757,6 +766,11 @@
 
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
+          if (r1 && typeof r1 === 'object' && r1.error) {
+            out.classList.add('hidden');
+            scrollToWithHeader(err);
+            return;
+          }
           if (typeof r1 === 'number') t1 = r1;
         } else {
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
@@ -764,6 +778,11 @@
 
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
+          if (r2 && typeof r2 === 'object' && r2.error) {
+            out.classList.add('hidden');
+            scrollToWithHeader(err);
+            return;
+          }
           if (typeof r2 === 'number') t2 = r2;
         } else {
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });

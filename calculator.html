@@ -103,24 +103,6 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ✅ Secondary (Sıfırla) — bölmənin içi kimi + bir az tünd */
-    .ep-btn-secondary{
-      border: 1px solid rgba(203,213,225,.95);
-      background: linear-gradient(180deg, rgba(241,245,249,.96) 0%, rgba(226,232,240,.88) 100%);
-      color: rgb(15,23,42);
-    }
-    .ep-btn-secondary:hover{
-      background: linear-gradient(180deg, rgba(226,232,240,.96) 0%, rgba(203,213,225,.88) 100%);
-    }
-    html.dark .ep-btn-secondary{
-      border-color: rgba(30,41,59,.75);
-      background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.05) 100%);
-      color: rgb(226,232,240);
-    }
-    html.dark .ep-btn-secondary:hover{
-      background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.06) 100%);
-    }
-
     /* ===== Frame/Shell ===== */
     :root{
       --ep-frame-max: 80rem;
@@ -195,24 +177,40 @@
 
     @media print{ .no-print{ display:none !important; } }
 
-    /* Legend pill */
+    /* ✅ Legend pill (daha professional) */
     .ep-legend-pill{
       display: inline-flex;
       align-items: center;
-      gap: .4rem;
-      padding: .20rem .55rem;
-      border-radius: .65rem;
-      font-weight: 600;
-      line-height: 1.15;
+      gap: .5rem;
+      padding: .32rem .82rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 12.5px;
+      line-height: 1.1;
       letter-spacing: -.01em;
-      border: 1px solid rgba(203,213,225,.95);
-      background: rgba(241,245,249,.96);
-      color: rgb(51,65,85);
+
+      border: 1px solid rgba(148,163,184,.55);
+      background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(241,245,249,.92) 100%);
+      color: rgb(30,41,59);
+      box-shadow: 0 1px 2px rgba(15,23,42,.08);
+    }
+    .ep-legend-pill::before{
+      content: "";
+      width: .55rem;
+      height: .55rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg,#4f46e5 0%,#9333ea 100%);
+      box-shadow: 0 0 0 2px rgba(99,102,241,.18);
+      flex: 0 0 auto;
     }
     html.dark .ep-legend-pill{
-      border-color: rgba(30,41,59,.75);
-      background: rgba(15,23,42,.55);
+      border-color: rgba(148,163,184,.18);
+      background: linear-gradient(180deg, rgba(15,23,42,.72) 0%, rgba(15,23,42,.42) 100%);
       color: rgb(226,232,240);
+      box-shadow: 0 1px 2px rgba(0,0,0,.35);
+    }
+    html.dark .ep-legend-pill::before{
+      box-shadow: 0 0 0 2px rgba(99,102,241,.22);
     }
 
     /* ✅ Light mod: rəngləri bir az tündləşdir (hamısı ağ olmasın) */
@@ -385,11 +383,11 @@
                       Hesabla
                     </button>
 
-                    <!-- ✅ Sıfırla: indi bölmənin içi kimi + tündləşdirilmiş -->
+                    <!-- ✅ Sıfırla: ölçü eyni, görünüş mode-btn ilə eyni -->
                     <button
                       id="btn-reset"
                       type="button"
-                      class="ep-btn-secondary w-full rounded-2xl px-4 py-3 font-semibold transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      class="mode-btn w-full rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-slate-50/80 dark:bg-white/5 px-4 py-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                       Sıfırla
                     </button>

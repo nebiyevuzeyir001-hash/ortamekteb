@@ -34,6 +34,7 @@
   <link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
   <link rel="manifest" href="manifest.webmanifest">
 
+  <!-- Tema: FOUC olmaması üçün -->
   <script>
     (function () {
       try {
@@ -230,7 +231,7 @@
               </p>
             </section>
 
-            <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
+            <section id="calc-panel" class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
               <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
                 <div class="font-semibold">🧮 Bal kalkulyatoru</div>
               </div>
@@ -245,7 +246,7 @@
                   </div>
                 </div>
 
-                <div class="grid gap-2">
+                <div class="grid gap-2" id="mode-area">
                   <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
                   <div class="grid grid-cols-3 gap-2">
                     <button
@@ -324,7 +325,14 @@
                     </button>
                   </div>
 
-                  <div id="calc-error" class="hidden text-sm text-rose-500"></div>
+                  <!-- ✅ daha professional: alert styling + a11y -->
+                  <div
+                    id="calc-error"
+                    class="hidden rounded-2xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/25 px-4 py-3 text-sm text-rose-700 dark:text-rose-300"
+                    role="alert"
+                    aria-live="polite"
+                    tabindex="-1"
+                  ></div>
 
                   <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
                     <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
@@ -433,6 +441,7 @@
     </div>
   </footer>
 
+  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -479,6 +488,7 @@
     })();
   </script>
 
+  <!-- Ads: auto layout -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -502,9 +512,7 @@
         const hasRight = hasContent(right);
         shell.classList.toggle('has-left-ad', hasLeft);
         shell.classList.toggle('has-right-ad', hasRight);
-
-        const hasAds = hasLeft || hasRight;
-        frame.classList.toggle('has-ads', hasAds);
+        frame.classList.toggle('has-ads', hasLeft || hasRight);
       };
 
       update();
@@ -515,6 +523,7 @@
     })();
   </script>
 
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -525,77 +534,103 @@
 
       let mode = null;
 
+      const panel = $id('calc-panel');
+      const modeArea = $id('mode-area');
       const emptyState = $id('empty-state');
       const fsT1 = $id('fs-t1');
       const fsT2 = $id('fs-t2');
 
-      const actions = $id('calc-actions');
+      const btnCalc = $id('btn-calc');
+      const out = $id('calc-output');
+      const err = $id('calc-error');
+      const warn = $id('calc-warn');
+      const resetBtn = $id('btn-reset');
 
-      function scrollToWithHeader(el, extraOffset = 0) {
-        if (!el) return;
+      const modeButtons = $qsa('[data-mode]');
+
+      const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
+      const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
+      const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+
+      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
+
+      // ===== Professional scroll helpers (minimum scroll only) =====
+      const prefersReduceMotion = () => {
+        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+        catch (e) { return false; }
+      };
+
+      function isInSafeZone(el, opts = {}) {
+        if (!el) return true;
         const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+        const topGap = opts.topGap ?? 28;      // “azca” boşluq (professional)
+        const bottomGap = opts.bottomGap ?? 20;
 
-      function scrollToStable(el, extraOffset = 0) {
-        if (!el) return;
-        try { document.activeElement?.blur?.(); } catch (e) {}
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            scrollToWithHeader(el, extraOffset);
-          });
-        });
-      }
-
-      // ✅ Professional + nəzarətli:
-      // - YALNIZ lazım olanda scroll edir
-      // - elementin yuxarısı header-in altına "rahat" məsafə ilə düşür
-      // - lazımsız uzun scroll yoxdur
-      function ensureVisibleIfNeeded(el, opts = {}) {
-        if (!el) return;
-
-        const headerH = document.querySelector('header')?.offsetHeight || 0;
-
-        // rahat görünüş üçün (azca artıq, amma nəzarətli)
-        const topGap = opts.topGap ?? 32;      // header-dən sonra boşluq
-        const bottomGap = opts.bottomGap ?? 24; // ekran altından boşluq
-
+        const r = el.getBoundingClientRect();
         const topLimit = headerH + topGap;
         const bottomLimit = window.innerHeight - bottomGap;
 
-        const r = el.getBoundingClientRect();
-
-        // element artıq "təhlükəsiz zonada" görünürsə, scroll ETMƏ
-        const isOk =
-          (r.top >= topLimit) &&
-          (r.bottom <= bottomLimit);
-
-        if (isOk) return;
-
-        let targetY = window.scrollY;
-
-        // yuxarıda qalıbsa (header altına gətir)
-        if (r.top < topLimit) {
-          targetY = window.scrollY + (r.top - topLimit);
-        }
-        // aşağıda qalıbsa (alt limitin içinə al)
-        else if (r.bottom > bottomLimit) {
-          targetY = window.scrollY + (r.bottom - bottomLimit);
-        }
-
-        targetY = Math.max(0, targetY);
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
+        // tam sığırsa -> ok
+        return (r.top >= topLimit) && (r.bottom <= bottomLimit);
       }
 
-      function ensureVisibleStable(el, opts) {
+      function reveal(el, opts = {}) {
+        if (!el) return;
+        if (isInSafeZone(el, opts)) return;
+
+        const headerH = document.querySelector('header')?.offsetHeight || 0;
+        const topGap = opts.topGap ?? 28;
+
+        // fixed header overlay problemini “native” həll edir
+        el.style.scrollMarginTop = (headerH + topGap) + 'px';
+
+        el.scrollIntoView({
+          behavior: prefersReduceMotion() ? 'auto' : 'smooth',
+          block: 'nearest',
+          inline: 'nearest'
+        });
+      }
+
+      function revealStable(el, opts = {}) {
         if (!el) return;
         try { document.activeElement?.blur?.(); } catch (e) {}
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            ensureVisibleIfNeeded(el, opts);
-          });
-        });
+        requestAnimationFrame(() => requestAnimationFrame(() => reveal(el, opts)));
+      }
+
+      // ===== UX helpers =====
+      function pulse(el, ms = 900) {
+        if (!el) return;
+        const cls = ['ring-2', 'ring-rose-400/50', 'border-rose-400/70'];
+        cls.forEach(c => el.classList.add(c));
+        window.setTimeout(() => cls.forEach(c => el.classList.remove(c)), ms);
+      }
+
+      function tryFocus(el) {
+        if (!el) return;
+        try { el.focus({ preventScroll: true }); }
+        catch (e) { try { el.focus(); } catch (e2) {} }
+      }
+
+      function clearError() {
+        err.classList.add('hidden');
+        err.textContent = '';
+      }
+
+      function showError(message, opts = {}) {
+        warn.classList.add('hidden');
+        out.classList.add('hidden');
+        err.textContent = message;
+        err.classList.remove('hidden');
+        tryFocus(err);
+        revealStable(err, opts);
+      }
+
+      function clearOutputs() {
+        [
+          'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
+          'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
+          'out-year','out-year-grade'
+        ].forEach(id => { $id(id).textContent = '—'; });
       }
 
       function setBtnActive(btn, act) {
@@ -612,7 +647,7 @@
       }
 
       function updateModeUI() {
-        $qsa('[data-mode]').forEach(b => {
+        modeButtons.forEach(b => {
           const act = (b.dataset.mode === mode);
           b.setAttribute('aria-pressed', act ? 'true' : 'false');
           setBtnActive(b, act);
@@ -623,7 +658,7 @@
           fsT1.classList.add('hidden');
           fsT2.classList.add('hidden');
           $id('calc-output')?.classList.add('hidden');
-          $id('calc-error')?.classList.add('hidden');
+          clearError();
           return;
         }
 
@@ -637,36 +672,16 @@
         $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
       }
 
-      $qsa('[data-mode]').forEach(btn => {
+      modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           mode = btn.dataset.mode;
           updateModeUI();
           btn.blur();
-          scrollToWithHeader(document.querySelector('section.rounded-3xl') || fsT1 || fsT2);
+          revealStable(panel || fsT1 || fsT2, { topGap: 18, bottomGap: 18 });
         });
       });
 
       updateModeUI();
-
-      const btnCalc = $id('btn-calc');
-      const out = $id('calc-output');
-      const err = $id('calc-error');
-      const warn = $id('calc-warn');
-      const resetBtn = $id('btn-reset');
-
-      const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
-      const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
-      const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-
-      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
-
-      function clearOutputs() {
-        [
-          'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
-          'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
-          'out-year','out-year-grade'
-        ].forEach(id => { $id(id).textContent = '—'; });
-      }
 
       function readTerm(prefix) {
         const ksq = idsFor(prefix).map(id => numOrNull($id(id).value)).filter(v => v !== null);
@@ -674,36 +689,44 @@
         return { ksq, bsq };
       }
 
+      // computeTerm: side-effect only outputs; errors are returned (professional separation)
       function computeTerm(prefix, outIds) {
         const { ksq, bsq } = readTerm(prefix);
 
+        // heç nə daxil edilməyibsə
         if (ksq.length === 0 && bsq === null) return null;
 
+        // BSQ var, amma KSQ yoxdursa -> xəta
         if (bsq !== null && ksq.length === 0) {
-          warn.classList.add('hidden');
-          err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.';
-          err.classList.remove('hidden');
-          return { error:true, code:'KSQ_REQUIRED' };
+          return {
+            error: true,
+            code: 'KSQ_REQUIRED',
+            prefix,
+            message: (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.'
+          };
         }
 
+        const missingKsqs = (ksq.length > 0 && ksq.length < KSQ_COUNT);
         const kAvg = ksq.length ? avg(ksq) : 0;
 
-        warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
-
+        // BSQ yoxdursa -> KSQ ortası
         if (bsq === null) {
           const total = +kAvg.toFixed(2);
           $id(outIds.total).textContent = total.toFixed(2);
           $id(outIds.ksq).textContent   = kAvg.toFixed(2);
           $id(outIds.bsq).textContent   = '—';
           $id(outIds.grade).textContent = to5(total);
-          return total;
+          return { total, missingKsqs };
         }
 
+        // BSQ range check
         if (bsq < 0 || bsq > 100) {
-          warn.classList.add('hidden');
-          err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
-          err.classList.remove('hidden');
-          return { error:true, code:'BSQ_RANGE' };
+          return {
+            error: true,
+            code: 'BSQ_RANGE',
+            prefix,
+            message: (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.'
+          };
         }
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -711,7 +734,8 @@
         $id(outIds.ksq).textContent   = kAvg.toFixed(2);
         $id(outIds.bsq).textContent   = bsq.toFixed(2);
         $id(outIds.grade).textContent = to5(total);
-        return total;
+
+        return { total, missingKsqs };
       }
 
       function resetCalc() {
@@ -724,16 +748,17 @@
           if (bsq) bsq.value = '';
         });
 
-        err.classList.add('hidden'); err.textContent = '';
-        warn.classList.add('hidden'); clearOutputs();
+        clearError();
+        warn.classList.add('hidden');
+        clearOutputs();
         out.classList.add('hidden');
 
-        const anchor = document.querySelector('section.rounded-3xl') || (mode === 't2' ? fsT2 : fsT1);
-        scrollToWithHeader(anchor);
+        revealStable(panel || modeArea, { topGap: 18, bottomGap: 18 });
       }
 
       resetBtn?.addEventListener('click', resetCalc);
 
+      // Enter -> calculate
       [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id => {
         const el = $id(id);
         el?.addEventListener('keydown', e => {
@@ -746,50 +771,77 @@
       });
 
       btnCalc?.addEventListener('click', () => {
-        err.classList.add('hidden'); err.textContent = '';
+        clearError();
 
-        // ✅ FIX: "rejim seçin" xətası artıq lazımsız böyük scroll ETMƏYƏCƏK
-        // yalnız görünmürsə, nəzarətli şəkildə gətirəcək
+        // ===== 1) Mode required (NO over-scroll) =====
         if (!mode) {
-          warn.classList.add('hidden');
-          out.classList.add('hidden');
-          err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-          err.classList.remove('hidden');
+          showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).', { topGap: 28, bottomGap: 20 });
 
-          // nəzarətli + professional
-          ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+          // professional guidance: focus + subtle pulse (no forced scroll)
+          const firstModeBtn = document.querySelector('[data-mode="t1"]');
+          tryFocus(firstModeBtn);
+          pulse(modeArea);
+
+          // error görünürsə scroll etməyəcək, görünmürsə minimal gətirəcək
+          revealStable(modeArea, { topGap: 18, bottomGap: 18 });
           return;
         }
 
         let t1 = null, t2 = null;
+        let missingAny = false;
 
+        // ===== 2) Term calculations =====
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
-          if (r1 && typeof r1 === 'object' && r1.error) {
-            out.classList.add('hidden');
-            ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+
+          if (r1 && r1.error) {
+            showError(r1.message, { topGap: 28, bottomGap: 20 });
+
+            if (r1.code === 'KSQ_REQUIRED') {
+              pulse(fsT1);
+              tryFocus($id('t1-ksq1'));
+            } else {
+              pulse($id('t1-bsq'));
+              tryFocus($id('t1-bsq'));
+            }
             return;
           }
-          if (typeof r1 === 'number') t1 = r1;
+
+          if (r1 && typeof r1.total === 'number') t1 = r1.total;
+          if (r1 && r1.missingKsqs) missingAny = true;
         } else {
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
-          if (r2 && typeof r2 === 'object' && r2.error) {
-            out.classList.add('hidden');
-            ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+
+          if (r2 && r2.error) {
+            showError(r2.message, { topGap: 28, bottomGap: 20 });
+
+            if (r2.code === 'KSQ_REQUIRED') {
+              pulse(fsT2);
+              tryFocus($id('t2-ksq1'));
+            } else {
+              pulse($id('t2-bsq'));
+              tryFocus($id('t2-bsq'));
+            }
             return;
           }
-          if (typeof r2 === 'number') t2 = r2;
+
+          if (r2 && typeof r2.total === 'number') t2 = r2.total;
+          if (r2 && r2.missingKsqs) missingAny = true;
         } else {
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
+        // ===== 3) Output =====
         out.classList.remove('hidden');
-        scrollToStable(actions || out, 8);
 
+        // Warn: yalnız həqiqətən lazımdırsa
+        warn.classList.toggle('hidden', !missingAny);
+
+        // İllik
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -800,6 +852,9 @@
           $id('out-year-grade').textContent = '—';
           $id('out-year-card').classList.add('hidden');
         }
+
+        // ✅ professional: nəticə görünürsə scroll etmə, görünmürsə minimal gətir
+        revealStable(out, { topGap: 22, bottomGap: 18 });
       });
 
       (function init() {

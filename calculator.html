@@ -177,12 +177,11 @@
 
     @media print{ .no-print{ display:none !important; } }
 
-    /* ✅ Legend pill (daha professional) */
+    /* ✅ Legend pill (nöqtəsiz + dark-da opaq, “kəsilmə” problemi yox) */
     .ep-legend-pill{
       display: inline-flex;
       align-items: center;
-      gap: .5rem;
-      padding: .32rem .82rem;
+      padding: .34rem .86rem;
       border-radius: 9999px;
       font-weight: 700;
       font-size: 12.5px;
@@ -190,27 +189,22 @@
       letter-spacing: -.01em;
 
       border: 1px solid rgba(148,163,184,.55);
-      background: linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(241,245,249,.92) 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(241,245,249,.96) 100%);
       color: rgb(30,41,59);
       box-shadow: 0 1px 2px rgba(15,23,42,.08);
     }
+
+    /* ❌ bənövşəyi nöqtəni tam söndür */
     .ep-legend-pill::before{
-      content: "";
-      width: .55rem;
-      height: .55rem;
-      border-radius: 9999px;
-      background: linear-gradient(135deg,#4f46e5 0%,#9333ea 100%);
-      box-shadow: 0 0 0 2px rgba(99,102,241,.18);
-      flex: 0 0 auto;
+      content: none !important;
+      display: none !important;
     }
+
     html.dark .ep-legend-pill{
-      border-color: rgba(148,163,184,.18);
-      background: linear-gradient(180deg, rgba(15,23,42,.72) 0%, rgba(15,23,42,.42) 100%);
+      border-color: rgba(148,163,184,.20);
+      background: linear-gradient(180deg, rgb(15,23,42) 0%, rgb(2,6,23) 100%);
       color: rgb(226,232,240);
-      box-shadow: 0 1px 2px rgba(0,0,0,.35);
-    }
-    html.dark .ep-legend-pill::before{
-      box-shadow: 0 0 0 2px rgba(99,102,241,.22);
+      box-shadow: 0 1px 2px rgba(0,0,0,.45);
     }
 
     /* ✅ Light mod: rəngləri bir az tündləşdir (hamısı ağ olmasın) */
@@ -224,6 +218,10 @@
     html:not(.dark) .mode-btn:hover{
       background: rgba(226,232,240,1) !important;
     }
+
+    /* ✅ Dark mod: panel/subpanel daha opaq olsun (şəffaf görünməsin) */
+    html.dark .ep-panel-bg{ background: rgba(2,6,23,.88) !important; }
+    html.dark .ep-subpanel-bg{ background: rgba(15,23,42,.78) !important; }
   </style>
 </head>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="canonical" href="https://www.eduplan.az/timetable.html" />
-    <meta name="keywords" content="Dərs cədvəlinin hazırlanması, Dərs cədvəli qurmaq üçün proqram, Orta məktəblərdə dərs cədvəli, Dərs cədvəli proqramı, dərs cədvəli qurmaq üçün proqram yüklə, 
+  <meta name="keywords" content="Dərs cədvəlinin hazırlanması, Dərs cədvəli qurmaq üçün proqram, Orta məktəblərdə dərs cədvəli, Dərs cədvəli proqramı, dərs cədvəli qurmaq üçün proqram yüklə, 
       Dərs cədvəli hazırlayıcı, Online Dərs cədvəli hazırlayıcı, Onlayn Dərs cədvəli hazrılayıcı" />
   <meta name="description" content="Azərbaycan orta məktəbləri üçün onlayn Dərs cədvəli hazırlayıcı — müəllim, sinif və fənn məlumatlarını daxil edin, sistem avtomatik cədvəl qursun.">
   <meta name="robots" content="index, follow" />
@@ -226,19 +226,20 @@
       white-space: nowrap;
       transition: background-color .15s ease, border-color .15s ease, color .15s ease;
     }
-    .tab-btn:hover{ background: rgba(15,23,42,.04); }
+    .tab-btn:hover{ background: rgba(15,23,42,.06); }
     html.dark .tab-btn:hover{ background: rgba(255,255,255,.06); }
 
     .tab-btn.active{
       border-color: rgba(99,102,241,.55);
-      background: rgba(99,102,241,.10);
-      color: rgb(67 56 202);
+      background: rgba(99,102,241,.14);
+      color: rgb(55 48 163);
       font-weight: 600;
     }
     html.dark .tab-btn.active{
       border-color: rgba(129,140,248,.55);
       background: rgba(129,140,248,.12);
       color: rgb(226 232 240);
+      font-weight: 600;
     }
 
     /* Timetable table */
@@ -267,7 +268,53 @@
     .tt-slot-muted{ color: rgb(148 163 184); font-style: italic; }
     html.dark .tt-slot-muted{ color: rgb(100 116 139); }
 
-    #unplacedContainer{ white-space: pre-line; }
+    /* Error & unplaced scroll (çərçivəyə dəymədən) */
+    #globalError{
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 170px;
+      overflow: auto;
+      padding-right: .25rem;
+    }
+
+    #unplacedContainer{
+      white-space: pre-line;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: .25rem;
+    }
+
+    /* Scrollbar (error + unplaced + select menu) */
+    #globalError, #unplacedContainer, .ep-select-menu{
+      scrollbar-width: thin;
+      scrollbar-color: rgba(15,23,42,.25) transparent;
+    }
+    html.dark #globalError, html.dark #unplacedContainer, html.dark .ep-select-menu{
+      scrollbar-color: rgba(226,232,240,.25) transparent;
+    }
+
+    #globalError::-webkit-scrollbar,
+    #unplacedContainer::-webkit-scrollbar,
+    .ep-select-menu::-webkit-scrollbar{
+      width: 10px;
+      height: 10px;
+    }
+
+    #globalError::-webkit-scrollbar-thumb,
+    #unplacedContainer::-webkit-scrollbar-thumb,
+    .ep-select-menu::-webkit-scrollbar-thumb{
+      background: rgba(15,23,42,.18);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    html.dark #globalError::-webkit-scrollbar-thumb,
+    html.dark #unplacedContainer::-webkit-scrollbar-thumb,
+    html.dark .ep-select-menu::-webkit-scrollbar-thumb{
+      background: rgba(226,232,240,.18);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
 
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
@@ -353,11 +400,11 @@
       transition: background-color .12s ease;
     }
     .ep-select-sm .ep-select-item{ font-size: 12.5px; padding: .5rem .7rem; }
-    .ep-select-item:hover{ background: rgba(99,102,241,.10); }
+    .ep-select-item:hover{ background: rgba(99,102,241,.14); }
     html.dark .ep-select-item:hover{ background: rgba(129,140,248,.14); }
 
     .ep-select-item[aria-selected="true"]{
-      background: rgba(99,102,241,.16);
+      background: rgba(99,102,241,.20);
       font-weight: 600;
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }

@@ -1318,7 +1318,7 @@
         });
 
         if (!teachers.length || !classes.length || !lessons.length) {
-          throw new Error('Heç olmasa 1 müəllim, 1 sinif və 1 dərs əlavə etməlisən.');
+          throw new Error('Ən azı 1 müəllim, 1 sinif və 1 dərs əlavə edilməlidir.');
         }
         if (lessonsPerDay > 8 || lessonsPerDay < 1) {
           throw new Error('Gündə dərs saatı 1–8 aralığında olmalıdır.');

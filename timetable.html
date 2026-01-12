@@ -87,19 +87,17 @@
       --ep-frame-max: 80rem;
     }
 
-    /* ✅ Light mode contrast (tündləşdirmə) */
     input[type="text"], input[type="number"], select {
       width: 100%;
       border-radius: var(--ep-radius-lg);
-      border: 1px solid rgba(148,163,184,.85);              /* əvvəl: çox açıq idi */
-      background-color: rgba(255,255,255,.80);              /* əvvəl: .6 */
+      border: 1px solid rgba(226,232,240,.75);
+      background-color: rgba(255,255,255,.6);
       padding: .58rem .9rem;
       font-size: 13px;
       line-height: 1.35;
       min-height: var(--ep-field-h);
       outline: none;
       transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
-      color: rgb(15 23 42);
     }
 
     html.dark input[type="text"], html.dark input[type="number"], html.dark select {
@@ -108,7 +106,7 @@
       color: rgb(226,232,240);
     }
 
-    input[type="text"]::placeholder, input[type="number"]::placeholder { color: rgb(100,116,139); } /* bir az tünd */
+    input[type="text"]::placeholder, input[type="number"]::placeholder { color: rgb(148,163,184); }
 
     input[type="text"]:focus, input[type="number"]:focus, select:focus{
       border-color: rgb(99,102,241);
@@ -123,7 +121,7 @@
       background-repeat: no-repeat;
       background-position: right .75rem center;
       background-size: 1rem 1rem;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); /* əvvəl: #334155 */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
     html.dark select{
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -144,65 +142,6 @@
       color: rgb(100 116 139);
     }
     html.dark .section-title{ color: rgb(148 163 184); }
-
-    /* ✅ Xəta bildirişləri: scroll + görünüş */
-    #globalError{
-      white-space: pre-line;             /* \n-lər görünsün */
-      max-height: 220px;
-      overflow: auto;
-      padding: .75rem 1rem;
-      border-radius: 1rem;
-      border: 1px solid rgba(244,63,94,.28);
-      background: rgba(254,242,242,.85);
-    }
-    html.dark #globalError{
-      border-color: rgba(244,63,94,.28);
-      background: rgba(190,18,60,.12);
-    }
-
-    /* ✅ “Yerləşdirilməyənlər” çoxalanda scroll olsun */
-    #unplacedContainer{
-      white-space: pre-line;
-      max-height: 260px;
-      overflow: auto;
-      padding: .75rem 1rem;
-      border-radius: 1rem;
-      border: 1px solid rgba(245,158,11,.30);
-      background: rgba(255,251,235,.75);
-    }
-    html.dark #unplacedContainer{
-      border-color: rgba(245,158,11,.25);
-      background: rgba(245,158,11,.08);
-    }
-
-    /* Scrollbar (Chrome/Edge/Safari) */
-    #globalError::-webkit-scrollbar,
-    #unplacedContainer::-webkit-scrollbar,
-    .ep-select-menu::-webkit-scrollbar{
-      width: 10px;
-      height: 10px;
-    }
-    #globalError::-webkit-scrollbar-thumb,
-    #unplacedContainer::-webkit-scrollbar-thumb,
-    .ep-select-menu::-webkit-scrollbar-thumb{
-      background: rgba(15,23,42,.18);
-      border-radius: 999px;
-    }
-    html.dark #globalError::-webkit-scrollbar-thumb,
-    html.dark #unplacedContainer::-webkit-scrollbar-thumb,
-    html.dark .ep-select-menu::-webkit-scrollbar-thumb{
-      background: rgba(148,163,184,.22);
-    }
-    /* Firefox */
-    #globalError, #unplacedContainer, .ep-select-menu{
-      scrollbar-width: thin;
-      scrollbar-color: rgba(15,23,42,.18) transparent;
-    }
-    html.dark #globalError,
-    html.dark #unplacedContainer,
-    html.dark .ep-select-menu{
-      scrollbar-color: rgba(148,163,184,.22) transparent;
-    }
 
     /* Config table */
     table.config-table{
@@ -287,20 +226,19 @@
       white-space: nowrap;
       transition: background-color .15s ease, border-color .15s ease, color .15s ease;
     }
-    .tab-btn:hover{ background: rgba(15,23,42,.08); }  /* əvvəl: .04 */
+    .tab-btn:hover{ background: rgba(15,23,42,.04); }
     html.dark .tab-btn:hover{ background: rgba(255,255,255,.06); }
 
     .tab-btn.active{
-      border-color: rgba(99,102,241,.70);  /* əvvəl: .55 */
-      background: rgba(99,102,241,.16);    /* əvvəl: .10 */
-      color: rgb(49 46 129);               /* əvvəl: 67 56 202 */
-      font-weight: 700;
+      border-color: rgba(99,102,241,.55);
+      background: rgba(99,102,241,.10);
+      color: rgb(67 56 202);
+      font-weight: 600;
     }
     html.dark .tab-btn.active{
       border-color: rgba(129,140,248,.55);
       background: rgba(129,140,248,.12);
       color: rgb(226 232 240);
-      font-weight: 600;
     }
 
     /* Timetable table */
@@ -320,7 +258,7 @@
       border-color: rgba(51,65,85,.9);
     }
     .tt-table th{
-      background: rgba(148,163,184,.18); /* əvvəl: .14 */
+      background: rgba(148,163,184,.14);
       font-weight: 700;
       font-size: .75rem;
     }
@@ -328,6 +266,8 @@
 
     .tt-slot-muted{ color: rgb(148 163 184); font-style: italic; }
     html.dark .tt-slot-muted{ color: rgb(100 116 139); }
+
+    #unplacedContainer{ white-space: pre-line; }
 
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
@@ -344,8 +284,8 @@
       width:100%;
       min-height: var(--ep-field-h);
       border-radius: var(--ep-radius-lg);
-      border: 1px solid rgba(148,163,184,.85);     /* ✅ daha görünən */
-      background: rgba(255,255,255,.82);           /* ✅ daha “solid” */
+      border: 1px solid rgba(226,232,240,.75);
+      background: rgba(255,255,255,.65);
       padding: .62rem 1rem;
       font-size: 13px;
       line-height: 1.35;
@@ -354,10 +294,9 @@
       justify-content:space-between;
       gap:.75rem;
       cursor:pointer;
-      color: rgb(15 23 42);
       transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease;
     }
-    .ep-select-btn:hover{ background: rgba(255,255,255,.92); }
+    .ep-select-btn:hover{ background: rgba(255,255,255,.78); }
     .ep-select-btn:active{ transform: translateY(1px); }
     .ep-select-btn:focus{
       outline:none;
@@ -385,8 +324,8 @@
       top: calc(100% + .35rem);
       z-index: 9999;
       border-radius: 1rem;
-      border: 1px solid rgba(148,163,184,.70);     /* ✅ əvvəl: çox açıq */
-      background: rgba(255,255,255,.95);
+      border: 1px solid rgba(226,232,240,.9);
+      background: rgba(255,255,255,.92);
       backdrop-filter: blur(10px);
       padding: .35rem;
       box-shadow: 0 18px 55px rgba(2,6,23,.18);
@@ -411,23 +350,17 @@
       font-size: 13px;
       text-align:left;
       cursor:pointer;
-      transition: background-color .12s ease, color .12s ease;
+      transition: background-color .12s ease;
     }
     .ep-select-sm .ep-select-item{ font-size: 12.5px; padding: .5rem .7rem; }
-
-    .ep-select-item:hover{ background: rgba(99,102,241,.14); } /* ✅ əvvəl: .10 */
+    .ep-select-item:hover{ background: rgba(99,102,241,.10); }
     html.dark .ep-select-item:hover{ background: rgba(129,140,248,.14); }
 
     .ep-select-item[aria-selected="true"]{
-      background: rgba(99,102,241,.24);  /* ✅ əvvəl: .16 */
-      font-weight: 700;
-      color: rgb(49 46 129);
-    }
-    html.dark .ep-select-item[aria-selected="true"]{
-      background: rgba(129,140,248,.18);
-      color: rgb(226 232 240);
+      background: rgba(99,102,241,.16);
       font-weight: 600;
     }
+    html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
     /* =========================================================
        ✅ PARALLEL LAYOUT (Header ilə 1:1)
@@ -1706,7 +1639,7 @@
               `Axtarış davam edir… Cəhd: ${attempts.toLocaleString('az-AZ')} · Ən yaxşı: ${bestPlaced}/${target} (${pct}%) · ${elapsed}s`;
           }
 
-          // UI donmasın deyə yield
+          // UI donmasın deyə yield (amma limit yoxdur — sadəcə “freeze” etməsin)
           await new Promise(r => requestAnimationFrame(r));
         }
       }

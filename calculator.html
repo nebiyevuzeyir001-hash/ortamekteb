@@ -61,7 +61,7 @@
     html, body { overflow-x: hidden; }
     :root { color-scheme: light; }
     html.dark { color-scheme: dark; }
-    html { scroll-padding-top: 84px; } /* header + azca rahatlıq */
+    html { scroll-padding-top: 84px; }
 
     /* kart hover kölgəsi */
     .card-surface { transition: box-shadow 200ms ease, transform 200ms ease; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
@@ -73,8 +73,8 @@
     input[type="number"]{
       width:100%;
       border-radius: 0.75rem;
-      border: 1px solid rgba(226,232,240,.85);
-      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(203,213,225,.95);
+      background: rgba(248,250,252,.92);
       padding: .65rem .9rem;
       font-size: 14px;
       outline: none;
@@ -91,7 +91,6 @@
       box-shadow: 0 0 0 3px rgba(99,102,241,.22);
     }
 
-    /* Invalid pulse (professional, çox şişirtmədən) */
     .ep-invalid{
       border-color: rgba(244,63,94,.85) !important;
       box-shadow: 0 0 0 3px rgba(244,63,94,.22) !important;
@@ -104,10 +103,28 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ===== Parallellik üçün frame ===== */
+    /* ✅ Secondary (Sıfırla) — bölmənin içi kimi + bir az tünd */
+    .ep-btn-secondary{
+      border: 1px solid rgba(203,213,225,.95);
+      background: linear-gradient(180deg, rgba(241,245,249,.96) 0%, rgba(226,232,240,.88) 100%);
+      color: rgb(15,23,42);
+    }
+    .ep-btn-secondary:hover{
+      background: linear-gradient(180deg, rgba(226,232,240,.96) 0%, rgba(203,213,225,.88) 100%);
+    }
+    html.dark .ep-btn-secondary{
+      border-color: rgba(30,41,59,.75);
+      background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.05) 100%);
+      color: rgb(226,232,240);
+    }
+    html.dark .ep-btn-secondary:hover{
+      background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.06) 100%);
+    }
+
+    /* ===== Frame/Shell ===== */
     :root{
-      --ep-frame-max: 80rem;     /* max-w-7xl */
-      --ep-shell-max: 1700px;    /* reklam olanda genişlənəcək */
+      --ep-frame-max: 80rem;
+      --ep-shell-max: 1700px;
       --ep-rail-w: clamp(260px, 16vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
@@ -178,7 +195,7 @@
 
     @media print{ .no-print{ display:none !important; } }
 
-    /* ✅ Legend “kəsilmiş kimi” görünməsin: pill + fon (border xəttini örtür) */
+    /* Legend pill */
     .ep-legend-pill{
       display: inline-flex;
       align-items: center;
@@ -188,8 +205,8 @@
       font-weight: 600;
       line-height: 1.15;
       letter-spacing: -.01em;
-      border: 1px solid rgba(226,232,240,.9);
-      background: rgba(248,250,252,.95);
+      border: 1px solid rgba(203,213,225,.95);
+      background: rgba(241,245,249,.96);
       color: rgb(51,65,85);
     }
     html.dark .ep-legend-pill{
@@ -198,37 +215,32 @@
       color: rgb(226,232,240);
     }
 
-    /* ✅ Light mod: “hamısı ağ” hissini azaltsın (seçicilik) */
-    html:not(.dark) .ep-panel-bg{
-      background: rgba(255,255,255,.86);
-    }
-    html:not(.dark) .ep-subpanel-bg{
-      background: rgba(248,250,252,.92);
-    }
+    /* ✅ Light mod: rəngləri bir az tündləşdir (hamısı ağ olmasın) */
+    html:not(.dark) .ep-panel-bg{ background: rgba(248,250,252,.90); }
+    html:not(.dark) .ep-subpanel-bg{ background: rgba(241,245,249,.94); }
+
     html:not(.dark) .mode-btn{
-      background: rgba(248,250,252,.92) !important;
+      background: rgba(241,245,249,.94) !important;
+      border-color: rgba(203,213,225,.95) !important;
     }
     html:not(.dark) .mode-btn:hover{
-      background: rgba(241,245,249,1) !important;
+      background: rgba(226,232,240,1) !important;
     }
   </style>
 </head>
 
 <body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
 
-  <!-- Skip link -->
   <a href="#main"
      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
     Kontentə keç
   </a>
 
-  <!-- Background blobs -->
   <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
     <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <!-- Header -->
   <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
@@ -257,18 +269,15 @@
     </div>
   </header>
 
-  <!-- Main -->
   <main id="main" class="pt-4 pb-0">
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
         <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)"></aside>
 
-        <!-- CENTER -->
         <div class="ep-center">
           <div class="py-0">
 
-            <!-- Intro -->
             <section class="py-6 sm:py-8">
               <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
               <p class="mt-2 text-slate-600 dark:text-slate-300">
@@ -276,14 +285,12 @@
               </p>
             </section>
 
-            <!-- Calculator panel -->
             <section class="ep-panel-bg rounded-3xl border border-slate-200/80 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
               <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
                 <div class="font-semibold">🧮 Bal kalkulyatoru</div>
               </div>
 
               <div class="p-6">
-                <!-- Empty state -->
                 <div id="empty-state" class="relative mb-6">
                   <div class="ep-subpanel-bg rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-slate-50/70 dark:bg-white/5 p-5 text-center">
                     <div class="text-lg font-semibold">Rejimi seçin</div>
@@ -293,7 +300,6 @@
                   </div>
                 </div>
 
-                <!-- Mode -->
                 <div id="mode-block" class="grid gap-2">
                   <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
 
@@ -324,7 +330,6 @@
                     </button>
                   </div>
 
-                  <!-- ✅ Mode error (burda göstərilir ki, uzun scroll olmasın) -->
                   <div
                     id="mode-error"
                     class="hidden mt-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/25 dark:bg-rose-500/10 dark:text-rose-200"
@@ -338,13 +343,9 @@
                   </div>
                 </div>
 
-                <!-- Forms -->
                 <div class="mt-6 grid gap-6">
-                  <!-- I term -->
                   <fieldset id="fs-t1" class="ep-subpanel-bg hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-slate-50/70 dark:bg-white/5 p-4">
-                    <legend class="px-2">
-                      <span class="ep-legend-pill">I yarımil</span>
-                    </legend>
+                    <legend class="px-2"><span class="ep-legend-pill">I yarımil</span></legend>
 
                     <div class="mt-3 grid grid-cols-2 gap-2">
                       <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
@@ -361,11 +362,8 @@
                     </div>
                   </fieldset>
 
-                  <!-- II term -->
                   <fieldset id="fs-t2" class="ep-subpanel-bg hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-slate-50/70 dark:bg-white/5 p-4">
-                    <legend class="px-2">
-                      <span class="ep-legend-pill">II yarımil</span>
-                    </legend>
+                    <legend class="px-2"><span class="ep-legend-pill">II yarımil</span></legend>
 
                     <div class="mt-3 grid grid-cols-2 gap-2">
                       <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
@@ -382,22 +380,21 @@
                     </div>
                   </fieldset>
 
-                  <!-- Actions -->
                   <div id="calc-actions" class="flex flex-col sm:flex-row gap-3">
-                    <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition">
+                    <button id="btn-calc" class="ep-btn-primary w-full rounded-2xl px-4 py-3 font-semibold text-white shadow-sm hover:brightness-110 transition focus:outline-none focus:ring-2 focus:ring-indigo-400">
                       Hesabla
                     </button>
 
+                    <!-- ✅ Sıfırla: indi bölmənin içi kimi + tündləşdirilmiş -->
                     <button
                       id="btn-reset"
                       type="button"
-                      class="w-full rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-slate-200 dark:hover:bg-slate-900/60 transition"
+                      class="ep-btn-secondary w-full rounded-2xl px-4 py-3 font-semibold transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                       Sıfırla
                     </button>
                   </div>
 
-                  <!-- ✅ Calc errors (peşəkar alert) -->
                   <div
                     id="calc-error"
                     class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/25 dark:bg-rose-500/10 dark:text-rose-200"
@@ -410,7 +407,6 @@
                     </div>
                   </div>
 
-                  <!-- Output -->
                   <div id="calc-output" class="ep-subpanel-bg hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/70 bg-slate-50/70 dark:bg-white/5 p-5">
                     <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
 
@@ -458,7 +454,6 @@
               </div>
             </section>
 
-            <!-- Info -->
             <section class="mt-10 rounded-3xl border border-slate-200/80 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
               <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
@@ -467,30 +462,25 @@
                   Bal kalkulyatoru KSQ və BSQ nəticələrinə əsaslanaraq yarımil və illik qiymətləri avtomatik hesablayır.
                   Alqoritm <strong>KSQ 40% + BSQ 60%</strong> çəkisinə əsaslanır və bütün hesablamalar brauzerdə aparılır.
                 </p>
-
                 <p>
                   İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir.
                   KSQ sahələrinə daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəyə daha çox təsir edir.
                   “Hər ikisi” rejimində iki yarımilin ortası illik bal kimi göstərilir.
                 </p>
-
                 <p>
                   KSQ sahələri istəyə bağlıdır; boş buraxılan KSQ-lar ortalamaya daxil edilmir.
                   <strong>BSQ daxil edilməzsə</strong>, nəticə <strong>KSQ-ların ədədi ortası</strong> kimi hesablanır.
                   <strong>BSQ daxil edilərsə</strong>, <strong>ən azı 1 KSQ</strong> daxil edilməlidir və BSQ <strong>0–100</strong> aralığında olmalıdır.
                   Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
-
                 <p>
                   Nəticələr 2–5 qiymət şkalasında təqdim olunur:
                   81–100 → 5, 61–80 → 4, 31–60 → 3, 0–30 → 2.
                 </p>
-
                 <p>
                   Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
                   Səhifə yenilənərsə dəyərlər sıfırlanır.
                 </p>
-
                 <p>
                   Təklif və rəy üçün:
                   <a class="underline underline-offset-4 hover:opacity-80" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
@@ -507,7 +497,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
@@ -644,7 +633,6 @@
         window.scrollTo({ top: Math.max(0, y), behavior: scrollBehavior() });
       }
 
-      // ✅ Nəzarətli/professional: yalnız lazım olanda + “safe zone”
       function ensureVisibleIfNeeded(el, opts = {}) {
         if (!el) return;
 
@@ -663,14 +651,9 @@
 
         let targetY = window.scrollY;
 
-        // element çox hündürdürsə, üstünü safe zonaya gətir
-        if (r.height > safeH) {
-          targetY += (r.top - topLimit);
-        } else if (r.top < topLimit) {
-          targetY += (r.top - topLimit);
-        } else if (r.bottom > bottomLimit) {
-          targetY += (r.bottom - bottomLimit);
-        }
+        if (r.height > safeH) targetY += (r.top - topLimit);
+        else if (r.top < topLimit) targetY += (r.top - topLimit);
+        else if (r.bottom > bottomLimit) targetY += (r.bottom - bottomLimit);
 
         window.scrollTo({ top: Math.max(0, targetY), behavior: scrollBehavior() });
       }
@@ -686,7 +669,6 @@
         modeErr.classList.add('hidden');
         if (modeErrText) modeErrText.textContent = '';
       }
-
       function showModeError(msg) {
         if (!modeErr) return;
         if (modeErrText) modeErrText.textContent = msg;
@@ -697,7 +679,6 @@
         calcErr.classList.add('hidden');
         calcErrText.textContent = '';
       }
-
       function showCalcError(msg) {
         calcErrText.textContent = msg;
         calcErr.classList.remove('hidden');
@@ -758,7 +739,6 @@
           mode = btn.dataset.mode;
           updateModeUI();
           btn.blur();
-          // rejim seçiləndə kalkulyatora gətir (bu normaldır)
           scrollToWithHeader(document.querySelector('section.ep-panel-bg') || fsT1 || fsT2);
         });
       });
@@ -771,8 +751,6 @@
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-
-      // 2: 0-30, 3: 31-60, 4: 61-80, 5: 81-100
       const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
 
       function clearOutputs() {
@@ -789,14 +767,11 @@
         return { ksq, bsq };
       }
 
-      // ✅ Daha “professional” nəticə modeli (oxunaqlı + warn bug-u düzəlir)
       function computeTerm(prefix, outIds) {
         const { ksq, bsq } = readTerm(prefix);
         const warnLocal = (ksq.length > 0 && ksq.length < KSQ_COUNT);
 
-        if (ksq.length === 0 && bsq === null) {
-          return { status: 'empty', warn: false };
-        }
+        if (ksq.length === 0 && bsq === null) return { status: 'empty', warn: false };
 
         if (bsq !== null && ksq.length === 0) {
           return {
@@ -833,7 +808,6 @@
         $id(outIds.ksq).textContent   = kAvg.toFixed(2);
         $id(outIds.bsq).textContent   = bsq.toFixed(2);
         $id(outIds.grade).textContent = to5(total);
-
         return { status: 'ok', value: total, warn: warnLocal };
       }
 
@@ -875,12 +849,9 @@
         hideCalcError();
         warn.classList.add('hidden');
 
-        // ✅ Mode seçilməyibsə: xətanı elə həmin hissədə göstər (uzun scroll yox)
         if (!mode) {
           out.classList.add('hidden');
           showModeError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).');
-
-          // yalnız görünmürsə, minimal scroll (mode blokunu göstərsin kifayətdir)
           ensureVisibleStable(modeBlock, { topGap: 22, bottomGap: 18 });
           return;
         }
@@ -898,9 +869,7 @@
             return;
           }
           if (r1.status === 'ok') { t1 = r1.value; warnNeeded = warnNeeded || r1.warn; }
-          if (r1.status === 'empty') {
-            ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
-          }
+          if (r1.status === 'empty') ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         } else {
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
@@ -915,17 +884,13 @@
             return;
           }
           if (r2.status === 'ok') { t2 = r2.value; warnNeeded = warnNeeded || r2.warn; }
-          if (r2.status === 'empty') {
-            ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
-          }
+          if (r2.status === 'empty') ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         } else {
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
         out.classList.remove('hidden');
         warn.classList.toggle('hidden', !warnNeeded);
-
-        // nəticələr görünmürsə, minimal scroll et (tam “jump” yox)
         ensureVisibleStable(out, { topGap: 22, bottomGap: 18 });
 
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {

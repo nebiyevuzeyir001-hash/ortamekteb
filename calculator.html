@@ -180,6 +180,85 @@
     @media print{
       .no-print{ display:none !important; }
     }
+
+    /* =========================================================
+       ✅ Term headers (I/II yarımil) – professional pill style
+       (legend render problemi yoxdur, hər brauzerdə eyni görünür)
+       ========================================================= */
+    .ep-term-head{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .ep-term-head::after{
+      content:"";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(99,102,241,.22), rgba(99,102,241,0));
+    }
+    html.dark .ep-term-head::after{
+      background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
+    }
+
+    .ep-term-pill{
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(226,232,240,.85);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 1px 2px rgba(15,23,42,.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      line-height: 1;
+    }
+    html.dark .ep-term-pill{
+      border-color: rgba(148,163,184,.18);
+      background: rgba(2,6,23,.28);
+      box-shadow: 0 1px 2px rgba(0,0,0,.35);
+    }
+
+    /* soft gradient outline (subtle) */
+    .ep-term-pill::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(90deg, rgba(79,70,229,.55), rgba(147,51,234,.55));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events:none;
+      opacity: .28;
+    }
+    html.dark .ep-term-pill::before{ opacity: .42; }
+
+    .ep-term-dot{
+      width: 9px;
+      height: 9px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg,#4f46e5,#9333ea);
+      box-shadow: 0 0 0 4px rgba(99,102,241,.12);
+      flex: 0 0 auto;
+    }
+    html.dark .ep-term-dot{
+      box-shadow: 0 0 0 4px rgba(99,102,241,.18);
+    }
+
+    .ep-term-title{
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      color: rgb(15, 23, 42);
+      white-space: nowrap;
+    }
+    html.dark .ep-term-title{
+      color: rgb(226,232,240);
+    }
   </style>
 </head>
 
@@ -289,8 +368,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
+                  <!-- ✅ FIXED: legend visually replaced by professional header -->
                   <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                    <legend class="px-2 text-sm font-semibold">I yarımil</legend>
+                    <legend class="sr-only">I yarımil</legend>
+
+                    <div class="ep-term-head" aria-hidden="true">
+                      <div class="ep-term-pill">
+                        <span class="ep-term-dot"></span>
+                        <span class="ep-term-title">I yarımil</span>
+                      </div>
+                    </div>
+
                     <div class="mt-2 grid grid-cols-2 gap-2">
                       <input id="t1-ksq1" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="KSQ 1" />
                       <input id="t1-ksq2" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="KSQ 2" />
@@ -307,7 +395,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </fieldset>
 
                   <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                    <legend class="px-2 text-sm font-semibold">II yarımil</legend>
+                    <legend class="sr-only">II yarımil</legend>
+
+                    <div class="ep-term-head" aria-hidden="true">
+                      <div class="ep-term-pill">
+                        <span class="ep-term-dot"></span>
+                        <span class="ep-term-title">II yarımil</span>
+                      </div>
+                    </div>
+
                     <div class="mt-2 grid grid-cols-2 gap-2">
                       <input id="t2-ksq1" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="KSQ 1" />
                       <input id="t2-ksq2" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="KSQ 2" />
@@ -619,7 +715,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const band = safeBand(opts);
         const r = pageRect(el);
 
-        // if element taller than safe band, accept partial (top visible)
         if (r.height > (band.bottom - band.top)) {
           return r.top >= band.top && r.top <= band.bottom;
         }
@@ -643,29 +738,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         let targetY = band.y;
 
-        // Scroll up
         if (r.top < band.top) {
           targetY = r.top - (getHeaderHeight() + (opts.topGap ?? 18));
-        }
-        // Scroll down
-        else if (r.bottom > band.bottom) {
-          // bring bottom into view (keyboard-aware via vh)
+        } else if (r.bottom > band.bottom) {
           targetY = r.bottom - band.vh + (opts.bottomGap ?? 16);
         }
 
         scrollToY(targetY, behavior);
       }
 
-      // Stabilizer: keyboard animation, layout reflow, iOS quirks
       function ensureVisibleStable(el, opts = {}) {
         if (!el) return;
 
         const run = () => ensureVisible(el, opts);
 
-        // immediate paint cycle
         requestAnimationFrame(() => requestAnimationFrame(run));
-
-        // short settle (helps iOS + Android)
         window.setTimeout(run, 120);
         window.setTimeout(run, 260);
 
@@ -706,7 +793,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         all.forEach(el => setInvalid(el, false));
       }
 
-      // Normalize comma on blur + clear invalid on input
       function attachInputHygiene(el) {
         if (!el) return;
         el.addEventListener('input', () => setInvalid(el, false));
@@ -717,7 +803,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
       }
 
-      // attach hygiene to all inputs
       [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id => attachInputHygiene($id(id)));
 
       // ===== Error / focus management =====
@@ -739,15 +824,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         err.textContent = message;
         err.classList.remove('hidden');
 
-        // Keep keyboard open if there's a field to fix, otherwise focus the alert
         if (focusEl) {
           setInvalid(focusEl, true);
 
-          // 1) make error visible
           ensureVisibleStable(err, { topGap: 18, bottomGap: 16 });
-
-          // 2) make field visible, then focus without scroll-jump, then re-ensure
           ensureVisibleStable(focusEl, { topGap: 18, bottomGap: 16 });
+
           requestAnimationFrame(() => {
             tryFocus(focusEl);
             ensureVisibleStable(focusEl, { topGap: 18, bottomGap: 16 });
@@ -806,7 +888,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
       }
 
-      // mode change
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           mode = btn.dataset.mode;
@@ -817,7 +898,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           btn.blur();
           ensureVisibleStable(panel || fsT1 || fsT2, { topGap: 18, bottomGap: 18 });
 
-          // focus first input of active mode for speed
           requestAnimationFrame(() => {
             if (mode === 't1') tryFocus($id('t1-ksq1'));
             else if (mode === 't2') tryFocus($id('t2-ksq1'));
@@ -828,7 +908,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
-      // range check helpers
       function readTerm(prefix) {
         const termLabel = (prefix === 't1' ? 'I' : 'II');
 
@@ -861,10 +940,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         const { ksq, bsq } = term;
 
-        // nothing entered
         if (ksq.length === 0 && bsq === null) return null;
 
-        // BSQ exists but no KSQ
         if (bsq !== null && ksq.length === 0) {
           return {
             error: true,
@@ -878,7 +955,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const missingKsqs = (ksq.length > 0 && ksq.length < KSQ_COUNT);
         const kAvg = ksq.length ? avg(ksq) : 0;
 
-        // no BSQ => KSQ average only
         if (bsq === null) {
           const total = +kAvg.toFixed(2);
           $id(outIds.total).textContent = total.toFixed(2);
@@ -888,7 +964,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           return { total, missingKsqs };
         }
 
-        // BSQ range
         if (bsq < 0 || bsq > 100) {
           return {
             error: true,
@@ -929,7 +1004,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       resetBtn?.addEventListener('click', resetCalc);
 
-      // Enter -> calculate (desktop + mobile external keyboards)
       [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id => {
         const el = $id(id);
         el?.addEventListener('keydown', e => {
@@ -945,7 +1019,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearAllInvalid();
         clearError();
 
-        // Mode required
         if (!mode) {
           showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).');
           ensureVisibleStable(modeArea, { topGap: 18, bottomGap: 18 });
@@ -957,7 +1030,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let t1 = null, t2 = null;
         let missingAny = false;
 
-        // Term 1
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
 
@@ -973,7 +1045,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        // Term 2
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
 
@@ -989,11 +1060,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
-        // Output
         out.classList.remove('hidden');
         warn.classList.toggle('hidden', !missingAny);
 
-        // Year
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -1005,11 +1074,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           $id('out-year-card').classList.add('hidden');
         }
 
-        // Make result visible (keyboard-aware)
         ensureVisibleStable(out, { topGap: 22, bottomGap: 18 });
       });
 
-      // Initial behavior (don’t aggressively override history scroll on desktop)
       (function init() {
         try {
           if ('scrollRestoration' in history) history.scrollRestoration = 'auto';

@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="az" class="scroll-smooth">
 <head>
-  <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M3CQTM2P');</script>
-<!-- End Google Tag Manager -->
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -42,6 +34,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
   <link rel="manifest" href="manifest.webmanifest">
 
+  <!-- Tema: FOUC olmaması üçün -->
   <script>
     (function () {
       try {
@@ -70,185 +63,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     html.dark { color-scheme: dark; }
     html { scroll-padding-top: 80px; }
 
-    /* =========================
-       LIGHT/DARK TOKENLAR
-       (light modda “hər yer ağ” problemini aradan qaldırır)
-       ========================= */
-    :root{
-      /* page */
-      --ep-page-top: #eef2ff;    /* indigo-50 */
-      --ep-page-mid: #f8fafc;    /* slate-50 */
-      --ep-page-bot: #ffffff;
+    .card-surface { transition: box-shadow 200ms ease, transform 200ms ease; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
+    .card-surface:hover { box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.08); }
+    html.dark .card-surface { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03); }
+    html.dark .card-surface:hover { box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06); }
 
-      /* surfaces */
-      --ep-surface-1: #ffffff;   /* əsas kart */
-      --ep-surface-2: #f8fafc;   /* iç panel */
-      --ep-surface-3: #eef2f7;   /* daha “fərqlənən” iç element */
-
-      --ep-border: rgba(15,23,42,.12);
-      --ep-border-strong: rgba(15,23,42,.18);
-
-      --ep-muted: #475569;       /* slate-600 */
-      --ep-muted-2: #64748b;     /* slate-500 */
-
-      --ep-header-bg: rgba(255,255,255,.72);
-
-      --ep-input-bg: #ffffff;
-      --ep-input-border: rgba(148,163,184,.65);
-
-      /* legend chip (şəffaf OLMASIN) */
-      --ep-legend-bg: #ffffff;
-      --ep-legend-border: rgba(99,102,241,.38);
-
-      /* focus */
-      --ep-focus: rgba(99,102,241,.25);
-    }
-
-    html.dark{
-      --ep-page-top: #020617;     /* slate-950 */
-      --ep-page-mid: #0b1220;     /* custom dark */
-      --ep-page-bot: #0f172a;     /* slate-900 */
-
-      --ep-surface-1: rgba(255,255,255,.06);
-      --ep-surface-2: rgba(255,255,255,.045);
-      --ep-surface-3: rgba(255,255,255,.035);
-
-      --ep-border: rgba(148,163,184,.18);
-      --ep-border-strong: rgba(148,163,184,.24);
-
-      --ep-muted: rgba(226,232,240,.78);
-      --ep-muted-2: rgba(226,232,240,.62);
-
-      --ep-header-bg: rgba(2,6,23,.55);
-
-      --ep-input-bg: rgba(255,255,255,.04);
-      --ep-input-border: rgba(51,65,85,.9);
-
-      /* legend chip (şəffaf OLMASIN) */
-      --ep-legend-bg: #0b1220;
-      --ep-legend-border: rgba(129,140,248,.35);
-
-      --ep-focus: rgba(99,102,241,.28);
-    }
-
-    /* Page background (tailwind gradienti çıxardıq, eyni “layering” hissini light-da da verdik) */
-    body.ep-page{
-      background:
-        radial-gradient(900px 420px at 15% -10%, rgba(99,102,241,.12), transparent 60%),
-        radial-gradient(700px 360px at 95% 10%, rgba(16,185,129,.10), transparent 60%),
-        linear-gradient(180deg, var(--ep-page-top) 0%, var(--ep-page-mid) 45%, var(--ep-page-bot) 100%);
-    }
-
-    /* “glass” header */
-    .ep-header{
-      background: var(--ep-header-bg);
-      border-color: var(--ep-border);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
-    }
-
-    /* Surfaces */
-    .ep-surface-1{
-      background: var(--ep-surface-1);
-      border: 1px solid var(--ep-border);
-    }
-    .ep-surface-2{
-      background: var(--ep-surface-2);
-      border: 1px solid var(--ep-border);
-    }
-    .ep-surface-3{
-      background: var(--ep-surface-3);
-      border: 1px solid var(--ep-border);
-    }
-
-    /* Card shadow (light-da daha görünən, dark-da onsuz da yaxşı idi) */
-    .card-surface{
-      transition: box-shadow 200ms ease, transform 200ms ease, border-color 200ms ease;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-    }
-    .card-surface:hover{
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
-      border-color: var(--ep-border-strong);
-    }
-    html.dark .card-surface{
-      box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03);
-    }
-    html.dark .card-surface:hover{
-      box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);
-    }
-
-    /* Inputs (light-da daha “səliqəli”, dark-da eyni) */
     input[type="number"]{
       width:100%;
       border-radius: 0.75rem;
-      border: 1px solid var(--ep-input-border);
-      background: var(--ep-input-bg);
+      border: 1px solid rgba(226,232,240,.7);
+      background: rgba(255,255,255,.6);
       padding: .65rem .9rem;
       font-size: 14px;
       outline: none;
-      color: rgb(15,23,42);
-      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
     }
     html.dark input[type="number"]{
+      border-color: rgba(30,41,59,.7);
+      background: rgba(255,255,255,.05);
       color: rgb(226,232,240);
     }
     input[type="number"]::placeholder{ color: rgb(148,163,184); }
     input[type="number"]:focus{
       border-color: rgb(99,102,241);
-      box-shadow: 0 0 0 3px var(--ep-focus);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.25);
     }
 
-    /* Buttons */
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
-
-    /* Mode buttons: light-da da “panel” kimi fərqlənsin */
-    .mode-btn{
-      background: var(--ep-surface-3);
-      border: 1px solid var(--ep-border);
-    }
-    .mode-btn:hover{
-      filter: brightness(0.98);
-      border-color: var(--ep-border-strong);
-    }
-    html.dark .mode-btn:hover{
-      filter: none;
-      background: rgba(255,255,255,.05);
-    }
-
-    /* Fieldset + Legend (kəsilmiş kimi görünməsin, şəffaf olmasın) */
-    .ep-fieldset{
-      position: relative;
-      padding-top: 1.75rem; /* legend çip üçün yer */
-    }
-    .ep-legend{
-      position: absolute;
-      top: 0;
-      left: 1rem;
-      transform: translateY(-55%);
-      z-index: 5;
-
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-
-      padding: .3rem .85rem;
-      border-radius: 9999px;
-
-      background: var(--ep-legend-bg);     /* ✅ şəffaf deyil */
-      border: 1px solid var(--ep-legend-border);
-
-      box-shadow: 0 10px 22px rgba(15,23,42,.12);
-      letter-spacing: .2px;
-      white-space: nowrap;
-    }
-    html.dark .ep-legend{
-      box-shadow: 0 14px 28px rgba(0,0,0,.45);
-    }
-
-    /* Muted text helpers */
-    .ep-muted{ color: var(--ep-muted); }
-    .ep-muted-2{ color: var(--ep-muted-2); }
 
     :root{
       --ep-frame-max: 80rem;
@@ -334,11 +175,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </style>
 </head>
 
-<body class="ep-page min-h-screen pt-16 text-slate-900 dark:text-slate-100">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M3CQTM2P"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+<body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
 
   <a href="#main"
      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
@@ -350,7 +187,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
 
-  <header class="ep-header fixed top-0 inset-x-0 z-50 border-b">
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="h-16 flex items-center justify-between gap-3">
         <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
@@ -362,8 +199,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button
           id="theme-toggle"
           type="button"
-          class="inline-flex items-center justify-center rounded-2xl border p-2 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          style="background: var(--ep-surface-2); border-color: var(--ep-border);"
+          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-slate-200 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
           aria-label="Tema dəyişdir"
           aria-pressed="false"
         >
@@ -390,32 +226,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             <section class="py-6 sm:py-8">
               <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Bal kalkulyatoru</h1>
-              <p class="mt-2 ep-muted">
+              <p class="mt-2 text-slate-600 dark:text-slate-300">
                 I/II yarımil və illik nəticələri sürətli və dəqiq hesablamaq üçün sadə kalkulyator.
               </p>
             </section>
 
-            <section class="rounded-3xl ep-surface-1 card-surface overflow-hidden relative">
-              <div class="px-6 py-4 border-b" style="border-color: var(--ep-border);">
+            <section id="calc-panel" class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm overflow-hidden relative">
+              <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
                 <div class="font-semibold">🧮 Bal kalkulyatoru</div>
               </div>
 
               <div class="p-6">
                 <div id="empty-state" class="relative mb-6">
-                  <div class="rounded-2xl ep-surface-2 p-5 text-center">
+                  <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
                     <div class="text-lg font-semibold">Rejimi seçin</div>
-                    <div class="mt-1 text-sm ep-muted">
+                    <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">
                       I yarımil, II yarımil və ya “Hər ikisi” seçdikdən sonra xanalar aktiv olacaq.
                     </div>
                   </div>
                 </div>
 
-                <div class="grid gap-2">
-                  <div class="text-sm ep-muted">Hesablama rejimi</div>
+                <div class="grid gap-2" id="mode-area">
+                  <div class="text-sm text-slate-600 dark:text-slate-300">Hesablama rejimi</div>
                   <div class="grid grid-cols-3 gap-2">
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl px-3 py-2 text-sm font-medium transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-900/60 transition"
                       data-mode="t1"
                       aria-pressed="false"
                     >
@@ -423,7 +259,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </button>
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl px-3 py-2 text-sm font-medium transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-900/60 transition"
                       data-mode="t2"
                       aria-pressed="false"
                     >
@@ -431,7 +267,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </button>
                     <button
                       type="button"
-                      class="mode-btn w-full rounded-xl px-3 py-2 text-sm font-medium transition"
+                      class="mode-btn w-full rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-900/60 transition"
                       data-mode="both"
                       aria-pressed="false"
                     >
@@ -441,8 +277,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
-                  <fieldset id="fs-t1" class="hidden rounded-2xl ep-surface-2 ep-fieldset p-4">
-                    <legend class="ep-legend text-sm font-semibold">I yarımil</legend>
+                  <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                    <legend class="px-2 text-sm font-semibold">I yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
                       <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
                       <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
@@ -458,8 +294,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                   </fieldset>
 
-                  <fieldset id="fs-t2" class="hidden rounded-2xl ep-surface-2 ep-fieldset p-4">
-                    <legend class="ep-legend text-sm font-semibold">II yarımil</legend>
+                  <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                    <legend class="px-2 text-sm font-semibold">II yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
                       <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
                       <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
@@ -483,46 +319,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <button
                       id="btn-reset"
                       type="button"
-                      class="w-full rounded-2xl px-4 py-3 font-semibold transition"
-                      style="background: var(--ep-surface-3); border: 1px solid var(--ep-border);"
+                      class="w-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 font-semibold hover:bg-slate-200 dark:hover:bg-slate-900/60 transition"
                     >
                       Sıfırla
                     </button>
                   </div>
 
-                  <div id="calc-error" class="hidden text-sm text-rose-500"></div>
+                  <!-- ✅ daha professional: alert styling + a11y -->
+                  <div
+                    id="calc-error"
+                    class="hidden rounded-2xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/25 px-4 py-3 text-sm text-rose-700 dark:text-rose-300"
+                    role="alert"
+                    aria-live="polite"
+                    tabindex="-1"
+                  ></div>
 
-                  <div id="calc-output" class="hidden rounded-2xl ep-surface-2 p-5">
-                    <div class="text-sm ep-muted-2">Nəticələr</div>
+                  <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
+                    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
 
                     <div class="mt-4 grid sm:grid-cols-3 gap-3">
-                      <div id="out-t1-card" class="rounded-2xl ep-surface-3 p-4">
-                        <div class="text-sm ep-muted-2">I yarımil</div>
+                      <div id="out-t1-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">I yarımil</div>
                         <div class="mt-1 text-2xl font-bold" id="out-t1">—</div>
-                        <div class="mt-2 text-xs ep-muted">
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
                           KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span>
                         </div>
-                        <div class="text-xs ep-muted">
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
                           Qiymət: <span class="font-semibold" id="out-t1-grade">—</span>
                         </div>
                       </div>
 
-                      <div id="out-t2-card" class="rounded-2xl ep-surface-3 p-4">
-                        <div class="text-sm ep-muted-2">II yarımil</div>
+                      <div id="out-t2-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">II yarımil</div>
                         <div class="mt-1 text-2xl font-bold" id="out-t2">—</div>
-                        <div class="mt-2 text-xs ep-muted">
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
                           KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span>
                         </div>
-                        <div class="text-xs ep-muted">
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
                           Qiymət: <span class="font-semibold" id="out-t2-grade">—</span>
                         </div>
                       </div>
 
-                      <div id="out-year-card" class="rounded-2xl ep-surface-3 p-4">
-                        <div class="text-sm ep-muted-2">İllik</div>
+                      <div id="out-year-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
                         <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
-                        <div class="mt-2 text-xs ep-muted">Hesab: (I + II) / 2</div>
-                        <div class="text-xs ep-muted">
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">Hesab: (I + II) / 2</div>
+                        <div class="text-xs text-slate-600 dark:text-slate-300">
                           Qiymət: <span class="font-semibold" id="out-year-grade">—</span>
                         </div>
                       </div>
@@ -536,7 +378,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
             </section>
 
-            <section class="mt-10 rounded-3xl ep-surface-1 card-surface p-6 sm:p-10">
+            <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
               <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
               <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
@@ -584,8 +426,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </main>
 
-  <footer class="mt-10 border-t" style="border-color: var(--ep-border);">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm ep-muted">
+  <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
       <div>
         © <span id="year"></span> <span class="font-semibold text-slate-900 dark:text-slate-100">EduPlan AZ</span> · Bütün hüquqlar qorunur
       </div>
@@ -599,6 +441,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </footer>
 
+  <!-- JS: year + theme toggle -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -645,6 +488,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
+  <!-- Ads: auto layout -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -668,9 +512,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const hasRight = hasContent(right);
         shell.classList.toggle('has-left-ad', hasLeft);
         shell.classList.toggle('has-right-ad', hasRight);
-
-        const hasAds = hasLeft || hasRight;
-        frame.classList.toggle('has-ads', hasAds);
+        frame.classList.toggle('has-ads', hasLeft || hasRight);
       };
 
       update();
@@ -681,6 +523,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -691,74 +534,120 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       let mode = null;
 
+      const panel = $id('calc-panel');
+      const modeArea = $id('mode-area');
       const emptyState = $id('empty-state');
       const fsT1 = $id('fs-t1');
       const fsT2 = $id('fs-t2');
 
-      const actions = $id('calc-actions');
+      const btnCalc = $id('btn-calc');
+      const out = $id('calc-output');
+      const err = $id('calc-error');
+      const warn = $id('calc-warn');
+      const resetBtn = $id('btn-reset');
 
-      function scrollToWithHeader(el, extraOffset = 0) {
-        if (!el) return;
+      const modeButtons = $qsa('[data-mode]');
+
+      const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
+      const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
+      const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+
+      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
+
+      // ===== Professional scroll helpers (minimum scroll only) =====
+      const prefersReduceMotion = () => {
+        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+        catch (e) { return false; }
+      };
+
+      function isInSafeZone(el, opts = {}) {
+        if (!el) return true;
         const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const y = el.getBoundingClientRect().top + window.scrollY - headerH - 10 - extraOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+        const topGap = opts.topGap ?? 28;      // “azca” boşluq (professional)
+        const bottomGap = opts.bottomGap ?? 20;
 
-      function scrollToStable(el, extraOffset = 0) {
-        if (!el) return;
-        try { document.activeElement?.blur?.(); } catch (e) {}
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            scrollToWithHeader(el, extraOffset);
-          });
-        });
-      }
-
-      function ensureVisibleIfNeeded(el, opts = {}) {
-        if (!el) return;
-
-        const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const topGap = opts.topGap ?? 32;
-        const bottomGap = opts.bottomGap ?? 24;
-
+        const r = el.getBoundingClientRect();
         const topLimit = headerH + topGap;
         const bottomLimit = window.innerHeight - bottomGap;
 
-        const r = el.getBoundingClientRect();
-
-        const isOk = (r.top >= topLimit) && (r.bottom <= bottomLimit);
-        if (isOk) return;
-
-        let targetY = window.scrollY;
-
-        if (r.top < topLimit) {
-          targetY = window.scrollY + (r.top - topLimit);
-        } else if (r.bottom > bottomLimit) {
-          targetY = window.scrollY + (r.bottom - bottomLimit);
-        }
-
-        targetY = Math.max(0, targetY);
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
+        // tam sığırsa -> ok
+        return (r.top >= topLimit) && (r.bottom <= bottomLimit);
       }
 
-      function ensureVisibleStable(el, opts) {
+      function reveal(el, opts = {}) {
         if (!el) return;
-        try { document.activeElement?.blur?.(); } catch (e) {}
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            ensureVisibleIfNeeded(el, opts);
-          });
+        if (isInSafeZone(el, opts)) return;
+
+        const headerH = document.querySelector('header')?.offsetHeight || 0;
+        const topGap = opts.topGap ?? 28;
+
+        // fixed header overlay problemini “native” həll edir
+        el.style.scrollMarginTop = (headerH + topGap) + 'px';
+
+        el.scrollIntoView({
+          behavior: prefersReduceMotion() ? 'auto' : 'smooth',
+          block: 'nearest',
+          inline: 'nearest'
         });
       }
 
+      function revealStable(el, opts = {}) {
+        if (!el) return;
+        try { document.activeElement?.blur?.(); } catch (e) {}
+        requestAnimationFrame(() => requestAnimationFrame(() => reveal(el, opts)));
+      }
+
+      // ===== UX helpers =====
+      function pulse(el, ms = 900) {
+        if (!el) return;
+        const cls = ['ring-2', 'ring-rose-400/50', 'border-rose-400/70'];
+        cls.forEach(c => el.classList.add(c));
+        window.setTimeout(() => cls.forEach(c => el.classList.remove(c)), ms);
+      }
+
+      function tryFocus(el) {
+        if (!el) return;
+        try { el.focus({ preventScroll: true }); }
+        catch (e) { try { el.focus(); } catch (e2) {} }
+      }
+
+      function clearError() {
+        err.classList.add('hidden');
+        err.textContent = '';
+      }
+
+      function showError(message, opts = {}) {
+        warn.classList.add('hidden');
+        out.classList.add('hidden');
+        err.textContent = message;
+        err.classList.remove('hidden');
+        tryFocus(err);
+        revealStable(err, opts);
+      }
+
+      function clearOutputs() {
+        [
+          'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
+          'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
+          'out-year','out-year-grade'
+        ].forEach(id => { $id(id).textContent = '—'; });
+      }
+
       function setBtnActive(btn, act) {
-        const addA = ['ring-2','ring-indigo-500/45','border-indigo-500'];
-        if (act) addA.forEach(c => btn.classList.add(c));
-        else addA.forEach(c => btn.classList.remove(c));
+        const addA = ['ring-2','ring-indigo-500/45','border-indigo-500','bg-white/80','dark:bg-slate-900/60'];
+        const remA = ['border-slate-200/70','dark:border-slate-800/70','bg-white/60','dark:bg-white/5'];
+
+        if (act) {
+          remA.forEach(c => btn.classList.remove(c));
+          addA.forEach(c => btn.classList.add(c));
+        } else {
+          addA.forEach(c => btn.classList.remove(c));
+          remA.forEach(c => btn.classList.add(c));
+        }
       }
 
       function updateModeUI() {
-        $qsa('[data-mode]').forEach(b => {
+        modeButtons.forEach(b => {
           const act = (b.dataset.mode === mode);
           b.setAttribute('aria-pressed', act ? 'true' : 'false');
           setBtnActive(b, act);
@@ -769,7 +658,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           fsT1.classList.add('hidden');
           fsT2.classList.add('hidden');
           $id('calc-output')?.classList.add('hidden');
-          $id('calc-error')?.classList.add('hidden');
+          clearError();
           return;
         }
 
@@ -783,36 +672,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         $id('out-year-card')?.classList.toggle('hidden', mode !== 'both');
       }
 
-      $qsa('[data-mode]').forEach(btn => {
+      modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           mode = btn.dataset.mode;
           updateModeUI();
           btn.blur();
-          scrollToWithHeader(document.querySelector('section.rounded-3xl') || fsT1 || fsT2);
+          revealStable(panel || fsT1 || fsT2, { topGap: 18, bottomGap: 18 });
         });
       });
 
       updateModeUI();
-
-      const btnCalc = $id('btn-calc');
-      const out = $id('calc-output');
-      const err = $id('calc-error');
-      const warn = $id('calc-warn');
-      const resetBtn = $id('btn-reset');
-
-      const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
-      const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
-      const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-
-      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
-
-      function clearOutputs() {
-        [
-          'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
-          'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
-          'out-year','out-year-grade'
-        ].forEach(id => { $id(id).textContent = '—'; });
-      }
 
       function readTerm(prefix) {
         const ksq = idsFor(prefix).map(id => numOrNull($id(id).value)).filter(v => v !== null);
@@ -820,36 +689,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return { ksq, bsq };
       }
 
+      // computeTerm: side-effect only outputs; errors are returned (professional separation)
       function computeTerm(prefix, outIds) {
         const { ksq, bsq } = readTerm(prefix);
 
+        // heç nə daxil edilməyibsə
         if (ksq.length === 0 && bsq === null) return null;
 
+        // BSQ var, amma KSQ yoxdursa -> xəta
         if (bsq !== null && ksq.length === 0) {
-          warn.classList.add('hidden');
-          err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.';
-          err.classList.remove('hidden');
-          return { error:true, code:'KSQ_REQUIRED' };
+          return {
+            error: true,
+            code: 'KSQ_REQUIRED',
+            prefix,
+            message: (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün ən azı 1 KSQ dəyəri daxil edin.'
+          };
         }
 
+        const missingKsqs = (ksq.length > 0 && ksq.length < KSQ_COUNT);
         const kAvg = ksq.length ? avg(ksq) : 0;
 
-        warn.classList.toggle('hidden', ksq.length === KSQ_COUNT || ksq.length === 0);
-
+        // BSQ yoxdursa -> KSQ ortası
         if (bsq === null) {
           const total = +kAvg.toFixed(2);
           $id(outIds.total).textContent = total.toFixed(2);
           $id(outIds.ksq).textContent   = kAvg.toFixed(2);
           $id(outIds.bsq).textContent   = '—';
           $id(outIds.grade).textContent = to5(total);
-          return total;
+          return { total, missingKsqs };
         }
 
+        // BSQ range check
         if (bsq < 0 || bsq > 100) {
-          warn.classList.add('hidden');
-          err.textContent = (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.';
-          err.classList.remove('hidden');
-          return { error:true, code:'BSQ_RANGE' };
+          return {
+            error: true,
+            code: 'BSQ_RANGE',
+            prefix,
+            message: (prefix === 't1' ? 'I' : 'II') + ' yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.'
+          };
         }
 
         const total = +(kAvg * W_KSQ + bsq * W_BSQ).toFixed(2);
@@ -857,7 +734,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         $id(outIds.ksq).textContent   = kAvg.toFixed(2);
         $id(outIds.bsq).textContent   = bsq.toFixed(2);
         $id(outIds.grade).textContent = to5(total);
-        return total;
+
+        return { total, missingKsqs };
       }
 
       function resetCalc() {
@@ -870,16 +748,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (bsq) bsq.value = '';
         });
 
-        err.classList.add('hidden'); err.textContent = '';
-        warn.classList.add('hidden'); clearOutputs();
+        clearError();
+        warn.classList.add('hidden');
+        clearOutputs();
         out.classList.add('hidden');
 
-        const anchor = document.querySelector('section.rounded-3xl') || (mode === 't2' ? fsT2 : fsT1);
-        scrollToWithHeader(anchor);
+        revealStable(panel || modeArea, { topGap: 18, bottomGap: 18 });
       }
 
       resetBtn?.addEventListener('click', resetCalc);
 
+      // Enter -> calculate
       [...idsFor('t1'),'t1-bsq',...idsFor('t2'),'t2-bsq'].forEach(id => {
         const el = $id(id);
         el?.addEventListener('keydown', e => {
@@ -892,47 +771,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
 
       btnCalc?.addEventListener('click', () => {
-        err.classList.add('hidden'); err.textContent = '';
+        clearError();
 
+        // ===== 1) Mode required (NO over-scroll) =====
         if (!mode) {
-          warn.classList.add('hidden');
-          out.classList.add('hidden');
-          err.textContent = 'Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).';
-          err.classList.remove('hidden');
+          showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).', { topGap: 28, bottomGap: 20 });
 
-          ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+          // professional guidance: focus + subtle pulse (no forced scroll)
+          const firstModeBtn = document.querySelector('[data-mode="t1"]');
+          tryFocus(firstModeBtn);
+          pulse(modeArea);
+
+          // error görünürsə scroll etməyəcək, görünmürsə minimal gətirəcək
+          revealStable(modeArea, { topGap: 18, bottomGap: 18 });
           return;
         }
 
         let t1 = null, t2 = null;
+        let missingAny = false;
 
+        // ===== 2) Term calculations =====
         if (mode !== 't2') {
           const r1 = computeTerm('t1', { total:'out-t1', ksq:'out-t1-ksq', bsq:'out-t1-bsq', grade:'out-t1-grade' });
-          if (r1 && typeof r1 === 'object' && r1.error) {
-            out.classList.add('hidden');
-            ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+
+          if (r1 && r1.error) {
+            showError(r1.message, { topGap: 28, bottomGap: 20 });
+
+            if (r1.code === 'KSQ_REQUIRED') {
+              pulse(fsT1);
+              tryFocus($id('t1-ksq1'));
+            } else {
+              pulse($id('t1-bsq'));
+              tryFocus($id('t1-bsq'));
+            }
             return;
           }
-          if (typeof r1 === 'number') t1 = r1;
+
+          if (r1 && typeof r1.total === 'number') t1 = r1.total;
+          if (r1 && r1.missingKsqs) missingAny = true;
         } else {
           ['out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
         if (mode !== 't1') {
           const r2 = computeTerm('t2', { total:'out-t2', ksq:'out-t2-ksq', bsq:'out-t2-bsq', grade:'out-t2-grade' });
-          if (r2 && typeof r2 === 'object' && r2.error) {
-            out.classList.add('hidden');
-            ensureVisibleStable(err, { topGap: 32, bottomGap: 24 });
+
+          if (r2 && r2.error) {
+            showError(r2.message, { topGap: 28, bottomGap: 20 });
+
+            if (r2.code === 'KSQ_REQUIRED') {
+              pulse(fsT2);
+              tryFocus($id('t2-ksq1'));
+            } else {
+              pulse($id('t2-bsq'));
+              tryFocus($id('t2-bsq'));
+            }
             return;
           }
-          if (typeof r2 === 'number') t2 = r2;
+
+          if (r2 && typeof r2.total === 'number') t2 = r2.total;
+          if (r2 && r2.missingKsqs) missingAny = true;
         } else {
           ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade'].forEach(id => { $id(id).textContent='—'; });
         }
 
+        // ===== 3) Output =====
         out.classList.remove('hidden');
-        scrollToStable(actions || out, 8);
 
+        // Warn: yalnız həqiqətən lazımdırsa
+        warn.classList.toggle('hidden', !missingAny);
+
+        // İllik
         if (mode === 'both' && typeof t1 === 'number' && typeof t2 === 'number') {
           const yearVal = +(((t1 + t2) / 2).toFixed(2));
           $id('out-year').textContent = yearVal.toFixed(2);
@@ -943,6 +852,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           $id('out-year-grade').textContent = '—';
           $id('out-year-card').classList.add('hidden');
         }
+
+        // ✅ professional: nəticə görünürsə scroll etmə, görünmürsə minimal gətir
+        revealStable(out, { topGap: 22, bottomGap: 18 });
       });
 
       (function init() {

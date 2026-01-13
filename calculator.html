@@ -292,34 +292,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="px-2 text-sm font-semibold">I yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
-                      <input id="t1-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-                      <input id="t1-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-                      <input id="t1-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-                      <input id="t1-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-                      <input id="t1-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-                      <input id="t1-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-                      <input id="t1-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
-                      <input id="t1-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+                      <input id="t1-ksq1" type="number" min="0" max="100" step="0.01" placeholder="KSQ1" />
+                      <input id="t1-ksq2" type="number" min="0" max="100" step="0.01" placeholder="KSQ2" />
+                      <input id="t1-ksq3" type="number" min="0" max="100" step="0.01" placeholder="KSQ3" />
+                      <input id="t1-ksq4" type="number" min="0" max="100" step="0.01" placeholder="KSQ4" />
+                      <input id="t1-ksq5" type="number" min="0" max="100" step="0.01" placeholder="KSQ5" />
+                      <input id="t1-ksq6" type="number" min="0" max="100" step="0.01" placeholder="KSQ6" />
+                      <input id="t1-ksq7" type="number" min="0" max="100" step="0.01" placeholder="KSQ7" />
+                      <input id="t1-ksq8" type="number" min="0" max="100" step="0.01" placeholder="KSQ8" />
                     </div>
                     <div class="mt-3">
-                      <input id="t1-bsq" type="number" min="0" max="100" placeholder="BSQ" />
+                      <input id="t1-bsq" type="number" min="0" max="100" step="0.01" placeholder="BSQ" />
                     </div>
                   </fieldset>
 
                   <fieldset id="fs-t2" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="px-2 text-sm font-semibold">II yarımil</legend>
                     <div class="mt-2 grid grid-cols-2 gap-2">
-                      <input id="t2-ksq1" type="number" min="0" max="100" placeholder="KSQ1" />
-                      <input id="t2-ksq2" type="number" min="0" max="100" placeholder="KSQ2" />
-                      <input id="t2-ksq3" type="number" min="0" max="100" placeholder="KSQ3" />
-                      <input id="t2-ksq4" type="number" min="0" max="100" placeholder="KSQ4" />
-                      <input id="t2-ksq5" type="number" min="0" max="100" placeholder="KSQ5" />
-                      <input id="t2-ksq6" type="number" min="0" max="100" placeholder="KSQ6" />
-                      <input id="t2-ksq7" type="number" min="0" max="100" placeholder="KSQ7" />
-                      <input id="t2-ksq8" type="number" min="0" max="100" placeholder="KSQ8" />
+                      <input id="t2-ksq1" type="number" min="0" max="100" step="0.01" placeholder="KSQ1" />
+                      <input id="t2-ksq2" type="number" min="0" max="100" step="0.01" placeholder="KSQ2" />
+                      <input id="t2-ksq3" type="number" min="0" max="100" step="0.01" placeholder="KSQ3" />
+                      <input id="t2-ksq4" type="number" min="0" max="100" step="0.01" placeholder="KSQ4" />
+                      <input id="t2-ksq5" type="number" min="0" max="100" step="0.01" placeholder="KSQ5" />
+                      <input id="t2-ksq6" type="number" min="0" max="100" step="0.01" placeholder="KSQ6" />
+                      <input id="t2-ksq7" type="number" min="0" max="100" step="0.01" placeholder="KSQ7" />
+                      <input id="t2-ksq8" type="number" min="0" max="100" step="0.01" placeholder="KSQ8" />
                     </div>
                     <div class="mt-3">
-                      <input id="t2-bsq" type="number" min="0" max="100" placeholder="BSQ" />
+                      <input id="t2-bsq" type="number" min="0" max="100" step="0.01" placeholder="BSQ" />
                     </div>
                   </fieldset>
 
@@ -337,7 +337,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </button>
                   </div>
 
-                  <!-- ✅ daha professional: alert styling + a11y -->
                   <div
                     id="calc-error"
                     class="hidden rounded-2xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/25 px-4 py-3 text-sm text-rose-700 dark:text-rose-300"
@@ -561,7 +560,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const modeButtons = $qsa('[data-mode]');
 
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
-      const numOrNull = v => (v === '' || v == null) ? null : (isFinite(+v) ? +v : null);
+
+      const numOrNull = (v) => {
+        if (v == null) return null;
+        const s = String(v).trim();
+        if (s === '') return null;
+        const n = +s;
+        return Number.isFinite(n) ? n : null;
+      };
+
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
       const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
@@ -575,14 +582,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function isInSafeZone(el, opts = {}) {
         if (!el) return true;
         const headerH = document.querySelector('header')?.offsetHeight || 0;
-        const topGap = opts.topGap ?? 28;      // “azca” boşluq (professional)
+        const topGap = opts.topGap ?? 28;
         const bottomGap = opts.bottomGap ?? 20;
 
         const r = el.getBoundingClientRect();
         const topLimit = headerH + topGap;
         const bottomLimit = window.innerHeight - bottomGap;
 
-        // tam sığırsa -> ok
         return (r.top >= topLimit) && (r.bottom <= bottomLimit);
       }
 
@@ -593,7 +599,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const headerH = document.querySelector('header')?.offsetHeight || 0;
         const topGap = opts.topGap ?? 28;
 
-        // fixed header overlay problemini “native” həll edir
         el.style.scrollMarginTop = (headerH + topGap) + 'px';
 
         el.scrollIntoView({
@@ -695,15 +700,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
+      // ✅ KSQ-lar üçün də 0–100 range check buradadır
       function readTerm(prefix) {
-        const ksq = idsFor(prefix).map(id => numOrNull($id(id).value)).filter(v => v !== null);
-        const bsq = numOrNull($id(`${prefix}-bsq`).value);
+        const termLabel = (prefix === 't1' ? 'I' : 'II');
+
+        const ksq = [];
+        for (let i = 1; i <= KSQ_COUNT; i++) {
+          const el = $id(`${prefix}-ksq${i}`);
+          const n = numOrNull(el?.value);
+
+          if (n !== null) {
+            if (n < 0 || n > 100) {
+              return {
+                error: true,
+                code: 'KSQ_RANGE',
+                prefix,
+                fieldId: `${prefix}-ksq${i}`,
+                message: `${termLabel} yarımil üçün KSQ${i} dəyərini 0–100 arasında daxil edin.`
+              };
+            }
+            ksq.push(n);
+          }
+        }
+
+        const bsq = numOrNull($id(`${prefix}-bsq`)?.value);
         return { ksq, bsq };
       }
 
-      // computeTerm: side-effect only outputs; errors are returned (professional separation)
+      // computeTerm: side-effect only outputs; errors are returned
       function computeTerm(prefix, outIds) {
-        const { ksq, bsq } = readTerm(prefix);
+        const term = readTerm(prefix);
+
+        // KSQ range error
+        if (term && term.error) return term;
+
+        const { ksq, bsq } = term;
 
         // heç nə daxil edilməyibsə
         if (ksq.length === 0 && bsq === null) return null;
@@ -785,16 +816,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btnCalc?.addEventListener('click', () => {
         clearError();
 
-        // ===== 1) Mode required (NO over-scroll) =====
+        // ===== 1) Mode required =====
         if (!mode) {
           showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).', { topGap: 28, bottomGap: 20 });
 
-          // professional guidance: focus + subtle pulse (no forced scroll)
           const firstModeBtn = document.querySelector('[data-mode="t1"]');
           tryFocus(firstModeBtn);
           pulse(modeArea);
 
-          // error görünürsə scroll etməyəcək, görünmürsə minimal gətirəcək
           revealStable(modeArea, { topGap: 18, bottomGap: 18 });
           return;
         }
@@ -812,9 +841,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if (r1.code === 'KSQ_REQUIRED') {
               pulse(fsT1);
               tryFocus($id('t1-ksq1'));
-            } else {
+            } else if (r1.code === 'BSQ_RANGE') {
               pulse($id('t1-bsq'));
               tryFocus($id('t1-bsq'));
+            } else if (r1.code === 'KSQ_RANGE') {
+              const bad = $id(r1.fieldId);
+              pulse(bad);
+              tryFocus(bad);
             }
             return;
           }
@@ -834,9 +867,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if (r2.code === 'KSQ_REQUIRED') {
               pulse(fsT2);
               tryFocus($id('t2-ksq1'));
-            } else {
+            } else if (r2.code === 'BSQ_RANGE') {
               pulse($id('t2-bsq'));
               tryFocus($id('t2-bsq'));
+            } else if (r2.code === 'KSQ_RANGE') {
+              const bad = $id(r2.fieldId);
+              pulse(bad);
+              tryFocus(bad);
             }
             return;
           }
@@ -850,7 +887,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         // ===== 3) Output =====
         out.classList.remove('hidden');
 
-        // Warn: yalnız həqiqətən lazımdırsa
         warn.classList.toggle('hidden', !missingAny);
 
         // İllik
@@ -865,7 +901,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           $id('out-year-card').classList.add('hidden');
         }
 
-        // ✅ professional: nəticə görünürsə scroll etmə, görünmürsə minimal gətir
         revealStable(out, { topGap: 22, bottomGap: 18 });
       });
 

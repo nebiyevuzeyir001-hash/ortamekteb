@@ -2,16 +2,17 @@
 <html lang="az" class="scroll-smooth">
 <head>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M3CQTM2P');</script>
-<!-- End Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M3CQTM2P');</script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="canonical" href="https://www.eduplan.az/timetable.html" />
-    <meta name="keywords" content="Dərs cədvəlinin hazırlanması, Dərs cədvəli qurmaq üçün proqram, Orta məktəblərdə dərs cədvəli, Dərs cədvəli proqramı, dərs cədvəli qurmaq üçün proqram yüklə, 
+  <meta name="keywords" content="Dərs cədvəlinin hazırlanması, Dərs cədvəli qurmaq üçün proqram, Orta məktəblərdə dərs cədvəli, Dərs cədvəli proqramı, dərs cədvəli qurmaq üçün proqram yüklə, 
       Dərs cədvəli hazırlayıcı, Online Dərs cədvəli hazırlayıcı, Onlayn Dərs cədvəli hazrılayıcı" />
   <meta name="description" content="Azərbaycan orta məktəbləri üçün onlayn Dərs cədvəli hazırlayıcı — müəllim, sinif və fənn məlumatlarını daxil edin, sistem avtomatik cədvəl qursun.">
   <meta name="robots" content="index, follow" />
@@ -19,7 +20,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="language" content="az" />
   <meta name="format-detection" content="telephone=no" />
   <title>Dərs cədvəli hazırlayıcı — EduPlan</title>
-  <meta name="theme-color" content="#ffffff" id="theme-color" />
+
+  <!-- ✅ kalkulyatorla eyni -->
+  <meta name="theme-color" content="#f8fafc" id="theme-color" />
+
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Dərs cədvəli hazırlayıcı — EduPlan" />
   <meta property="og:description" content="Müəllim və sinif məlumatlarını daxil edin, sistem avtomatik dərs cədvəli hazırlasın." />
@@ -51,7 +55,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         root.dataset.theme = theme;
 
         const meta = document.getElementById('theme-color');
-        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+        // ✅ light: #f8fafc
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8fafc');
       } catch (e) {}
     })();
   </script>
@@ -71,7 +76,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
-    /* ==== Form controls ==== */
+    /* =========================================================
+       ✅ Light/Dark token sistemi (kalkulyatorla eyni hiss)
+    ========================================================= */
     :root{
       --ep-field-h: 42px;
       --ep-field-h-sm: 36px;
@@ -92,13 +99,110 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       /* Header max-w-7xl = 80rem */
       --ep-frame-max: 80rem;
+
+      /* ===== Light mode: layer separation ===== */
+      --ep-bg-from: #f8fafc;
+      --ep-bg-mid:  #eef2ff;
+      --ep-bg-to:   #ecfeff;
+
+      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.86), rgba(238,242,255,.60));
+      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.84), rgba(241,245,249,.64));
+
+      --ep-border: rgba(79,70,229,.12);
+      --ep-panel-border: rgba(79,70,229,.28);
+
+      /* secondary buttons / pills */
+      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.88), rgba(238,242,255,.70));
+      --ep-mode-idle-border: rgba(79,70,229,.16);
+      --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(224,231,255,.78));
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(30,58,138,.10), rgba(79,70,229,.12), rgba(147,51,234,.10));
+      --ep-mode-active-border: rgba(79,70,229,.55);
+      --ep-mode-active-shadow: 0 10px 24px rgba(79,70,229,.16), 0 2px 8px rgba(15,23,42,.06);
+
+      --ep-focus: rgba(79,70,229,.28);
     }
 
+    html.dark{
+      --ep-bg-from: #020617;
+      --ep-bg-mid:  #0b1220;
+      --ep-bg-to:   #0f172a;
+
+      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+
+      --ep-border: rgba(148,163,184,.18);
+      --ep-panel-border: rgba(99,102,241,.18);
+
+      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      --ep-mode-idle-border: rgba(148,163,184,.16);
+      --ep-mode-hover-bg: linear-gradient(180deg, rgba(15,23,42,.78), rgba(15,23,42,.62));
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(49,46,129,.45), rgba(67,56,202,.40), rgba(126,34,206,.35));
+      --ep-mode-active-border: rgba(99,102,241,.55);
+      --ep-mode-active-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+
+      --ep-focus: rgba(99,102,241,.34);
+    }
+
+    /* ✅ Tailwind bg-ni override et (kalkulyator kimi) */
+    body{
+      background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
+    }
+
+    /* =========================================================
+       ✅ Panel + cards (kalkulyator hissi)
+    ========================================================= */
+    #tt-panel{
+      background: var(--ep-surface) !important;
+      border-color: var(--ep-panel-border) !important;
+      box-shadow: 0 18px 60px rgba(15,23,42,.08);
+      overflow: hidden;
+    }
+    html.dark #tt-panel{ box-shadow: 0 18px 70px rgba(0,0,0,.55); }
+
+    #tt-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(79,70,229,.10), rgba(16,185,129,.08), rgba(245,158,11,.08));
+    }
+    html.dark #tt-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(99,102,241,.12), rgba(16,185,129,.09), rgba(245,158,11,.09));
+    }
+
+    .ep-card{
+      background: var(--ep-surface-2) !important;
+      border-color: var(--ep-border) !important;
+      box-shadow: 0 12px 34px rgba(15,23,42,.06);
+    }
+    html.dark .ep-card{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
+
+    /* =========================================================
+       ✅ Secondary buttons (reset/mode kimi)
+    ========================================================= */
+    .ep-btn-secondary{
+      background: var(--ep-mode-idle-bg) !important;
+      border-color: var(--ep-mode-idle-border) !important;
+      box-shadow: 0 8px 20px rgba(15,23,42,.06);
+      transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+    }
+    html.dark .ep-btn-secondary{ box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+
+    .ep-btn-secondary:hover{ background: var(--ep-mode-hover-bg) !important; transform: translateY(-1px); }
+    .ep-btn-secondary:active{ transform: translateY(0px); }
+
+    .ep-btn-secondary:focus-visible{
+      outline: none !important;
+      box-shadow: 0 0 0 4px var(--ep-focus), 0 12px 28px rgba(15,23,42,.06) !important;
+    }
+    html.dark .ep-btn-secondary:focus-visible{
+      box-shadow: 0 0 0 4px var(--ep-focus), 0 14px 34px rgba(0,0,0,.45) !important;
+    }
+
+    /* ==== Form controls ==== */
     input[type="text"], input[type="number"], select {
       width: 100%;
       border-radius: var(--ep-radius-lg);
       border: 1px solid rgba(226,232,240,.75);
-      background-color: rgba(255,255,255,.6);
+      background-color: rgba(255,255,255,.82);
       padding: .58rem .9rem;
       font-size: 13px;
       line-height: 1.35;
@@ -131,7 +235,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
     html.dark select{
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.googletagmanager.com' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 
     select option, select optgroup{
@@ -231,21 +335,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: transparent;
       cursor: pointer;
       white-space: nowrap;
-      transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
     }
     .tab-btn:hover{ background: rgba(15,23,42,.04); }
     html.dark .tab-btn:hover{ background: rgba(255,255,255,.06); }
 
     .tab-btn.active{
-      border-color: rgba(99,102,241,.55);
+      border-color: var(--ep-mode-active-border);
       background: rgba(99,102,241,.10);
       color: rgb(67 56 202);
       font-weight: 600;
+      box-shadow: 0 8px 18px rgba(15,23,42,.06);
     }
     html.dark .tab-btn.active{
-      border-color: rgba(129,140,248,.55);
       background: rgba(129,140,248,.12);
       color: rgb(226 232 240);
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
     }
 
     /* Timetable table */
@@ -292,7 +397,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       min-height: var(--ep-field-h);
       border-radius: var(--ep-radius-lg);
       border: 1px solid rgba(226,232,240,.75);
-      background: rgba(255,255,255,.65);
+      background: rgba(255,255,255,.70);
       padding: .62rem 1rem;
       font-size: 13px;
       line-height: 1.35;
@@ -303,7 +408,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       cursor:pointer;
       transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease;
     }
-    .ep-select-btn:hover{ background: rgba(255,255,255,.78); }
+    .ep-select-btn:hover{ background: rgba(255,255,255,.82); }
     .ep-select-btn:active{ transform: translateY(1px); }
     .ep-select-btn:focus{
       outline:none;
@@ -376,7 +481,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     ========================================================= */
     .ep-frame{
       width: 100%;
-      max-width: var(--ep-frame-max); /* header max-w-7xl */
+      max-width: var(--ep-frame-max);
       margin: 0 auto;
       padding-left: 16px;  /* px-4 */
       padding-right: 16px; /* px-4 */
@@ -390,12 +495,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     .ep-frame.has-ads{
-      max-width: var(--ep-shell-max); /* reklam varsa genişlət */
+      max-width: var(--ep-shell-max);
     }
 
     .ep-shell{
       display:grid;
-      grid-template-columns: 1fr;  /* default: reklam YOX */
+      grid-template-columns: 1fr;
       gap: 0;
       align-items:start;
       width:100%;
@@ -403,7 +508,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .ep-center{ min-width:0; }
 
     .ep-ad-slot{
-      display:none;                 /* default: görünməsin, yer saxlamasın */
+      display:none;
       width: 100%;
       min-height: var(--ep-rail-min-h);
       align-items:flex-start;
@@ -411,7 +516,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       overflow:hidden;
 
       position: sticky;
-      top: 88px; /* header(64px) + boşluq */
+      top: 88px;
       height: fit-content;
     }
     .ep-ad-slot > div{ width:100%; max-width: 100%; }
@@ -436,7 +541,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     /* Laptop/telefon: relslər gizlənsin */
     @media (max-width: 1024px){
-      .ep-frame.has-ads{ max-width: var(--ep-frame-max); } /* mobil-də genişlənmə */
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
       .ep-shell{
         grid-template-columns: 1fr !important;
         gap: 0 !important;
@@ -498,7 +603,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </header>
 
   <main id="main" class="pt-4 pb-0">
-    <!-- ✅ Reklamsız halda header ilə paralel -->
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
@@ -515,7 +619,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </p>
           </section>
 
-          <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
+          <!-- ✅ PANEL -->
+          <section id="tt-panel" class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
             <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
               <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
             </div>
@@ -523,7 +628,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="p-6 space-y-4">
 
               <!-- 1) Məktəb parametrləri -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                 <div class="section-title mb-2">Məktəb parametrləri</div>
 
                 <div class="grid grid-cols-2 gap-3 text-sm">
@@ -558,11 +663,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
 
               <!-- 2) Müəllimlər -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Müəllimlər</div>
                   <button type="button" id="btnAddTeacher"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+                          class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -589,11 +694,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
 
               <!-- 3) Siniflər -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Siniflər</div>
                   <button type="button" id="btnAddClass"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+                          class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -617,11 +722,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
 
               <!-- 4) Fənn / dərs saatları -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                 <div class="flex items-center justify-between mb-2">
                   <div class="section-title">Fənn / dərs saatları</div>
                   <button type="button" id="btnAddLesson"
-                          class="no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+                          class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     ➕ Əlavə et
                   </button>
                 </div>
@@ -647,7 +752,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
 
               <!-- 5) Hazırlayıcı -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 no-print">
                 <div class="section-title mb-2">Hazırlayıcı</div>
 
                 <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 mb-4">
@@ -665,17 +770,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </button>
 
                   <button id="btnResetAll"
-                          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+                          class="ep-btn-secondary inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-4 py-3 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
                     🧹 Hamısını təmizlə
                   </button>
                 </div>
 
-                <div id="globalError" class="mt-3 text-xs text-rose-500 hidden"></div>
+                <!-- ✅ styled error -->
+                <div id="globalError"
+                     class="hidden mt-3 rounded-2xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/25 px-4 py-3 text-xs text-rose-700 dark:text-rose-300"
+                     role="alert" aria-live="polite" tabindex="-1"></div>
+
                 <div id="globalInfo" class="mt-2 text-[11px] text-slate-500 dark:text-slate-400"></div>
               </div>
 
               <!-- 6) Nəticə -->
-              <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 min-h-[260px]" id="resultCard">
                 <div class="flex items-center justify-between mb-3">
                   <div class="section-title">Nəticə</div>
                   <div id="resultStats" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
@@ -696,7 +805,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </section>
 
-          <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+          <!-- ✅ MƏLUMAT da ep-card oldu -->
+          <section class="ep-card mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
             <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
             <div class="mt-5 space-y-6 text-base leading-7 text-slate-700 dark:text-slate-200">
@@ -707,7 +817,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 cədvəli avtomatik yığmağa çalışır.
               </p>
 
-              <div class="rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
+              <div class="ep-card rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
                 <div class="font-semibold text-slate-900 dark:text-slate-100">İş prinsipi (qısa axın)</div>
                 <ol class="mt-2 list-decimal pl-6 space-y-1">
                   <li><strong>Məktəb parametrləri</strong> — həftə günü sayı və gündə maksimum saatı seçin.</li>
@@ -925,7 +1035,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         document.documentElement.dataset.theme = theme;
 
         if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
 
         if (persist) {
           try { localStorage.setItem('theme', theme); } catch (e) {}
@@ -950,7 +1060,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- ✅ Reklam gəlsə: avtomatik 3 sütun + frame genişlənir (paralel qalır) -->
+  <!-- ✅ Reklam gəlsə: avtomatik 3 sütun + frame genişlənir -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -1026,6 +1136,80 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       let __solverRunning = false;
       let __stopRequested = false;
       let __runId = 0;
+
+      // ===== ✅ nəticə çıxanda scroll (stabil) =====
+      const prefersReduceMotion = () => {
+        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+        catch (e) { return false; }
+      };
+
+      function getViewportHeight() {
+        return window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      }
+      function getHeaderHeight() {
+        return document.querySelector('header')?.offsetHeight || 0;
+      }
+      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+      function pageRect(el) {
+        const r = el.getBoundingClientRect();
+        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        return { top: r.top + y, bottom: r.bottom + y, height: r.height };
+      }
+      function safeBand(opts = {}) {
+        const topGap = opts.topGap ?? 18;
+        const bottomGap = opts.bottomGap ?? 16;
+        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const vh = getViewportHeight();
+        const top = y + getHeaderHeight() + topGap;
+        const bottom = y + vh - bottomGap;
+        return { top, bottom, vh, y, topGap, bottomGap };
+      }
+      function isInSafeZone(el, opts = {}) {
+        if (!el) return true;
+        const band = safeBand(opts);
+        const r = pageRect(el);
+        if (r.height > (band.bottom - band.top)) return r.top >= band.top && r.top <= band.bottom;
+        return r.top >= band.top && r.bottom <= band.bottom;
+      }
+      function scrollToY(targetY, behavior) {
+        const se = document.scrollingElement || document.documentElement;
+        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
+        const y = clamp(targetY, 0, maxY);
+        window.scrollTo({ top: y, left: 0, behavior });
+      }
+      function ensureVisible(el, opts = {}) {
+        if (!el) return;
+        if (isInSafeZone(el, opts)) return;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const band = safeBand(opts);
+        const r = pageRect(el);
+
+        let targetY = band.y;
+        if (r.top < band.top) targetY = r.top - (getHeaderHeight() + (opts.topGap ?? 18));
+        else if (r.bottom > band.bottom) targetY = r.bottom - band.vh + (opts.bottomGap ?? 16);
+
+        scrollToY(targetY, behavior);
+      }
+      function ensureVisibleStable(el, opts = {}) {
+        if (!el) return;
+        const run = () => ensureVisible(el, opts);
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        window.setTimeout(run, 120);
+        window.setTimeout(run, 260);
+
+        const vv = window.visualViewport;
+        if (vv) {
+          let active = true;
+          const onVV = () => { if (active) run(); };
+          vv.addEventListener('resize', onVV);
+          vv.addEventListener('scroll', onVV);
+          window.setTimeout(() => {
+            active = false;
+            vv.removeEventListener('resize', onVV);
+            vv.removeEventListener('scroll', onVV);
+          }, 420);
+        }
+      }
 
       function makePrettySelect(selectEl, opts = {}) {
         if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
@@ -1247,11 +1431,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         globalError.classList.add('hidden');
         globalError.textContent = '';
         globalInfo.textContent = '';
+
+        // optional: yuxarı panelə qaytar
+        ensureVisibleStable(document.getElementById('tt-panel'), { topGap: 18, bottomGap: 18 });
       });
 
       function showError(msg){
         globalError.textContent = msg;
         globalError.classList.remove('hidden');
+        try { globalError.focus({ preventScroll: true }); } catch(e) { try { globalError.focus(); } catch(e2){} }
+        ensureVisibleStable(globalError, { topGap: 18, bottomGap: 16 });
       }
 
       function readConfig() {
@@ -1604,7 +1793,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
         const startedAt = performance.now();
 
-        const BATCH = 300; // “cihaz gücü nəzərə alınmasın” dedin — batch-i yüksək saxladım
+        const BATCH = 300;
 
         let attempts = 0;
         let best = null;
@@ -1650,7 +1839,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               `Axtarış davam edir… Cəhd: ${attempts.toLocaleString('az-AZ')} · Ən yaxşı: ${bestPlaced}/${target} (${pct}%) · ${elapsed}s`;
           }
 
-          // UI donmasın deyə yield (amma limit yoxdur — sadəcə “freeze” etməsin)
           await new Promise(r => requestAnimationFrame(r));
         }
       }
@@ -1785,6 +1973,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (myRun !== __runId) return;
 
           renderTimetable(config, result);
+
+          // ✅ result çıxan kimi resultCard-a scroll
+          ensureVisibleStable(document.getElementById('resultCard'), { topGap: 18, bottomGap: 16 });
 
           const target = Number(result.targetHours) || Number(config._targetHours) || sumRequiredHours(config.lessons);
           const bestPlaced = result.placedCount || 0;

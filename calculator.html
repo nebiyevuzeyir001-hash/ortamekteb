@@ -80,7 +80,7 @@
       width:100%;
       border-radius: 0.75rem;
       border: 1px solid rgba(226,232,240,.75);
-      background: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.78);
       padding: .65rem .9rem;
       font-size: 14px;
       outline: none;
@@ -108,18 +108,15 @@
       --ep-rail-gap: 24px;
       --ep-center-max: 1220px;
 
-      /* ===== Light mode: dark-dakı “layer separation” hissini light-a da veririk ===== */
+      /* ===== Light mode "selectivity" tokens (rəngli, amma təmiz) ===== */
       --ep-bg-from: #f8fafc;
       --ep-bg-mid:  #eef2ff;
       --ep-bg-to:   #ecfeff;
 
-      /* panel / inner surfaces: artıq plain ağ deyil, incə rəngli qatlar */
-      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.86), rgba(238,242,255,.60));
-      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.84), rgba(241,245,249,.64));
-
-      /* borderlər: “mətbəx ağ” yox, brand-a uyğun incə indigo ton */
-      --ep-border: rgba(79,70,229,.12);
-      --ep-panel-border: rgba(79,70,229,.28);
+      --ep-surface:   rgba(255,255,255,.72);
+      --ep-surface-2: rgba(255,255,255,.62);
+      --ep-border:    rgba(15,23,42,.10);
+      --ep-panel-border: rgba(79,70,229,.22);
 
       /* I yarımil tokenləri */
       --ep-t1-bg: rgba(238,242,255,.78);
@@ -132,10 +129,10 @@
       --ep-year-bg: rgba(255,247,237,.80);
       --ep-year-border: rgba(245,158,11,.28);
 
-      /* controls (mode buttons + reset) - light-da da “separation” */
-      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.88), rgba(238,242,255,.70));
+      /* ✅ ONLY COLORS CHANGED (mode + reset buttons) — dark-dakı kimi fərqlilik */
+      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.90), rgba(238,242,255,.70));
       --ep-mode-idle-border: rgba(79,70,229,.16);
-      --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(224,231,255,.78));
+      --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.94), rgba(224,231,255,.82));
 
       --ep-mode-active-bg: linear-gradient(90deg, rgba(30,58,138,.10), rgba(79,70,229,.12), rgba(147,51,234,.10));
       --ep-mode-active-border: rgba(79,70,229,.55);
@@ -149,11 +146,9 @@
       --ep-bg-mid:  #0b1220;
       --ep-bg-to:   #0f172a;
 
-      /* dark-da da qat hissini bir az “pro” edirik */
-      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-
-      --ep-border: rgba(148,163,184,.18);
+      --ep-surface:   rgba(255,255,255,.06);
+      --ep-surface-2: rgba(255,255,255,.04);
+      --ep-border:    rgba(148,163,184,.18);
       --ep-panel-border: rgba(99,102,241,.18);
 
       /* I yarımil tokenləri (dark) */
@@ -167,9 +162,9 @@
       --ep-year-bg: rgba(120,53,15,.18);
       --ep-year-border: rgba(245,158,11,.20);
 
-      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      --ep-mode-idle-bg: rgba(255,255,255,.06);
       --ep-mode-idle-border: rgba(148,163,184,.16);
-      --ep-mode-hover-bg: linear-gradient(180deg, rgba(15,23,42,.78), rgba(15,23,42,.62));
+      --ep-mode-hover-bg: rgba(15,23,42,.72);
 
       --ep-mode-active-bg: linear-gradient(90deg, rgba(49,46,129,.45), rgba(67,56,202,.40), rgba(126,34,206,.35));
       --ep-mode-active-border: rgba(99,102,241,.55);
@@ -183,28 +178,22 @@
       background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
     }
 
-    /* Panel + internal surfaces */
+    /* Panel + internal surfaces: light mode gets tasteful color separation */
     #calc-panel{
       background: var(--ep-surface) !important;
       border-color: var(--ep-panel-border) !important;
-      box-shadow: 0 18px 60px rgba(15,23,42,.08);
     }
-    html.dark #calc-panel{ box-shadow: 0 18px 70px rgba(0,0,0,.55); }
-
     #calc-panel > div:first-child{
-      background: linear-gradient(90deg, rgba(79,70,229,.10), rgba(16,185,129,.08), rgba(245,158,11,.08));
+      background: linear-gradient(90deg, rgba(79,70,229,.06), rgba(16,185,129,.06), rgba(245,158,11,.06));
     }
     html.dark #calc-panel > div:first-child{
-      background: linear-gradient(90deg, rgba(99,102,241,.12), rgba(16,185,129,.09), rgba(245,158,11,.09));
+      background: linear-gradient(90deg, rgba(99,102,241,.10), rgba(16,185,129,.08), rgba(245,158,11,.08));
     }
 
-    /* Empty state: light-da da vizual fərq */
     #empty-state .rounded-2xl{
       background: var(--ep-surface-2) !important;
       border-color: var(--ep-border) !important;
-      box-shadow: 0 10px 28px rgba(15,23,42,.06);
     }
-    html.dark #empty-state .rounded-2xl{ box-shadow: 0 12px 30px rgba(0,0,0,.45); }
 
     /* Mode buttons: idle vs active colors (works both themes) */
     .mode-btn{
@@ -213,10 +202,7 @@
       position: relative;
       overflow: hidden;
       transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
-      box-shadow: 0 8px 20px rgba(15,23,42,.06);
     }
-    html.dark .mode-btn{ box-shadow: 0 10px 26px rgba(0,0,0,.35); }
-
     .mode-btn:hover{
       background: var(--ep-mode-hover-bg) !important;
       transform: translateY(-1px);
@@ -225,10 +211,7 @@
 
     .mode-btn:focus-visible{
       outline: none;
-      box-shadow: 0 0 0 4px var(--ep-focus), 0 12px 28px rgba(15,23,42,.06);
-    }
-    html.dark .mode-btn:focus-visible{
-      box-shadow: 0 0 0 4px var(--ep-focus), 0 14px 34px rgba(0,0,0,.45);
+      box-shadow: 0 0 0 4px var(--ep-focus);
     }
 
     .mode-btn[aria-pressed="true"]{
@@ -246,33 +229,22 @@
       pointer-events:none;
       opacity: .95;
     }
-    html.dark .mode-btn[aria-pressed="true"]::after{ opacity: .30; }
+    html.dark .mode-btn[aria-pressed="true"]::after{
+      opacity: .30;
+    }
 
-    /* Reset button: light-da da mode düymələri kimi “layered” görünsün */
+    /* ✅ Sıfırla button: only colors, same logic as mode buttons */
     #btn-reset{
       background: var(--ep-mode-idle-bg) !important;
       border-color: var(--ep-mode-idle-border) !important;
-      box-shadow: 0 8px 20px rgba(15,23,42,.06);
     }
     #btn-reset:hover{
       background: var(--ep-mode-hover-bg) !important;
     }
     #btn-reset:focus-visible{
-      outline: none !important;
-      box-shadow: 0 0 0 4px var(--ep-focus), 0 12px 28px rgba(15,23,42,.06) !important;
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ep-focus);
     }
-    html.dark #btn-reset{ box-shadow: 0 10px 26px rgba(0,0,0,.35); }
-    html.dark #btn-reset:focus-visible{
-      box-shadow: 0 0 0 4px var(--ep-focus), 0 14px 34px rgba(0,0,0,.45) !important;
-    }
-
-    /* Output container: light-da da panel daxilində seçilsin */
-    #calc-output{
-      background: var(--ep-surface-2) !important;
-      border-color: var(--ep-border) !important;
-      box-shadow: 0 12px 34px rgba(15,23,42,.06);
-    }
-    html.dark #calc-output{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
 
     /* Fieldsets: eyni rəng (t1) */
     #fs-t1{

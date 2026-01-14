@@ -118,11 +118,13 @@
       --ep-border:    rgba(15,23,42,.10);
       --ep-panel-border: rgba(79,70,229,.22);
 
+      /* I yarımil tokenləri */
       --ep-t1-bg: rgba(238,242,255,.78);
       --ep-t1-border: rgba(79,70,229,.30);
 
-      --ep-t2-bg: rgba(236,253,245,.76);
-      --ep-t2-border: rgba(16,185,129,.26);
+      /* II yarımil: eyni rəng (I yarımil kimi) */
+      --ep-t2-bg: var(--ep-t1-bg);
+      --ep-t2-border: var(--ep-t1-border);
 
       --ep-year-bg: rgba(255,247,237,.80);
       --ep-year-border: rgba(245,158,11,.28);
@@ -148,11 +150,13 @@
       --ep-border:    rgba(148,163,184,.18);
       --ep-panel-border: rgba(99,102,241,.18);
 
+      /* I yarımil tokenləri (dark) */
       --ep-t1-bg: rgba(49,46,129,.18);
       --ep-t1-border: rgba(99,102,241,.22);
 
-      --ep-t2-bg: rgba(6,78,59,.18);
-      --ep-t2-border: rgba(16,185,129,.22);
+      /* II yarımil: eyni rəng (I yarımil kimi) */
+      --ep-t2-bg: var(--ep-t1-bg);
+      --ep-t2-border: var(--ep-t1-border);
 
       --ep-year-bg: rgba(120,53,15,.18);
       --ep-year-border: rgba(245,158,11,.20);
@@ -228,49 +232,42 @@
       opacity: .30;
     }
 
-    /* Fieldsets: t1/t2 color separation */
+    /* Fieldsets: eyni rəng (t1) */
     #fs-t1{
       background: var(--ep-t1-bg) !important;
       border-color: var(--ep-t1-border) !important;
     }
     #fs-t2{
-      background: var(--ep-t2-bg) !important;
-      border-color: var(--ep-t2-border) !important;
+      background: var(--ep-t1-bg) !important;
+      border-color: var(--ep-t1-border) !important;
     }
 
-    /* Term pill accents per term (dot + outline + divider line) */
-    #fs-t1 .ep-term-dot{
+    /* Term pill accents: II də I kimi */
+    #fs-t1 .ep-term-dot,
+    #fs-t2 .ep-term-dot{
       background: linear-gradient(90deg,#4f46e5,#9333ea);
       box-shadow: 0 0 0 4px rgba(99,102,241,.14);
     }
-    #fs-t2 .ep-term-dot{
-      background: linear-gradient(90deg,#10b981,#06b6d4);
-      box-shadow: 0 0 0 4px rgba(16,185,129,.16);
+    html.dark #fs-t1 .ep-term-dot,
+    html.dark #fs-t2 .ep-term-dot{
+      box-shadow: 0 0 0 4px rgba(99,102,241,.18);
     }
-    html.dark #fs-t1 .ep-term-dot{ box-shadow: 0 0 0 4px rgba(99,102,241,.18); }
-    html.dark #fs-t2 .ep-term-dot{ box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
 
-    #fs-t1 .ep-term-pill::before{
+    #fs-t1 .ep-term-pill::before,
+    #fs-t2 .ep-term-pill::before{
       background: linear-gradient(90deg, rgba(79,70,229,.60), rgba(147,51,234,.55));
     }
-    #fs-t2 .ep-term-pill::before{
-      background: linear-gradient(90deg, rgba(16,185,129,.60), rgba(6,182,212,.55));
-    }
 
-    #fs-t1 .ep-term-head::after{
+    #fs-t1 .ep-term-head::after,
+    #fs-t2 .ep-term-head::after{
       background: linear-gradient(90deg, rgba(79,70,229,.24), rgba(79,70,229,0));
     }
-    #fs-t2 .ep-term-head::after{
-      background: linear-gradient(90deg, rgba(16,185,129,.24), rgba(16,185,129,0));
-    }
-    html.dark #fs-t1 .ep-term-head::after{
+    html.dark #fs-t1 .ep-term-head::after,
+    html.dark #fs-t2 .ep-term-head::after{
       background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
     }
-    html.dark #fs-t2 .ep-term-head::after{
-      background: linear-gradient(90deg, rgba(16,185,129,.34), rgba(16,185,129,0));
-    }
 
-    /* Output cards: distinct surfaces + subtle decoration */
+    /* Output cards: II də I kimi */
     #out-t1-card, #out-t2-card, #out-year-card{
       position: relative;
       overflow: hidden;
@@ -280,28 +277,21 @@
       border-color: var(--ep-t1-border) !important;
     }
     #out-t2-card{
-      background: var(--ep-t2-bg) !important;
-      border-color: var(--ep-t2-border) !important;
+      background: var(--ep-t1-bg) !important;
+      border-color: var(--ep-t1-border) !important;
     }
     #out-year-card{
       background: var(--ep-year-bg) !important;
       border-color: var(--ep-year-border) !important;
     }
 
-    #out-t1-card::before{
+    #out-t1-card::before,
+    #out-t2-card::before{
       content:"";
       position:absolute; inset:0;
       background:
         radial-gradient(120% 120% at 0% 0%, rgba(79,70,229,.14), transparent 55%),
         radial-gradient(120% 120% at 100% 0%, rgba(147,51,234,.10), transparent 55%);
-      pointer-events:none;
-    }
-    #out-t2-card::before{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        radial-gradient(120% 120% at 0% 0%, rgba(16,185,129,.14), transparent 55%),
-        radial-gradient(120% 120% at 100% 0%, rgba(6,182,212,.10), transparent 55%);
       pointer-events:none;
     }
     #out-year-card::before{
@@ -313,13 +303,13 @@
       pointer-events:none;
     }
 
-    /* Big numbers: term-colored emphasis (light + dark) */
+    /* Big numbers: II də I kimi */
     #out-t1{ color: rgb(67,56,202); }
-    #out-t2{ color: rgb(5,150,105); }
+    #out-t2{ color: rgb(67,56,202); }
     #out-year{ color: rgb(217,119,6); }
 
     html.dark #out-t1{ color: rgb(199,210,254); }
-    html.dark #out-t2{ color: rgb(167,243,208); }
+    html.dark #out-t2{ color: rgb(199,210,254); }
     html.dark #out-year{ color: rgb(253,230,138); }
 
     .ep-frame{

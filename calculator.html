@@ -23,7 +23,7 @@
 
   <title>Bal kalkulyatoru — EduPlan</title>
 
-  <meta name="theme-color" content="#ffffff" id="theme-color" />
+  <meta name="theme-color" content="#f8fafc" id="theme-color" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Bal kalkulyatoru — EduPlan" />
@@ -55,7 +55,7 @@
         root.dataset.theme = theme;
 
         const meta = document.getElementById('theme-color');
-        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8fafc');
       } catch (e) {}
     })();
   </script>
@@ -79,11 +79,12 @@
     input[type="number"]{
       width:100%;
       border-radius: 0.75rem;
-      border: 1px solid rgba(226,232,240,.7);
-      background: rgba(255,255,255,.6);
+      border: 1px solid rgba(226,232,240,.75);
+      background: rgba(255,255,255,.78);
       padding: .65rem .9rem;
       font-size: 14px;
       outline: none;
+      transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
     html.dark input[type="number"]{
       border-color: rgba(30,41,59,.7);
@@ -106,7 +107,220 @@
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
       --ep-center-max: 1220px;
+
+      /* ===== Light mode "selectivity" tokens (rəngli, amma təmiz) ===== */
+      --ep-bg-from: #f8fafc;
+      --ep-bg-mid:  #eef2ff;
+      --ep-bg-to:   #ecfeff;
+
+      --ep-surface:   rgba(255,255,255,.72);
+      --ep-surface-2: rgba(255,255,255,.62);
+      --ep-border:    rgba(15,23,42,.10);
+      --ep-panel-border: rgba(79,70,229,.22);
+
+      --ep-t1-bg: rgba(238,242,255,.78);
+      --ep-t1-border: rgba(79,70,229,.30);
+
+      --ep-t2-bg: rgba(236,253,245,.76);
+      --ep-t2-border: rgba(16,185,129,.26);
+
+      --ep-year-bg: rgba(255,247,237,.80);
+      --ep-year-border: rgba(245,158,11,.28);
+
+      --ep-mode-idle-bg: rgba(255,255,255,.72);
+      --ep-mode-idle-border: rgba(15,23,42,.12);
+      --ep-mode-hover-bg: rgba(241,245,249,.92);
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(30,58,138,.10), rgba(79,70,229,.12), rgba(147,51,234,.10));
+      --ep-mode-active-border: rgba(79,70,229,.55);
+      --ep-mode-active-shadow: 0 10px 24px rgba(79,70,229,.16), 0 2px 8px rgba(15,23,42,.06);
+
+      --ep-focus: rgba(79,70,229,.28);
     }
+
+    html.dark{
+      --ep-bg-from: #020617;
+      --ep-bg-mid:  #0b1220;
+      --ep-bg-to:   #0f172a;
+
+      --ep-surface:   rgba(255,255,255,.06);
+      --ep-surface-2: rgba(255,255,255,.04);
+      --ep-border:    rgba(148,163,184,.18);
+      --ep-panel-border: rgba(99,102,241,.18);
+
+      --ep-t1-bg: rgba(49,46,129,.18);
+      --ep-t1-border: rgba(99,102,241,.22);
+
+      --ep-t2-bg: rgba(6,78,59,.18);
+      --ep-t2-border: rgba(16,185,129,.22);
+
+      --ep-year-bg: rgba(120,53,15,.18);
+      --ep-year-border: rgba(245,158,11,.20);
+
+      --ep-mode-idle-bg: rgba(255,255,255,.06);
+      --ep-mode-idle-border: rgba(148,163,184,.16);
+      --ep-mode-hover-bg: rgba(15,23,42,.72);
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(49,46,129,.45), rgba(67,56,202,.40), rgba(126,34,206,.35));
+      --ep-mode-active-border: rgba(99,102,241,.55);
+      --ep-mode-active-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+
+      --ep-focus: rgba(99,102,241,.34);
+    }
+
+    /* Override Tailwind bg gradient so light mode isn't "full white" */
+    body{
+      background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
+    }
+
+    /* Panel + internal surfaces: light mode gets tasteful color separation */
+    #calc-panel{
+      background: var(--ep-surface) !important;
+      border-color: var(--ep-panel-border) !important;
+    }
+    #calc-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(79,70,229,.06), rgba(16,185,129,.06), rgba(245,158,11,.06));
+    }
+    html.dark #calc-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(99,102,241,.10), rgba(16,185,129,.08), rgba(245,158,11,.08));
+    }
+
+    #empty-state .rounded-2xl{
+      background: var(--ep-surface-2) !important;
+      border-color: var(--ep-border) !important;
+    }
+
+    /* Mode buttons: idle vs active colors (works both themes) */
+    .mode-btn{
+      background: var(--ep-mode-idle-bg) !important;
+      border-color: var(--ep-mode-idle-border) !important;
+      position: relative;
+      overflow: hidden;
+      transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+    }
+    .mode-btn:hover{
+      background: var(--ep-mode-hover-bg) !important;
+      transform: translateY(-1px);
+    }
+    .mode-btn:active{ transform: translateY(0px); }
+
+    .mode-btn:focus-visible{
+      outline: none;
+      box-shadow: 0 0 0 4px var(--ep-focus);
+    }
+
+    .mode-btn[aria-pressed="true"]{
+      background-image: var(--ep-mode-active-bg) !important;
+      border-color: var(--ep-mode-active-border) !important;
+      box-shadow: var(--ep-mode-active-shadow) !important;
+    }
+    .mode-btn[aria-pressed="true"]::after{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:
+        radial-gradient(120% 120% at 20% 0%, rgba(79,70,229,.18), transparent 55%),
+        radial-gradient(120% 120% at 80% 0%, rgba(147,51,234,.16), transparent 55%);
+      pointer-events:none;
+      opacity: .95;
+    }
+    html.dark .mode-btn[aria-pressed="true"]::after{
+      opacity: .30;
+    }
+
+    /* Fieldsets: t1/t2 color separation */
+    #fs-t1{
+      background: var(--ep-t1-bg) !important;
+      border-color: var(--ep-t1-border) !important;
+    }
+    #fs-t2{
+      background: var(--ep-t2-bg) !important;
+      border-color: var(--ep-t2-border) !important;
+    }
+
+    /* Term pill accents per term (dot + outline + divider line) */
+    #fs-t1 .ep-term-dot{
+      background: linear-gradient(90deg,#4f46e5,#9333ea);
+      box-shadow: 0 0 0 4px rgba(99,102,241,.14);
+    }
+    #fs-t2 .ep-term-dot{
+      background: linear-gradient(90deg,#10b981,#06b6d4);
+      box-shadow: 0 0 0 4px rgba(16,185,129,.16);
+    }
+    html.dark #fs-t1 .ep-term-dot{ box-shadow: 0 0 0 4px rgba(99,102,241,.18); }
+    html.dark #fs-t2 .ep-term-dot{ box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
+
+    #fs-t1 .ep-term-pill::before{
+      background: linear-gradient(90deg, rgba(79,70,229,.60), rgba(147,51,234,.55));
+    }
+    #fs-t2 .ep-term-pill::before{
+      background: linear-gradient(90deg, rgba(16,185,129,.60), rgba(6,182,212,.55));
+    }
+
+    #fs-t1 .ep-term-head::after{
+      background: linear-gradient(90deg, rgba(79,70,229,.24), rgba(79,70,229,0));
+    }
+    #fs-t2 .ep-term-head::after{
+      background: linear-gradient(90deg, rgba(16,185,129,.24), rgba(16,185,129,0));
+    }
+    html.dark #fs-t1 .ep-term-head::after{
+      background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
+    }
+    html.dark #fs-t2 .ep-term-head::after{
+      background: linear-gradient(90deg, rgba(16,185,129,.34), rgba(16,185,129,0));
+    }
+
+    /* Output cards: distinct surfaces + subtle decoration */
+    #out-t1-card, #out-t2-card, #out-year-card{
+      position: relative;
+      overflow: hidden;
+    }
+    #out-t1-card{
+      background: var(--ep-t1-bg) !important;
+      border-color: var(--ep-t1-border) !important;
+    }
+    #out-t2-card{
+      background: var(--ep-t2-bg) !important;
+      border-color: var(--ep-t2-border) !important;
+    }
+    #out-year-card{
+      background: var(--ep-year-bg) !important;
+      border-color: var(--ep-year-border) !important;
+    }
+
+    #out-t1-card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(120% 120% at 0% 0%, rgba(79,70,229,.14), transparent 55%),
+        radial-gradient(120% 120% at 100% 0%, rgba(147,51,234,.10), transparent 55%);
+      pointer-events:none;
+    }
+    #out-t2-card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(120% 120% at 0% 0%, rgba(16,185,129,.14), transparent 55%),
+        radial-gradient(120% 120% at 100% 0%, rgba(6,182,212,.10), transparent 55%);
+      pointer-events:none;
+    }
+    #out-year-card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(120% 120% at 0% 0%, rgba(245,158,11,.14), transparent 55%),
+        radial-gradient(120% 120% at 100% 0%, rgba(244,63,94,.08), transparent 55%);
+      pointer-events:none;
+    }
+
+    /* Big numbers: term-colored emphasis (light + dark) */
+    #out-t1{ color: rgb(67,56,202); }
+    #out-t2{ color: rgb(5,150,105); }
+    #out-year{ color: rgb(217,119,6); }
+
+    html.dark #out-t1{ color: rgb(199,210,254); }
+    html.dark #out-t2{ color: rgb(167,243,208); }
+    html.dark #out-year{ color: rgb(253,230,138); }
 
     .ep-frame{
       width: 100%;
@@ -183,7 +397,6 @@
 
     /* =========================================================
        ✅ Term headers (I/II yarımil) – professional pill style
-       (legend render problemi yoxdur, hər brauzerdə eyni görünür)
        ========================================================= */
     .ep-term-head{
       display:flex;
@@ -221,7 +434,6 @@
       box-shadow: 0 1px 2px rgba(0,0,0,.35);
     }
 
-    /* soft gradient outline (subtle) */
     .ep-term-pill::before{
       content:"";
       position:absolute;
@@ -368,7 +580,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
-                  <!-- ✅ FIXED: legend visually replaced by professional header -->
                   <fieldset id="fs-t1" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">I yarımil</legend>
 
@@ -570,7 +781,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         document.documentElement.dataset.theme = theme;
 
         if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
 
         if (persist) {
           try { localStorage.setItem('theme', theme); } catch (e) {}

@@ -576,7 +576,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <div class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5 text-center">
                     <div class="text-lg font-semibold">Rejimi seçin</div>
                     <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      I yarımil, II yarımil və ya “Hər ikisi” seçdikdən sonra xanalar aktiv olacaq.
+                      I yarımil, II yarımil və ya “İllik” seçdikdən sonra xanalar aktiv olacaq.
                     </div>
                   </div>
                 </div>
@@ -606,7 +606,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                       data-mode="both"
                       aria-pressed="false"
                     >
-                      Hər ikisi
+                      İllik
                     </button>
                   </div>
                 </div>
@@ -738,9 +738,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </p>
 
                 <p>
-                  İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>Hər ikisi</em> rejimlərindən birini seçir.
+                  İstifadəçi <em>I yarımil</em>, <em>II yarımil</em> və ya <em>İllik</em> rejimlərindən birini seçir.
                   KSQ sahələrinə daxil edilən dəyərlərin ortası götürülür, BSQ isə yekun nəticəyə daha çox təsir edir.
-                  “Hər ikisi” rejimində iki yarımilin ortası illik bal kimi göstərilir.
+                  “İllik” rejimində iki yarımilin ortası illik bal kimi göstərilir.
                 </p>
 
                 <p>
@@ -1263,7 +1263,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearError();
 
         if (!mode) {
-          showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya Hər ikisi).');
+          showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (I, II və ya İllik).');
           ensureVisibleStable(modeArea, { topGap: 18, bottomGap: 18 });
           const firstModeBtn = document.querySelector('[data-mode="t1"]');
           tryFocus(firstModeBtn);

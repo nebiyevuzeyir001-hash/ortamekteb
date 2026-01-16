@@ -76,7 +76,7 @@
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
     /* =========================================================
-       ✅ Light/Dark token sistemi
+       ✅ Light/Dark token sistemi (kalkulyatorla eyni hiss)
     ========================================================= */
     :root{
       --ep-field-h: 42px;
@@ -85,14 +85,21 @@
       --ep-radius-lg: 1rem;
       --ep-radius-sm: .95rem;
 
+      /* ===== Reklam relsləri ===== */
       --ep-rail-w: clamp(160px, 14vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
 
+      /* Mərkəz sütunun max eni (reklam olanda) */
       --ep-center-max: 1100px;
+
+      /* Reklam olanda səhifənin max eni */
       --ep-shell-max: 1600px;
+
+      /* Header max-w-7xl = 80rem */
       --ep-frame-max: 80rem;
 
+      /* ===== Light mode: layer separation ===== */
       --ep-bg-from: #f8fafc;
       --ep-bg-mid:  #eef2ff;
       --ep-bg-to:   #ecfeff;
@@ -103,6 +110,7 @@
       --ep-border: rgba(79,70,229,.12);
       --ep-panel-border: rgba(79,70,229,.28);
 
+      /* secondary buttons / pills */
       --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.88), rgba(238,242,255,.70));
       --ep-mode-idle-border: rgba(79,70,229,.16);
       --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(224,231,255,.78));
@@ -136,12 +144,13 @@
       --ep-focus: rgba(99,102,241,.34);
     }
 
+    /* ✅ Tailwind bg-ni override et (kalkulyator kimi) */
     body{
       background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
     }
 
     /* =========================================================
-       ✅ Panel + cards
+       ✅ Panel + cards (kalkulyator hissi)
     ========================================================= */
     #tt-panel{
       background: var(--ep-surface) !important;
@@ -165,6 +174,9 @@
     }
     html.dark .ep-card{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
 
+    /* =========================================================
+       ✅ Secondary buttons (reset/mode kimi)
+    ========================================================= */
     .ep-btn-secondary{
       background: var(--ep-mode-idle-bg) !important;
       border-color: var(--ep-mode-idle-border) !important;
@@ -272,7 +284,7 @@
       line-height: 1.35;
     }
 
-    /* ===== Teacher table (UPDATED) ===== */
+    /* ===== Teacher table ===== */
     #teacherTable{ table-layout: fixed; width: 100%; min-width: 0; }
     #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 20%; }
     #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 8%; }
@@ -344,7 +356,6 @@
     #classTable th:nth-child(4), #classTable td:nth-child(4){ width: 26%; }
     #classTable th:nth-child(5), #classTable td:nth-child(5){ width: 10%; }
 
-    /* Lesson table widths updated for Qoşa select */
     #lessonTable th:nth-child(1), #lessonTable td:nth-child(1){ width: 15%; }
     #lessonTable th:nth-child(2), #lessonTable td:nth-child(2){ width: 28%; }
     #lessonTable th:nth-child(3), #lessonTable td:nth-child(3){ width: 23%; }
@@ -503,19 +514,21 @@
 
     /* =========================================================
        ✅ PARALLEL LAYOUT (Header ilə 1:1)
+       - Reklam YOX: ep-frame = max-w-7xl + eyni padding
+       - Reklam VAR: ep-frame genişlənir, shell 3 sütun olur
     ========================================================= */
     .ep-frame{
       width: 100%;
       max-width: var(--ep-frame-max);
       margin: 0 auto;
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 16px;  /* px-4 */
+      padding-right: 16px; /* px-4 */
       transition: max-width .22s ease, padding .22s ease;
     }
-    @media (min-width: 640px){
+    @media (min-width: 640px){ /* sm:px-6 */
       .ep-frame{ padding-left: 24px; padding-right: 24px; }
     }
-    @media (min-width: 1024px){
+    @media (min-width: 1024px){ /* lg:px-8 */
       .ep-frame{ padding-left: 32px; padding-right: 32px; }
     }
 
@@ -564,6 +577,7 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
+    /* Laptop/telefon: relslər gizlənsin */
     @media (max-width: 1024px){
       .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
       .ep-shell{
@@ -632,7 +646,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="ep-shell" id="ep-shell">
 
         <!-- SOL reklam slotu -->
-        <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)"></aside>
+        <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
+          <!-- SOL reklam kodu bura -->
+        </aside>
 
         <div class="ep-center">
           <section class="py-6 sm:py-8">
@@ -673,9 +689,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
                     <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
                   </label>
+
                   <label class="inline-flex items-start gap-2">
                     <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
-                    <span>Eyni gündə eyni fənn 2 dəfədən çox bir sinifdə təkrarlanmasın (pozulmur)</span>
+                    <span>Eyni gündə eyni fənn maksimum 2 dəfə təkrarlansın</span>
+                  </label>
+
+                  <label class="inline-flex items-start gap-2 md:col-span-2">
+                    <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
+                    <span>Siniflər üzrə gün ərzində boş saat olmasın (dərslər 1-ci saatdan ardıcıl olsun)</span>
                   </label>
                 </div>
 
@@ -696,8 +718,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                  Hər müəllim üçün həftəlik/gündəlik maksimum saat, <strong>uyğun dərs saatları</strong> və <strong>gəlmə günləri</strong>.
-                  (Günlər və saatlar seçimləri pozulmur.)
+                  Hər müəllim üçün həftəlik və gündəlik maksimum saat, uyğun dərs saatları və gəlmə günləri.
                 </div>
 
                 <table class="config-table" id="teacherTable">
@@ -727,7 +748,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                  Səviyyə: 1–4 ibtidai, 5–8 əsas, 9–11 yuxarı. Növbə sadəcə informasiya üçündür.
+                  Səviyyə və növbə hazırda informasiya üçündür. “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
                 </div>
 
                 <table class="config-table" id="classTable">
@@ -756,7 +777,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
                   Hər sətir: sinif + fənn + müəllim + həftəlik saat.
-                  <strong>Qoşa</strong>: “İmkan daxilində” seçsəniz mümkün olduqca ardıcıl yerləşdirər, alınmasa bölə bilər; “Mütləq” seçsəniz ardıcıllıq pozulmur.
+                  “Qoşa”: <strong>İmkan daxilində</strong> seçsəniz ardıcıllıq mümkün olduqca qorunur; <strong>Mütləq</strong> seçsəniz ardıcıllıq pozulmur.
                 </div>
 
                 <table class="config-table" id="lessonTable">
@@ -829,7 +850,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </section>
 
-          <!-- Məlumat bölməsi (istəsəniz saxlaya bilərsiniz) -->
+          <!-- ✅ MƏLUMAT (kullanıcı klavuzu) -->
           <section class="ep-card mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
             <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
 
@@ -842,31 +863,189 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </p>
 
               <div class="ep-card rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
-                <div class="font-semibold text-slate-900 dark:text-slate-100">Sərt qaydalar (pozulmur)</div>
-                <ul class="mt-2 list-disc pl-6 space-y-1 text-sm text-slate-600 dark:text-slate-300">
-                  <li>Müəllim gəlmə günləri</li>
-                  <li>Müəllimin seçdiyi dərs saatları</li>
-                  <li>Müəllim conflict (eyni vaxtda 2 dərs olmaz)</li>
-                  <li>Müəllim/sinif həftəlik-gündəlik limitləri</li>
-                  <li>Aktivdirsə: eyni fənn gündə maksimum 2 saat</li>
-                  <li>Qoşa = “Mütləq” seçilibsə: ardıcıllıq pozulmur</li>
+                <div class="font-semibold text-slate-900 dark:text-slate-100">İş prinsipi (qısa axın)</div>
+                <ol class="mt-2 list-decimal pl-6 space-y-1">
+                  <li><strong>Məktəb parametrləri</strong> — həftə günü sayı və gündə maksimum saatı seçin.</li>
+                  <li><strong>Müəllimlər</strong> — hər müəllimin limitlərini, uyğun saatları və gəlmə günlərini yazın.</li>
+                  <li><strong>Siniflər</strong> — sinif siyahısını (səviyyə, növbə, gündə limit) daxil edin.</li>
+                  <li><strong>Fənn / dərs saatları</strong> — “sinif + fənn + müəllim + həftəlik saat” sətirlərini əlavə edin.</li>
+                  <li><strong>⚙️ Cədvəli qur</strong> — sistem <strong>tam həll tapılanadək</strong> fərqli kombinasiyalar sınayır.</li>
+                  <li><strong>Nəticə</strong> — sinif tablarını dəyişərək cədvəli yoxlayın, lazım olsa parametrləri düzəldin və yenidən qurun.</li>
+                </ol>
+
+                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                  Proses zamanı ekranda <strong>cəhd sayı</strong> və <strong>ən yaxşı tapılan nəticə</strong> (faizlə) göstərilir.
+                  İstəsəniz <strong>🛑 Dayandır</strong> düyməsi ilə axtarışı dayandırıb həmin “ən yaxşı” nəticəyə baxa bilərsiniz.
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">1) Məktəb parametrləri nə edir?</h3>
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Həftəlik iş günü (5/6)</strong> cədvəlin sütun sayını müəyyən edir:
+                    5 gün seçəndə <em>Şənbə</em> (Ş) gizlənir və müəllimlərin “Ş” günü avtomatik deaktiv edilir.
+                  </li>
+                  <li>
+                    <strong>Gündə dərs saatı (max)</strong> hər sinif üçün matrisin (gün × saat) ölçüsünü təyin edir.
+                    Məsələn 7 seçsəniz, hər gün 1–7 saat aralığı yaranır.
+                  </li>
+                  <li>
+                    <strong>Ağır fənlər mümkün qədər 1-ci/sonuncu saatda olmasın</strong> — bu seçim aktivdirsə,
+                    “Ağır?” işarələdiyiniz dərslər mümkün olduqca 1-ci və sonuncu saata salınmır (optimallaşdırma).
+                  </li>
+                  <li>
+                    <strong>Eyni gündə eyni fənn maksimum 2 dəfə təkrarlansın</strong> — aktivdirsə,
+                    bir sinifdə eyni fənnin bir gündə toplamı <strong>2 saatdan çox</strong> ola bilməz (qayda kimi tətbiq olunur).
+                  </li>
+                  <li>
+                    <strong>Siniflər üzrə gün ərzində boş saat olmasın</strong> — aktivdirsə,
+                    sinifdə dərslər gün ərzində <strong>1-ci saatdan başlayıb ardıcıl</strong> gedir, arada boşluq yaranmır (qayda kimi tətbiq olunur).
+                  </li>
+                </ul>
+
+                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+                  Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
+                  Digər seçimlər (müəllim gün/saat uyğunluğu, eyni fənnin gündə max 2, boş saat olmaması, Qoşa=Mütləq) qayda kimi tətbiq olunur və pozulmur.
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">2) Müəllimlər bölməsi necə istifadə olunur?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Ad, soyad</strong> və <strong>Kod</strong>:
+                    “Fənn / dərs saatları” bölməsində müəllimi tapmaq üçün sistem müəllimi <strong>kodla və ya adla</strong> uyğunlaşdırır.
+                    Praktik üsul: hər müəllimə qısa kod verin (məs: <code class="px-1 rounded bg-slate-100/80 dark:bg-white/10">İSF</code>).
+                  </li>
+                  <li>
+                    <strong>Həftəlik max</strong> və <strong>Gündə max</strong>: müəllimin həftəlik/gündəlik dərs limitidir.
+                    <strong>0</strong> yazılsa (və ya boş qalsa) sistem bunu “limitsiz” kimi qəbul edir.
+                  </li>
+                  <li>
+                    <strong>Dərs saatları</strong>:
+                    müəllimin dərsinin <strong>hansı saatlarda</strong> ola biləcəyini göstərir.
+                    Heç nə seçməsəniz sistem standart olaraq <strong>bütün saatları</strong> uyğun sayır.
+                    Bu seçim <strong>qayda kimidir</strong> və pozulmur.
+                  </li>
+                  <li>
+                    <strong>Gəlmə günləri</strong>:
+                    müəllimin dərsinin hansı günlərdə ola biləcəyini göstərir. Heç nə seçməsəniz,
+                    sistem <strong>hamı günlər</strong> kimi qəbul edir.
+                    Vacib: “gəlmə günləri” <strong>qayda kimidir</strong> — pozulmur.
+                  </li>
+                </ul>
+
+                <div class="mt-3 rounded-xl border border-amber-200/70 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/10 p-3 text-sm">
+                  <div class="font-semibold text-amber-900 dark:text-amber-200">Diqqət (uyğunlaşdırma)</div>
+                  <p class="mt-1">
+                    “Fənn / dərs saatları” bölməsində müəllimi <strong>kod və ya ad</strong> ilə yazanda,
+                    bu dəyər müəllim cədvəlindəki kod/ad ilə <strong>eyni yazılışda</strong> olmalıdır
+                    (sistem yalnız boşluqları kəsir).
+                    Məsələn <code class="px-1 rounded bg-white/60 dark:bg-white/10">FİR</code> ilə
+                    <code class="px-1 rounded bg-white/60 dark:bg-white/10">fir</code> fərqli sayılır.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">3) Siniflər bölməsi necə işləyir?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Sinif</strong> (məs: 5A) — “Fənn / dərs saatları” sətirlərində də eyni adla yazılmalıdır.
+                  </li>
+                  <li>
+                    <strong>Gündə max dərs</strong> boş qalarsa standart limit kimi <strong>“Gündə dərs saatı (max)”</strong> tətbiq olunur.
+                    Əgər rəqəm yazsanız, həmin sinif üçün gündəlik limit ayrıca təyin olunur.
+                  </li>
+                  <li>
+                    <strong>Növbə</strong> (Səhər/Günorta) hazırda <strong>informasiya üçündür</strong> — alqoritm növbəyə görə ayrıca məhdudiyyət tətbiq etmir.
+                  </li>
                 </ul>
               </div>
 
-              <div class="ep-card rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
-                <div class="font-semibold text-slate-900 dark:text-slate-100">Optimallaşdırmalar (mümkün olduqca)</div>
-                <ul class="mt-2 list-disc pl-6 space-y-1 text-sm text-slate-600 dark:text-slate-300">
-                  <li>Ağır fənnlərin 1-ci və sonuncu saata düşməməsi</li>
-                  <li>Qoşa = “İmkan daxilində” seçimi</li>
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">4) Fənn / dərs saatları: ən vacib hissə</h3>
+
+                <p class="mt-2">
+                  Bu cədvəldəki hər sətir bir “tədris tapşırığıdır”:
+                  <strong>hansı sinifə</strong>, <strong>hansı fənn</strong>, <strong>hansı müəllim</strong> və
+                  <strong>həftədə neçə saat</strong>.
+                </p>
+
+                <ul class="mt-3 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>Həftəlik saat</strong> daxil etdikdə sistem bunu “bloklara” parçalayır və yerləşdirir.
+                  </li>
+                  <li>
+                    <strong>Qoşa</strong> rejimi:
+                    <ul class="list-disc pl-6 mt-1 space-y-1">
+                      <li><strong>Yox</strong> → normal yerləşdirmə.</li>
+                      <li><strong>İmkan daxilində</strong> → 2 saatlıq blokları ardıcıl yerləşdirməyə çalışır, alınmasa bölə bilər.</li>
+                      <li><strong>Mütləq</strong> → 2 saatlıq bloklar mütləq ardıcıl olmalıdır (pozulmur).</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <strong>Ağır?</strong> seçilibsə:
+                    “Ağır fənlər 1-ci/sonuncu saatda olmasın” parametri aktiv olanda
+                    sistem əvvəlcə ağır fənni 1-ci/sonuncu saata salmamağa çalışır.
+                  </li>
                 </ul>
               </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">5) “Cədvəli qur” düyməsi arxada nə edir?</h3>
+
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    Sistem “dərs bloklarını” müxtəlif ardıcıllıqlarda və slot kombinasiyalarında yerləşdirməyə çalışır.
+                  </li>
+                  <li>
+                    <strong>Qayda kimi tətbiq olunan məhdudiyyətlər</strong> (müəllim konfliktləri, gəlmə günləri, müəllim saat seçimi, limitlər, sinif tutumu, eyni fənnin gündə max 2, boş saat olmaması, Qoşa=Mütləq) pozulmur.
+                  </li>
+                  <li>
+                    <strong>Optimallaşdırmalar</strong> (ağır fənnin kənar saatlara düşməməsi, Qoşa=İmkan daxilində ardıcıllıq) mümkün olduqca qorunur.
+                  </li>
+                  <li>
+                    Tam həll tapılanadək axtarış davam edir. Konfiqurasiya həqiqətən mümkünsüzdürsə axtarış da uzana bilər —
+                    bu halda <strong>🛑 Dayandır</strong> düyməsi ilə prosesi dayandırıb ən yaxşı tapılmış nəticəni görə bilərsiniz.
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tez-tez rast gəlinən problemlər və həll yolları</h3>
+                <ul class="mt-2 list-disc pl-6 space-y-1">
+                  <li>
+                    <strong>“Sinif/müəllim tapılmadı” xətası</strong> →
+                    sinif adlarını və müəllim kod/adını bütün yerlərdə eyni yazın.
+                  </li>
+                  <li>
+                    <strong>Çox “Yerləşdirilməyənlər” çıxır</strong> →
+                    sinif/müəllim limitlərini yoxlayın, sinif tutumunu artırın (gündə max), müəllim gəlmə günlərini və uyğun saatları genişləndirin.
+                  </li>
+                  <li>
+                    <strong>Axtarış çox uzanır</strong> →
+                    çox vaxt bu ya konfiqurasiyanın mümkünsüz olmasına, ya da limitlərin həddən artıq sərt olmasına işarə edir.
+                  </li>
+                </ul>
+              </div>
+
+              <p class="text-sm text-slate-600 dark:text-slate-300">
+                Qeyd: Bu alqoritm brauzerdə işləyir və “tam həll tapılanadək” axtarış aparır. Real məktəb cədvəllərində ən stabil nəticə üçün
+                kod/ad uyğunluğunu qorumaq və limitləri realist qurmaq ən vacibdir.
+              </p>
             </div>
           </section>
 
         </div>
 
         <!-- SAĞ reklam slotu -->
-        <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)"></aside>
+        <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
+          <!-- SAĞ reklam kodu bura -->
+        </aside>
 
       </div>
     </div>
@@ -887,7 +1066,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </footer>
 
-  <!-- Theme script -->
   <script>
     (function () {
       const yearEl = document.getElementById('year');
@@ -934,7 +1112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Ads layout -->
+  <!-- ✅ Reklam gəlsə: avtomatik 3 sütun + frame genişlənir -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -972,7 +1150,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Timetable logic (PRO) -->
+  <!-- Timetable logic (PRO + "boş saat olmasın") -->
   <script>
     (function () {
       const teacherTbody = document.getElementById('teacherTbody');
@@ -1012,11 +1190,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       let __stopRequested = false;
       let __runId = 0;
 
-      // ===== scroll helpers =====
+      // ===== ✅ nəticə çıxanda scroll (stabil) =====
       const prefersReduceMotion = () => {
         try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
         catch (e) { return false; }
       };
+
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -1085,7 +1264,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       }
 
-      // ===== pretty select =====
       function makePrettySelect(selectEl, opts = {}) {
         if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
 
@@ -1226,7 +1404,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ? initial.availableDays
           : defaultAvailDays;
 
-        // Default: bütün saatlar seçili (1..8)
+        // Default: bütün saatlar seçili
         const defaultAvailHoursAll = Array.from({ length: 8 }, (_, i) => i);
         const availableHours = Array.isArray(initial.availableHours) && initial.availableHours.length
           ? initial.availableHours
@@ -1335,7 +1513,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btnAddClass.addEventListener('click', () => addClassRow({}));
       btnAddLesson.addEventListener('click', () => addLessonRow({}));
 
-      // Teacher actions (delete + hour presets)
+      // Teacher actions
       teacherTbody.addEventListener('click', (e) => {
         const del = e.target.closest('.t-del');
         if (del) { del.closest('tr')?.remove(); return; }
@@ -1416,6 +1594,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
         const optLimitSameSubject = document.getElementById('optLimitSameSubject').checked;
+        const optNoClassGaps = document.getElementById('optNoClassGaps').checked;
 
         const teachers = [];
         teacherTbody.querySelectorAll('tr').forEach(tr => {
@@ -1435,7 +1614,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           availableDays = availableDays.filter(d => d < daysCount);
           if (!availableDays.length) availableDays = Array.from({ length: daysCount }, (_, i) => i);
 
-          // Hours (STRICT)
+          // Hours
           const hourCbs = tr.querySelectorAll('.t-avhour[data-h]');
           let availableHours = [];
           hourCbs.forEach(cb => {
@@ -1516,6 +1695,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           lessonsPerDay,
           optHeavyAvoidEdges,
           optLimitSameSubject,
+          optNoClassGaps,
           teachers,
           classes,
           lessons,
@@ -1698,9 +1878,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return config;
       }
 
-      // ===== PRO placement =====
+      // ===== PRO placement + "boş saat olmasın" =====
       function attemptBuild(config) {
-        const { daysCount, lessonsPerDay, teachers, classes, optHeavyAvoidEdges, optLimitSameSubject } = config;
+        const {
+          daysCount,
+          lessonsPerDay,
+          teachers,
+          classes,
+          optHeavyAvoidEdges,
+          optLimitSameSubject,
+          optNoClassGaps
+        } = config;
 
         const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
           ? config._blocks
@@ -1737,7 +1925,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           return Math.min(maxDayRaw, lessonsPerDay);
         });
 
-        // Order blocks by "difficulty" (domain size) + tie random
+        // Order blocks by difficulty
         const blocks = baseBlocks.slice().map(b => ({ ...b, __r: Math.random() }));
         blocks.forEach(b => {
           const tid = b.teacherId;
@@ -1746,14 +1934,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const slotsAvail1 = teacherAllowedSlots[tid][1].length;
 
           let slotsAvail = teacherAllowedSlots[tid][b.length].length;
-          // if it can split, it’s not as impossible as 0 contiguous
           if (b.length === 2 && b.splitAllowed) {
             slotsAvail = Math.max(slotsAvail2, slotsAvail1);
           }
           const domain = Math.max(1, daysAvail * Math.max(1, slotsAvail));
-          // smaller domain -> more difficult
           b.__difficulty = domain;
-          // required doubles first
           b.__hardDouble = (b.length === 2 && b.doublePolicy === 'required') ? 0 : 1;
         });
 
@@ -1796,6 +1981,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const { classId, teacherId, subject, length } = block;
 
           if (slot + length - 1 >= lessonsPerDay) return 'Saat aralığına sığmır';
+
+          // ✅ boş saat olmasın: sinifdə yalnız "növbəti boş slot"a yerləşdir
+          if (optNoClassGaps) {
+            const nextSlot = classDaily[classId][day];
+            if (slot !== nextSlot) return 'Sinifdə boşluq qaydası (ardıcıllıq)';
+          }
 
           const matrix = timetable[classId];
           for (let i = 0; i < length; i++) {
@@ -1882,29 +2073,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           score += classDaily[classId][day] * 6;
           score += teacherDaily[teacherId][day] * 3;
 
-          // prefer earlier slots a bit (nicer day shape)
+          // prefer earlier slots a bit
           score += slot * 0.35;
 
-          // heavy edge penalty (optimization, not hard unless avoidEdgesHard stage)
           if (optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) score += 18;
 
-          // small random noise for diversification
           score += Math.random() * 0.6;
-
           return score;
         }
 
         function getCandidates(block, avoidEdgesHard){
-          const { teacherId, length } = block;
-
+          const { teacherId, length, classId } = block;
           const days = teachers[teacherId].availableDays || [];
           const slots = teacherAllowedSlots[teacherId][length] || [];
 
           const cands = [];
+
           for (const d of days) {
-            // quick day caps
             if (teacherDaily[teacherId][d] + length > teacherDayMax[teacherId]) continue;
-            if (classDaily[block.classId][d] + length > classMaxPerDay[block.classId]) continue;
+            if (classDaily[classId][d] + length > classMaxPerDay[classId]) continue;
+
+            if (optNoClassGaps) {
+              const s = classDaily[classId][d]; // next slot
+              if (s + length - 1 >= lessonsPerDay) continue;
+              if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
+              if (!canPlace(block, d, s, avoidEdgesHard)) continue;
+              cands.push({ d, s, score: candidateScore(block, d, s) });
+              continue;
+            }
 
             for (const s of slots) {
               if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
@@ -1912,6 +2108,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               cands.push({ d, s, score: candidateScore(block, d, s) });
             }
           }
+
           return cands;
         }
 
@@ -1936,14 +2133,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           pick = pickFromTopK(cands, 8);
           if (pick) { place(block, pick.d, pick.s); return true; }
 
-          // 3) if it is a splittable double (prefer) -> try split into two singles
+          // 3) splittable double -> try split into two singles
           if (block.length === 2 && block.splitAllowed) {
             const singleA = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
             const singleB = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
 
             const trySplit = (avoidEdgesHard) => {
               const aCands = getCandidates(singleA, avoidEdgesHard);
-              // Explore more for split
               aCands.sort((x,y)=>x.score-y.score);
               const limit = Math.min(12, aCands.length);
               for (let i = 0; i < limit; i++) {
@@ -2054,7 +2250,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function renderTimetable(config, result) {
-        const { classes, teachers, daysCount, lessonsPerDay, optLimitSameSubject } = config;
+        const { classes, teachers, daysCount, lessonsPerDay, optLimitSameSubject, optNoClassGaps } = config;
         const { timetable, unplaced, placedCount, meta } = result;
 
         const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
@@ -2122,7 +2318,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (!meta) return '';
 
           const reasons = Object.create(null);
-
           const { classId, teacherId, subject, length } = block;
           const matrix = timetable[classId];
           const t = teachers[teacherId];
@@ -2132,8 +2327,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
 
           for (let d = 0; d < daysCount; d++) {
+            // firstEmpty for no-gaps rule
+            let firstEmpty = 0;
+            if (optNoClassGaps) {
+              while (firstEmpty < lessonsPerDay && matrix[d][firstEmpty] != null) firstEmpty++;
+            }
+
             for (let s = 0; s <= lessonsPerDay - length; s++) {
-              // Evaluate reasons in priority order
+              if (optNoClassGaps && s !== firstEmpty) { add('Sinifdə boşluq qaydası'); continue; }
+
               // Class occupancy
               let occ = false;
               for (let i = 0; i < length; i++) {
@@ -2171,7 +2373,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 if (cur + length > 2) { add('Eyni fənn gündə maksimum 2'); continue; }
               }
 
-              // If reached here -> it would be placeable, but in practice we didn't manage (rare)
               add('Slot var, amma kombinasiya çətindir');
             }
           }
@@ -2200,7 +2401,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         softWarnings.textContent =
-          'Qeyd: Gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və “eyni fənn gündə 2-dən çox olmasın” (aktivdirsə) pozulmur. ' +
+          'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri, eyni fənnin gündə max 2 (aktivdirsə) və sinifdə boş saat olmaması (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
           '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır. “Qoşa = İmkan daxilində” seçilmiş dərslər əvvəlcə ardıcıl yerləşdirilməyə çalışılır, alınmasa bölünə bilər.';
 
         const firstClassId = classes[0]?.id;

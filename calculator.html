@@ -873,7 +873,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       };
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-      const to5 = x => (x >= 81) ? 5 : (x >= 61) ? 4 : (x >= 31) ? 3 : 2;
+
+      // ✅ FIXED grading logic:
+      // 0–30 (30 daxil) => 2
+      // 30-dan böyük – 60 (60 daxil) => 3
+      // 60-dan böyük – 80 (80 daxil) => 4
+      // 80-dən böyük => 5
+      const to5 = (x) => {
+        if (x <= 30) return 2;
+        if (x <= 60) return 3;
+        if (x <= 80) return 4;
+        return 5;
+      };
 
       // ----- motion preference -----
       const prefersReduceMotion = () => {

@@ -266,35 +266,36 @@
     }
 
     /* Term pill accents */
-    #fs-term .ep-term-dot{
+    #fs-term .ep-term-dot,
+    #fs-year .ep-term-dot{
       background: linear-gradient(90deg,#4f46e5,#9333ea);
       box-shadow: 0 0 0 4px rgba(99,102,241,.14);
     }
-    html.dark #fs-term .ep-term-dot{
+    html.dark #fs-term .ep-term-dot,
+    html.dark #fs-year .ep-term-dot{
       box-shadow: 0 0 0 4px rgba(99,102,241,.18);
     }
 
-    #fs-term .ep-term-pill::before{
+    #fs-term .ep-term-pill::before,
+    #fs-year .ep-term-pill::before{
       background: linear-gradient(90deg, rgba(79,70,229,.60), rgba(147,51,234,.55));
     }
 
-    #fs-term .ep-term-head::after{
+    #fs-term .ep-term-head::after,
+    #fs-year .ep-term-head::after{
       background: linear-gradient(90deg, rgba(79,70,229,.24), rgba(79,70,229,0));
     }
-    html.dark #fs-term .ep-term-head::after{
+    html.dark #fs-term .ep-term-head::after,
+    html.dark #fs-year .ep-term-head::after{
       background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
     }
 
     /* Output cards */
-    #out-t1-card, #out-t2-card, #out-year-card{
+    #out-term-card, #out-year-card{
       position: relative;
       overflow: hidden;
     }
-    #out-t1-card{
-      background: var(--ep-t1-bg) !important;
-      border-color: var(--ep-t1-border) !important;
-    }
-    #out-t2-card{
+    #out-term-card{
       background: var(--ep-t1-bg) !important;
       border-color: var(--ep-t1-border) !important;
     }
@@ -303,8 +304,7 @@
       border-color: var(--ep-year-border) !important;
     }
 
-    #out-t1-card::before,
-    #out-t2-card::before{
+    #out-term-card::before{
       content:"";
       position:absolute; inset:0;
       background:
@@ -322,12 +322,10 @@
     }
 
     /* Big numbers */
-    #out-t1{ color: rgb(67,56,202); }
-    #out-t2{ color: rgb(67,56,202); }
+    #out-term{ color: rgb(67,56,202); }
     #out-year{ color: rgb(217,119,6); }
 
-    html.dark #out-t1{ color: rgb(199,210,254); }
-    html.dark #out-t2{ color: rgb(199,210,254); }
+    html.dark #out-term{ color: rgb(199,210,254); }
     html.dark #out-year{ color: rgb(253,230,138); }
 
     .ep-frame{
@@ -580,36 +578,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
-                  <!-- ✅ One (combined) half-year form -->
+                  <!-- ✅ Yarımil form (I/II seçimi YOXDUR — sadəcə yarımil hesablanır) -->
                   <fieldset id="fs-term" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">Yarımil</legend>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div class="ep-term-head" aria-hidden="true">
-                        <div class="ep-term-pill">
-                          <span class="ep-term-dot"></span>
-                          <span class="ep-term-title" id="term-pill-title">I yarımil</span>
-                        </div>
-                      </div>
-
-                      <!-- Half-year selector (inside the same section) -->
-                      <div class="flex flex-wrap gap-2" aria-label="Yarımili seçin">
-                        <button
-                          type="button"
-                          class="mode-btn rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs sm:text-sm font-medium transition"
-                          data-term="t1"
-                          aria-pressed="true"
-                        >
-                          I yarımil
-                        </button>
-                        <button
-                          type="button"
-                          class="mode-btn rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs sm:text-sm font-medium transition"
-                          data-term="t2"
-                          aria-pressed="false"
-                        >
-                          II yarımil
-                        </button>
+                    <div class="ep-term-head" aria-hidden="true">
+                      <div class="ep-term-pill">
+                        <span class="ep-term-dot"></span>
+                        <span class="ep-term-title">Yarımil</span>
                       </div>
                     </div>
 
@@ -672,48 +648,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   ></div>
 
                   <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
-                    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticələr</div>
+                    <div class="text-sm text-slate-500 dark:text-slate-300">Nəticə</div>
 
-                    <div class="mt-4 grid sm:grid-cols-3 gap-3">
-                      <div id="out-t1-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                        <div class="text-slate-500 dark:text-slate-400 text-sm" id="out-t1-title">I yarımil</div>
-                        <div class="mt-1 text-2xl font-bold" id="out-t1">—</div>
-
-                        <!-- term-mode details -->
-                        <div id="out-t1-details-ksq" class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                          KSQ ort.: <span id="out-t1-ksq">—</span>, BSQ: <span id="out-t1-bsq">—</span>
+                    <!-- ✅ Yalnız 1 nəticə göstərilir (mode-a görə) -->
+                    <div class="mt-4 grid gap-3">
+                      <!-- Yarımil nəticəsi -->
+                      <div id="out-term-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                        <div class="text-slate-500 dark:text-slate-400 text-sm">Yarımil</div>
+                        <div class="mt-1 text-2xl font-bold" id="out-term">—</div>
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                          KSQ ort.: <span id="out-term-ksq">—</span>, BSQ: <span id="out-term-bsq">—</span>
                         </div>
-
-                        <!-- annual-mode details -->
-                        <div id="out-t1-details-direct" class="hidden mt-2 text-xs text-slate-600 dark:text-slate-300">
-                          Giriş: yarımil balı
-                        </div>
-
                         <div class="text-xs text-slate-600 dark:text-slate-300">
-                          Qiymət: <span class="font-semibold" id="out-t1-grade">—</span>
+                          Qiymət: <span class="font-semibold" id="out-term-grade">—</span>
                         </div>
                       </div>
 
-                      <div id="out-t2-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                        <div class="text-slate-500 dark:text-slate-400 text-sm" id="out-t2-title">II yarımil</div>
-                        <div class="mt-1 text-2xl font-bold" id="out-t2">—</div>
-
-                        <!-- term-mode details (not used in current layout, but kept for consistency) -->
-                        <div id="out-t2-details-ksq" class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                          KSQ ort.: <span id="out-t2-ksq">—</span>, BSQ: <span id="out-t2-bsq">—</span>
-                        </div>
-
-                        <!-- annual-mode details -->
-                        <div id="out-t2-details-direct" class="hidden mt-2 text-xs text-slate-600 dark:text-slate-300">
-                          Giriş: yarımil balı
-                        </div>
-
-                        <div class="text-xs text-slate-600 dark:text-slate-300">
-                          Qiymət: <span class="font-semibold" id="out-t2-grade">—</span>
-                        </div>
-                      </div>
-
-                      <div id="out-year-card" class="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                      <!-- İllik nəticəsi (yalnız bu göstəriləcək illik rejimdə) -->
+                      <div id="out-year-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                         <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
                         <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
                         <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">Hesab: (I + II) / 2</div>
@@ -742,7 +694,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <p>
                   İstifadəçi <em>I/II yarımil</em> və ya <em>İllik</em> rejimlərindən birini seçir.
-                  <em>I/II yarımil</em> rejimində bir yarımil seçilir (I və ya II) və KSQ+BSQ əsasında nəticə hesablanır.
+                  <em>I/II yarımil</em> rejimində bir yarımilin (I və ya II) KSQ/BSQ nəticələrini daxil edib yarımil balını hesablayır.
                   <em>İllik</em> rejimində isə iki yarımilin balı daxil edilir və illik bal <strong>(I + II) / 2</strong> kimi hesablanır.
                 </p>
 
@@ -876,7 +828,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (structure updated, rules unchanged) -->
+  <!-- Calculator logic (selector removed, annual shows ONLY year output) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -885,18 +837,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const $id = (x) => document.getElementById(x);
       const $qsa = (s) => Array.from(document.querySelectorAll(s));
 
-      // ===== state =====
-      let mode = null;          // 'term' | 'year'
-      let activeTerm = 't1';    // 't1' | 't2' (only for term mode)
-
-      const TERM_NAME = { t1: 'I yarımil', t2: 'II yarımil' };
-      const TERM_LABEL = { t1: 'I', t2: 'II' };
-
-      // Persist inputs for each term while using a single form
-      const termStore = {
-        t1: { ksq: Array(KSQ_COUNT).fill(''), bsq: '' },
-        t2: { ksq: Array(KSQ_COUNT).fill(''), bsq: '' }
-      };
+      let mode = null; // 'term' | 'year'
 
       const panel = $id('calc-panel');
       const modeArea = $id('mode-area');
@@ -905,8 +846,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const fsTerm = $id('fs-term');
       const fsYear = $id('fs-year');
 
-      const termPillTitle = $id('term-pill-title');
-
       const btnCalc = $id('btn-calc');
       const out = $id('calc-output');
       const err = $id('calc-error');
@@ -914,19 +853,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const resetBtn = $id('btn-reset');
 
       const modeButtons = $qsa('[data-mode]');
-      const termButtons = $qsa('[data-term]');
 
-      const outT1Card = $id('out-t1-card');
-      const outT2Card = $id('out-t2-card');
+      const outTermCard = $id('out-term-card');
       const outYearCard = $id('out-year-card');
-
-      const outT1Title = $id('out-t1-title');
-      const outT2Title = $id('out-t2-title');
-
-      const t1KsqLine = $id('out-t1-details-ksq');
-      const t1DirectLine = $id('out-t1-details-direct');
-      const t2KsqLine = $id('out-t2-details-ksq');
-      const t2DirectLine = $id('out-t2-details-direct');
 
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const TERM_KSQ_IDS = idsFor('term');
@@ -1046,7 +975,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       }
 
-      // ===== Input invalid state (professional UX + accessibility) =====
+      // ===== Input invalid state =====
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
         if (!el) return;
@@ -1117,14 +1046,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function clearOutputs() {
-        [
-          'out-t1','out-t1-ksq','out-t1-bsq','out-t1-grade',
-          'out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade',
-          'out-year','out-year-grade'
-        ].forEach(id => { const el = $id(id); if (el) el.textContent = '—'; });
+        ['out-term','out-term-ksq','out-term-bsq','out-term-grade','out-year','out-year-grade'].forEach(id => {
+          const el = $id(id);
+          if (el) el.textContent = '—';
+        });
 
-        if (outT1Title) outT1Title.textContent = 'I yarımil';
-        if (outT2Title) outT2Title.textContent = 'II yarımil';
+        outTermCard?.classList.add('hidden');
+        outYearCard?.classList.add('hidden');
       }
 
       function setBtnActive(btn, act) {
@@ -1154,6 +1082,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           out?.classList.add('hidden');
           warn?.classList.add('hidden');
           clearError();
+          clearOutputs();
           return;
         }
 
@@ -1162,74 +1091,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         fsTerm?.classList.toggle('hidden', mode !== 'term');
         fsYear?.classList.toggle('hidden', mode !== 'year');
 
-        // Output visibility by mode (cards are toggled; output container itself is shown only after "Hesabla")
-        outT1Card?.classList.remove('hidden');
-
-        if (mode === 'term') {
-          outT2Card?.classList.add('hidden');
-          outYearCard?.classList.add('hidden');
-
-          // term details
-          t1KsqLine?.classList.remove('hidden');
-          t1DirectLine?.classList.add('hidden');
-
-          // keep others clean
-          t2KsqLine?.classList.remove('hidden');
-          t2DirectLine?.classList.add('hidden');
-        } else {
-          outT2Card?.classList.remove('hidden');
-          outYearCard?.classList.remove('hidden');
-
-          // annual details
-          t1KsqLine?.classList.add('hidden');
-          t1DirectLine?.classList.remove('hidden');
-
-          t2KsqLine?.classList.add('hidden');
-          t2DirectLine?.classList.remove('hidden');
-        }
-      }
-
-      function updateTermUI() {
-        termButtons.forEach(b => {
-          const act = (b.dataset.term === activeTerm);
-          b.setAttribute('aria-pressed', act ? 'true' : 'false');
-          setBtnActive(b, act);
-        });
-
-        if (termPillTitle) termPillTitle.textContent = TERM_NAME[activeTerm] || 'Yarımil';
-      }
-
-      function saveActiveTermToStore() {
-        const store = termStore[activeTerm];
-        if (!store) return;
-
-        store.ksq = TERM_KSQ_IDS.map(id => {
-          const el = $id(id);
-          return el ? String(el.value ?? '') : '';
-        });
-        const bsqEl = $id('term-bsq');
-        store.bsq = bsqEl ? String(bsqEl.value ?? '') : '';
-      }
-
-      function loadTermFromStore(termKey) {
-        const store = termStore[termKey];
-        if (!store) return;
-
-        TERM_KSQ_IDS.forEach((id, idx) => {
-          const el = $id(id);
-          if (el) el.value = store.ksq[idx] ?? '';
-        });
-        const bsqEl = $id('term-bsq');
-        if (bsqEl) bsqEl.value = store.bsq ?? '';
+        // Card visibility will be controlled after calculation
+        outTermCard?.classList.add('hidden');
+        outYearCard?.classList.add('hidden');
       }
 
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           mode = btn.dataset.mode;
+
           updateModeUI();
-          updateTermUI();
           clearAllInvalid();
           clearError();
+          warn.classList.add('hidden');
+          clearOutputs();
+          out.classList.add('hidden');
 
           btn.blur();
           ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
@@ -1241,36 +1117,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
       });
 
-      termButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const next = btn.dataset.term;
-          if (!next || next === activeTerm) return;
-
-          // save current visible values, then swap
-          saveActiveTermToStore();
-          activeTerm = next;
-          loadTermFromStore(activeTerm);
-
-          updateTermUI();
-          clearAllInvalid();
-          clearError();
-
-          btn.blur();
-          ensureVisibleStable(fsTerm || panel, { topGap: 18, bottomGap: 18 });
-
-          requestAnimationFrame(() => tryFocus($id('term-ksq1')));
-        });
-      });
-
       updateModeUI();
-      updateTermUI();
-      loadTermFromStore(activeTerm);
 
       // ===== Read & compute rules (unchanged) =====
-      function readTermFromForm() {
-        const termLabel = TERM_LABEL[activeTerm] || '';
-
+      function readHalfYearFromForm() {
         const ksq = [];
+
         for (let i = 1; i <= KSQ_COUNT; i++) {
           const el = $id(`term-ksq${i}`);
           const n = numOrNull(el?.value);
@@ -1281,7 +1133,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 error: true,
                 code: 'KSQ_RANGE',
                 fieldId: `term-ksq${i}`,
-                message: `${termLabel} yarımil üçün KSQ ${i} dəyərini 0–100 arasında daxil edin.`
+                message: `Yarımil üçün KSQ ${i} dəyərini 0–100 arasında daxil edin.`
               };
             }
             ksq.push(n);
@@ -1294,7 +1146,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             error: true,
             code: 'BSQ_RANGE',
             fieldId: 'term-bsq',
-            message: `${termLabel} yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.`
+            message: `Yarımil üçün BSQ dəyərini 0–100 arasında daxil edin.`
           };
         }
 
@@ -1302,30 +1154,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function computeHalfYearFromForm() {
-        const termLabel = TERM_LABEL[activeTerm] || '';
-
-        const data = readTermFromForm();
+        const data = readHalfYearFromForm();
         if (data && data.error) return data;
 
         const { ksq, bsq } = data;
 
-        // If completely empty -> show error (more robust UX)
         if (ksq.length === 0 && bsq === null) {
           return {
             error: true,
             code: 'EMPTY',
             fieldId: 'term-ksq1',
-            message: `${termLabel} yarımil üçün ən azı 1 KSQ (və ya KSQ + BSQ) daxil edin.`
+            message: `Yarımil üçün ən azı 1 KSQ (və ya KSQ + BSQ) daxil edin.`
           };
         }
 
-        // BSQ given but no KSQ -> rule unchanged
         if (bsq !== null && ksq.length === 0) {
           return {
             error: true,
             code: 'KSQ_REQUIRED',
             fieldId: 'term-ksq1',
-            message: `${termLabel} yarımil üçün ən azı 1 KSQ dəyəri daxil edin.`
+            message: `Yarımil üçün ən azı 1 KSQ dəyəri daxil edin.`
           };
         }
 
@@ -1360,62 +1208,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         const yearVal = +(((t1 + t2) / 2).toFixed(2));
-        return { t1: +t1.toFixed(2), t2: +t2.toFixed(2), year: yearVal };
+        return { year: yearVal };
       }
 
-      function renderTermOutput(res) {
-        if (outT1Title) outT1Title.textContent = TERM_NAME[activeTerm] || 'Yarımil';
-
-        // show only one card
-        outT1Card?.classList.remove('hidden');
-        outT2Card?.classList.add('hidden');
+      function renderHalfYearOutput(res) {
+        outTermCard?.classList.remove('hidden');
         outYearCard?.classList.add('hidden');
 
-        // details mode
-        t1KsqLine?.classList.remove('hidden');
-        t1DirectLine?.classList.add('hidden');
-
-        // values
-        $id('out-t1').textContent = res.total.toFixed(2);
-        $id('out-t1-ksq').textContent = res.kAvg.toFixed(2);
-        $id('out-t1-bsq').textContent = (res.bsqOut === null) ? '—' : res.bsqOut.toFixed(2);
-        $id('out-t1-grade').textContent = to5(res.total);
-
-        // keep other cards clean
-        ['out-t2','out-t2-ksq','out-t2-bsq','out-t2-grade','out-year','out-year-grade'].forEach(id => {
-          const el = $id(id); if (el) el.textContent = '—';
-        });
+        $id('out-term').textContent = res.total.toFixed(2);
+        $id('out-term-ksq').textContent = res.kAvg.toFixed(2);
+        $id('out-term-bsq').textContent = (res.bsqOut === null) ? '—' : res.bsqOut.toFixed(2);
+        $id('out-term-grade').textContent = to5(res.total);
 
         warn.classList.toggle('hidden', !res.missingKsqs);
       }
 
       function renderAnnualOutput(res) {
-        if (outT1Title) outT1Title.textContent = 'I yarımil';
-        if (outT2Title) outT2Title.textContent = 'II yarımil';
-
-        outT1Card?.classList.remove('hidden');
-        outT2Card?.classList.remove('hidden');
+        outTermCard?.classList.add('hidden');
         outYearCard?.classList.remove('hidden');
 
-        // annual details: direct input
-        t1KsqLine?.classList.add('hidden');
-        t1DirectLine?.classList.remove('hidden');
-        t2KsqLine?.classList.add('hidden');
-        t2DirectLine?.classList.remove('hidden');
-
-        // t1
-        $id('out-t1').textContent = res.t1.toFixed(2);
-        $id('out-t1-ksq').textContent = '—';
-        $id('out-t1-bsq').textContent = '—';
-        $id('out-t1-grade').textContent = to5(res.t1);
-
-        // t2
-        $id('out-t2').textContent = res.t2.toFixed(2);
-        $id('out-t2-ksq').textContent = '—';
-        $id('out-t2-bsq').textContent = '—';
-        $id('out-t2-grade').textContent = to5(res.t2);
-
-        // year
         $id('out-year').textContent = res.year.toFixed(2);
         $id('out-year-grade').textContent = to5(res.year);
 
@@ -1423,19 +1234,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function resetCalc() {
-        // clear term form
-        TERM_KSQ_IDS.forEach(id => { const el = $id(id); if (el) el.value = ''; });
-        const bsqEl = $id('term-bsq'); if (bsqEl) bsqEl.value = '';
+        TERM_KSQ_IDS.forEach(id => {
+          const el = $id(id);
+          if (el) el.value = '';
+        });
+        const bsqEl = $id('term-bsq');
+        if (bsqEl) bsqEl.value = '';
 
-        // clear annual inputs
         const y1 = $id('year-t1'); if (y1) y1.value = '';
         const y2 = $id('year-t2'); if (y2) y2.value = '';
-
-        // clear stores
-        termStore.t1.ksq = Array(KSQ_COUNT).fill('');
-        termStore.t1.bsq = '';
-        termStore.t2.ksq = Array(KSQ_COUNT).fill('');
-        termStore.t2.bsq = '';
 
         clearAllInvalid();
         clearError();
@@ -1463,6 +1270,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btnCalc?.addEventListener('click', () => {
         clearAllInvalid();
         clearError();
+        warn.classList.add('hidden');
 
         if (!mode) {
           showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (“I/II yarımil” və ya “İllik”).');
@@ -1473,9 +1281,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         if (mode === 'term') {
-          // Save current visible values to the store (so switching keeps latest edits)
-          saveActiveTermToStore();
-
           const res = computeHalfYearFromForm();
           if (res && res.error) {
             const focusEl = $id(res.fieldId) || $id('term-ksq1');
@@ -1483,7 +1288,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             return;
           }
 
-          renderTermOutput(res);
+          renderHalfYearOutput(res);
           out.classList.remove('hidden');
           ensureVisibleStable(out, { topGap: 22, bottomGap: 18 });
           return;

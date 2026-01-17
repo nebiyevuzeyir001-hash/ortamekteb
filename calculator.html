@@ -828,7 +828,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (selector removed, annual shows ONLY year output) -->
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -875,10 +875,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
       // ✅ FIXED grading logic:
-      // 0–30 (30 daxil) => 2
-      // 30-dan böyük – 60 (60 daxil) => 3
-      // 60-dan böyük – 80 (80 daxil) => 4
-      // 80-dən böyük => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -892,7 +888,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         catch (e) { return false; }
       };
 
-      // ✅ Desktop-only detection (touch/mobil davranışını dəyişmir)
+      // ✅ Desktop-only detection (mobil davranışı dəyişməsin)
       const isDesktop = () => {
         try {
           return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -901,7 +897,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       };
 
-      // ===== Professional scroll (desktop + mobile keyboard aware) =====
+      // ===== Scroll helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -974,6 +970,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (!el) return;
 
         const run = () => ensureVisible(el, opts);
+
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        window.setTimeout(run, 120);
+        window.setTimeout(run, 260);
+
+        const vv = window.visualViewport;
+        if (vv) {
+          let active = true;
+          const onVV = () => { if (active) run(); };
+
+          vv.addEventListener('resize', onVV);
+          vv.addEventListener('scroll', onVV);
+
+          window.setTimeout(() => {
+            active = false;
+            vv.removeEventListener('resize', onVV);
+            vv.removeEventListener('scroll', onVV);
+          }, 420);
+        }
+      }
+
+      // ✅ Desktopda həm fieldset, həm nəticə görünməyə çalışsın
+      function fitRangeIntoView(topEl, bottomEl, opts = {}) {
+        if (!topEl || !bottomEl) return;
+
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const topGap = opts.topGap ?? 22;
+        const bottomGap = opts.bottomGap ?? 18;
+
+        const headerH = getHeaderHeight();
+        const vh = getViewportHeight();
+
+        const topR = pageRect(topEl);
+        const bottomR = pageRect(bottomEl);
+
+        const minY = bottomR.bottom - vh + bottomGap;
+        const maxY = topR.top - headerH - topGap;
+
+        const curY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        let targetY = curY;
+
+        if (minY <= maxY) {
+          if (curY < minY) targetY = minY;
+          else if (curY > maxY) targetY = maxY;
+          else targetY = curY;
+        } else {
+          targetY = (minY + maxY) / 2;
+        }
+
+        scrollToY(targetY, behavior);
+      }
+
+      function fitRangeIntoViewStable(topEl, bottomEl, opts = {}) {
+        const run = () => fitRangeIntoView(topEl, bottomEl, opts);
 
         requestAnimationFrame(() => requestAnimationFrame(run));
         window.setTimeout(run, 120);
@@ -1111,7 +1161,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         fsTerm?.classList.toggle('hidden', mode !== 'term');
         fsYear?.classList.toggle('hidden', mode !== 'year');
 
-        // Card visibility will be controlled after calculation
         outTermCard?.classList.add('hidden');
         outYearCard?.classList.add('hidden');
       }
@@ -1125,33 +1174,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           clearError();
           warn.classList.add('hidden');
           clearOutputs();
-          out.classList.add('hidden');
 
           btn.blur();
 
-          // ✅ İSTƏDİYİN DƏYİŞİKLİK:
-          // Desktop: rejimi seçən kimi müvafiq fieldset-ə qədər scroll et.
-          // Mobil: əvvəlki davranış dəyişməsin.
           if (isDesktop()) {
-            const targetFs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : (panel || fsTerm || fsYear);
-            ensureVisibleStable(targetFs, { topGap: 22, bottomGap: 18 });
-          } else {
-            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
-          }
+            // ✅ Desktop: rejimi seçən kimi nəticə blokları da görünsün (placeholder “—” ilə)
+            out.classList.remove('hidden');
 
-          requestAnimationFrame(() => {
-            let focusEl = null;
-
-            if (mode === 'term') focusEl = $id('term-ksq1');
-            else if (mode === 'year') focusEl = $id('year-t1');
-
-            if (focusEl) {
-              tryFocus(focusEl);
-
-              // Desktopda fokus olunan input görünən zonada qalsın
-              if (isDesktop()) ensureVisibleStable(focusEl, { topGap: 22, bottomGap: 18 });
+            if (mode === 'term') {
+              outTermCard?.classList.remove('hidden');
+              outYearCard?.classList.add('hidden');
+            } else if (mode === 'year') {
+              outYearCard?.classList.remove('hidden');
+              outTermCard?.classList.add('hidden');
             }
-          });
+
+            const targetFs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : (panel || fsTerm || fsYear);
+
+            // həm fieldset, həm nəticə görünəcək şəkildə scroll
+            requestAnimationFrame(() => {
+              fitRangeIntoViewStable(targetFs, out, { topGap: 22, bottomGap: 18 });
+            });
+
+            // Fokus yalnız görünəndə (ekranı tərpətməsin)
+            requestAnimationFrame(() => {
+              const focusEl = (mode === 'term') ? $id('term-ksq1') : (mode === 'year') ? $id('year-t1') : null;
+              if (focusEl && isInSafeZone(focusEl, { topGap: 22, bottomGap: 18 })) {
+                tryFocus(focusEl);
+              }
+            });
+
+          } else {
+            // ✅ Mobil: heç nə dəyişmir (nəticə gizli qalır, əvvəlki scroll/fokus)
+            out.classList.add('hidden');
+            outTermCard?.classList.add('hidden');
+            outYearCard?.classList.add('hidden');
+
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+
+            requestAnimationFrame(() => {
+              let focusEl = null;
+              if (mode === 'term') focusEl = $id('term-ksq1');
+              else if (mode === 'year') focusEl = $id('year-t1');
+              if (focusEl) tryFocus(focusEl);
+            });
+          }
         });
       });
 

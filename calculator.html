@@ -986,6 +986,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       }
 
+      /* ===========================
+         ✅ DESKTOP-ONLY MODE SCROLL
+         (mobil davranışa toxunmur)
+         =========================== */
+      function isDesktop() {
+        try { return window.matchMedia && window.matchMedia('(min-width: 1024px)').matches; }
+        catch (e) { return false; }
+      }
+
+      function scrollToElementTop(el, opts = {}) {
+        if (!el) return;
+        const topGap = opts.topGap ?? 18;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const r = pageRect(el);
+        const targetY = r.top - (getHeaderHeight() + topGap);
+        scrollToY(targetY, behavior);
+      }
+
+      function scrollToElementTopStable(el, opts = {}) {
+        if (!el) return;
+        const run = () => scrollToElementTop(el, opts);
+
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        window.setTimeout(run, 120);
+        window.setTimeout(run, 260);
+      }
+
       // ===== Input invalid state =====
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
@@ -1119,7 +1146,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           out.classList.add('hidden');
 
           btn.blur();
-          ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+
+          // ✅ Desktop: klikdən sonra form hissəsinə scroll et
+          // ✅ Mobil: əvvəlki davranış 100% saxlanılır
+          if (isDesktop()) {
+            const target = (mode === 'term') ? fsTerm : fsYear;
+            scrollToElementTopStable(target, { topGap: 18 });
+          } else {
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+          }
 
           requestAnimationFrame(() => {
             if (mode === 'term') tryFocus($id('term-ksq1'));

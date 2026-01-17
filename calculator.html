@@ -892,6 +892,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         catch (e) { return false; }
       };
 
+      // ✅ Desktop-only detection (touch/mobil davranışını dəyişmir)
+      const isDesktop = () => {
+        try {
+          return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        } catch (e) {
+          return true;
+        }
+      };
+
       // ===== Professional scroll (desktop + mobile keyboard aware) =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -1119,11 +1128,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           out.classList.add('hidden');
 
           btn.blur();
-          ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+
+          // ✅ İSTƏDİYİN DƏYİŞİKLİK:
+          // Desktop: rejimi seçən kimi müvafiq fieldset-ə qədər scroll et.
+          // Mobil: əvvəlki davranış dəyişməsin.
+          if (isDesktop()) {
+            const targetFs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : (panel || fsTerm || fsYear);
+            ensureVisibleStable(targetFs, { topGap: 22, bottomGap: 18 });
+          } else {
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+          }
 
           requestAnimationFrame(() => {
-            if (mode === 'term') tryFocus($id('term-ksq1'));
-            else if (mode === 'year') tryFocus($id('year-t1'));
+            let focusEl = null;
+
+            if (mode === 'term') focusEl = $id('term-ksq1');
+            else if (mode === 'year') focusEl = $id('year-t1');
+
+            if (focusEl) {
+              tryFocus(focusEl);
+
+              // Desktopda fokus olunan input görünən zonada qalsın
+              if (isDesktop()) ensureVisibleStable(focusEl, { topGap: 22, bottomGap: 18 });
+            }
           });
         });
       });

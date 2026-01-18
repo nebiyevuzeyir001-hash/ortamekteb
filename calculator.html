@@ -1417,11 +1417,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
-          _trackTimer(setTimeout(() => {
-            const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
-            const targetEl = $id(targetId);
-            if (targetEl) tryFocus(targetEl);
-          }, 560));
+
+          // ✅ Cursor ASAP: term -> KSQ1, year -> year-t1
+          const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
+          const targetEl = $id(targetId);
+          if (targetEl) requestAnimationFrame(() => tryFocus(targetEl));
         }));
       }
 

@@ -691,7 +691,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
-                <!-- ✅ Səliqəli hissə (yenilənib) -->
                 <div class="pt-1">
                   <p class="font-medium">
                     Nəticələr 2–5 qiymət şkalasında təqdim olunur:
@@ -727,7 +726,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </table>
                   </div>
                 </div>
-                <!-- ✅ /Səliqəli hissə -->
 
                 <p>
                   Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
@@ -847,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
+  <!-- Calculator logic (FINAL) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -1395,12 +1393,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
+      // ✅ DƏYİŞİKLİK BURADADIR: RESET basılanda TERM rejimi + KSQ1 fokus
       function resetCalc() {
         _newScrollJob();
 
         try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
         try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
 
+        // 1) Dəyərləri təmizlə
         TERM_KSQ_IDS.forEach(id => {
           const el = $id(id);
           if (el) el.value = '';
@@ -1411,14 +1411,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const y1 = $id('year-t1'); if (y1) y1.value = '';
         const y2 = $id('year-t2'); if (y2) y2.value = '';
 
+        // 2) Rejimi TERM et (KSQ 1 açıq olsun)
+        mode = 'term';
+        updateModeUI();
+
+        // 3) UI təmizləmələri
         clearAllInvalid();
         clearError();
         warn.classList.add('hidden');
         clearOutputs();
         out.classList.add('hidden');
 
+        // 4) Fokus funksiyası
+        const focusKSQ1 = () => {
+          const el = $id('term-ksq1');
+          if (!el) return;
+          tryFocus(el);
+          ensureVisibleStable(el, { topGap: 18, bottomGap: 18 });
+        };
+
+        // Klik hadisəsində dərhal fokus (mobil üçün daha stabil)
+        focusKSQ1();
+
+        // Scroll düzəltdikdən sonra yenə fokusla (stabil olsun)
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
+          focusKSQ1();
         }));
       }
 

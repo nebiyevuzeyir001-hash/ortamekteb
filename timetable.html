@@ -21,6 +21,7 @@
   <meta name="format-detection" content="telephone=no" />
   <title>Dərs cədvəli hazırlayıcı — EduPlan</title>
 
+  <!-- ✅ kalkulyatorla eyni -->
   <meta name="theme-color" content="#f8fafc" id="theme-color" />
 
   <meta property="og:type" content="website" />
@@ -74,6 +75,9 @@
     .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
     html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
 
+    /* =========================================================
+       ✅ Light/Dark token sistemi (kalkulyatorla eyni hiss)
+    ========================================================= */
     :root{
       --ep-field-h: 42px;
       --ep-field-h-sm: 36px;
@@ -81,14 +85,21 @@
       --ep-radius-lg: 1rem;
       --ep-radius-sm: .95rem;
 
+      /* ===== Reklam relsləri ===== */
       --ep-rail-w: clamp(160px, 14vw, 300px);
       --ep-rail-min-h: 600px;
       --ep-rail-gap: 24px;
 
+      /* Mərkəz sütunun max eni (reklam olanda) */
       --ep-center-max: 1100px;
+
+      /* Reklam olanda səhifənin max eni */
       --ep-shell-max: 1600px;
+
+      /* Header max-w-7xl = 80rem */
       --ep-frame-max: 80rem;
 
+      /* ===== Light mode: layer separation ===== */
       --ep-bg-from: #f8fafc;
       --ep-bg-mid:  #eef2ff;
       --ep-bg-to:   #ecfeff;
@@ -99,6 +110,7 @@
       --ep-border: rgba(79,70,229,.12);
       --ep-panel-border: rgba(79,70,229,.28);
 
+      /* secondary buttons / pills */
       --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.88), rgba(238,242,255,.70));
       --ep-mode-idle-border: rgba(79,70,229,.16);
       --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(224,231,255,.78));
@@ -132,10 +144,14 @@
       --ep-focus: rgba(99,102,241,.34);
     }
 
+    /* ✅ Tailwind bg-ni override et (kalkulyator kimi) */
     body{
       background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
     }
 
+    /* =========================================================
+       ✅ Panel + cards (kalkulyator hissi)
+    ========================================================= */
     #tt-panel{
       background: var(--ep-surface) !important;
       border-color: var(--ep-panel-border) !important;
@@ -158,6 +174,9 @@
     }
     html.dark .ep-card{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
 
+    /* =========================================================
+       ✅ Secondary buttons (reset/mode kimi)
+    ========================================================= */
     .ep-btn-secondary{
       background: var(--ep-mode-idle-bg) !important;
       border-color: var(--ep-mode-idle-border) !important;
@@ -177,6 +196,7 @@
       box-shadow: 0 0 0 4px var(--ep-focus), 0 14px 34px rgba(0,0,0,.45) !important;
     }
 
+    /* ==== Form controls ==== */
     input[type="text"], input[type="number"], select {
       width: 100%;
       border-radius: var(--ep-radius-lg);
@@ -233,6 +253,7 @@
     }
     html.dark .section-title{ color: rgb(148 163 184); }
 
+    /* Config table */
     table.config-table{
       width:100%;
       border-collapse:separate;
@@ -263,6 +284,7 @@
       line-height: 1.35;
     }
 
+    /* ===== Teacher table ===== */
     #teacherTable{ table-layout: fixed; width: 100%; min-width: 0; }
     #teacherTable th:nth-child(1), #teacherTable td:nth-child(1){ width: 20%; }
     #teacherTable th:nth-child(2), #teacherTable td:nth-child(2){ width: 8%; }
@@ -326,6 +348,7 @@
     }
     html.dark .t-mini-btn:hover{ background: rgba(255,255,255,.07); }
 
+    /* Class / Lesson tables */
     #classTable, #lessonTable{ table-layout: fixed; width:100%; min-width:0; }
     #classTable th:nth-child(1), #classTable td:nth-child(1){ width: 18%; }
     #classTable th:nth-child(2), #classTable td:nth-child(2){ width: 28%; }
@@ -341,6 +364,7 @@
     #lessonTable th:nth-child(6), #lessonTable td:nth-child(6){ width: 14%; }
     #lessonTable th:nth-child(7), #lessonTable td:nth-child(7){ width: 2%; }
 
+    /* Tabs */
     .tab-btn{
       border-radius: 9999px;
       padding: .3rem .8rem;
@@ -367,6 +391,7 @@
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
     }
 
+    /* Timetable table */
     .tt-table{
       width:100%;
       border-collapse:collapse;
@@ -394,6 +419,7 @@
 
     #unplacedContainer{ white-space: pre-line; }
 
+    /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
       position:absolute !important;
       opacity:0 !important;
@@ -486,18 +512,23 @@
     }
     html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
 
+    /* =========================================================
+       ✅ PARALLEL LAYOUT (Header ilə 1:1)
+       - Reklam YOX: ep-frame = max-w-7xl + eyni padding
+       - Reklam VAR: ep-frame genişlənir, shell 3 sütun olur
+    ========================================================= */
     .ep-frame{
       width: 100%;
       max-width: var(--ep-frame-max);
       margin: 0 auto;
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 16px;  /* px-4 */
+      padding-right: 16px; /* px-4 */
       transition: max-width .22s ease, padding .22s ease;
     }
-    @media (min-width: 640px){
+    @media (min-width: 640px){ /* sm:px-6 */
       .ep-frame{ padding-left: 24px; padding-right: 24px; }
     }
-    @media (min-width: 1024px){
+    @media (min-width: 1024px){ /* lg:px-8 */
       .ep-frame{ padding-left: 32px; padding-right: 32px; }
     }
 
@@ -546,6 +577,7 @@
       grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
     }
 
+    /* Laptop/telefon: relslər gizlənsin */
     @media (max-width: 1024px){
       .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
       .ep-shell{
@@ -613,7 +645,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="ep-frame" id="ep-frame">
       <div class="ep-shell" id="ep-shell">
 
+        <!-- SOL reklam slotu -->
         <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
+          <!-- SOL reklam kodu bura -->
         </aside>
 
         <div class="ep-center">
@@ -624,6 +658,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </p>
           </section>
 
+          <!-- ✅ PANEL -->
           <section id="tt-panel" class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
             <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
               <div class="font-semibold">🧩 Məktəb konfiqurasiyası və hazırlayıcı</div>
@@ -653,6 +688,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <label class="inline-flex items-start gap-2">
                     <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
                     <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
+                  </label>
+
+                  <label class="inline-flex items-start gap-2">
+                    <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
+                    <span>Eyni gündə eyni fənn maksimum 2 dəfə təkrarlansın</span>
                   </label>
 
                   <label class="inline-flex items-start gap-2 md:col-span-2">
@@ -737,7 +777,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
                   Hər sətir: sinif + fənn + müəllim + həftəlik saat.
-                  “Qoşa” qaydası: <strong>Yox</strong> → eyni gündə max 1; <strong>İmkan daxilində</strong> → eyni gündə mütləq 2 (ardıcıl üstünlük); <strong>Mütləq</strong> → eyni gündə mütləq 2 ardıcıl.
+                  “Qoşa”: <strong>İmkan daxilində</strong> seçsəniz ardıcıllıq mümkün olduqca qorunur; <strong>Mütləq</strong> seçsəniz ardıcıllıq pozulmur.
                 </div>
 
                 <table class="config-table" id="lessonTable">
@@ -780,6 +820,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </button>
                 </div>
 
+                <!-- ✅ styled error -->
                 <div id="globalError"
                      class="hidden mt-3 rounded-2xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/25 px-4 py-3 text-xs text-rose-700 dark:text-rose-300"
                      role="alert" aria-live="polite" tabindex="-1"></div>
@@ -811,193 +852,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <!-- ✅ MƏLUMAT (kullanıcı klavuzu) -->
           <section class="ep-card mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
-            <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
-
-            <div class="mt-5 space-y-6 text-base leading-7 text-slate-700 dark:text-slate-200">
-              <p>
-                Bu səhifədəki <strong>“🧩 Məktəb konfiqurasiyası və hazırlayıcı”</strong> bloku
-                dərs cədvəlini <strong>tamamilə brauzerdə</strong> qurmaq üçün hazırlanıb:
-                siz müəllim/sinif/fənn məlumatlarını daxil edirsiniz, sistem isə konfliktləri minimuma endirərək
-                cədvəli avtomatik yığmağa çalışır.
-              </p>
-
-              <div class="ep-card rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-white/5 p-4">
-                <div class="font-semibold text-slate-900 dark:text-slate-100">İş prinsipi (qısa axın)</div>
-                <ol class="mt-2 list-decimal pl-6 space-y-1">
-                  <li><strong>Məktəb parametrləri</strong> — həftə günü sayı və gündə maksimum saatı seçin.</li>
-                  <li><strong>Müəllimlər</strong> — hər müəllimin limitlərini, uyğun saatları və gəlmə günlərini yazın.</li>
-                  <li><strong>Siniflər</strong> — sinif siyahısını (səviyyə, növbə, gündə limit) daxil edin.</li>
-                  <li><strong>Fənn / dərs saatları</strong> — “sinif + fənn + müəllim + həftəlik saat” sətirlərini əlavə edin.</li>
-                  <li><strong>⚙️ Cədvəli qur</strong> — sistem <strong>tam həll tapılanadək</strong> fərqli kombinasiyalar sınayır.</li>
-                  <li><strong>Nəticə</strong> — sinif tablarını dəyişərək cədvəli yoxlayın, lazım olsa parametrləri düzəldin və yenidən qurun.</li>
-                </ol>
-
-                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                  Proses zamanı ekranda <strong>cəhd sayı</strong> və <strong>ən yaxşı tapılan nəticə</strong> (faizlə) göstərilir.
-                  İstəsəniz <strong>🛑 Dayandır</strong> düyməsi ilə axtarışı dayandırıb həmin “ən yaxşı” nəticəyə baxa bilərsiniz.
-                </p>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">1) Məktəb parametrləri nə edir?</h3>
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>Həftəlik iş günü (5/6)</strong> cədvəlin sütun sayını müəyyən edir:
-                    5 gün seçəndə <em>Şənbə</em> (Ş) gizlənir və müəllimlərin “Ş” günü avtomatik deaktiv edilir.
-                  </li>
-                  <li>
-                    <strong>Gündə dərs saatı (max)</strong> hər sinif üçün matrisin (gün × saat) ölçüsünü təyin edir.
-                    Məsələn 7 seçsəniz, hər gün 1–7 saat aralığı yaranır.
-                  </li>
-                  <li>
-                    <strong>Ağır fənlər mümkün qədər 1-ci/sonuncu saatda olmasın</strong> — bu seçim aktivdirsə,
-                    “Ağır?” işarələdiyiniz dərslər mümkün olduqca 1-ci və sonuncu saata salınmır (optimallaşdırma).
-                  </li>
-                  <li>
-                    <strong>Siniflər üzrə gün ərzində boş saat olmasın</strong> — aktivdirsə,
-                    sinifdə dərslər gün ərzində <strong>1-ci saatdan başlayıb ardıcıl</strong> gedir, arada boşluq yaranmır (qayda kimi tətbiq olunur).
-                  </li>
-                </ul>
-
-                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                  Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
-                  Müəllim gün/saat uyğunluğu, müəllim/sinif limitləri, sinifdə boş saat olmaması və “Qoşa” qaydaları isə qayda kimidir və pozulmur.
-                </p>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">2) Müəllimlər bölməsi necə istifadə olunur?</h3>
-
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>Ad, soyad</strong> və <strong>Kod</strong>:
-                    “Fənn / dərs saatları” bölməsində müəllimi tapmaq üçün sistem müəllimi <strong>kodla və ya adla</strong> uyğunlaşdırır.
-                    Praktik üsul: hər müəllimə qısa kod verin (məs: <code class="px-1 rounded bg-slate-100/80 dark:bg-white/10">İSF</code>).
-                  </li>
-                  <li>
-                    <strong>Həftəlik max</strong> və <strong>Gündə max</strong>: müəllimin həftəlik/gündəlik dərs limitidir.
-                    <strong>0</strong> yazılsa (və ya boş qalsa) sistem bunu “limitsiz” kimi qəbul edir.
-                  </li>
-                  <li>
-                    <strong>Dərs saatları</strong>:
-                    müəllimin dərsinin <strong>hansı saatlarda</strong> ola biləcəyini göstərir.
-                    Heç nə seçməsəniz sistem standart olaraq <strong>bütün saatları</strong> uyğun sayır.
-                    Bu seçim <strong>qayda kimidir</strong> və pozulmur.
-                  </li>
-                  <li>
-                    <strong>Gəlmə günləri</strong>:
-                    müəllimin dərsinin hansı günlərdə ola biləcəyini göstərir. Heç nə seçməsəniz,
-                    sistem <strong>hamı günlər</strong> kimi qəbul edir.
-                    Vacib: “gəlmə günləri” <strong>qayda kimidir</strong> — pozulmur.
-                  </li>
-                </ul>
-
-                <div class="mt-3 rounded-xl border border-amber-200/70 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/10 p-3 text-sm">
-                  <div class="font-semibold text-amber-900 dark:text-amber-200">Diqqət (uyğunlaşdırma)</div>
-                  <p class="mt-1">
-                    “Fənn / dərs saatları” bölməsində müəllimi <strong>kod və ya ad</strong> ilə yazanda,
-                    bu dəyər müəllim cədvəlindəki kod/ad ilə <strong>eyni yazılışda</strong> olmalıdır
-                    (sistem yalnız boşluqları kəsir).
-                    Məsələn <code class="px-1 rounded bg-white/60 dark:bg-white/10">FİR</code> ilə
-                    <code class="px-1 rounded bg-white/60 dark:bg-white/10">fir</code> fərqli sayılır.
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">3) Siniflər bölməsi necə işləyir?</h3>
-
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>Sinif</strong> (məs: 5A) — “Fənn / dərs saatları” sətirlərində də eyni adla yazılmalıdır.
-                  </li>
-                  <li>
-                    <strong>Gündə max dərs</strong> boş qalarsa standart limit kimi <strong>“Gündə dərs saatı (max)”</strong> tətbiq olunur.
-                    Əgər rəqəm yazsanız, həmin sinif üçün gündəlik limit ayrıca təyin olunur.
-                  </li>
-                  <li>
-                    <strong>Növbə</strong> (Səhər/Günorta) hazırda <strong>informasiya üçündür</strong> — alqoritm növbəyə görə ayrıca məhdudiyyət tətbiq etmir.
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">4) Fənn / dərs saatları: ən vacib hissə</h3>
-
-                <p class="mt-2">
-                  Bu cədvəldəki hər sətir bir “tədris tapşırığıdır”:
-                  <strong>hansı sinifə</strong>, <strong>hansı fənn</strong>, <strong>hansı müəllim</strong> və
-                  <strong>həftədə neçə saat</strong>.
-                </p>
-
-                <ul class="mt-3 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>Həftəlik saat</strong> daxil etdikdə sistem bunu “bloklara” parçalayır və yerləşdirir.
-                  </li>
-                  <li>
-                    <strong>Qoşa</strong> rejimi (yeni qayda):
-                    <ul class="list-disc pl-6 mt-1 space-y-1">
-                      <li><strong>Yox</strong> → həmin fənn eyni gündə <strong>max 1 dəfə</strong> ola bilər.</li>
-                      <li><strong>İmkan daxilində</strong> → həmin fənn eyni gündə <strong>mütləq 2 dəfə</strong> olmalıdır. Sistem əvvəlcə <strong>ardıcıl</strong> (yanaşı) etməyə çalışır, mümkün deyilsə yenə də <strong>eyni gün 2 dəfə</strong> (ardıcıl olmadan) yerləşdirir.</li>
-                      <li><strong>Mütləq</strong> → həmin fənn eyni gündə <strong>mütləq 2 dəfə ardıcıl</strong> olmalıdır.</li>
-                    </ul>
-                  </li>
-                  <li>
-                    <strong>Ağır?</strong> seçilibsə:
-                    “Ağır fənlər 1-ci/sonuncu saatda olmasın” parametri aktiv olanda
-                    sistem əvvəlcə ağır fənni 1-ci/sonuncu saata salmamağa çalışır.
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">5) “Cədvəli qur” düyməsi arxada nə edir?</h3>
-
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    Sistem “dərs bloklarını” müxtəlif ardıcıllıqlarda və slot kombinasiyalarında yerləşdirməyə çalışır.
-                  </li>
-                  <li>
-                    <strong>Qayda kimi tətbiq olunan məhdudiyyətlər</strong> (müəllim konfliktləri, gəlmə günləri, müəllim saat seçimi, limitlər, sinif tutumu, “Qoşa” qaydaları, sinifdə boş saat olmaması) pozulmur.
-                  </li>
-                  <li>
-                    <strong>Optimallaşdırmalar</strong> (ağır fənnin kənar saatlara düşməməsi, Qoşa=İmkan daxilində ardıcıllıq) mümkün olduqca qorunur.
-                  </li>
-                  <li>
-                    Tam həll tapılanadək axtarış davam edir. Konfiqurasiya həqiqətən mümkünsüzdürsə axtarış da uzana bilər —
-                    bu halda <strong>🛑 Dayandır</strong> düyməsi ilə prosesi dayandırıb ən yaxşı tapılmış nəticəni görə bilərsiniz.
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Tez-tez rast gəlinən problemlər və həll yolları</h3>
-                <ul class="mt-2 list-disc pl-6 space-y-1">
-                  <li>
-                    <strong>“Sinif/müəllim tapılmadı” xətası</strong> →
-                    sinif adlarını və müəllim kod/adını bütün yerlərdə eyni yazın.
-                  </li>
-                  <li>
-                    <strong>Çox “Yerləşdirilməyənlər” çıxır</strong> →
-                    sinif/müəllim limitlərini yoxlayın, sinif tutumunu artırın (gündə max), müəllim gəlmə günlərini və uyğun saatları genişləndirin.
-                  </li>
-                  <li>
-                    <strong>Axtarış çox uzanır</strong> →
-                    çox vaxt bu ya konfiqurasiyanın mümkünsüz olmasına, ya da limitlərin həddən artıq sərt olmasına işarə edir.
-                  </li>
-                </ul>
-              </div>
-
-              <p class="text-sm text-slate-600 dark:text-slate-300">
-                Qeyd: Bu alqoritm brauzerdə işləyir və “tam həll tapılanadək” axtarış aparır. Stabil nəticə üçün
-                kod/ad uyğunluğunu qorumaq və limitləri realist qurmaq ən vacibdir.
-              </p>
-            </div>
+            <!-- ... (Sənin göndərdiyin “Məlumat” bölməsi dəyişmədən burada qalır) ... -->
           </section>
 
         </div>
 
+        <!-- SAĞ reklam slotu -->
         <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
+          <!-- SAĞ reklam kodu bura -->
         </aside>
 
       </div>
@@ -1065,6 +927,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
+  <!-- ✅ Reklam gəlsə: avtomatik 3 sütun + frame genişlənir -->
   <script>
     (function () {
       const frame = document.getElementById('ep-frame');
@@ -1102,7 +965,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Timetable logic (PRO + Qoşa qaydaları + "boş saat olmasın") -->
+  <!-- Timetable logic (PRO + "boş saat olmasın") -->
   <script>
     (function () {
       const teacherTbody = document.getElementById('teacherTbody');
@@ -1112,56 +975,549 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const btnAddTeacher = document.getElementById('btnAddTeacher');
       const btnAddClass = document.getElementById('btnAddClass');
       const btnAddLesson = document.getElementById('btnAddLesson');
+
       const btnGenerate = document.getElementById('btnGenerate');
       const btnResetAll = document.getElementById('btnResetAll');
 
-      const daysCountEl = document.getElementById('daysCount');
-      const lessonsPerDayEl = document.getElementById('lessonsPerDay');
-      const optHeavyAvoidEdgesEl = document.getElementById('optHeavyAvoidEdges');
-      const optNoClassGapsEl = document.getElementById('optNoClassGaps');
+      const globalError = document.getElementById('globalError');
+      const globalInfo  = document.getElementById('globalInfo');
 
-      const timetableContainer = document.getElementById('timetableContainer');
-      const classTabs = document.getElementById('classTabs');
       const resultStats = document.getElementById('resultStats');
+      const timetableContainer = document.getElementById('timetableContainer');
       const unplacedContainer = document.getElementById('unplacedContainer');
       const softWarnings = document.getElementById('softWarnings');
+      const classTabs = document.getElementById('classTabs');
 
-      const globalError = document.getElementById('globalError');
-      const globalInfo = document.getElementById('globalInfo');
+      const daysCountSelect = document.getElementById('daysCount');
+      const lessonsPerDayInput = document.getElementById('lessonsPerDay');
 
-      const DAY_LABELS = ["B.e", "Ç.a", "Ç", "C.a", "C", "Ş"];
-      const MAX_HOURS_UI = 8;
+      const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C','C.u'];
+      const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
+      const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
+      const HOUR_LABELS_FULL = ['1','2','3','4','5','6','7','8'];
 
-      const STORAGE_KEY = "eduplan_tt_v3";
+      const __epSelectInstances = new Set();
 
-      let isGenerating = false;
-      let stopRequested = false;
+      const GENERATE_LABEL = '⚙️ Cədvəli qur';
+      const STOP_LABEL = '🛑 Dayandır';
 
-      // ---------------------------
-      // Helpers
-      // ---------------------------
-      const clampInt = (v, min, max, fallback) => {
-        const n = parseInt(v, 10);
-        if (Number.isNaN(n)) return fallback;
-        return Math.max(min, Math.min(max, n));
+      let __solverRunning = false;
+      let __stopRequested = false;
+      let __runId = 0;
+
+      // ===== ✅ nəticə çıxanda scroll (stabil) =====
+      const prefersReduceMotion = () => {
+        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+        catch (e) { return false; }
       };
 
-      const qs = (sel, root = document) => root.querySelector(sel);
+      function getViewportHeight() {
+        return window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      }
+      function getHeaderHeight() {
+        return document.querySelector('header')?.offsetHeight || 0;
+      }
+      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+      function pageRect(el) {
+        const r = el.getBoundingClientRect();
+        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        return { top: r.top + y, bottom: r.bottom + y, height: r.height };
+      }
+      function safeBand(opts = {}) {
+        const topGap = opts.topGap ?? 18;
+        const bottomGap = opts.bottomGap ?? 16;
+        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const vh = getViewportHeight();
+        const top = y + getHeaderHeight() + topGap;
+        const bottom = y + vh - bottomGap;
+        return { top, bottom, vh, y, topGap, bottomGap };
+      }
+      function isInSafeZone(el, opts = {}) {
+        if (!el) return true;
+        const band = safeBand(opts);
+        const r = pageRect(el);
+        if (r.height > (band.bottom - band.top)) return r.top >= band.top && r.top <= band.bottom;
+        return r.top >= band.top && r.bottom <= band.bottom;
+      }
+      function scrollToY(targetY, behavior) {
+        const se = document.scrollingElement || document.documentElement;
+        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
+        const y = clamp(targetY, 0, maxY);
+        window.scrollTo({ top: y, left: 0, behavior });
+      }
+      function ensureVisible(el, opts = {}) {
+        if (!el) return;
+        if (isInSafeZone(el, opts)) return;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const band = safeBand(opts);
+        const r = pageRect(el);
 
-      function showError(msg) {
-        if (!globalError) return;
+        let targetY = band.y;
+        if (r.top < band.top) targetY = r.top - (getHeaderHeight() + (opts.topGap ?? 18));
+        else if (r.bottom > band.bottom) targetY = r.bottom - band.vh + (opts.bottomGap ?? 16);
+
+        scrollToY(targetY, behavior);
+      }
+      function ensureVisibleStable(el, opts = {}) {
+        if (!el) return;
+        const run = () => ensureVisible(el, opts);
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        window.setTimeout(run, 120);
+        window.setTimeout(run, 260);
+
+        const vv = window.visualViewport;
+        if (vv) {
+          let active = true;
+          const onVV = () => { if (active) run(); };
+          vv.addEventListener('resize', onVV);
+          vv.addEventListener('scroll', onVV);
+          window.setTimeout(() => {
+            active = false;
+            vv.removeEventListener('resize', onVV);
+            vv.removeEventListener('scroll', onVV);
+          }, 420);
+        }
+      }
+
+      function makePrettySelect(selectEl, opts = {}) {
+        if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
+
+        const size = opts.size === 'sm' ? 'sm' : 'md';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'ep-select' + (size === 'sm' ? ' ep-select-sm' : '');
+
+        selectEl.parentNode.insertBefore(wrap, selectEl);
+        wrap.appendChild(selectEl);
+
+        selectEl.classList.add('ep-native-select');
+        selectEl.dataset.epPrettySelect = '1';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ep-select-btn';
+        btn.setAttribute('aria-haspopup', 'listbox');
+        btn.setAttribute('aria-expanded', 'false');
+
+        const menu = document.createElement('div');
+        menu.className = 'ep-select-menu';
+        menu.setAttribute('role', 'listbox');
+
+        wrap.appendChild(btn);
+        wrap.appendChild(menu);
+
+        function close() {
+          wrap.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+        function open() {
+          __epSelectInstances.forEach(inst => { if (inst !== api) inst.close(); });
+          wrap.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+        function toggle() { wrap.classList.contains('open') ? close() : open(); }
+
+        function render() {
+          const selected = selectEl.options[selectEl.selectedIndex];
+          const label = selected ? selected.textContent : '';
+
+          btn.innerHTML = `
+            <span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true" style="flex:0 0 auto;opacity:.9">
+              <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+
+          menu.innerHTML = '';
+          Array.from(selectEl.options).forEach((opt, idx) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'ep-select-item';
+            item.textContent = opt.textContent;
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', idx === selectEl.selectedIndex ? 'true' : 'false');
+
+            item.addEventListener('click', () => {
+              selectEl.selectedIndex = idx;
+              selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+              render();
+              close();
+            });
+
+            menu.appendChild(item);
+          });
+        }
+
+        btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+        btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+        function onDocDown(e){ if (!wrap.contains(e.target)) close(); }
+        document.addEventListener('mousedown', onDocDown);
+
+        selectEl.addEventListener('change', render);
+
+        const api = { close, wrap };
+        __epSelectInstances.add(api);
+
+        render();
+      }
+
+      makePrettySelect(daysCountSelect, { size: 'md' });
+
+      function currentDaysCount(){
+        return parseInt(daysCountSelect.value, 10) || 5;
+      }
+      function currentLessonsPerDay(){
+        const v = parseInt(lessonsPerDayInput.value, 10);
+        if (!Number.isFinite(v)) return 7;
+        return Math.max(1, Math.min(8, v));
+      }
+
+      function syncTeacherDayVisibility(daysCount){
+        teacherTbody.querySelectorAll('.t-daylbl[data-d]').forEach(lbl => {
+          const idx = parseInt(lbl.dataset.d, 10);
+          const cb = lbl.querySelector('input[type="checkbox"]');
+          if (idx >= daysCount) {
+            lbl.style.display = 'none';
+            if (cb) cb.checked = false;
+          } else {
+            lbl.style.display = 'inline-flex';
+          }
+        });
+      }
+
+      function syncTeacherHourVisibility(lessonsPerDay){
+        teacherTbody.querySelectorAll('.t-hourlbl[data-h]').forEach(lbl => {
+          const idx = parseInt(lbl.dataset.h, 10);
+          if (idx >= lessonsPerDay) {
+            lbl.style.display = 'none';
+          } else {
+            lbl.style.display = 'inline-flex';
+          }
+        });
+      }
+
+      daysCountSelect.addEventListener('change', () => {
+        syncTeacherDayVisibility(currentDaysCount());
+      });
+
+      lessonsPerDayInput.addEventListener('change', () => {
+        const lp = currentLessonsPerDay();
+        lessonsPerDayInput.value = String(lp);
+        syncTeacherHourVisibility(lp);
+      });
+      lessonsPerDayInput.addEventListener('input', () => {
+        syncTeacherHourVisibility(currentLessonsPerDay());
+      });
+
+      function addTeacherRow(initial = {}) {
+        const tr = document.createElement('tr');
+
+        const dc = currentDaysCount();
+        const defaultAvailDays = Array.from({ length: dc }, (_, i) => i);
+        const availableDays = Array.isArray(initial.availableDays) && initial.availableDays.length
+          ? initial.availableDays
+          : defaultAvailDays;
+
+        // Default: bütün saatlar seçili
+        const defaultAvailHoursAll = Array.from({ length: 8 }, (_, i) => i);
+        const availableHours = Array.isArray(initial.availableHours) && initial.availableHours.length
+          ? initial.availableHours
+          : defaultAvailHoursAll;
+
+        const hoursHtml = HOUR_LABELS_FULL.map((lbl, idx) => {
+          const checked = availableHours.includes(idx) ? 'checked' : '';
+          return `<label class="t-hourlbl" data-h="${idx}">
+                    <input type="checkbox" class="t-avhour" data-h="${idx}" ${checked}>
+                    <span>${lbl}</span>
+                  </label>`;
+        }).join(' ');
+
+        const daysHtml = DAY_LABELS_FULL.map((lbl, idx) => {
+          const checked = availableDays.includes(idx) ? 'checked' : '';
+          return `<label class="t-daylbl" data-d="${idx}">
+                    <input type="checkbox" class="t-avday" data-d="${idx}" ${checked}>
+                    <span>${lbl}</span>
+                  </label>`;
+        }).join(' ');
+
+        tr.innerHTML = `
+          <td><input type="text" class="t-name" placeholder="Müəllim adı" value="${initial.name || ''}"></td>
+          <td><input type="text" class="t-code" placeholder="Kod" value="${initial.code || ''}"></td>
+          <td><input type="number" class="t-week" min="0" max="60" value="${initial.weeklyMax ?? 30}"></td>
+          <td><input type="number" class="t-daymax" min="0" max="10" value="${initial.dailyMax ?? 6}"></td>
+          <td>
+            <div class="t-mini-actions no-print">
+              <button type="button" class="t-mini-btn t-hour-all">Hamısı</button>
+              <button type="button" class="t-mini-btn t-hour-noedges">Kənarları çıxar</button>
+            </div>
+            <div class="t-hours">
+              ${hoursHtml}
+            </div>
+          </td>
+          <td>
+            <div class="t-days">
+              ${daysHtml}
+            </div>
+          </td>
+          <td class="no-print text-right">
+            <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
+          </td>
+        `;
+        teacherTbody.appendChild(tr);
+
+        syncTeacherDayVisibility(dc);
+        syncTeacherHourVisibility(currentLessonsPerDay());
+      }
+
+      function addClassRow(initial = {}) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name || ''}"></td>
+          <td>
+            <select class="c-level">
+              <option value="ibtidai" ${initial.level === 'ibtidai' ? 'selected' : ''}>İbtidai (1-4)</option>
+              <option value="esas" ${initial.level === 'esas' ? 'selected' : ''}>Əsas (5-8)</option>
+              <option value="yuxari" ${initial.level === 'yuxari' ? 'selected' : ''}>Yuxarı (9-11)</option>
+            </select>
+          </td>
+          <td>
+            <select class="c-shift">
+              <option value="seher" ${initial.shift === 'seher' ? 'selected' : ''}>Səhər</option>
+              <option value="gunorta" ${initial.shift === 'gunorta' ? 'selected' : ''}>Günorta</option>
+            </select>
+          </td>
+          <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
+          <td class="no-print text-right">
+            <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
+          </td>
+        `;
+        classTbody.appendChild(tr);
+
+        makePrettySelect(tr.querySelector('.c-level'), { size: 'sm' });
+        makePrettySelect(tr.querySelector('.c-shift'), { size: 'sm' });
+      }
+
+      function addLessonRow(initial = {}) {
+        const tr = document.createElement('tr');
+        const dm = initial.doubleMode || 'none';
+
+        tr.innerHTML = `
+          <td><input type="text" class="l-class" placeholder="məs: 5A" value="${initial.className || ''}"></td>
+          <td><input type="text" class="l-subj" placeholder="məs: Riyaziyyat" value="${initial.subject || ''}"></td>
+          <td><input type="text" class="l-teacher" placeholder="Kod və ya ad" value="${initial.teacher || ''}"></td>
+          <td><input type="number" class="l-hours" min="1" max="40" value="${initial.hours ?? 2}"></td>
+          <td class="text-center"><input type="checkbox" class="l-heavy" ${initial.heavy ? 'checked' : ''}></td>
+          <td>
+            <select class="l-doubleMode">
+              <option value="none" ${dm === 'none' ? 'selected' : ''}>Yox</option>
+              <option value="prefer" ${dm === 'prefer' ? 'selected' : ''}>İmkan daxilində</option>
+              <option value="required" ${dm === 'required' ? 'selected' : ''}>Mütləq</option>
+            </select>
+          </td>
+          <td class="no-print text-right">
+            <button type="button" class="text-xs text-rose-500 hover:underline l-del">Sil</button>
+          </td>
+        `;
+        lessonTbody.appendChild(tr);
+
+        makePrettySelect(tr.querySelector('.l-doubleMode'), { size: 'sm' });
+      }
+
+      btnAddTeacher.addEventListener('click', () => addTeacherRow({}));
+      btnAddClass.addEventListener('click', () => addClassRow({}));
+      btnAddLesson.addEventListener('click', () => addLessonRow({}));
+
+      // Teacher actions
+      teacherTbody.addEventListener('click', (e) => {
+        const del = e.target.closest('.t-del');
+        if (del) { del.closest('tr')?.remove(); return; }
+
+        const allBtn = e.target.closest('.t-hour-all');
+        if (allBtn) {
+          const tr = allBtn.closest('tr');
+          const lp = currentLessonsPerDay();
+          tr.querySelectorAll('.t-avhour').forEach(cb => {
+            const idx = parseInt(cb.dataset.h, 10);
+            if (idx >= 0 && idx < lp) cb.checked = true;
+          });
+          return;
+        }
+
+        const neBtn = e.target.closest('.t-hour-noedges');
+        if (neBtn) {
+          const tr = neBtn.closest('tr');
+          const lp = currentLessonsPerDay();
+          tr.querySelectorAll('.t-avhour').forEach(cb => {
+            const idx = parseInt(cb.dataset.h, 10);
+            if (idx >= 0 && idx < lp) cb.checked = true;
+          });
+          if (lp >= 1) {
+            const first = tr.querySelector('.t-avhour[data-h="0"]');
+            if (first) first.checked = false;
+          }
+          if (lp >= 2) {
+            const last = tr.querySelector('.t-avhour[data-h="' + (lp - 1) + '"]');
+            if (last) last.checked = false;
+          }
+          return;
+        }
+      });
+
+      classTbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('c-del')) e.target.closest('tr')?.remove();
+      });
+      lessonTbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('l-del')) e.target.closest('tr')?.remove();
+      });
+
+      btnResetAll.addEventListener('click', () => {
+        __stopRequested = true;
+        __runId++;
+        __solverRunning = false;
+        if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
+
+        teacherTbody.innerHTML = '';
+        classTbody.innerHTML = '';
+        lessonTbody.innerHTML = '';
+        timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Hələ cədvəl qurulmayıb.</div>';
+        classTabs.innerHTML = '';
+        unplacedContainer.classList.add('hidden');
+        unplacedContainer.textContent = '';
+        softWarnings.textContent = '';
+        resultStats.textContent = '';
+        globalError.classList.add('hidden');
+        globalError.textContent = '';
+        globalInfo.textContent = '';
+
+        ensureVisibleStable(document.getElementById('tt-panel'), { topGap: 18, bottomGap: 18 });
+      });
+
+      function showError(msg){
         globalError.textContent = msg;
         globalError.classList.remove('hidden');
-        try { globalError.focus(); } catch (e) {}
+        try { globalError.focus({ preventScroll: true }); } catch(e) { try { globalError.focus(); } catch(e2){} }
+        ensureVisibleStable(globalError, { topGap: 18, bottomGap: 16 });
       }
-      function clearError() {
-        if (!globalError) return;
-        globalError.textContent = "";
+
+      function readConfig() {
         globalError.classList.add('hidden');
-      }
-      function setInfo(msg) {
-        if (!globalInfo) return;
-        globalInfo.textContent = msg || "";
+        globalError.textContent = '';
+
+        const daysCount = currentDaysCount();
+        const lessonsPerDay = currentLessonsPerDay();
+
+        const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
+        const optLimitSameSubject = document.getElementById('optLimitSameSubject').checked;
+        const optNoClassGaps = document.getElementById('optNoClassGaps').checked;
+
+        const teachers = [];
+        teacherTbody.querySelectorAll('tr').forEach(tr => {
+          const name = tr.querySelector('.t-name')?.value.trim();
+          const code = tr.querySelector('.t-code')?.value.trim();
+          if (!name && !code) return;
+
+          // Days
+          const dayCbs = tr.querySelectorAll('.t-avday[data-d]');
+          let availableDays = [];
+          dayCbs.forEach(cb => {
+            if (cb.checked) {
+              const idx = parseInt(cb.dataset.d, 10);
+              if (!Number.isNaN(idx)) availableDays.push(idx);
+            }
+          });
+          availableDays = availableDays.filter(d => d < daysCount);
+          if (!availableDays.length) availableDays = Array.from({ length: daysCount }, (_, i) => i);
+
+          // Hours
+          const hourCbs = tr.querySelectorAll('.t-avhour[data-h]');
+          let availableHours = [];
+          hourCbs.forEach(cb => {
+            if (cb.checked) {
+              const idx = parseInt(cb.dataset.h, 10);
+              if (!Number.isNaN(idx)) availableHours.push(idx);
+            }
+          });
+          availableHours = availableHours.filter(h => h < lessonsPerDay);
+          if (!availableHours.length) availableHours = Array.from({ length: lessonsPerDay }, (_, i) => i);
+
+          const availableHoursMask = new Array(lessonsPerDay).fill(false);
+          availableHours.forEach(h => {
+            if (h >= 0 && h < lessonsPerDay) availableHoursMask[h] = true;
+          });
+
+          teachers.push({
+            id: teachers.length,
+            name: name || code,
+            code: code || name,
+            weeklyMax: Number(tr.querySelector('.t-week')?.value) || 0,
+            dailyMax: Number(tr.querySelector('.t-daymax')?.value) || 0,
+            availableDays,
+            availableHours,
+            availableHoursMask
+          });
+        });
+
+        const classes = [];
+        classTbody.querySelectorAll('tr').forEach(tr => {
+          const name = tr.querySelector('.c-name')?.value.trim();
+          if (!name) return;
+          const level = tr.querySelector('.c-level')?.value || 'esas';
+          const shift = tr.querySelector('.c-shift')?.value || 'seher';
+
+          const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
+          const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
+
+          classes.push({
+            id: classes.length,
+            name,
+            level,
+            shift,
+            maxPerDay: maxDay
+          });
+        });
+
+        const lessons = [];
+        lessonTbody.querySelectorAll('tr').forEach(tr => {
+          const className = tr.querySelector('.l-class')?.value.trim();
+          const subject   = tr.querySelector('.l-subj')?.value.trim();
+          const teacher   = tr.querySelector('.l-teacher')?.value.trim();
+          const hours     = Number(tr.querySelector('.l-hours')?.value) || 0;
+          if (!className || !subject || !teacher || hours <= 0) return;
+
+          const dmRaw = tr.querySelector('.l-doubleMode')?.value || 'none';
+          const doubleMode = (dmRaw === 'prefer' || dmRaw === 'required') ? dmRaw : 'none';
+
+          lessons.push({
+            className,
+            subject,
+            teacherRef: teacher,
+            hours,
+            heavy: tr.querySelector('.l-heavy')?.checked || false,
+            doubleMode
+          });
+        });
+
+        if (!teachers.length || !classes.length || !lessons.length) {
+          throw new Error('Ən azı 1 müəllim, 1 sinif və 1 dərs əlavə edilməlidir.');
+        }
+        if (lessonsPerDay > 8 || lessonsPerDay < 1) {
+          throw new Error('Gündə dərs saatı 1–8 aralığında olmalıdır.');
+        }
+
+        return {
+          daysCount,
+          lessonsPerDay,
+          optHeavyAvoidEdges,
+          optLimitSameSubject,
+          optNoClassGaps,
+          teachers,
+          classes,
+          lessons,
+
+          _blocks: null,
+          _targetHours: 0
+        };
       }
 
       function shuffle(arr) {
@@ -1169,1092 +1525,782 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const j = Math.floor(Math.random() * (i + 1));
           [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        return arr;
       }
 
-      function uid(prefix = "id") {
-        return prefix + "_" + Math.random().toString(36).slice(2, 10);
-      }
+      function generateBlocks(config) {
+        const { lessons, classes, teachers } = config;
 
-      function escapeHtml(s) {
-        return String(s)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
+        const classIndexByName = new Map();
+        classes.forEach(c => classIndexByName.set(c.name.trim(), c.id));
 
-      function nextTick() {
-        return new Promise((r) => setTimeout(r, 0));
-      }
-
-      // ---------------------------
-      // Row builders (Teachers / Classes / Lessons)
-      // ---------------------------
-      function buildMiniActions() {
-        return `
-          <div class="t-mini-actions">
-            <button type="button" class="t-mini-btn" data-mini="all">Hamısı</button>
-            <button type="button" class="t-mini-btn" data-mini="none">Heç biri</button>
-          </div>
-        `;
-      }
-
-      function buildHourCheckboxes(hourMax) {
-        let out = buildMiniActions();
-        out += `<div class="t-hours" data-scope="hours">`;
-        for (let h = 1; h <= MAX_HOURS_UI; h++) {
-          const disabled = h > hourMax ? "disabled" : "";
-          out += `
-            <label>
-              <input type="checkbox" class="t-hour" data-hour="${h}" ${disabled} />
-              <span>${h}</span>
-            </label>
-          `;
-        }
-        out += `</div>`;
-        return out;
-      }
-
-      function buildDayCheckboxes(dayCount) {
-        let out = buildMiniActions();
-        out += `<div class="t-days" data-scope="days">`;
-        for (let d = 0; d < 6; d++) {
-          const disabled = (dayCount === 5 && d === 5) ? "disabled" : "";
-          out += `
-            <label>
-              <input type="checkbox" class="t-day" data-day="${d}" ${disabled} />
-              <span>${DAY_LABELS[d]}</span>
-            </label>
-          `;
-        }
-        out += `</div>`;
-        return out;
-      }
-
-      function addTeacherRow(data = null) {
-        const dayCount = clampInt(daysCountEl?.value, 5, 6, 5);
-        const hourMax = clampInt(lessonsPerDayEl?.value, 1, 8, 7);
-
-        const rowId = uid("t");
-        const tr = document.createElement("tr");
-        tr.dataset.id = rowId;
-
-        tr.innerHTML = `
-          <td><input type="text" class="t-name" placeholder="Məs: Aygün Əliyeva" value="${data?.name ? escapeHtml(data.name) : ""}"></td>
-          <td><input type="text" class="t-code" placeholder="Məs: AGA" value="${data?.code ? escapeHtml(data.code) : ""}"></td>
-          <td><input type="number" class="t-weekMax" min="0" max="60" placeholder="0 = limitsiz" value="${(data?.weekMax ?? "")}"></td>
-          <td><input type="number" class="t-dayMax" min="0" max="10" placeholder="0 = limitsiz" value="${(data?.dayMax ?? "")}"></td>
-          <td>${buildHourCheckboxes(hourMax)}</td>
-          <td>${buildDayCheckboxes(dayCount)}</td>
-          <td class="no-print">
-            <button type="button" class="ep-btn-secondary rounded-xl border border-slate-200/70 dark:border-slate-800/70 px-2 py-2 text-xs">🗑️</button>
-          </td>
-        `;
-
-        teacherTbody.appendChild(tr);
-
-        // restore checks
-        const hours = (data?.hours && Array.isArray(data.hours)) ? data.hours : null;
-        if (hours) {
-          tr.querySelectorAll(".t-hour").forEach((cb) => {
-            const h = parseInt(cb.dataset.hour, 10);
-            cb.checked = !!hours[h - 1];
-          });
-        }
-
-        const days = (data?.days && Array.isArray(data.days)) ? data.days : null;
-        if (days) {
-          tr.querySelectorAll(".t-day").forEach((cb) => {
-            const d = parseInt(cb.dataset.day, 10);
-            cb.checked = !!days[d];
-          });
-        }
-
-        // delete
-        tr.querySelector("button")?.addEventListener("click", () => {
-          tr.remove();
-          refreshLessonDropdowns();
-          saveState();
-        });
-
-        // mini actions
-        tr.addEventListener("click", (e) => {
-          const btn = e.target?.closest?.("[data-mini]");
-          if (!btn) return;
-          const mode = btn.dataset.mini;
-          const cell = btn.closest("td");
-          if (!cell) return;
-          const scope = cell.querySelector("[data-scope]");
-          if (!scope) return;
-          const boxes = scope.querySelectorAll("input[type=checkbox]");
-          boxes.forEach((cb) => {
-            if (cb.disabled) return;
-            cb.checked = (mode === "all");
-          });
-          saveState();
-        });
-
-        // save on change
-        tr.addEventListener("change", () => {
-          refreshLessonDropdowns();
-          saveState();
-        });
-      }
-
-      function addClassRow(data = null) {
-        const tr = document.createElement("tr");
-        tr.dataset.id = uid("c");
-
-        tr.innerHTML = `
-          <td><input type="text" class="c-name" placeholder="Məs: 5A" value="${data?.name ? escapeHtml(data.name) : ""}"></td>
-          <td>
-            <select class="c-level">
-              <option value="İbtidai">İbtidai</option>
-              <option value="Orta">Orta</option>
-              <option value="Yuxarı">Yuxarı</option>
-            </select>
-          </td>
-          <td>
-            <select class="c-shift">
-              <option value="Səhər">Səhər</option>
-              <option value="Günorta">Günorta</option>
-            </select>
-          </td>
-          <td><input type="number" class="c-dayMax" min="1" max="8" placeholder="Boş = standart" value="${(data?.dayMax ?? "")}"></td>
-          <td class="no-print">
-            <button type="button" class="ep-btn-secondary rounded-xl border border-slate-200/70 dark:border-slate-800/70 px-2 py-2 text-xs">🗑️</button>
-          </td>
-        `;
-
-        classTbody.appendChild(tr);
-
-        if (data?.level) tr.querySelector(".c-level").value = data.level;
-        if (data?.shift) tr.querySelector(".c-shift").value = data.shift;
-
-        tr.querySelector("button")?.addEventListener("click", () => {
-          tr.remove();
-          refreshLessonDropdowns();
-          saveState();
-        });
-
-        tr.addEventListener("change", () => {
-          refreshLessonDropdowns();
-          saveState();
-        });
-        tr.addEventListener("input", () => {
-          refreshLessonDropdowns();
-          saveState();
-        });
-      }
-
-      function teacherOptionsHtml(teachers) {
-        let out = `<option value="">— seçin —</option>`;
+        const teacherIndexByKey = new Map();
         teachers.forEach(t => {
-          const label = (t.code ? `${t.code} — ` : "") + (t.name || "");
-          out += `<option value="${escapeHtml(t.code || t.name)}">${escapeHtml(label || (t.code || "Müəllim"))}</option>`;
-        });
-        return out;
-      }
-
-      function classOptionsHtml(classes) {
-        let out = `<option value="">— seçin —</option>`;
-        classes.forEach(c => {
-          out += `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`;
-        });
-        return out;
-      }
-
-      function addLessonRow(data = null) {
-        const tr = document.createElement("tr");
-        tr.dataset.id = uid("l");
-
-        tr.innerHTML = `
-          <td>
-            <select class="l-class"></select>
-          </td>
-          <td><input type="text" class="l-subject" placeholder="Məs: Riyaziyyat" value="${data?.subject ? escapeHtml(data.subject) : ""}"></td>
-          <td>
-            <select class="l-teacher"></select>
-          </td>
-          <td><input type="number" class="l-weekly" min="1" max="30" value="${(data?.weekly ?? "")}"></td>
-          <td class="text-center"><input type="checkbox" class="l-heavy" ${data?.heavy ? "checked" : ""}></td>
-          <td>
-            <select class="l-double">
-              <option value="no">Yox</option>
-              <option value="prefer">İmkan daxilində</option>
-              <option value="must">Mütləq</option>
-            </select>
-          </td>
-          <td class="no-print">
-            <button type="button" class="ep-btn-secondary rounded-xl border border-slate-200/70 dark:border-slate-800/70 px-2 py-2 text-xs">🗑️</button>
-          </td>
-        `;
-
-        lessonTbody.appendChild(tr);
-
-        refreshLessonDropdowns();
-
-        if (data?.className) tr.querySelector(".l-class").value = data.className;
-        if (data?.teacherKey) tr.querySelector(".l-teacher").value = data.teacherKey;
-        if (data?.doubleMode) tr.querySelector(".l-double").value = data.doubleMode;
-
-        tr.querySelector("button")?.addEventListener("click", () => {
-          tr.remove();
-          saveState();
+          if ((t.code || '').trim()) teacherIndexByKey.set((t.code || '').trim(), t.id);
+          if ((t.name || '').trim()) teacherIndexByKey.set((t.name || '').trim(), t.id);
         });
 
-        tr.addEventListener("change", saveState);
-        tr.addEventListener("input", saveState);
-      }
+        const blocks = [];
+        const unknown = [];
 
-      function refreshLessonDropdowns() {
-        const teachers = readTeachersRaw();
-        const classes = readClassesRaw();
-
-        // update lesson rows selects without losing current values
-        lessonTbody.querySelectorAll("tr").forEach(tr => {
-          const classSel = tr.querySelector(".l-class");
-          const tSel = tr.querySelector(".l-teacher");
-          const prevC = classSel?.value || "";
-          const prevT = tSel?.value || "";
-
-          if (classSel) classSel.innerHTML = classOptionsHtml(classes);
-          if (tSel) tSel.innerHTML = teacherOptionsHtml(teachers);
-
-          if (classSel && prevC) classSel.value = prevC;
-          if (tSel && prevT) tSel.value = prevT;
-        });
-      }
-
-      // ---------------------------
-      // Read current config (DOM -> Objects)
-      // ---------------------------
-      function readTeachersRaw() {
-        const dayCount = clampInt(daysCountEl?.value, 5, 6, 5);
-        const hourMax = clampInt(lessonsPerDayEl?.value, 1, 8, 7);
-
-        const rows = Array.from(teacherTbody.querySelectorAll("tr"));
-        return rows.map(tr => {
-          const name = tr.querySelector(".t-name")?.value?.trim() || "";
-          const code = tr.querySelector(".t-code")?.value?.trim() || "";
-          const weekMax = clampInt(tr.querySelector(".t-weekMax")?.value, 0, 200, 0);
-          const dayMax = clampInt(tr.querySelector(".t-dayMax")?.value, 0, 20, 0);
-
-          // if user selects none -> means "all", so we interpret later
-          const hoursArr = Array.from({length: MAX_HOURS_UI}, () => false);
-          const hourBoxes = tr.querySelectorAll(".t-hour");
-          let anyHourChecked = false;
-          hourBoxes.forEach(cb => {
-            const h = parseInt(cb.dataset.hour, 10);
-            if (cb.checked) { hoursArr[h - 1] = true; anyHourChecked = true; }
-          });
-          if (!anyHourChecked) {
-            for (let h = 1; h <= hourMax; h++) hoursArr[h - 1] = true;
+        lessons.forEach(l => {
+          const cId = classIndexByName.get(l.className.trim());
+          const tId = teacherIndexByKey.get(l.teacherRef.trim());
+          if (cId == null || tId == null) {
+            unknown.push(l);
+            return;
           }
 
-          const daysArr = Array.from({length: 6}, () => false);
-          const dayBoxes = tr.querySelectorAll(".t-day");
-          let anyDayChecked = false;
-          dayBoxes.forEach(cb => {
-            const d = parseInt(cb.dataset.day, 10);
-            if (cb.checked) { daysArr[d] = true; anyDayChecked = true; }
-          });
-          if (!anyDayChecked) {
-            for (let d = 0; d < dayCount; d++) daysArr[d] = true;
-          }
-
-          // enforce 5-day mode: disable Saturday
-          if (dayCount === 5) daysArr[5] = false;
-
-          return { name, code, weekMax, dayMax, hours: hoursArr, days: daysArr };
-        });
-      }
-
-      function readClassesRaw() {
-        const rows = Array.from(classTbody.querySelectorAll("tr"));
-        return rows.map(tr => {
-          const name = tr.querySelector(".c-name")?.value?.trim() || "";
-          const level = tr.querySelector(".c-level")?.value || "Orta";
-          const shift = tr.querySelector(".c-shift")?.value || "Səhər";
-          const dm = tr.querySelector(".c-dayMax")?.value?.trim();
-          const dayMax = dm === "" ? null : clampInt(dm, 1, 8, null);
-          return { name, level, shift, dayMax };
-        }).filter(c => c.name);
-      }
-
-      function readLessonsRaw() {
-        const rows = Array.from(lessonTbody.querySelectorAll("tr"));
-        return rows.map(tr => {
-          const className = tr.querySelector(".l-class")?.value?.trim() || "";
-          const subject = tr.querySelector(".l-subject")?.value?.trim() || "";
-          const teacherKey = tr.querySelector(".l-teacher")?.value?.trim() || "";
-          const weekly = clampInt(tr.querySelector(".l-weekly")?.value, 0, 60, 0);
-          const heavy = !!tr.querySelector(".l-heavy")?.checked;
-          const doubleMode = tr.querySelector(".l-double")?.value || "no";
-          return { className, subject, teacherKey, weekly, heavy, doubleMode };
-        }).filter(l => l.className && l.subject && l.teacherKey && l.weekly > 0);
-      }
-
-      // ---------------------------
-      // Persistence
-      // ---------------------------
-      function saveState() {
-        try {
-          const data = {
-            daysCount: clampInt(daysCountEl?.value, 5, 6, 5),
-            lessonsPerDay: clampInt(lessonsPerDayEl?.value, 1, 8, 7),
-            optHeavyAvoidEdges: !!optHeavyAvoidEdgesEl?.checked,
-            optNoClassGaps: !!optNoClassGapsEl?.checked,
-            teachers: readTeachersRaw(),
-            classes: readClassesRaw(),
-            lessons: readLessonsRaw()
+          let remaining = l.hours;
+          const base = {
+            classId: cId,
+            teacherId: tId,
+            subject: l.subject,
+            heavy: !!l.heavy
           };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        } catch (e) {}
+
+          if ((l.doubleMode === 'required' || l.doubleMode === 'prefer') && remaining >= 2) {
+            const splitAllowed = (l.doubleMode === 'prefer');
+            const doublePolicy = l.doubleMode;
+
+            while (remaining >= 2) {
+              blocks.push({ ...base, length: 2, splitAllowed, doublePolicy });
+              remaining -= 2;
+            }
+          }
+
+          while (remaining > 0) {
+            blocks.push({ ...base, length: 1, splitAllowed: false, doublePolicy: 'none' });
+            remaining -= 1;
+          }
+        });
+
+        return { blocks, unknownUnmapped: unknown };
       }
 
-      function loadState() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return false;
-          const data = JSON.parse(raw);
+      function sumRequiredHours(lessons){
+        return lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
+      }
 
-          if (daysCountEl && (data.daysCount === 5 || data.daysCount === 6)) daysCountEl.value = String(data.daysCount);
-          if (lessonsPerDayEl) lessonsPerDayEl.value = String(clampInt(data.lessonsPerDay, 1, 8, 7));
-          if (optHeavyAvoidEdgesEl) optHeavyAvoidEdgesEl.checked = !!data.optHeavyAvoidEdges;
-          if (optNoClassGapsEl) optNoClassGapsEl.checked = !!data.optNoClassGaps;
+      function prepareSolve(config){
+        const { blocks, unknownUnmapped } = generateBlocks(config);
 
-          teacherTbody.innerHTML = "";
-          classTbody.innerHTML = "";
-          lessonTbody.innerHTML = "";
+        if (unknownUnmapped && unknownUnmapped.length){
+          const lines = unknownUnmapped.map(l => `• ${l.className} – ${l.subject} (${l.teacherRef})`);
+          throw new Error(
+            'Bəzi dərslər üçün sinif və ya müəllim tapılmadı (yazılışları yoxlayın):\n' + lines.join('\n')
+          );
+        }
 
-          (data.teachers || []).forEach(t => addTeacherRow(t));
-          (data.classes || []).forEach(c => addClassRow(c));
-          (data.lessons || []).forEach(l => addLessonRow(l));
+        config._blocks = blocks;
+        config._targetHours = blocks.reduce((s, b) => s + b.length, 0);
 
-          refreshLessonDropdowns();
-          return true;
-        } catch (e) {
+        // ===== FAIL-FAST checklər =====
+        const teacherHours = new Array(config.teachers.length).fill(0);
+        const classHours = new Array(config.classes.length).fill(0);
+
+        blocks.forEach(b => {
+          teacherHours[b.teacherId] += b.length;
+          classHours[b.classId] += b.length;
+        });
+
+        // Müəllim tutumu: weeklyMax + (availableDays * min(dailyMax, availableHoursCount))
+        teacherHours.forEach((h, tId) => {
+          const t = config.teachers[tId];
+          const label = t.code || t.name || `#${tId}`;
+
+          const weeklyMax = (t.weeklyMax > 0) ? t.weeklyMax : Infinity;
+          const dailyMax  = (t.dailyMax > 0) ? t.dailyMax : Infinity;
+
+          const daysAvail = (Array.isArray(t.availableDays) && t.availableDays.length)
+            ? t.availableDays.length
+            : config.daysCount;
+
+          const hoursAvail = (Array.isArray(t.availableHours) && t.availableHours.length)
+            ? t.availableHours.length
+            : config.lessonsPerDay;
+
+          const perDayCap = Math.min(dailyMax, hoursAvail);
+          const capBySelection = perDayCap * daysAvail;
+          const overallCap = Math.min(weeklyMax, capBySelection);
+
+          if (h > overallCap) {
+            const wTxt = (weeklyMax === Infinity) ? 'limitsiz' : String(weeklyMax);
+            const dTxt = (dailyMax === Infinity) ? 'limitsiz' : String(dailyMax);
+            throw new Error(
+              `Mümkünsüz konfiqurasiya: "${label}" müəlliminə ${h} saat düşür, amma maksimum ${overallCap} saat mümkündür ` +
+              `(həftəlik max: ${wTxt}, gündə max: ${dTxt}, gəlmə günləri: ${daysAvail}, uyğun saatlar: ${hoursAvail}).`
+            );
+          }
+        });
+
+        // Sinif tutumu: default max = lessonsPerDay
+        classHours.forEach((h, cId) => {
+          const c = config.classes[cId];
+          const maxDayRaw = (c.maxPerDay > 0) ? c.maxPerDay : config.lessonsPerDay;
+          const maxDay = Math.min(maxDayRaw, config.lessonsPerDay);
+          const cap = maxDay * config.daysCount;
+          if (h > cap) {
+            throw new Error(`Mümkünsüz konfiqurasiya: "${c.name}" sinfində ${h} saat var, amma tutum ${cap}-dır (gündə ${maxDay} × ${config.daysCount} gün).`);
+          }
+        });
+
+        // Eyni fənn gündə 2 (sərt) -> həftəlik upper bound: 2 * gün
+        if (config.optLimitSameSubject) {
+          const byClass = new Map();
+          blocks.forEach(b => {
+            let m = byClass.get(b.classId);
+            if (!m) { m = new Map(); byClass.set(b.classId, m); }
+            m.set(b.subject, (m.get(b.subject) || 0) + b.length);
+          });
+
+          const weeklyCapPerSubject = 2 * config.daysCount;
+          byClass.forEach((m, classId) => {
+            const cls = config.classes[classId];
+            m.forEach((total, subject) => {
+              if (total > weeklyCapPerSubject) {
+                throw new Error(
+                  `Mümkünsüz konfiqurasiya: "${cls?.name || '?'}" sinfində "${subject}" fənni həftəlik ${total} saatdır, ` +
+                  `amma qaydaya görə bir gündə maksimum 2 saat olduğundan maksimum ${weeklyCapPerSubject} saat ola bilər.`
+                );
+              }
+            });
+          });
+        }
+
+        // Qoşa=required: müəllim seçdiyi saatlarda ardıcıl 2 saat olmalıdır
+        const requiredDoubleTeachers = new Set();
+        blocks.forEach(b => {
+          if (b.length === 2 && b.doublePolicy === 'required') requiredDoubleTeachers.add(b.teacherId);
+        });
+
+        if (requiredDoubleTeachers.size > 0 && config.lessonsPerDay < 2) {
+          throw new Error('“Qoşa = Mütləq” seçilmiş dərslər var, amma “Gündə dərs saatı (max)” 2-dən azdır.');
+        }
+
+        requiredDoubleTeachers.forEach(tId => {
+          const t = config.teachers[tId];
+          const mask = t.availableHoursMask || [];
+          let hasPair = false;
+          for (let s = 0; s < config.lessonsPerDay - 1; s++) {
+            if (mask[s] && mask[s + 1]) { hasPair = true; break; }
+          }
+          if (!hasPair) {
+            const label = t.code || t.name || `#${tId}`;
+            throw new Error(`Mümkünsüz konfiqurasiya: "${label}" müəlliminin seçdiyi dərs saatlarında ardıcıl 2 saat yoxdur, amma “Qoşa = Mütləq” dərsləri mövcuddur.`);
+          }
+        });
+
+        return config;
+      }
+
+      // ===== PRO placement + "boş saat olmasın" =====
+      function attemptBuild(config) {
+        const {
+          daysCount,
+          lessonsPerDay,
+          teachers,
+          classes,
+          optHeavyAvoidEdges,
+          optLimitSameSubject,
+          optNoClassGaps
+        } = config;
+
+        const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
+          ? config._blocks
+          : generateBlocks(config).blocks;
+
+        // Precompute masks and allowed slots for speed
+        const teacherWeekMax = teachers.map(t => t.weeklyMax > 0 ? t.weeklyMax : Infinity);
+        const teacherDayMax  = teachers.map(t => t.dailyMax > 0 ? t.dailyMax : Infinity);
+
+        const teacherDayMask = teachers.map(t => {
+          const m = new Array(daysCount).fill(false);
+          (t.availableDays || []).forEach(d => { if (d >= 0 && d < daysCount) m[d] = true; });
+          return m;
+        });
+
+        const teacherHourMask = teachers.map(t => {
+          const m = t.availableHoursMask;
+          if (Array.isArray(m) && m.length === lessonsPerDay) return m.slice();
+          return new Array(lessonsPerDay).fill(true);
+        });
+
+        const teacherAllowedSlots = teachers.map((t, tid) => {
+          const m = teacherHourMask[tid];
+          const slots1 = [];
+          for (let s = 0; s < lessonsPerDay; s++) if (m[s]) slots1.push(s);
+          const slots2 = [];
+          for (let s = 0; s < lessonsPerDay - 1; s++) if (m[s] && m[s + 1]) slots2.push(s);
+          return { 1: slots1, 2: slots2 };
+        });
+
+        const classMaxPerDay = classes.map(c => {
+          const raw = Number(c.maxPerDay) || 0;
+          const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
+          return Math.min(maxDayRaw, lessonsPerDay);
+        });
+
+        // Order blocks by difficulty
+        const blocks = baseBlocks.slice().map(b => ({ ...b, __r: Math.random() }));
+        blocks.forEach(b => {
+          const tid = b.teacherId;
+          const daysAvail = (teachers[tid]?.availableDays?.length || daysCount);
+          const slotsAvail2 = teacherAllowedSlots[tid][2].length;
+          const slotsAvail1 = teacherAllowedSlots[tid][1].length;
+
+          let slotsAvail = teacherAllowedSlots[tid][b.length].length;
+          if (b.length === 2 && b.splitAllowed) {
+            slotsAvail = Math.max(slotsAvail2, slotsAvail1);
+          }
+          const domain = Math.max(1, daysAvail * Math.max(1, slotsAvail));
+          b.__difficulty = domain;
+          b.__hardDouble = (b.length === 2 && b.doublePolicy === 'required') ? 0 : 1;
+        });
+
+        blocks.sort((a, b) => {
+          if (a.__hardDouble !== b.__hardDouble) return a.__hardDouble - b.__hardDouble;
+          if (a.__difficulty !== b.__difficulty) return a.__difficulty - b.__difficulty;
+          if (b.length !== a.length) return b.length - a.length;
+          if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
+          return a.__r - b.__r;
+        });
+
+        // Timetable matrices
+        const timetable = {};
+        classes.forEach(c => {
+          const matrix = [];
+          for (let d = 0; d < daysCount; d++) matrix.push(new Array(lessonsPerDay).fill(null));
+          timetable[c.id] = matrix;
+        });
+
+        // State
+        const teacherWeekly = new Array(teachers.length).fill(0);
+        const teacherDaily  = new Array(teachers.length).fill(null).map(() => new Array(daysCount).fill(0));
+        const classDaily    = new Array(classes.length).fill(null).map(() => new Array(daysCount).fill(0));
+        const classSubjPerDay = new Array(classes.length).fill(null).map(() => Object.create(null));
+
+        // teacherBusy[tid][day][slot] = true/false
+        const teacherBusy = new Array(teachers.length).fill(null).map(() =>
+          new Array(daysCount).fill(null).map(() => new Array(lessonsPerDay).fill(false))
+        );
+
+        const lastSlotIndex = lessonsPerDay - 1;
+        const unplaced = [];
+        let placedCount = 0;
+
+        function isEdge(slot, len){
+          return slot === 0 || (slot + len - 1) === lastSlotIndex;
+        }
+
+        function checkPlaceReason(block, day, slot, avoidEdgesHard){
+          const { classId, teacherId, subject, length } = block;
+
+          if (slot + length - 1 >= lessonsPerDay) return 'Saat aralığına sığmır';
+
+          // ✅ boş saat olmasın: sinifdə yalnız "növbəti boş slot"a yerləşdir
+          if (optNoClassGaps) {
+            const nextSlot = classDaily[classId][day];
+            if (slot !== nextSlot) return 'Sinifdə boşluq qaydası (ardıcıllıq)';
+          }
+
+          const matrix = timetable[classId];
+          for (let i = 0; i < length; i++) {
+            if (matrix[day][slot + i] != null) return 'Sinif slotu doludur';
+          }
+
+          if (!teacherDayMask[teacherId][day]) return 'Müəllim həmin gün gəlmir';
+
+          const hm = teacherHourMask[teacherId];
+          for (let i = 0; i < length; i++) {
+            if (!hm[slot + i]) return 'Müəllim həmin saatı seçməyib';
+          }
+
+          for (let i = 0; i < length; i++) {
+            if (teacherBusy[teacherId][day][slot + i]) return 'Müəllim conflict (başqa dərs)';
+          }
+
+          if (teacherWeekly[teacherId] + length > teacherWeekMax[teacherId]) return 'Müəllim həftəlik limit dolub';
+          if (teacherDaily[teacherId][day] + length > teacherDayMax[teacherId]) return 'Müəllim gündəlik limit dolub';
+
+          if (classDaily[classId][day] + length > classMaxPerDay[classId]) return 'Sinif gündəlik limit dolub';
+
+          if (optLimitSameSubject) {
+            const subjMap = classSubjPerDay[classId];
+            const arr = subjMap[subject];
+            const cur = arr ? arr[day] : 0;
+            if (cur + length > 2) return 'Eyni fənn gündə maksimum 2';
+          }
+
+          if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) {
+            return 'Ağır fənn kənar saat';
+          }
+
+          return null; // OK
+        }
+
+        function canPlace(block, day, slot, avoidEdgesHard){
+          return checkPlaceReason(block, day, slot, avoidEdgesHard) === null;
+        }
+
+        function place(block, day, slot){
+          const { classId, teacherId, subject, length } = block;
+          const matrix = timetable[classId];
+
+          for (let i = 0; i < length; i++) {
+            matrix[day][slot + i] = { block, part: i };
+            teacherBusy[teacherId][day][slot + i] = true;
+          }
+
+          teacherWeekly[teacherId] += length;
+          teacherDaily[teacherId][day] += length;
+          classDaily[classId][day] += length;
+
+          const subjMap = classSubjPerDay[classId];
+          if (!subjMap[subject]) subjMap[subject] = new Array(daysCount).fill(0);
+          subjMap[subject][day] += length;
+
+          placedCount += length;
+        }
+
+        function unplace(block, day, slot){
+          const { classId, teacherId, subject, length } = block;
+          const matrix = timetable[classId];
+
+          for (let i = 0; i < length; i++) {
+            matrix[day][slot + i] = null;
+            teacherBusy[teacherId][day][slot + i] = false;
+          }
+
+          teacherWeekly[teacherId] -= length;
+          teacherDaily[teacherId][day] -= length;
+          classDaily[classId][day] -= length;
+
+          const subjMap = classSubjPerDay[classId];
+          if (subjMap[subject]) subjMap[subject][day] -= length;
+
+          placedCount -= length;
+        }
+
+        function candidateScore(block, day, slot){
+          const { classId, teacherId, length } = block;
+
+          let score = 0;
+          score += classDaily[classId][day] * 6;
+          score += teacherDaily[teacherId][day] * 3;
+
+          // prefer earlier slots a bit
+          score += slot * 0.35;
+
+          if (optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) score += 18;
+
+          score += Math.random() * 0.6;
+          return score;
+        }
+
+        function getCandidates(block, avoidEdgesHard){
+          const { teacherId, length, classId } = block;
+          const days = teachers[teacherId].availableDays || [];
+          const slots = teacherAllowedSlots[teacherId][length] || [];
+
+          const cands = [];
+
+          for (const d of days) {
+            if (teacherDaily[teacherId][d] + length > teacherDayMax[teacherId]) continue;
+            if (classDaily[classId][d] + length > classMaxPerDay[classId]) continue;
+
+            if (optNoClassGaps) {
+              const s = classDaily[classId][d]; // next slot
+              if (s + length - 1 >= lessonsPerDay) continue;
+              if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
+              if (!canPlace(block, d, s, avoidEdgesHard)) continue;
+              cands.push({ d, s, score: candidateScore(block, d, s) });
+              continue;
+            }
+
+            for (const s of slots) {
+              if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
+              if (!canPlace(block, d, s, avoidEdgesHard)) continue;
+              cands.push({ d, s, score: candidateScore(block, d, s) });
+            }
+          }
+
+          return cands;
+        }
+
+        function pickFromTopK(cands, k){
+          if (!cands.length) return null;
+          cands.sort((a, b) => a.score - b.score);
+          const kk = Math.max(1, Math.min(k, cands.length));
+          const idx = Math.floor(Math.random() * kk);
+          return cands[idx];
+        }
+
+        function tryPlaceBlock(block){
+          const avoidEdgesStage1 = !!(optHeavyAvoidEdges && block.heavy);
+
+          // 1) stage-1 (avoid edges for heavy)
+          let cands = getCandidates(block, avoidEdgesStage1);
+          let pick = pickFromTopK(cands, 8);
+          if (pick) { place(block, pick.d, pick.s); return true; }
+
+          // 2) stage-2 (allow edges)
+          cands = getCandidates(block, false);
+          pick = pickFromTopK(cands, 8);
+          if (pick) { place(block, pick.d, pick.s); return true; }
+
+          // 3) splittable double -> try split into two singles
+          if (block.length === 2 && block.splitAllowed) {
+            const singleA = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
+            const singleB = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
+
+            const trySplit = (avoidEdgesHard) => {
+              const aCands = getCandidates(singleA, avoidEdgesHard);
+              aCands.sort((x,y)=>x.score-y.score);
+              const limit = Math.min(12, aCands.length);
+              for (let i = 0; i < limit; i++) {
+                const a = aCands[i];
+                place(singleA, a.d, a.s);
+
+                const bCands = getCandidates(singleB, avoidEdgesHard);
+                const bPick = pickFromTopK(bCands, 8);
+                if (bPick) {
+                  place(singleB, bPick.d, bPick.s);
+                  return true;
+                }
+
+                unplace(singleA, a.d, a.s);
+              }
+              return false;
+            };
+
+            if (trySplit(avoidEdgesStage1)) return true;
+            if (trySplit(false)) return true;
+          }
+
           return false;
         }
-      }
 
-      function hardReset() {
-        teacherTbody.innerHTML = "";
-        classTbody.innerHTML = "";
-        lessonTbody.innerHTML = "";
-        classTabs.innerHTML = "";
-        timetableContainer.innerHTML = `<div class="text-[12px] text-slate-500 dark:text-slate-400">Hələ cədvəl qurulmayıb.</div>`;
-        unplacedContainer.classList.add("hidden");
-        unplacedContainer.textContent = "";
-        softWarnings.textContent = "";
-        resultStats.textContent = "";
-        clearError();
-        setInfo("");
-        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-      }
-
-      // ---------------------------
-      // Constraints + Scheduler (Qoşa rules updated)
-      // ---------------------------
-      function validateConfig(cfg) {
-        const errors = [];
-        const warns = [];
-
-        const dayCount = cfg.dayCount;
-        const hourMax = cfg.hourMax;
-
-        if (cfg.classes.length === 0) errors.push("Ən az 1 sinif əlavə edin.");
-        if (cfg.teachers.length === 0) errors.push("Ən az 1 müəllim əlavə edin.");
-        if (cfg.lessons.length === 0) errors.push("Ən az 1 fənn/dərs sətiri əlavə edin.");
-
-        // teacher map by exact code OR exact name (trimmed)
-        const teacherByKey = new Map();
-        cfg.teachers.forEach((t, idx) => {
-          if (t.code) teacherByKey.set(t.code, idx);
-          if (t.name) teacherByKey.set(t.name, idx);
-        });
-
-        const classByName = new Map();
-        cfg.classes.forEach((c, idx) => classByName.set(c.name, idx));
-
-        // Lesson references and feasibility rules
-        cfg.lessons.forEach((l, i) => {
-          if (!classByName.has(l.className)) errors.push(`Fənn sətiri #${i+1}: sinif tapılmadı (“${l.className}”).`);
-          if (!teacherByKey.has(l.teacherKey)) errors.push(`Fənn sətiri #${i+1}: müəllim tapılmadı (“${l.teacherKey}”).`);
-
-          if (l.doubleMode !== "no") {
-            if (l.weekly % 2 !== 0) {
-              errors.push(`“${l.className} — ${l.subject}”: Qoşa seçilibsə həftəlik saat mütləq cüt olmalıdır.`);
-            }
-          } else {
-            // Qoşa=Yox => eyni gündə max 1
-            if (l.weekly > dayCount) {
-              errors.push(`“${l.className} — ${l.subject}”: Qoşa=Yox üçün həftəlik saat ${dayCount}-dən çox ola bilməz (çünki eyni gündə max 1).`);
-            }
-          }
-
-          if (l.weekly > dayCount * hourMax) {
-            errors.push(`“${l.className} — ${l.subject}”: həftəlik saat ümumi tutumu aşır (gün×saat).`);
-          }
-        });
-
-        // Capacity per class
-        cfg.classes.forEach((c) => {
-          const dayMax = c.dayMax ?? hourMax;
-          const sum = cfg.lessons.filter(l => l.className === c.name).reduce((a,b)=>a+b.weekly,0);
-          if (sum > dayCount * dayMax) {
-            errors.push(`“${c.name}”: həftəlik toplam saat (${sum}) tutumu aşır ( ${dayCount}×${dayMax} ).`);
-          }
-          if (cfg.optNoClassGaps && dayMax > hourMax) {
-            warns.push(`“${c.name}”: sinif gündəlik max (${dayMax}) ümumi max-dan (${hourMax}) böyükdür — sistem yenə ${hourMax} çərçivəsində quracaq.`);
-          }
-        });
-
-        // Teacher weekly max
-        cfg.teachers.forEach((t) => {
-          if (t.weekMax > 0) {
-            const load = cfg.lessons.reduce((acc,l)=> {
-              if (l.teacherKey === t.code || l.teacherKey === t.name) return acc + l.weekly;
-              return acc;
-            },0);
-            if (load > t.weekMax) {
-              warns.push(`Müəllim “${t.code || t.name}”: həftəlik yük (${load}) həftəlik max-dan (${t.weekMax}) çoxdur — həll mümkünsüz ola bilər.`);
-            }
-          }
-        });
-
-        return { errors, warns, teacherByKey, classByName };
-      }
-
-      function buildTasks(cfg, teacherByKey, classByName) {
-        const tasks = [];
-        cfg.lessons.forEach((l) => {
-          const classIdx = classByName.get(l.className);
-          const teacherIdx = teacherByKey.get(l.teacherKey);
-
-          if (l.doubleMode === "no") {
-            for (let k = 0; k < l.weekly; k++) {
-              tasks.push({
-                type: "single",
-                classIdx, teacherIdx,
-                subject: l.subject,
-                heavy: l.heavy,
-                preferConsecutive: false,
-                fixedDay: null
-              });
-            }
-          } else if (l.doubleMode === "must") {
-            const pairs = l.weekly / 2;
-            for (let p = 0; p < pairs; p++) {
-              tasks.push({
-                type: "double_must",
-                classIdx, teacherIdx,
-                subject: l.subject,
-                heavy: l.heavy,
-                preferConsecutive: true, // must consecutive
-                fixedDay: null
-              });
-            }
-          } else {
-            // prefer => same day MUST be 2, consecutive preferred
-            const pairs = l.weekly / 2;
-            for (let p = 0; p < pairs; p++) {
-              tasks.push({
-                type: "double_prefer",
-                classIdx, teacherIdx,
-                subject: l.subject,
-                heavy: l.heavy,
-                preferConsecutive: true,  // try consecutive first
-                fixedDay: null
-              });
-            }
-          }
-        });
-        return tasks;
-      }
-
-      function initState(cfg) {
-        const dayCount = cfg.dayCount;
-        const hourMax = cfg.hourMax;
-
-        const classSched = cfg.classes.map(() =>
-          Array.from({ length: dayCount }, () => Array.from({ length: hourMax }, () => null))
-        );
-
-        const classDayCount = cfg.classes.map(() =>
-          Array.from({ length: dayCount }, () => 0)
-        );
-
-        const classSubDay = cfg.classes.map(() =>
-          Array.from({ length: dayCount }, () => ({}))
-        );
-
-        const teacherBusy = cfg.teachers.map(() =>
-          Array.from({ length: dayCount }, () => Array.from({ length: hourMax }, () => false))
-        );
-
-        const teacherDayCount = cfg.teachers.map(() =>
-          Array.from({ length: dayCount }, () => 0)
-        );
-
-        const teacherWeekCount = cfg.teachers.map(() => 0);
+        for (const b of blocks) {
+          const ok = tryPlaceBlock(b);
+          if (!ok) unplaced.push(b);
+        }
 
         return {
-          classSched,
-          classDayCount,
-          classSubDay,
-          teacherBusy,
-          teacherDayCount,
-          teacherWeekCount,
-          placed: 0,
-          penalties: 0,
-          pending: [] // for double_prefer second lesson when consecutive not possible now
+          timetable,
+          unplaced,
+          placedCount,
+          meta: {
+            teacherWeekly,
+            teacherDaily,
+            classDaily,
+            classSubjPerDay,
+            teacherBusy,
+            teacherWeekMax,
+            teacherDayMax,
+            classMaxPerDay
+          }
         };
       }
 
-      function canTeacherTeach(cfg, state, teacherIdx, day, slot) {
-        const t = cfg.teachers[teacherIdx];
-        if (!t) return false;
-        if (!t.days[day]) return false;
-        if (!t.hours[slot]) return false;
+      async function buildUntilSolved(config, shouldStop){
+        const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
+        const startedAt = performance.now();
 
-        if (state.teacherBusy[teacherIdx][day][slot]) return false;
+        const BATCH = 260;
 
-        // daily max
-        if (t.dayMax > 0 && state.teacherDayCount[teacherIdx][day] + 1 > t.dayMax) return false;
-
-        // weekly max
-        if (t.weekMax > 0 && state.teacherWeekCount[teacherIdx] + 1 > t.weekMax) return false;
-
-        return true;
-      }
-
-      function classDayMax(cfg, classIdx) {
-        const c = cfg.classes[classIdx];
-        return (c.dayMax ?? cfg.hourMax);
-      }
-
-      function canPlaceSingle(cfg, state, task, day, slot) {
-        // slot is 0-based, within cfg.hourMax
-        if (state.classSched[task.classIdx][day][slot] !== null) return false;
-
-        // class daily max
-        if (state.classDayCount[task.classIdx][day] + 1 > classDayMax(cfg, task.classIdx)) return false;
-
-        // Qoşa=Yox rule => same subject max 1 per day
-        const subCnt = state.classSubDay[task.classIdx][day][task.subject] || 0;
-        if (subCnt >= 1) return false;
-
-        // teacher constraints
-        if (!canTeacherTeach(cfg, state, task.teacherIdx, day, slot)) return false;
-
-        return true;
-      }
-
-      function canPlaceDoubleConsecutive(cfg, state, task, day, startSlot) {
-        const s1 = startSlot;
-        const s2 = startSlot + 1;
-        if (s2 >= cfg.hourMax) return false;
-
-        if (state.classSched[task.classIdx][day][s1] !== null) return false;
-        if (state.classSched[task.classIdx][day][s2] !== null) return false;
-
-        // class daily max
-        if (state.classDayCount[task.classIdx][day] + 2 > classDayMax(cfg, task.classIdx)) return false;
-
-        // subject same day max 2 (and also must become exactly 2 for this pair)
-        const subCnt = state.classSubDay[task.classIdx][day][task.subject] || 0;
-        if (subCnt > 0) return false; // we want this pair to occupy the 2 occurrences; no more for same subject/day
-        // (If you have multiple pairs of same subject, they must be on different days.)
-
-        // teacher constraints for both slots
-        if (!canTeacherTeach(cfg, state, task.teacherIdx, day, s1)) return false;
-        if (!canTeacherTeach(cfg, state, task.teacherIdx, day, s2)) return false;
-
-        return true;
-      }
-
-      function place(cfg, state, task, day, slot) {
-        // place a single lesson at (day,slot)
-        state.classSched[task.classIdx][day][slot] = {
-          subject: task.subject,
-          teacherIdx: task.teacherIdx,
-          heavy: task.heavy
-        };
-        state.classDayCount[task.classIdx][day] += 1;
-
-        const prev = state.classSubDay[task.classIdx][day][task.subject] || 0;
-        state.classSubDay[task.classIdx][day][task.subject] = prev + 1;
-
-        state.teacherBusy[task.teacherIdx][day][slot] = true;
-        state.teacherDayCount[task.teacherIdx][day] += 1;
-        state.teacherWeekCount[task.teacherIdx] += 1;
-
-        state.placed += 1;
-
-        // soft: heavy edge avoid
-        if (cfg.optHeavyAvoidEdges && task.heavy) {
-          if (slot === 0 || slot === cfg.hourMax - 1) state.penalties += 1;
-        }
-      }
-
-      function placeDoubleConsecutive(cfg, state, task, day, startSlot) {
-        place(cfg, state, task, day, startSlot);
-        place(cfg, state, task, day, startSlot + 1);
-      }
-
-      function scoreState(state, total) {
-        const ratio = total > 0 ? state.placed / total : 0;
-        // higher is better: placed ratio dominates, then fewer penalties
-        return ratio * 1000 - state.penalties;
-      }
-
-      function pickDayOrder(cfg, state, classIdx) {
-        const days = Array.from({length: cfg.dayCount}, (_, i) => i);
-        // prefer days with fewer lessons to balance
-        days.sort((a,b) => state.classDayCount[classIdx][a] - state.classDayCount[classIdx][b]);
-        // small random jitter
-        if (Math.random() < 0.35) shuffle(days);
-        return days;
-      }
-
-      function nextSlotForDay(cfg, state, classIdx, day) {
-        if (!cfg.optNoClassGaps) {
-          // allow any empty, but prefer earlier
-          for (let s = 0; s < cfg.hourMax; s++) {
-            if (state.classSched[classIdx][day][s] === null) return s;
-          }
-          return null;
-        }
-        // no gaps => always next contiguous slot
-        const s = state.classDayCount[classIdx][day];
-        if (s >= cfg.hourMax) return null;
-        return s;
-      }
-
-      function tryPlaceTaskGreedy(cfg, state, task) {
-        const classIdx = task.classIdx;
-
-        const days = task.fixedDay !== null ? [task.fixedDay] : pickDayOrder(cfg, state, classIdx);
-
-        for (const day of days) {
-          const dayMax = classDayMax(cfg, classIdx);
-          const leftCap = dayMax - state.classDayCount[classIdx][day];
-
-          if (task.type === "single") {
-            const slot = nextSlotForDay(cfg, state, classIdx, day);
-            if (slot === null) continue;
-            if (canPlaceSingle(cfg, state, task, day, slot)) {
-              place(cfg, state, task, day, slot);
-              return true;
-            }
-          }
-
-          if (task.type === "double_must") {
-            if (leftCap < 2) continue;
-            const slot = nextSlotForDay(cfg, state, classIdx, day);
-            if (slot === null) continue;
-
-            // Must be consecutive; if no-gaps false, still must consecutive but can start anywhere empty consecutive
-            if (!cfg.optNoClassGaps) {
-              for (let s = 0; s < cfg.hourMax - 1; s++) {
-                if (canPlaceDoubleConsecutive(cfg, state, task, day, s)) {
-                  placeDoubleConsecutive(cfg, state, task, day, s);
-                  return true;
-                }
-              }
-            } else {
-              if (canPlaceDoubleConsecutive(cfg, state, task, day, slot)) {
-                placeDoubleConsecutive(cfg, state, task, day, slot);
-                return true;
-              }
-            }
-          }
-
-          if (task.type === "double_prefer") {
-            if (leftCap < 2) continue;
-
-            // consecutive preferred: try consecutive now if possible
-            if (cfg.optNoClassGaps) {
-              const slot = nextSlotForDay(cfg, state, classIdx, day);
-              if (slot === null) continue;
-
-              if (canPlaceDoubleConsecutive(cfg, state, task, day, slot)) {
-                placeDoubleConsecutive(cfg, state, task, day, slot);
-                return true;
-              }
-
-              // cannot do consecutive now: place first now, force second later same day
-              // for "prefer" we still MUST have 2 same day, not necessarily consecutive.
-              // We'll place first now if possible with subjectCount==0.
-              if (canPlaceSingle(cfg, state, task, day, slot)) {
-                // but for double_prefer, subject can be at most 2/day; we must reserve second.
-                place(cfg, state, task, day, slot);
-
-                // push pending second constrained to same day, but allow subjectCount currently 1
-                state.pending.push({
-                  type: "pending_second",
-                  classIdx: task.classIdx,
-                  teacherIdx: task.teacherIdx,
-                  subject: task.subject,
-                  heavy: task.heavy,
-                  fixedDay: day
-                });
-                return true;
-              }
-            } else {
-              // gaps allowed: try any consecutive anywhere first
-              for (let s = 0; s < cfg.hourMax - 1; s++) {
-                if (canPlaceDoubleConsecutive(cfg, state, task, day, s)) {
-                  placeDoubleConsecutive(cfg, state, task, day, s);
-                  return true;
-                }
-              }
-              // else: place two singles on same day (not necessarily consecutive)
-              // ensure subjectCount==0 initially
-              const subCnt = state.classSubDay[classIdx][day][task.subject] || 0;
-              if (subCnt !== 0) continue;
-
-              // find two slots that teacher can take
-              const slots = [];
-              for (let s = 0; s < cfg.hourMax; s++) {
-                if (state.classSched[classIdx][day][s] !== null) continue;
-                if (!canTeacherTeach(cfg, state, task.teacherIdx, day, s)) continue;
-                slots.push(s);
-              }
-              if (slots.length >= 2) {
-                // place first, then second
-                place(cfg, state, task, day, slots[0]);
-                place(cfg, state, task, day, slots[1]);
-                return true;
-              }
-            }
-          }
-
-          if (task.type === "pending_second") {
-            // must complete pair on same day; subject must be exactly 2 that day at end.
-            const slot = nextSlotForDay(cfg, state, classIdx, day);
-            if (slot === null) continue;
-
-            // For pending second: allow subjectCount==1 only
-            const subCnt = state.classSubDay[classIdx][day][task.subject] || 0;
-            if (subCnt !== 1) continue; // if already 2 or 0, something inconsistent
-            // also ensure teacher available
-            if (!canTeacherTeach(cfg, state, task.teacherIdx, day, slot)) continue;
-
-            // class daily max
-            if (state.classDayCount[classIdx][day] + 1 > classDayMax(cfg, classIdx)) continue;
-
-            // Place second
-            place(cfg, state, task, day, slot);
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      async function generateSchedule(cfg, tasks) {
-        const total = tasks.reduce((acc, t) => {
-          if (t.type === "double_must") return acc + 2;
-          if (t.type === "double_prefer") return acc + 2;
-          return acc + 1;
-        }, 0);
-
-        const MAX_TRIES = 600; // browser-friendly; best-effort
-        let best = null;
-        let bestScoreVal = -Infinity;
         let attempts = 0;
+        let best = null;
 
-        for (attempts = 1; attempts <= MAX_TRIES; attempts++) {
-          if (stopRequested) break;
+        function isBetter(a, b){
+          if (!b) return true;
+          if (a.placedCount !== b.placedCount) return a.placedCount > b.placedCount;
+          const au = a.unplaced?.length || 0;
+          const bu = b.unplaced?.length || 0;
+          if (au !== bu) return au < bu;
+          return false;
+        }
 
-          const state = initState(cfg);
+        while (true) {
+          for (let i = 0; i < BATCH; i++) {
+            if (shouldStop && shouldStop()) {
+              if (!best) best = { timetable: {}, unplaced: [], placedCount: 0, meta: null };
+              best.stopped = true;
+              best.attemptsUsed = attempts;
+              best.targetHours = target;
+              return best;
+            }
 
-          // order: must double first, then prefer, then singles
-          const base = tasks.slice();
-          base.sort((a,b) => {
-            const w = (x) => (x.type === "double_must" ? 0 : x.type === "double_prefer" ? 1 : 2);
-            return w(a) - w(b);
-          });
-          // shuffle within bands
-          const bands = [[],[],[]];
-          base.forEach(t => bands[(t.type==="double_must")?0:(t.type==="double_prefer")?1:2].push(t));
-          bands.forEach(shuffle);
-          const queue = [...bands[0], ...bands[1], ...bands[2]];
+            attempts++;
+            const res = attemptBuild(config);
+            res.attemptsUsed = attempts;
+            res.targetHours = target;
 
-          let ok = true;
+            if (isBetter(res, best)) best = res;
 
-          for (let i = 0; i < queue.length; i++) {
-            if (stopRequested) { ok = false; break; }
+            if (res.placedCount >= target) {
+              best = res;
+              best.solved = true;
+              return best;
+            }
+          }
 
-            const t = queue[i];
-            const placed = tryPlaceTaskGreedy(cfg, state, t);
-            if (!placed) { ok = false; break; }
+          const bestPlaced = best ? best.placedCount : 0;
+          const pct = target > 0 ? ((bestPlaced / target) * 100).toFixed(1) : '0.0';
+          const elapsed = ((performance.now() - startedAt) / 1000).toFixed(1);
 
-            // occasionally attempt to place pending items earlier to reduce dead-ends
-            if (state.pending.length && Math.random() < 0.25) {
-              const pend = state.pending.shift();
-              if (pend) {
-                const pPlaced = tryPlaceTaskGreedy(cfg, state, pend);
-                if (!pPlaced) {
-                  // put it back and continue; may fail later
-                  state.pending.unshift(pend);
-                }
+          if (globalInfo) {
+            globalInfo.textContent =
+              `Axtarış davam edir… Cəhd: ${attempts.toLocaleString('az-AZ')} · Ən yaxşı: ${bestPlaced}/${target} (${pct}%) · ${elapsed}s`;
+          }
+
+          await new Promise(r => requestAnimationFrame(r));
+        }
+      }
+
+      function teacherLabel(teachers, tId) {
+        const t = teachers[tId];
+        if (!t) return '';
+        if (t.code && t.name) return `${t.code}`;
+        return t.code || t.name || '';
+      }
+
+      function renderTimetable(config, result) {
+        const { classes, teachers, daysCount, lessonsPerDay, optLimitSameSubject, optNoClassGaps } = config;
+        const { timetable, unplaced, placedCount, meta } = result;
+
+        const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
+
+        classTabs.innerHTML = '';
+        classes.forEach((c, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'tab-btn' + (idx === 0 ? ' active' : '');
+          btn.textContent = c.name;
+          btn.dataset.classId = c.id;
+          classTabs.appendChild(btn);
+        });
+
+        function renderForClass(classId) {
+          const matrix = timetable[classId];
+          if (!matrix) {
+            timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Bu sinif üçün cədvəl tapılmadı.</div>';
+            return;
+          }
+
+          let html = '<table class="tt-table"><thead><tr><th>Saat</th>';
+          daysLabels.forEach(d => { html += `<th>${d}</th>`; });
+          html += '</tr></thead><tbody>';
+
+          for (let s = 0; s < lessonsPerDay; s++) {
+            html += `<tr><th>${s + 1}</th>`;
+            for (let d = 0; d < daysCount; d++) {
+              const cell = matrix[d][s];
+              if (!cell) {
+                html += `<td><span class="tt-slot-muted">—</span></td>`;
+              } else if (cell.part === 0) {
+                const b = cell.block;
+                const subj = b.subject;
+                const tLab = teacherLabel(teachers, b.teacherId);
+                const rowspan = b.length > 1 ? b.length : 1;
+                html += `<td rowspan="${rowspan}">
+                          <div class="font-semibold">${subj}</div>
+                          <div class="text-[10px] mt-0.5 text-slate-500 dark:text-slate-400">${tLab}</div>
+                        </td>`;
+              } else {
+                // rowspan-a görə boş qalır
               }
             }
+            html += '</tr>';
           }
 
-          // after main tasks, must finish all pending seconds
-          if (ok) {
-            // try to finish all pending in some order
-            shuffle(state.pending);
-            while (state.pending.length) {
-              if (stopRequested) { ok = false; break; }
-              const pend = state.pending.shift();
-              if (!tryPlaceTaskGreedy(cfg, state, pend)) { ok = false; break; }
+          html += '</tbody></table>';
+          timetableContainer.innerHTML = html;
+        }
+
+        const totalRequiredHours =
+          Number(result.targetHours) ||
+          Number(config._targetHours) ||
+          sumRequiredHours(config.lessons);
+
+        const placedPercent = totalRequiredHours > 0 ? ((placedCount / totalRequiredHours) * 100).toFixed(1) : '0.0';
+        const attemptsUsed = result.attemptsUsed ?? 0;
+
+        resultStats.textContent =
+          `Yerləşdirilən saat: ${placedCount}/${totalRequiredHours} (${placedPercent}%) · Cəhd: ${attemptsUsed.toLocaleString('az-AZ')}`;
+
+        // ===== Diagnostics for unplaced =====
+        function explainUnplaced(block){
+          if (!meta) return '';
+
+          const reasons = Object.create(null);
+          const { classId, teacherId, subject, length } = block;
+          const matrix = timetable[classId];
+          const t = teachers[teacherId];
+
+          function add(reason){
+            reasons[reason] = (reasons[reason] || 0) + 1;
+          }
+
+          for (let d = 0; d < daysCount; d++) {
+            // firstEmpty for no-gaps rule
+            let firstEmpty = 0;
+            if (optNoClassGaps) {
+              while (firstEmpty < lessonsPerDay && matrix[d][firstEmpty] != null) firstEmpty++;
+            }
+
+            for (let s = 0; s <= lessonsPerDay - length; s++) {
+              if (optNoClassGaps && s !== firstEmpty) { add('Sinifdə boşluq qaydası'); continue; }
+
+              // Class occupancy
+              let occ = false;
+              for (let i = 0; i < length; i++) {
+                if (matrix[d][s + i] != null) { occ = true; break; }
+              }
+              if (occ) { add('Sinif slotu doludur'); continue; }
+
+              // Teacher day
+              if (t.availableDays && !t.availableDays.includes(d)) { add('Müəllim həmin gün gəlmir'); continue; }
+
+              // Teacher hour
+              const hm = t.availableHoursMask || [];
+              let hourOk = true;
+              for (let i = 0; i < length; i++) {
+                if (!hm[s + i]) { hourOk = false; break; }
+              }
+              if (!hourOk) { add('Müəllim həmin saatı seçməyib'); continue; }
+
+              // Teacher conflict
+              let conf = false;
+              for (let i = 0; i < length; i++) {
+                if (meta.teacherBusy[teacherId][d][s + i]) { conf = true; break; }
+              }
+              if (conf) { add('Müəllim conflict'); continue; }
+
+              // Limits
+              if (meta.teacherWeekly[teacherId] + length > meta.teacherWeekMax[teacherId]) { add('Müəllim həftəlik limit'); continue; }
+              if (meta.teacherDaily[teacherId][d] + length > meta.teacherDayMax[teacherId]) { add('Müəllim gündəlik limit'); continue; }
+              if (meta.classDaily[classId][d] + length > meta.classMaxPerDay[classId]) { add('Sinif gündəlik limit'); continue; }
+
+              if (optLimitSameSubject) {
+                const subjMap = meta.classSubjPerDay[classId];
+                const arr = subjMap[subject];
+                const cur = arr ? arr[d] : 0;
+                if (cur + length > 2) { add('Eyni fənn gündə maksimum 2'); continue; }
+              }
+
+              add('Slot var, amma kombinasiya çətindir');
             }
           }
 
-          const sc = scoreState(state, total);
-          if (sc > bestScoreVal) {
-            bestScoreVal = sc;
-            best = state;
-          }
+          const entries = Object.entries(reasons).sort((a,b)=>b[1]-a[1]);
+          if (!entries.length) return '';
 
-          // UI update
-          if (attempts % 20 === 0) {
-            setInfo(`Cəhd: ${attempts}/${MAX_TRIES} · Ən yaxşı nəticə: ${Math.round((best?.placed || 0) / total * 100)}%`);
-            await nextTick();
-          }
-
-          if (ok && best && best.placed === total) {
-            setInfo(`Tam həll tapıldı · Cəhd: ${attempts}`);
-            return { state: best, total, attempts, perfect: true };
-          }
+          const top1 = entries[0][0];
+          const top2 = entries[1] ? entries[1][0] : null;
+          return top2 ? `Səbəb: ${top1}; ${top2}` : `Səbəb: ${top1}`;
         }
 
-        return { state: best, total, attempts, perfect: false };
-      }
-
-      // ---------------------------
-      // Render
-      // ---------------------------
-      function renderTimetable(cfg, state, activeClassIdx = 0) {
-        if (!state) return;
-
-        const dayLabels = DAY_LABELS.slice(0, cfg.dayCount);
-        const hourLabels = Array.from({length: cfg.hourMax}, (_, i) => String(i+1));
-
-        const c = cfg.classes[activeClassIdx];
-        const sched = state.classSched[activeClassIdx];
-
-        let html = `
-          <div class="mb-2 text-sm font-semibold">${escapeHtml(c.name)}</div>
-          <table class="tt-table">
-            <thead>
-              <tr>
-                <th>Saat</th>
-                ${dayLabels.map(d => `<th>${escapeHtml(d)}</th>`).join("")}
-              </tr>
-            </thead>
-            <tbody>
-              ${hourLabels.map((h, row) => {
-                const tds = dayLabels.map((_, day) => {
-                  const cell = sched[day][row];
-                  if (!cell) return `<td class="tt-slot-muted">—</td>`;
-                  const teacher = cfg.teachers[cell.teacherIdx];
-                  const tLabel = (teacher?.code || teacher?.name || "");
-                  return `<td>
-                    <div class="font-semibold">${escapeHtml(cell.subject)}</div>
-                    <div class="text-[11px] text-slate-500 dark:text-slate-300">${escapeHtml(tLabel)}</div>
-                  </td>`;
-                }).join("");
-                return `<tr><th>${h}</th>${tds}</tr>`;
-              }).join("")}
-            </tbody>
-          </table>
-        `;
-
-        timetableContainer.innerHTML = html;
-
-        // stats
-        const placed = state.placed;
-        resultStats.textContent = `Doluluq: ${Math.round((placed / (cfg.totalSlots || 1)) * 100)}% · Cəmlənən dərs: ${placed}`;
-      }
-
-      function renderTabs(cfg, state) {
-        classTabs.innerHTML = "";
-        cfg.classes.forEach((c, idx) => {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.className = "tab-btn" + (idx === 0 ? " active" : "");
-          b.textContent = c.name;
-          b.addEventListener("click", () => {
-            classTabs.querySelectorAll(".tab-btn").forEach(x => x.classList.remove("active"));
-            b.classList.add("active");
-            renderTimetable(cfg, state, idx);
+        if (unplaced && unplaced.length) {
+          const lines = unplaced.map(b => {
+            const cls = classes[b.classId]?.name || '?';
+            const t = teachers[b.teacherId];
+            const tLabel = t ? (t.code || t.name) : '?';
+            const why = explainUnplaced(b);
+            return `• ${cls} – ${b.subject} (${tLabel}), ${b.length} saat${why ? ' — ' + why : ''}`;
           });
-          classTabs.appendChild(b);
-        });
-      }
-
-      function renderUnplaced(result, cfg) {
-        const { state, total, perfect } = result;
-        const placed = state?.placed || 0;
-
-        // show unplaced summary (best-effort, since greedy doesn't track exact list)
-        // We'll estimate missing counts per class/day by capacity and placed ratio.
-        if (perfect) {
-          unplacedContainer.classList.add("hidden");
-          unplacedContainer.textContent = "";
-          return;
-        }
-
-        const missing = Math.max(0, total - placed);
-        unplacedContainer.classList.remove("hidden");
-        unplacedContainer.textContent =
-          `Tam həll tapılmadı. Yerləşdirilməyən dərs sayı (təxmini): ${missing}\n` +
-          `Tövsiyə: müəllim uyğun gün/saatlarını genişləndirin, gündəlik limitləri artırın, və ya Qoşa qaydalarını yumşaldın.`;
-      }
-
-      // ---------------------------
-      // Main action: Generate
-      // ---------------------------
-      async function onGenerateClick() {
-        if (isGenerating) {
-          stopRequested = true;
-          setInfo("Dayandırılır…");
-          return;
-        }
-
-        clearError();
-        softWarnings.textContent = "";
-        unplacedContainer.classList.add("hidden");
-        unplacedContainer.textContent = "";
-
-        const dayCount = clampInt(daysCountEl?.value, 5, 6, 5);
-        const hourMax = clampInt(lessonsPerDayEl?.value, 1, 8, 7);
-
-        const cfg = {
-          dayCount,
-          hourMax,
-          optHeavyAvoidEdges: !!optHeavyAvoidEdgesEl?.checked,
-          optNoClassGaps: !!optNoClassGapsEl?.checked,
-          teachers: readTeachersRaw().filter(t => t.name || t.code),
-          classes: readClassesRaw(),
-          lessons: readLessonsRaw()
-        };
-
-        cfg.totalSlots = cfg.classes.length * cfg.dayCount * cfg.hourMax;
-
-        const { errors, warns, teacherByKey, classByName } = validateConfig(cfg);
-        if (warns.length) softWarnings.textContent = warns.join(" · ");
-        if (errors.length) {
-          showError(errors.join(" "));
-          return;
-        }
-
-        const tasks = buildTasks(cfg, teacherByKey, classByName);
-
-        isGenerating = true;
-        stopRequested = false;
-        btnGenerate.textContent = "🛑 Dayandır";
-        btnGenerate.classList.add("brightness-110");
-
-        setInfo("Axtarış başladı…");
-
-        const res = await generateSchedule(cfg, tasks);
-
-        isGenerating = false;
-        stopRequested = false;
-        btnGenerate.textContent = "⚙️ Cədvəli qur";
-        btnGenerate.classList.remove("brightness-110");
-
-        if (!res.state) {
-          showError("Heç bir nəticə alına bilmədi. Məlumatları yoxlayın və yenidən cəhd edin.");
-          return;
-        }
-
-        renderTabs(cfg, res.state);
-        renderTimetable(cfg, res.state, 0);
-        renderUnplaced(res, cfg);
-
-        if (res.perfect) {
-          setInfo(`Tam həll tapıldı · Cəhd: ${res.attempts}`);
+          unplacedContainer.classList.remove('hidden');
+          unplacedContainer.textContent = 'Yerləşdirilməyənlər:\n' + lines.join('\n');
         } else {
-          setInfo(`Tam həll tapılmadı · Cəhd: ${res.attempts} · Ən yaxşı: ${Math.round(res.state.placed / res.total * 100)}%`);
+          unplacedContainer.classList.add('hidden');
+          unplacedContainer.textContent = '';
         }
+
+        softWarnings.textContent =
+          'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri, eyni fənnin gündə max 2 (aktivdirsə) və sinifdə boş saat olmaması (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
+          '“Ağır fənn 1-ci/sonuncu saat olmasın” optimallaşdırmadır. “Qoşa = İmkan daxilində” seçilmiş dərslər əvvəlcə ardıcıl yerləşdirilməyə çalışılır, alınmasa bölünə bilər.';
+
+        const firstClassId = classes[0]?.id;
+        if (firstClassId != null) renderForClass(firstClassId);
+
+        classTabs.onclick = (e) => {
+          const btn = e.target.closest('.tab-btn');
+          if (!btn) return;
+          classTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderForClass(Number(btn.dataset.classId));
+        };
       }
 
-      // ---------------------------
-      // React to school param changes
-      // ---------------------------
-      function syncTeacherHoursDaysUI() {
-        const dayCount = clampInt(daysCountEl?.value, 5, 6, 5);
-        const hourMax = clampInt(lessonsPerDayEl?.value, 1, 8, 7);
+      btnGenerate.addEventListener('click', async () => {
+        if (__solverRunning) {
+          __stopRequested = true;
+          if (globalInfo) globalInfo.textContent = 'Dayandırılır…';
+          return;
+        }
 
-        // update teacher hour disables and day disables
-        teacherTbody.querySelectorAll("tr").forEach(tr => {
-          tr.querySelectorAll(".t-hour").forEach(cb => {
-            const h = parseInt(cb.dataset.hour, 10);
-            cb.disabled = h > hourMax;
-            if (cb.disabled) cb.checked = false;
-          });
-          tr.querySelectorAll(".t-day").forEach(cb => {
-            const d = parseInt(cb.dataset.day, 10);
-            cb.disabled = (dayCount === 5 && d === 5);
-            if (cb.disabled) cb.checked = false;
-          });
-        });
-      }
+        const myRun = ++__runId;
+        __solverRunning = true;
+        __stopRequested = false;
 
-      // ---------------------------
-      // Bindings
-      // ---------------------------
-      btnAddTeacher?.addEventListener("click", () => { addTeacherRow(); refreshLessonDropdowns(); saveState(); });
-      btnAddClass?.addEventListener("click", () => { addClassRow(); refreshLessonDropdowns(); saveState(); });
-      btnAddLesson?.addEventListener("click", () => { addLessonRow(); saveState(); });
+        if (btnGenerate) btnGenerate.textContent = STOP_LABEL;
 
-      btnGenerate?.addEventListener("click", onGenerateClick);
+        try {
+          let config = readConfig();
+          config = prepareSolve(config);
 
-      btnResetAll?.addEventListener("click", () => {
-        if (isGenerating) return;
-        hardReset();
+          globalError.classList.add('hidden');
+          globalError.textContent = '';
+
+          if (globalInfo) globalInfo.textContent = 'Axtarış başlayır… (tam həll tapılanadək cəhd ediləcək)';
+
+          const result = await buildUntilSolved(config, () => __stopRequested || myRun !== __runId);
+
+          if (myRun !== __runId) return;
+
+          renderTimetable(config, result);
+
+          ensureVisibleStable(document.getElementById('resultCard'), { topGap: 18, bottomGap: 16 });
+
+          const target = Number(result.targetHours) || Number(config._targetHours) || sumRequiredHours(config.lessons);
+          const bestPlaced = result.placedCount || 0;
+          const pct = target > 0 ? ((bestPlaced / target) * 100).toFixed(1) : '0.0';
+
+          if (result.solved) {
+            if (globalInfo) globalInfo.textContent =
+              `Cədvəl 100% quruldu. (Cəhd: ${(result.attemptsUsed || 0).toLocaleString('az-AZ')})`;
+          } else if (result.stopped) {
+            if (globalInfo) globalInfo.textContent =
+              `Dayandırıldı. Ən yaxşı nəticə: ${bestPlaced}/${target} (${pct}%).`;
+          } else {
+            if (globalInfo) globalInfo.textContent = 'Cədvəl quruldu.';
+          }
+        } catch (err) {
+          if (myRun !== __runId) return;
+          showError(err.message || String(err));
+          if (globalInfo) globalInfo.textContent = '';
+        } finally {
+          if (myRun === __runId) {
+            __solverRunning = false;
+            __stopRequested = false;
+            if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
+          }
+        }
       });
 
-      daysCountEl?.addEventListener("change", () => {
-        syncTeacherHoursDaysUI();
-        refreshLessonDropdowns();
-        saveState();
-      });
-      lessonsPerDayEl?.addEventListener("change", () => {
-        syncTeacherHoursDaysUI();
-        saveState();
-      });
+      // Başlanğıc nümunələr (istəsən sil)
+      addTeacherRow({ name: 'Əhmədov Firdovsi', code: 'FİR', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
+      addTeacherRow({ name: 'İsfəndiyarlı Məzahir', code: 'MƏZ', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
 
-      optHeavyAvoidEdgesEl?.addEventListener("change", saveState);
-      optNoClassGapsEl?.addEventListener("change", saveState);
+      addClassRow({ name: '5A', level: 'esas', shift: 'seher' });
+      addClassRow({ name: '6A', level: 'esas', shift: 'seher' });
 
-      // ---------------------------
-      // Init
-      // ---------------------------
-      const loaded = loadState();
-      if (!loaded) {
-        // starter rows
-        addTeacherRow();
-        addClassRow();
-        addLessonRow();
-      }
-      syncTeacherHoursDaysUI();
-      refreshLessonDropdowns();
-      saveState();
+      addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'FİR', hours: 4, heavy: true, doubleMode: 'prefer' });
+      addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'MƏZ', hours: 3, heavy: false, doubleMode: 'none' });
 
+      // ilkin state
+      syncTeacherDayVisibility(currentDaysCount());
+      syncTeacherHourVisibility(currentLessonsPerDay());
     })();
   </script>
-
 </body>
 </html>

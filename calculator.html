@@ -1417,16 +1417,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
-
-          // ✅ İSTƏNİLƏN DƏYİŞİKLİK: Reset-dən sonra KSQ 1-də yazı yazmaq üçün fokus
-          const k1 = $id('term-ksq1');
-          if (k1 && !k1.closest('fieldset')?.classList.contains('hidden')) {
-            tryFocus(k1);
-          } else {
-            // Əgər hazırkı rejimdə KSQ sahəsi görünmürsə (məs: illik rejim), ilk görünən inputa fokus ver
-            const fallback = (mode === 'year') ? $id('year-t1') : k1;
-            if (fallback) tryFocus(fallback);
-          }
+          _trackTimer(setTimeout(() => {
+            const k1 = $id('term-ksq1');
+            if (k1) tryFocus(k1);
+          }, 560));
         }));
       }
 

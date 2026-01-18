@@ -1418,8 +1418,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
           _trackTimer(setTimeout(() => {
-            const k1 = $id('term-ksq1');
-            if (k1) tryFocus(k1);
+            const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
+            const targetEl = $id(targetId);
+            if (targetEl) tryFocus(targetEl);
           }, 560));
         }));
       }

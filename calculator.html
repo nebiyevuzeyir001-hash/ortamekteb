@@ -691,7 +691,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
-                <!-- ✅ Səliqəli hissə (yenilənib) -->
                 <div class="pt-1">
                   <p class="font-medium">
                     Nəticələr 2–5 qiymət şkalasında təqdim olunur:
@@ -727,7 +726,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </table>
                   </div>
                 </div>
-                <!-- ✅ /Səliqəli hissə -->
 
                 <p>
                   Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
@@ -847,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
+  <!-- Calculator logic (FINAL: Reset focus opens keyboard) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -1395,6 +1393,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
+      // ✅✅✅ BURADA DƏYİŞİKLİK VAR: resetdən sonra fokus + click
       function resetCalc() {
         _newScrollJob();
 
@@ -1419,6 +1418,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
+
+          // ✅ Resetdən sonra avtomatik ilk input fokus alsın (klaviatura açılsın)
+          const targetInput =
+            mode === 'term' ? $id('term-ksq1') :
+            mode === 'year' ? $id('year-t1') :
+            null;
+
+          if (targetInput) {
+            tryFocus(targetInput);
+            try { targetInput.click(); } catch (e) {}
+          }
         }));
       }
 

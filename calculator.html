@@ -814,7 +814,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FIXED reset scroll: single, direct to target) -->
+  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -874,7 +874,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         catch (e) { return false; }
       };
 
-      // ===== Scroll utilities =====
+      // ===== viewport helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -893,45 +893,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return { top: r.top + y, bottom: r.bottom + y, height: r.height };
       }
 
-      function scrollToY(targetY, behavior) {
+      function getMaxScrollY() {
         const se = document.scrollingElement || document.documentElement;
-        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
-        const y = clamp(targetY, 0, maxY);
+        const vh = window.innerHeight || 0;
+        return Math.max(0, se.scrollHeight - vh);
+      }
+
+      function scrollToY(targetY, behavior) {
+        const y = clamp(targetY, 0, getMaxScrollY());
         window.scrollTo({ top: y, left: 0, behavior });
       }
 
-      function scrollToElementTop(el, opts = {}) {
-        if (!el) return;
-        const topGap = opts.topGap ?? 18;
-        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
-        const r = pageRect(el);
-        const targetY = r.top - (getHeaderHeight() + topGap);
-        scrollToY(targetY, behavior);
+      // ===========================
+      // Scroll Job Manager (HARD FIX)
+      // ===========================
+      let _scrollJobId = 0;
+      let _scrollTimers = new Set();
+      let _scrollCleanups = new Set();
+
+      function _stopScrollJobs() {
+        _scrollTimers.forEach(t => clearTimeout(t));
+        _scrollTimers.clear();
+
+        _scrollCleanups.forEach(fn => { try { fn(); } catch (e) {} });
+        _scrollCleanups.clear();
       }
 
-      // ===== "Single action" scroll coordinator (prevents late timers from older actions) =====
-      let scrollEpoch = 0;
-      let pendingTimers = new Set();
-      let pendingCleanups = new Set();
-
-      function clearPendingScrollSideEffects() {
-        pendingTimers.forEach((t) => clearTimeout(t));
-        pendingTimers.clear();
-
-        pendingCleanups.forEach((fn) => { try { fn(); } catch (e) {} });
-        pendingCleanups.clear();
+      function _trackTimer(t) {
+        _scrollTimers.add(t);
+        return t;
       }
 
-      function beginScrollAction() {
-        scrollEpoch += 1;
-        clearPendingScrollSideEffects();
-        return scrollEpoch;
+      function _newScrollJob() {
+        _scrollJobId += 1;
+        _stopScrollJobs();
+
+        // smooth scroll varsa "kəs"
+        try {
+          const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+          window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+        } catch (e) {}
+
+        return _scrollJobId;
       }
 
-      function raf2(fn) {
-        requestAnimationFrame(() => requestAnimationFrame(fn));
-      }
-
+      // ===== safe-zone scroll (for errors/output) =====
       function safeBand(opts = {}) {
         const topGap = opts.topGap ?? 18;
         const bottomGap = opts.bottomGap ?? 16;
@@ -975,36 +981,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         scrollToY(targetY, behavior);
       }
 
-      function ensureVisibleStable(el, opts = {}, epoch = scrollEpoch) {
+      function ensureVisibleStable(el, opts = {}) {
         if (!el) return;
-        const run = () => { if (epoch === scrollEpoch) ensureVisible(el, opts); };
 
-        raf2(run);
+        const job = _scrollJobId;
+        const run = () => {
+          if (job !== _scrollJobId) return;
+          ensureVisible(el, opts);
+        };
 
-        const t1 = setTimeout(run, 120);
-        const t2 = setTimeout(run, 260);
-        pendingTimers.add(t1); pendingTimers.add(t2);
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        _trackTimer(setTimeout(run, 120));
+        _trackTimer(setTimeout(run, 260));
 
         const vv = window.visualViewport;
         if (vv) {
           let active = true;
-          const onVV = () => { if (active && epoch === scrollEpoch) run(); };
+          const onVV = () => { if (active && job === _scrollJobId) run(); };
 
           vv.addEventListener('resize', onVV);
           vv.addEventListener('scroll', onVV);
 
           const cleanup = () => {
+            if (!active) return;
             active = false;
             vv.removeEventListener('resize', onVV);
             vv.removeEventListener('scroll', onVV);
           };
-          pendingCleanups.add(cleanup);
 
-          const t3 = setTimeout(() => {
-            pendingCleanups.delete(cleanup);
+          _scrollCleanups.add(cleanup);
+          _trackTimer(setTimeout(() => {
+            _scrollCleanups.delete(cleanup);
             cleanup();
-          }, 420);
-          pendingTimers.add(t3);
+          }, 420));
         }
       }
 
@@ -1013,14 +1022,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         catch (e) { return false; }
       }
 
-      function scrollToElementTopStable(el, opts = {}, epoch = scrollEpoch) {
+      function scrollToElementTop(el, opts = {}) {
         if (!el) return;
-        const run = () => { if (epoch === scrollEpoch) scrollToElementTop(el, opts); };
-        raf2(run);
+        const topGap = opts.topGap ?? 18;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const r = pageRect(el);
+        const targetY = r.top - (getHeaderHeight() + topGap);
+        scrollToY(targetY, behavior);
+      }
 
-        const t1 = setTimeout(run, 120);
-        const t2 = setTimeout(run, 260);
-        pendingTimers.add(t1); pendingTimers.add(t2);
+      function scrollToElementTopStable(el, opts = {}) {
+        if (!el) return;
+
+        const job = _scrollJobId;
+        const run = () => {
+          if (job !== _scrollJobId) return;
+          scrollToElementTop(el, opts);
+        };
+
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        _trackTimer(setTimeout(run, 120));
+        _trackTimer(setTimeout(run, 260));
       }
 
       // ===== Input invalid state =====
@@ -1070,7 +1092,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function showError(message, focusEl = null) {
-        // same action epoch; do NOT begin a new epoch here
+        _newScrollJob();
+
         warn.classList.add('hidden');
         out.classList.add('hidden');
 
@@ -1136,7 +1159,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         emptyState?.classList.add('hidden');
-
         fsTerm?.classList.toggle('hidden', mode !== 'term');
         fsYear?.classList.toggle('hidden', mode !== 'year');
 
@@ -1144,9 +1166,65 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         outYearCard?.classList.add('hidden');
       }
 
+      // ===========================
+      // ✅ RESET SCROLL (exact target)
+      // "2-ci şəkil" görünüşü: mode-area + fieldset + düymələr eyni kadrda.
+      // ===========================
+      function computeResetTargetY() {
+        const headerH = getHeaderHeight();
+        const vh = getViewportHeight();
+        const topGap = 18;
+        const bottomGap = 18;
+
+        const actions = $id('calc-actions');
+
+        const fs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
+
+        // əsas hədəf: fieldset üstə "gəlsin", amma onun üstündə mode-area da görünsün
+        const anchor = fs || modeArea || panel;
+
+        const modeH = (fs && modeArea) ? modeArea.getBoundingClientRect().height : 0;
+        const extraAbove = fs ? (modeH + 12) : 0;
+
+        const rA = pageRect(anchor);
+        let y = rA.top - (headerH + topGap + extraAbove);
+
+        // düymələr aşağıdan çıxırsa, 1 dəfə aşağı çək
+        if (actions) {
+          const rB = pageRect(actions);
+          const bottomLimit = y + vh - bottomGap;
+          if (rB.bottom > bottomLimit) {
+            y += (rB.bottom - bottomLimit);
+          }
+        }
+
+        return clamp(y, 0, getMaxScrollY());
+      }
+
+      function scrollToResetSpot(behavior) {
+        const b = prefersReduceMotion() ? 'auto' : (behavior || 'smooth');
+        const y = computeResetTargetY();
+        scrollToY(y, b);
+      }
+
+      function scrollToResetSpotStable() {
+        // 1) smooth (user görür)
+        scrollToResetSpot('smooth');
+
+        // 2) sonra yenidən ölç → AUTO ilə "son kilid" (gözə görünməsin)
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 260));
+
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 520));
+      }
+
+      // Mode switches
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-          const epoch = beginScrollAction();
+          _newScrollJob();
 
           mode = btn.dataset.mode;
 
@@ -1161,9 +1239,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           if (isDesktop()) {
             const target = (mode === 'term') ? fsTerm : fsYear;
-            scrollToElementTopStable(target, { topGap: 18 }, epoch);
+            scrollToElementTopStable(target, { topGap: 18 });
           } else {
-            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 }, epoch);
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
           }
 
           requestAnimationFrame(() => {
@@ -1289,12 +1367,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
-      // ✅ FIX: Reset = ONE scroll only, directly to the desired (2nd screenshot) position
       function resetCalc() {
-        const epoch = beginScrollAction();
+        _newScrollJob();
 
-        // prevent browser from "helpfully" adjusting scroll to focused input
+        // fokus scroll-u “qarışdırmasın”
         try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
+        try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
 
         TERM_KSQ_IDS.forEach(id => {
           const el = $id(id);
@@ -1312,14 +1390,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // Single deterministic target: align "Hesablama rejimi" block under header
-        const anchor = modeArea || panel;
-
-        // wait for layout to settle, then do a single scroll
-        raf2(() => {
-          if (epoch !== scrollEpoch) return;
-          scrollToElementTop(anchor, { topGap: 18, behavior: 'smooth' });
-        });
+        // Layout otursun → sonra “2-ci şəkil” pozisiyasına birbaşa kilidlə
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          scrollToResetSpotStable();
+        }));
       }
 
       resetBtn?.addEventListener('click', resetCalc);
@@ -1337,7 +1411,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
 
       btnCalc?.addEventListener('click', () => {
-        const epoch = beginScrollAction();
+        _newScrollJob();
 
         clearAllInvalid();
         clearError();
@@ -1345,7 +1419,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         if (!mode) {
           showError('Zəhmət olmasa hesablamadan öncə rejimi seçin (“I/II yarımil” və ya “İllik”).');
-          ensureVisibleStable(modeArea, { topGap: 18, bottomGap: 18 }, epoch);
+          ensureVisibleStable(modeArea, { topGap: 18, bottomGap: 18 });
           const firstModeBtn = document.querySelector('[data-mode="term"]');
           tryFocus(firstModeBtn);
           return;
@@ -1361,7 +1435,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           renderHalfYearOutput(res);
           out.classList.remove('hidden');
-          ensureVisibleStable(out, { topGap: 22, bottomGap: 18 }, epoch);
+          ensureVisibleStable(out, { topGap: 22, bottomGap: 18 });
           return;
         }
 
@@ -1375,7 +1449,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           renderAnnualOutput(res);
           out.classList.remove('hidden');
-          ensureVisibleStable(out, { topGap: 22, bottomGap: 18 }, epoch);
+          ensureVisibleStable(out, { topGap: 22, bottomGap: 18 });
           return;
         }
       });

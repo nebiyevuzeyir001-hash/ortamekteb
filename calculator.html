@@ -108,7 +108,6 @@
       --ep-rail-gap: 24px;
       --ep-center-max: 1220px;
 
-      /* ===== Light mode ===== */
       --ep-bg-from: #f8fafc;
       --ep-bg-mid:  #eef2ff;
       --ep-bg-to:   #ecfeff;
@@ -119,7 +118,6 @@
       --ep-border: rgba(79,70,229,.12);
       --ep-panel-border: rgba(79,70,229,.28);
 
-      /* Yarımil tokenləri */
       --ep-t1-bg: rgba(238,242,255,.78);
       --ep-t1-border: rgba(79,70,229,.30);
 
@@ -255,7 +253,6 @@
     }
     html.dark #calc-output{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
 
-    /* Fieldsets */
     #fs-term{
       background: var(--ep-t1-bg) !important;
       border-color: var(--ep-t1-border) !important;
@@ -265,7 +262,6 @@
       border-color: var(--ep-year-border) !important;
     }
 
-    /* Term pill accents */
     #fs-term .ep-term-dot,
     #fs-year .ep-term-dot{
       background: linear-gradient(90deg,#4f46e5,#9333ea);
@@ -290,7 +286,6 @@
       background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
     }
 
-    /* Output cards */
     #out-term-card, #out-year-card{
       position: relative;
       overflow: hidden;
@@ -321,7 +316,6 @@
       pointer-events:none;
     }
 
-    /* Big numbers */
     #out-term{ color: rgb(67,56,202); }
     #out-year{ color: rgb(217,119,6); }
 
@@ -401,9 +395,6 @@
       .no-print{ display:none !important; }
     }
 
-    /* =========================================================
-       ✅ Term headers – professional pill style
-       ========================================================= */
     .ep-term-head{
       display:flex;
       align-items:center;
@@ -578,7 +569,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
-                  <!-- ✅ Yarımil form (I/II seçimi YOXDUR — sadəcə yarımil hesablanır) -->
                   <fieldset id="fs-term" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">Yarımil</legend>
 
@@ -604,7 +594,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                   </fieldset>
 
-                  <!-- ✅ Annual mode: only 2 places (I & II half-year scores) -->
                   <fieldset id="fs-year" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">İllik</legend>
 
@@ -650,9 +639,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
                     <div class="text-sm text-slate-500 dark:text-slate-300">Nəticə</div>
 
-                    <!-- ✅ Yalnız 1 nəticə göstərilir (mode-a görə) -->
                     <div class="mt-4 grid gap-3">
-                      <!-- Yarımil nəticəsi -->
                       <div id="out-term-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                         <div class="text-slate-500 dark:text-slate-400 text-sm">Yarımil</div>
                         <div class="mt-1 text-2xl font-bold" id="out-term">—</div>
@@ -664,7 +651,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                       </div>
 
-                      <!-- İllik nəticəsi (yalnız bu göstəriləcək illik rejimdə) -->
                       <div id="out-year-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                         <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
                         <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
@@ -828,7 +814,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (selector removed, annual shows ONLY year output) -->
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -860,7 +846,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const TERM_KSQ_IDS = idsFor('term');
 
-      // ----- number parsing (supports comma decimals) -----
       const normalizeNumberString = (s) => s.replace(/\s/g, '').replace(',', '.');
 
       const numOrNull = (v) => {
@@ -874,11 +859,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
-      // ✅ FIXED grading logic:
-      // 0–30 (30 daxil) => 2
-      // 30-dan böyük – 60 (60 daxil) => 3
-      // 60-dan böyük – 80 (80 daxil) => 4
-      // 80-dən böyük => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -886,13 +866,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return 5;
       };
 
-      // ----- motion preference -----
       const prefersReduceMotion = () => {
         try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
         catch (e) { return false; }
       };
 
-      // ===== Professional scroll (desktop + mobile keyboard aware) =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -909,6 +887,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const r = el.getBoundingClientRect();
         const y = window.pageYOffset || document.documentElement.scrollTop || 0;
         return { top: r.top + y, bottom: r.bottom + y, height: r.height };
+      }
+
+      function scrollToY(targetY, behavior) {
+        const se = document.scrollingElement || document.documentElement;
+        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
+        const y = clamp(targetY, 0, maxY);
+        window.scrollTo({ top: y, left: 0, behavior });
       }
 
       function safeBand(opts = {}) {
@@ -933,13 +918,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           return r.top >= band.top && r.top <= band.bottom;
         }
         return r.top >= band.top && r.bottom <= band.bottom;
-      }
-
-      function scrollToY(targetY, behavior) {
-        const se = document.scrollingElement || document.documentElement;
-        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
-        const y = clamp(targetY, 0, maxY);
-        window.scrollTo({ top: y, left: 0, behavior });
       }
 
       function ensureVisible(el, opts = {}) {
@@ -986,10 +964,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       }
 
-      /* ===========================
-         ✅ DESKTOP-ONLY MODE SCROLL
-         (mobil davranışa toxunmur)
-         =========================== */
       function isDesktop() {
         try { return window.matchMedia && window.matchMedia('(min-width: 1024px)').matches; }
         catch (e) { return false; }
@@ -1013,7 +987,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.setTimeout(run, 260);
       }
 
-      // ===== Input invalid state =====
+      /* ===========================
+         ✅ SINGLE-SCROLL RANGE (fix)
+         Sıfırla zamanı iki ayrı scrollun qarşısını alır.
+         =========================== */
+      function scrollRangeIntoView(topEl, bottomEl, opts = {}) {
+        if (!topEl) return;
+        const bottomTarget = bottomEl || topEl;
+
+        const topGap = opts.topGap ?? 18;
+        const bottomGap = opts.bottomGap ?? 18;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+
+        const headerH = getHeaderHeight();
+        const vh = getViewportHeight();
+
+        const topR = pageRect(topEl);
+        const bottomR = pageRect(bottomTarget);
+
+        const regionTop = topR.top;
+        const regionBottom = Math.max(topR.bottom, bottomR.bottom);
+        const bandHeight = vh - headerH - topGap - bottomGap;
+        const regionHeight = regionBottom - regionTop;
+
+        // default: align top element just under header
+        let targetY = regionTop - (headerH + topGap);
+
+        // if both fit, ensure bottom also fits without changing target twice
+        if (regionHeight <= bandHeight) {
+          const maxBottomVisible = targetY + vh - bottomGap;
+          if (regionBottom > maxBottomVisible) {
+            targetY = regionBottom - (vh - bottomGap);
+          }
+        }
+
+        scrollToY(targetY, behavior);
+      }
+
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
         if (!el) return;
@@ -1047,7 +1057,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       ALL_INPUT_IDS.forEach(id => attachInputHygiene($id(id)));
 
-      // ===== Error / focus management =====
       function tryFocus(el) {
         if (!el) return;
         try { el.focus({ preventScroll: true }); }
@@ -1162,7 +1171,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
-      // ===== Read & compute rules (unchanged) =====
       function readHalfYearFromForm() {
         const ksq = [];
 
@@ -1293,19 +1301,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // ✅ SIFIRLA: şəkildəkı hissələr MÜTLƏQ görünsün
-        // 1) “Hesablama rejimi” (rejim düymələri) hissəsini başa gətir
-        const anchor = modeArea || panel;
-        scrollToElementTopStable(anchor, { topGap: 18 });
+        // ✅ FIX: Sıfırla -> tək scroll (birbaşa “2-ci şəkil” görünüşünə)
+        // Hədəf aralığı: “Hesablama rejimi” (yuxarı) + düymələr (aşağı)
+        const topEl = modeArea || panel;
+        const bottomEl = $id('calc-actions') || ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : panel) || panel;
 
-        // 2) Aktiv formun (Yarımil/İllik) üst hissəsi də görünməsin deyə yoxla
-        const activeFs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
-        if (activeFs) ensureVisibleStable(activeFs, { topGap: 18, bottomGap: 18 });
+        // DOM dəyərləri silindikdən sonra 1 dəfə ölçüb 1 dəfə scroll et
+        requestAnimationFrame(() => {
+          scrollRangeIntoView(topEl, bottomEl, { topGap: 18, bottomGap: 18, behavior: 'smooth' });
+        });
       }
 
       resetBtn?.addEventListener('click', resetCalc);
 
-      // Enter key -> calculate
       ALL_INPUT_IDS.forEach(id => {
         const el = $id(id);
         el?.addEventListener('keydown', e => {

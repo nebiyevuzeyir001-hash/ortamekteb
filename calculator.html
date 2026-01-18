@@ -1129,7 +1129,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         fsTerm?.classList.toggle('hidden', mode !== 'term');
         fsYear?.classList.toggle('hidden', mode !== 'year');
 
-        // Card visibility will be controlled after calculation
         outTermCard?.classList.add('hidden');
         outYearCard?.classList.add('hidden');
       }
@@ -1147,8 +1146,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           btn.blur();
 
-          // ✅ Desktop: klikdən sonra form hissəsinə scroll et
-          // ✅ Mobil: əvvəlki davranış 100% saxlanılır
           if (isDesktop()) {
             const target = (mode === 'term') ? fsTerm : fsYear;
             scrollToElementTopStable(target, { topGap: 18 });
@@ -1296,7 +1293,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        ensureVisibleStable(panel || modeArea, { topGap: 18, bottomGap: 18 });
+        // ✅ SIFIRLA: şəkildəkı hissələr MÜTLƏQ görünsün
+        // 1) “Hesablama rejimi” (rejim düymələri) hissəsini başa gətir
+        const anchor = modeArea || panel;
+        scrollToElementTopStable(anchor, { topGap: 18 });
+
+        // 2) Aktiv formun (Yarımil/İllik) üst hissəsi də görünməsin deyə yoxla
+        const activeFs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
+        if (activeFs) ensureVisibleStable(activeFs, { topGap: 18, bottomGap: 18 });
       }
 
       resetBtn?.addEventListener('click', resetCalc);

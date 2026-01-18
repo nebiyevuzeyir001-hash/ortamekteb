@@ -845,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FINAL: Reset focus opens keyboard) -->
+  <!-- Calculator logic (FINAL: Reset focus without changing mobile scroll) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -1393,7 +1393,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
-      // ✅✅✅ BURADA DƏYİŞİKLİK VAR: resetdən sonra fokus + click
+      // ✅ DƏYİŞİKLİK: resetdən sonra fokus verilir, amma scroll qorunur (telefonda tullanma olmasın)
       function resetCalc() {
         _newScrollJob();
 
@@ -1419,6 +1419,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
 
+          // ✅ Scroll eyni qalsın deyə mövcud Y-ni saxlayırıq
+          const yKeep = window.pageYOffset || document.documentElement.scrollTop || 0;
+
           // ✅ Resetdən sonra avtomatik ilk input fokus alsın (klaviatura açılsın)
           const targetInput =
             mode === 'term' ? $id('term-ksq1') :
@@ -1426,8 +1429,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             null;
 
           if (targetInput) {
-            tryFocus(targetInput);
-            try { targetInput.click(); } catch (e) {}
+            try { targetInput.focus({ preventScroll: true }); }
+            catch (e) { try { targetInput.focus(); } catch (e2) {} }
+
+            // Mobil brauzer fokus zamanı scroll edərsə, dərhal geri qaytar
+            requestAnimationFrame(() => {
+              window.scrollTo({ top: yKeep, left: 0, behavior: 'auto' });
+            });
           }
         }));
       }

@@ -108,7 +108,6 @@
       --ep-rail-gap: 24px;
       --ep-center-max: 1220px;
 
-      /* ===== Light mode ===== */
       --ep-bg-from: #f8fafc;
       --ep-bg-mid:  #eef2ff;
       --ep-bg-to:   #ecfeff;
@@ -119,7 +118,6 @@
       --ep-border: rgba(79,70,229,.12);
       --ep-panel-border: rgba(79,70,229,.28);
 
-      /* Yarımil tokenləri */
       --ep-t1-bg: rgba(238,242,255,.78);
       --ep-t1-border: rgba(79,70,229,.30);
 
@@ -255,7 +253,6 @@
     }
     html.dark #calc-output{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
 
-    /* Fieldsets */
     #fs-term{
       background: var(--ep-t1-bg) !important;
       border-color: var(--ep-t1-border) !important;
@@ -265,7 +262,6 @@
       border-color: var(--ep-year-border) !important;
     }
 
-    /* Term pill accents */
     #fs-term .ep-term-dot,
     #fs-year .ep-term-dot{
       background: linear-gradient(90deg,#4f46e5,#9333ea);
@@ -290,7 +286,6 @@
       background: linear-gradient(90deg, rgba(99,102,241,.34), rgba(99,102,241,0));
     }
 
-    /* Output cards */
     #out-term-card, #out-year-card{
       position: relative;
       overflow: hidden;
@@ -321,7 +316,6 @@
       pointer-events:none;
     }
 
-    /* Big numbers */
     #out-term{ color: rgb(67,56,202); }
     #out-year{ color: rgb(217,119,6); }
 
@@ -401,9 +395,6 @@
       .no-print{ display:none !important; }
     }
 
-    /* =========================================================
-       ✅ Term headers – professional pill style
-       ========================================================= */
     .ep-term-head{
       display:flex;
       align-items:center;
@@ -578,7 +569,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
 
                 <div class="mt-6 grid gap-6">
-                  <!-- ✅ Yarımil form (I/II seçimi YOXDUR — sadəcə yarımil hesablanır) -->
                   <fieldset id="fs-term" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">Yarımil</legend>
 
@@ -604,7 +594,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                   </fieldset>
 
-                  <!-- ✅ Annual mode: only 2 places (I & II half-year scores) -->
                   <fieldset id="fs-year" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                     <legend class="sr-only">İllik</legend>
 
@@ -650,9 +639,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <div id="calc-output" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
                     <div class="text-sm text-slate-500 dark:text-slate-300">Nəticə</div>
 
-                    <!-- ✅ Yalnız 1 nəticə göstərilir (mode-a görə) -->
                     <div class="mt-4 grid gap-3">
-                      <!-- Yarımil nəticəsi -->
                       <div id="out-term-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                         <div class="text-slate-500 dark:text-slate-400 text-sm">Yarımil</div>
                         <div class="mt-1 text-2xl font-bold" id="out-term">—</div>
@@ -664,7 +651,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                       </div>
 
-                      <!-- İllik nəticəsi (yalnız bu göstəriləcək illik rejimdə) -->
                       <div id="out-year-card" class="hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
                         <div class="text-slate-500 dark:text-slate-400 text-sm">İllik</div>
                         <div class="mt-1 text-2xl font-bold" id="out-year">—</div>
@@ -705,10 +691,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
-                <p>
-                  Nəticələr 2–5 qiymət şkalasında təqdim olunur:
-                  81–100 → 5, 61–80 → 4, 31–60 → 3, 0–30 → 2.
-                </p>
+                <div class="pt-1">
+                  <p class="font-medium">
+                    Nəticələr 2–5 qiymət şkalasında təqdim olunur:
+                  </p>
+
+                  <div class="mt-3 overflow-hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5">
+                    <table class="w-full text-sm">
+                      <thead class="bg-slate-50/80 dark:bg-slate-900/40 text-slate-600 dark:text-slate-300">
+                        <tr>
+                          <th scope="col" class="px-4 py-3 text-left font-semibold">Bal aralığı</th>
+                          <th scope="col" class="px-4 py-3 text-right font-semibold">Qiymət</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="divide-y divide-slate-200/70 dark:divide-slate-800/70">
+                        <tr>
+                          <td class="px-4 py-3">0 ≤ bal ≤ 30</td>
+                          <td class="px-4 py-3 text-right font-semibold">2</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">30 &lt; bal ≤ 60</td>
+                          <td class="px-4 py-3 text-right font-semibold">3</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">60 &lt; bal ≤ 80</td>
+                          <td class="px-4 py-3 text-right font-semibold">4</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">80 &lt; bal ≤ 100</td>
+                          <td class="px-4 py-3 text-right font-semibold">5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
                 <p>
                   Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
@@ -828,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (selector removed, annual shows ONLY year output) -->
+  <!-- Calculator logic (FINAL: Reset focus opens keyboard) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -874,11 +891,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
-      // ✅ FIXED grading logic:
-      // 0–30 (30 daxil) => 2
-      // 30-dan böyük – 60 (60 daxil) => 3
-      // 60-dan böyük – 80 (80 daxil) => 4
-      // 80-dən böyük => 5
+      // 0–30 => 2, 31–60 => 3, 61–80 => 4, 81–100 => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -892,7 +905,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         catch (e) { return false; }
       };
 
-      // ===== Professional scroll (desktop + mobile keyboard aware) =====
+      // ===== viewport helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -911,6 +924,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return { top: r.top + y, bottom: r.bottom + y, height: r.height };
       }
 
+      function getMaxScrollY() {
+        const se = document.scrollingElement || document.documentElement;
+        const vh = window.innerHeight || 0;
+        return Math.max(0, se.scrollHeight - vh);
+      }
+
+      function scrollToY(targetY, behavior) {
+        const y = clamp(targetY, 0, getMaxScrollY());
+        window.scrollTo({ top: y, left: 0, behavior });
+      }
+
+      // ===========================
+      // Scroll Job Manager (HARD FIX)
+      // ===========================
+      let _scrollJobId = 0;
+      let _scrollTimers = new Set();
+      let _scrollCleanups = new Set();
+
+      function _stopScrollJobs() {
+        _scrollTimers.forEach(t => clearTimeout(t));
+        _scrollTimers.clear();
+
+        _scrollCleanups.forEach(fn => { try { fn(); } catch (e) {} });
+        _scrollCleanups.clear();
+      }
+
+      function _trackTimer(t) {
+        _scrollTimers.add(t);
+        return t;
+      }
+
+      function _newScrollJob() {
+        _scrollJobId += 1;
+        _stopScrollJobs();
+
+        // smooth scroll varsa "kəs"
+        try {
+          const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+          window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+        } catch (e) {}
+
+        return _scrollJobId;
+      }
+
+      // ===== safe-zone scroll (for errors/output) =====
       function safeBand(opts = {}) {
         const topGap = opts.topGap ?? 18;
         const bottomGap = opts.bottomGap ?? 16;
@@ -935,13 +993,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return r.top >= band.top && r.bottom <= band.bottom;
       }
 
-      function scrollToY(targetY, behavior) {
-        const se = document.scrollingElement || document.documentElement;
-        const maxY = Math.max(0, se.scrollHeight - (window.innerHeight || 0));
-        const y = clamp(targetY, 0, maxY);
-        window.scrollTo({ top: y, left: 0, behavior });
-      }
-
       function ensureVisible(el, opts = {}) {
         if (!el) return;
         if (isInSafeZone(el, opts)) return;
@@ -964,26 +1015,65 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function ensureVisibleStable(el, opts = {}) {
         if (!el) return;
 
-        const run = () => ensureVisible(el, opts);
+        const job = _scrollJobId;
+        const run = () => {
+          if (job !== _scrollJobId) return;
+          ensureVisible(el, opts);
+        };
 
         requestAnimationFrame(() => requestAnimationFrame(run));
-        window.setTimeout(run, 120);
-        window.setTimeout(run, 260);
+        _trackTimer(setTimeout(run, 120));
+        _trackTimer(setTimeout(run, 260));
 
         const vv = window.visualViewport;
         if (vv) {
           let active = true;
-          const onVV = () => { if (active) run(); };
+          const onVV = () => { if (active && job === _scrollJobId) run(); };
 
           vv.addEventListener('resize', onVV);
           vv.addEventListener('scroll', onVV);
 
-          window.setTimeout(() => {
+          const cleanup = () => {
+            if (!active) return;
             active = false;
             vv.removeEventListener('resize', onVV);
             vv.removeEventListener('scroll', onVV);
-          }, 420);
+          };
+
+          _scrollCleanups.add(cleanup);
+          _trackTimer(setTimeout(() => {
+            _scrollCleanups.delete(cleanup);
+            cleanup();
+          }, 420));
         }
+      }
+
+      function isDesktop() {
+        try { return window.matchMedia && window.matchMedia('(min-width: 1024px)').matches; }
+        catch (e) { return false; }
+      }
+
+      function scrollToElementTop(el, opts = {}) {
+        if (!el) return;
+        const topGap = opts.topGap ?? 18;
+        const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+        const r = pageRect(el);
+        const targetY = r.top - (getHeaderHeight() + topGap);
+        scrollToY(targetY, behavior);
+      }
+
+      function scrollToElementTopStable(el, opts = {}) {
+        if (!el) return;
+
+        const job = _scrollJobId;
+        const run = () => {
+          if (job !== _scrollJobId) return;
+          scrollToElementTop(el, opts);
+        };
+
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        _trackTimer(setTimeout(run, 120));
+        _trackTimer(setTimeout(run, 260));
       }
 
       // ===== Input invalid state =====
@@ -1033,6 +1123,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function showError(message, focusEl = null) {
+        _newScrollJob();
+
         warn.classList.add('hidden');
         out.classList.add('hidden');
 
@@ -1098,17 +1190,68 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         emptyState?.classList.add('hidden');
-
         fsTerm?.classList.toggle('hidden', mode !== 'term');
         fsYear?.classList.toggle('hidden', mode !== 'year');
 
-        // Card visibility will be controlled after calculation
         outTermCard?.classList.add('hidden');
         outYearCard?.classList.add('hidden');
       }
 
+      // ===========================
+      // ✅ RESET SCROLL (exact target)
+      // ===========================
+      function computeResetTargetY() {
+        const headerH = getHeaderHeight();
+        const vh = getViewportHeight();
+        const topGap = 18;
+        const bottomGap = 18;
+
+        const actions = $id('calc-actions');
+
+        const fs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
+
+        const anchor = fs || modeArea || panel;
+
+        const modeH = (fs && modeArea) ? modeArea.getBoundingClientRect().height : 0;
+        const extraAbove = fs ? (modeH + 12) : 0;
+
+        const rA = pageRect(anchor);
+        let y = rA.top - (headerH + topGap + extraAbove);
+
+        if (actions) {
+          const rB = pageRect(actions);
+          const bottomLimit = y + vh - bottomGap;
+          if (rB.bottom > bottomLimit) {
+            y += (rB.bottom - bottomLimit);
+          }
+        }
+
+        return clamp(y, 0, getMaxScrollY());
+      }
+
+      function scrollToResetSpot(behavior) {
+        const b = prefersReduceMotion() ? 'auto' : (behavior || 'smooth');
+        const y = computeResetTargetY();
+        scrollToY(y, b);
+      }
+
+      function scrollToResetSpotStable() {
+        scrollToResetSpot('smooth');
+
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 260));
+
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 520));
+      }
+
+      // Mode switches
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
+          _newScrollJob();
+
           mode = btn.dataset.mode;
 
           updateModeUI();
@@ -1119,7 +1262,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           out.classList.add('hidden');
 
           btn.blur();
-          ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+
+          if (isDesktop()) {
+            const target = (mode === 'term') ? fsTerm : fsYear;
+            scrollToElementTopStable(target, { topGap: 18 });
+          } else {
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+          }
 
           requestAnimationFrame(() => {
             if (mode === 'term') tryFocus($id('term-ksq1'));
@@ -1130,7 +1279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
-      // ===== Read & compute rules (unchanged) =====
+      // ===== Read & compute rules =====
       function readHalfYearFromForm() {
         const ksq = [];
 
@@ -1244,7 +1393,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
+      // ✅✅✅ BURADA DƏYİŞİKLİK VAR: resetdən sonra fokus + click
       function resetCalc() {
+        _newScrollJob();
+
+        try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
+        try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
+
         TERM_KSQ_IDS.forEach(id => {
           const el = $id(id);
           if (el) el.value = '';
@@ -1261,7 +1416,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        ensureVisibleStable(panel || modeArea, { topGap: 18, bottomGap: 18 });
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          scrollToResetSpotStable();
+
+          // ✅ Resetdən sonra avtomatik ilk input fokus alsın (klaviatura açılsın)
+          const targetInput =
+            mode === 'term' ? $id('term-ksq1') :
+            mode === 'year' ? $id('year-t1') :
+            null;
+
+          if (targetInput) {
+            tryFocus(targetInput);
+            try { targetInput.click(); } catch (e) {}
+          }
+        }));
       }
 
       resetBtn?.addEventListener('click', resetCalc);
@@ -1279,6 +1447,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
 
       btnCalc?.addEventListener('click', () => {
+        _newScrollJob();
+
         clearAllInvalid();
         clearError();
         warn.classList.add('hidden');

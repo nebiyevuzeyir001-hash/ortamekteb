@@ -845,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
+  <!-- Calculator logic (RESET + mobile jump fix ONLY) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -1198,7 +1198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // ✅ RESET SCROLL (exact target)
+      // RESET SCROLL (exact target)
       // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
@@ -1393,8 +1393,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
+      // RESET: focus + mobile "jump" fix (ONLY)
       function resetCalc() {
-        _newScrollJob();
+        const job = _newScrollJob();
 
         try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
         try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
@@ -1415,14 +1416,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          scrollToResetSpotStable();
+        const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
+        const targetEl = $id(targetId);
+        const targetY = computeResetTargetY();
 
-          // ✅ Only change: focus immediately (no 560ms delay)
-          const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
-          const targetEl = $id(targetId);
-          if (targetEl) requestAnimationFrame(() => tryFocus(targetEl));
-        }));
+        const root = document.documentElement;
+        const prevSB = root.style.scrollBehavior;
+
+        requestAnimationFrame(() => {
+          if (job !== _scrollJobId) return;
+
+          root.style.scrollBehavior = 'auto';
+          scrollToY(targetY, 'auto');
+
+          requestAnimationFrame(() => {
+            if (job !== _scrollJobId) return;
+
+            if (targetEl) tryFocus(targetEl);
+
+            // focus-induced jump -> revert immediately
+            requestAnimationFrame(() => {
+              if (job !== _scrollJobId) return;
+              root.style.scrollBehavior = 'auto';
+              scrollToY(targetY, 'auto');
+              root.style.scrollBehavior = prevSB;
+            });
+
+            // keyboard/viewport change -> one more revert (once)
+            const vv = window.visualViewport;
+            if (vv) {
+              const fixOnce = () => {
+                if (job !== _scrollJobId) return;
+                root.style.scrollBehavior = 'auto';
+                scrollToY(targetY, 'auto');
+                root.style.scrollBehavior = prevSB;
+                try {
+                  vv.removeEventListener('resize', fixOnce);
+                  vv.removeEventListener('scroll', fixOnce);
+                } catch (e) {}
+              };
+
+              vv.addEventListener('resize', fixOnce);
+              vv.addEventListener('scroll', fixOnce);
+
+              _trackTimer(setTimeout(() => {
+                try {
+                  vv.removeEventListener('resize', fixOnce);
+                  vv.removeEventListener('scroll', fixOnce);
+                } catch (e) {}
+              }, 450));
+            } else {
+              root.style.scrollBehavior = prevSB;
+            }
+          });
+        });
       }
 
       resetBtn?.addEventListener('click', resetCalc);

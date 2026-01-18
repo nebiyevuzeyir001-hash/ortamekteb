@@ -691,13 +691,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   Ondalıq dəyərlər (məs.: 87.5) dəstəklənir.
                 </p>
 
-                <p>
-                  Nəticələr 2–5 qiymət şkalasında təqdim olunur:
-                 <p> <li>0-30 arası → 2</li> </p>
-                 <p> <li>30(daxil deyil)-60 arası → 3</li> </p>
-                 <p> <li>60(daxil deyil)-80 arası → 4</li> </p>
-                 <p> <li>80(daxil deyil)-100 arası → 5</li> </p>
-                </p>
+                <!-- ✅ Səliqəli hissə (yenilənib) -->
+                <div class="pt-1">
+                  <p class="font-medium">
+                    Nəticələr 2–5 qiymət şkalasında təqdim olunur:
+                  </p>
+
+                  <div class="mt-3 overflow-hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5">
+                    <table class="w-full text-sm">
+                      <thead class="bg-slate-50/80 dark:bg-slate-900/40 text-slate-600 dark:text-slate-300">
+                        <tr>
+                          <th scope="col" class="px-4 py-3 text-left font-semibold">Bal aralığı</th>
+                          <th scope="col" class="px-4 py-3 text-right font-semibold">Qiymət</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="divide-y divide-slate-200/70 dark:divide-slate-800/70">
+                        <tr>
+                          <td class="px-4 py-3">0 ≤ bal ≤ 30</td>
+                          <td class="px-4 py-3 text-right font-semibold">2</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">30 &lt; bal ≤ 60</td>
+                          <td class="px-4 py-3 text-right font-semibold">3</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">60 &lt; bal ≤ 80</td>
+                          <td class="px-4 py-3 text-right font-semibold">4</td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-3">80 &lt; bal ≤ 100</td>
+                          <td class="px-4 py-3 text-right font-semibold">5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- ✅ /Səliqəli hissə -->
 
                 <p>
                   Daxil etdiyiniz məlumatlar serverə göndərilmir və saxlanılmır; hər şey yalnız sizin brauzerdə emal olunur.
@@ -1171,7 +1201,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // ===========================
       // ✅ RESET SCROLL (exact target)
-      // "2-ci şəkil" görünüşü: mode-area + fieldset + düymələr eyni kadrda.
       // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
@@ -1183,7 +1212,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         const fs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
 
-        // əsas hədəf: fieldset üstə "gəlsin", amma onun üstündə mode-area da görünsün
         const anchor = fs || modeArea || panel;
 
         const modeH = (fs && modeArea) ? modeArea.getBoundingClientRect().height : 0;
@@ -1192,7 +1220,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const rA = pageRect(anchor);
         let y = rA.top - (headerH + topGap + extraAbove);
 
-        // düymələr aşağıdan çıxırsa, 1 dəfə aşağı çək
         if (actions) {
           const rB = pageRect(actions);
           const bottomLimit = y + vh - bottomGap;
@@ -1211,10 +1238,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function scrollToResetSpotStable() {
-        // 1) smooth (user görür)
         scrollToResetSpot('smooth');
 
-        // 2) sonra yenidən ölç → AUTO ilə "son kilid" (gözə görünməsin)
         _trackTimer(setTimeout(() => {
           scrollToResetSpot('auto');
         }, 260));
@@ -1373,7 +1398,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function resetCalc() {
         _newScrollJob();
 
-        // fokus scroll-u “qarışdırmasın”
         try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
         try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
 
@@ -1393,7 +1417,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // Layout otursun → sonra “2-ci şəkil” pozisiyasına birbaşa kilidlə
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
         }));

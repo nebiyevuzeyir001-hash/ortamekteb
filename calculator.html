@@ -671,19 +671,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             <section class="mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
               <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
-
               <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
                 <p>
                   Bal kalkulyatoru KSQ və BSQ nəticələrinə əsaslanaraq yarımil qiymətini avtomatik hesablayır.
                   Alqoritm <strong>KSQ 40% + BSQ 60%</strong> çəkisinə əsaslanır və bütün hesablamalar brauzerdə aparılır.
                 </p>
-
                 <p>
                   İstifadəçi <em>I/II yarımil</em> və ya <em>İllik</em> rejimlərindən birini seçir.
                   <em>I/II yarımil</em> rejimində bir yarımilin (I və ya II) KSQ/BSQ nəticələrini daxil edib yarımil balını hesablayır.
                   <em>İllik</em> rejimində isə iki yarımilin balı daxil edilir və illik bal <strong>(I + II) / 2</strong> kimi hesablanır.
                 </p>
-
                 <p>
                   Boş buraxılan KSQ-lar ortalamaya daxil edilmir.
                   <strong>BSQ daxil edilməzsə</strong>, nəticə <strong>KSQ-ların ədədi ortası</strong> kimi hesablanır.
@@ -692,10 +689,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </p>
 
                 <div class="pt-1">
-                  <p class="font-medium">
-                    Nəticələr 2–5 qiymət şkalasında təqdim olunur:
-                  </p>
-
+                  <p class="font-medium">Nəticələr 2–5 qiymət şkalasında təqdim olunur:</p>
                   <div class="mt-3 overflow-hidden rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5">
                     <table class="w-full text-sm">
                       <thead class="bg-slate-50/80 dark:bg-slate-900/40 text-slate-600 dark:text-slate-300">
@@ -704,24 +698,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <th scope="col" class="px-4 py-3 text-right font-semibold">Qiymət</th>
                         </tr>
                       </thead>
-
                       <tbody class="divide-y divide-slate-200/70 dark:divide-slate-800/70">
-                        <tr>
-                          <td class="px-4 py-3">0 ≤ bal ≤ 30</td>
-                          <td class="px-4 py-3 text-right font-semibold">2</td>
-                        </tr>
-                        <tr>
-                          <td class="px-4 py-3">30 &lt; bal ≤ 60</td>
-                          <td class="px-4 py-3 text-right font-semibold">3</td>
-                        </tr>
-                        <tr>
-                          <td class="px-4 py-3">60 &lt; bal ≤ 80</td>
-                          <td class="px-4 py-3 text-right font-semibold">4</td>
-                        </tr>
-                        <tr>
-                          <td class="px-4 py-3">80 &lt; bal ≤ 100</td>
-                          <td class="px-4 py-3 text-right font-semibold">5</td>
-                        </tr>
+                        <tr><td class="px-4 py-3">0 ≤ bal ≤ 30</td><td class="px-4 py-3 text-right font-semibold">2</td></tr>
+                        <tr><td class="px-4 py-3">30 &lt; bal ≤ 60</td><td class="px-4 py-3 text-right font-semibold">3</td></tr>
+                        <tr><td class="px-4 py-3">60 &lt; bal ≤ 80</td><td class="px-4 py-3 text-right font-semibold">4</td></tr>
+                        <tr><td class="px-4 py-3">80 &lt; bal ≤ 100</td><td class="px-4 py-3 text-right font-semibold">5</td></tr>
                       </tbody>
                     </table>
                   </div>
@@ -877,7 +858,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const TERM_KSQ_IDS = idsFor('term');
 
-      // ----- number parsing (supports comma decimals) -----
       const normalizeNumberString = (s) => s.replace(/\s/g, '').replace(',', '.');
 
       const numOrNull = (v) => {
@@ -891,7 +871,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
-      // 0–30 => 2, 31–60 => 3, 61–80 => 4, 81–100 => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -899,13 +878,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return 5;
       };
 
-      // ----- motion preference -----
       const prefersReduceMotion = () => {
         try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
         catch (e) { return false; }
       };
 
-      // ===== viewport helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -935,9 +912,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.scrollTo({ top: y, left: 0, behavior });
       }
 
-      // ===========================
-      // Scroll Job Manager (HARD FIX)
-      // ===========================
       let _scrollJobId = 0;
       let _scrollTimers = new Set();
       let _scrollCleanups = new Set();
@@ -959,7 +933,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         _scrollJobId += 1;
         _stopScrollJobs();
 
-        // smooth scroll varsa "kəs"
         try {
           const y = window.pageYOffset || document.documentElement.scrollTop || 0;
           window.scrollTo({ top: y, left: 0, behavior: 'auto' });
@@ -968,7 +941,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return _scrollJobId;
       }
 
-      // ===== safe-zone scroll (for errors/output) =====
       function safeBand(opts = {}) {
         const topGap = opts.topGap ?? 18;
         const bottomGap = opts.bottomGap ?? 16;
@@ -1076,7 +1048,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         _trackTimer(setTimeout(run, 260));
       }
 
-      // ===== Input invalid state =====
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
         if (!el) return;
@@ -1110,7 +1081,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       ALL_INPUT_IDS.forEach(id => attachInputHygiene($id(id)));
 
-      // ===== Error / focus management =====
       function tryFocus(el) {
         if (!el) return;
         try { el.focus({ preventScroll: true }); }
@@ -1197,9 +1167,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         outYearCard?.classList.add('hidden');
       }
 
-      // ===========================
-      // ✅ RESET SCROLL (exact target)
-      // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
         const vh = getViewportHeight();
@@ -1247,7 +1214,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }, 520));
       }
 
-      // Mode switches
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           _newScrollJob();
@@ -1279,7 +1245,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
-      // ===== Read & compute rules =====
       function readHalfYearFromForm() {
         const ksq = [];
 
@@ -1417,17 +1382,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         requestAnimationFrame(() => requestAnimationFrame(() => {
           scrollToResetSpotStable();
-          _trackTimer(setTimeout(() => {
-            const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
-            const targetEl = $id(targetId);
+
+          // ✅ Yeganə dəyişiklik: fokus (kursor) daha tez və stabil olsun deyə növbəti frame-də verilir
+          const targetId = (mode === 'year') ? 'year-t1' : 'term-ksq1';
+          const targetEl = $id(targetId);
+          requestAnimationFrame(() => {
             if (targetEl) tryFocus(targetEl);
-          }, 560));
+          });
         }));
       }
 
       resetBtn?.addEventListener('click', resetCalc);
 
-      // Enter key -> calculate
       ALL_INPUT_IDS.forEach(id => {
         const el = $id(id);
         el?.addEventListener('keydown', e => {

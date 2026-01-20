@@ -845,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -936,7 +936,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // Scroll Job Manager (HARD FIX)
+      // Scroll Job Manager
       // ===========================
       let _scrollJobId = 0;
       let _scrollTimers = new Set();
@@ -1131,20 +1131,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         err.textContent = message;
         err.classList.remove('hidden');
 
+        // ✅ error scroll gap = result gap (topGap:22, bottomGap:18)
+        const SCROLL_OPTS = { topGap: 22, bottomGap: 18 };
+
         if (focusEl) {
           setInvalid(focusEl, true);
 
-          ensureVisibleStable(err, { topGap: 18, bottomGap: 16 });
-          ensureVisibleStable(focusEl, { topGap: 18, bottomGap: 16 });
+          ensureVisibleStable(err, SCROLL_OPTS);
+          ensureVisibleStable(focusEl, SCROLL_OPTS);
 
           requestAnimationFrame(() => {
             tryFocus(focusEl);
-            ensureVisibleStable(focusEl, { topGap: 18, bottomGap: 16 });
-            ensureVisibleStable(err, { topGap: 18, bottomGap: 16 });
+            ensureVisibleStable(focusEl, SCROLL_OPTS);
+            ensureVisibleStable(err, SCROLL_OPTS);
           });
         } else {
           tryFocus(err);
-          ensureVisibleStable(err, { topGap: 18, bottomGap: 16 });
+          ensureVisibleStable(err, SCROLL_OPTS);
         }
       }
 
@@ -1198,7 +1201,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // ✅ RESET SCROLL (exact target)
+      // RESET SCROLL target
       // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
@@ -1207,9 +1210,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const bottomGap = 18;
 
         const actions = $id('calc-actions');
-
         const fs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
-
         const anchor = fs || modeArea || panel;
 
         const modeH = (fs && modeArea) ? modeArea.getBoundingClientRect().height : 0;
@@ -1235,16 +1236,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         scrollToY(y, b);
       }
 
+      // ✅ stable reset scroll (result kimi) — yalnız lazım olanda işlədiləcək
       function scrollToResetSpotStable() {
-        scrollToResetSpot('smooth');
+        const job = _scrollJobId;
+        const run = () => {
+          if (job !== _scrollJobId) return;
+          scrollToResetSpot('smooth');
+        };
 
-        _trackTimer(setTimeout(() => {
-          scrollToResetSpot('auto');
-        }, 260));
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        _trackTimer(setTimeout(run, 120));
+        _trackTimer(setTimeout(run, 260));
 
-        _trackTimer(setTimeout(() => {
-          scrollToResetSpot('auto');
-        }, 520));
+        const vv = window.visualViewport;
+        if (vv) {
+          let active = true;
+          const onVV = () => { if (active && job === _scrollJobId) run(); };
+
+          vv.addEventListener('resize', onVV);
+          vv.addEventListener('scroll', onVV);
+
+          const cleanup = () => {
+            if (!active) return;
+            active = false;
+            vv.removeEventListener('resize', onVV);
+            vv.removeEventListener('scroll', onVV);
+          };
+
+          _scrollCleanups.add(cleanup);
+          _trackTimer(setTimeout(() => {
+            _scrollCleanups.delete(cleanup);
+            cleanup();
+          }, 420));
+        }
       }
 
       // Mode switches
@@ -1393,9 +1417,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
-      // ✅ RESET: tək scroll (jump yoxdur), dərhal cursor
+      // ✅ RESET: xəta olandan sonra mobil-də result kimi "stable" scroll
       function resetCalc() {
         _newScrollJob();
+
+        const hadErrorVisible = !err.classList.contains('hidden');
 
         try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch (e) {}
         try { resetBtn && resetBtn.blur && resetBtn.blur(); } catch (e) {}
@@ -1416,8 +1442,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // tək dəfə smooth (sonradan auto/ikinci scroll YOX)
-        scrollToResetSpot('smooth');
+        // mobil + əvvəl xəta var idi => output kimi stabil scroll
+        if (!isDesktop() && hadErrorVisible) {
+          scrollToResetSpotStable();
+        } else {
+          scrollToResetSpot('smooth');
+        }
 
         // dərhal cursor (mode-ə görə)
         if (mode === 'term') tryFocus($id('term-ksq1'));

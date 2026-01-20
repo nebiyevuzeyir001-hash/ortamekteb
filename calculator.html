@@ -845,15 +845,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic -->
+  <!-- Calculator logic (FULL HTML with fixed mobile reset scroll consistency) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
       const KSQ_COUNT = 8;
-
-      // ✅ RESET zamanı “azca yuxarı” problemini söndürmək üçün:
-      // Reset anchor-ı 9px daha aşağı salırıq (səndə ikinci şəkil kimi görünür).
-      const RESET_TOP_GAP = 27; // əvvəl 18 idi
 
       const $id = (x) => document.getElementById(x);
       const $qsa = (s) => Array.from(document.querySelectorAll(s));
@@ -940,7 +936,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // Scroll Job Manager
+      // Scroll Job Manager (HARD FIX)
       // ===========================
       let _scrollJobId = 0;
       let _scrollTimers = new Set();
@@ -1202,11 +1198,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // ✅ RESET SCROLL (CONSISTENT)
+      // ✅ RESET SCROLL (CONSISTENT on mobile)
+      // Anchor = mode-area (Hesablama rejimi). Stabilize during keyboard/vv changes.
       // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
-        const topGap = RESET_TOP_GAP;
+        const topGap = 18;
 
         const anchor =
           modeArea ||
@@ -1236,8 +1233,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           scrollToY(target, behavior);
         };
 
+        // first move
         fix('smooth');
 
+        // quick stabilizers (keyboard/vv may shift layout)
         _trackTimer(setTimeout(() => fix(), 180));
         _trackTimer(setTimeout(() => fix(), 360));
 
@@ -1410,7 +1409,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
-      // ✅ RESET
+      // ✅ RESET: same scroll spot in BOTH cases (result/error) on mobile
       function resetCalc() {
         _newScrollJob();
 
@@ -1433,15 +1432,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // always go back to the SAME anchor
+        // always go back to the SAME anchor, stabilized across mobile keyboard changes
         scrollToResetSpotStable();
 
-        // optional: keep the first input ready
+        // optional: keep the first input ready, without letting browser push scroll elsewhere
         const focusEl = (mode === 'term') ? $id('term-ksq1') : (mode === 'year') ? $id('year-t1') : null;
         if (focusEl) {
           _trackTimer(setTimeout(() => {
             tryFocus(focusEl);
 
+            // after keyboard/vv shift, lock again to the same anchor
             _trackTimer(setTimeout(() => {
               const target = computeResetTargetY();
               const now = window.pageYOffset || document.documentElement.scrollTop || 0;

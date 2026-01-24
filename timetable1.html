@@ -684,22 +684,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </div>
                 </div>
 
-                <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
-                  <label class="inline-flex items-start gap-2">
-                    <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
-                    <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
-                  </label>
+<div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+  <label class="inline-flex items-start gap-2">
+    <input id="optHeavyAvoidEdges" type="checkbox" class="mt-0.5" checked />
+    <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
+  </label>
 
-                  <label class="inline-flex items-start gap-2">
-                    <input id="optLimitSameSubject" type="checkbox" class="mt-0.5" checked />
-                    <span>Eyni gündə eyni fənn maksimum 2 dəfə təkrarlansın</span>
-                  </label>
+  <label class="inline-flex items-start gap-2 md:col-span-2">
+    <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
+    <span>Siniflər üzrə gün ərzində boş saat olmasın (dərslər 1-ci saatdan ardıcıl olsun)</span>
+  </label>
+</div>
 
-                  <label class="inline-flex items-start gap-2 md:col-span-2">
-                    <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
-                    <span>Siniflər üzrə gün ərzində boş saat olmasın (dərslər 1-ci saatdan ardıcıl olsun)</span>
-                  </label>
-                </div>
 
                 <div class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
                   Bütün siniflər üçün gündəlik limit standart olaraq <strong>“Gündə dərs saatı (max)”</strong> qədər tətbiq olunur
@@ -777,7 +773,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
                   Hər sətir: sinif + fənn + müəllim + həftəlik saat.
-                  “Qoşa”: <strong>İmkan daxilində</strong> seçsəniz ardıcıllıq mümkün olduqca qorunur; <strong>Mütləq</strong> seçsəniz ardıcıllıq pozulmur.
+                  “Qoşa”: <strong>Yox</strong> seçsəniz eyni fənn eyni gündə max 1 dəfə ola bilər.
+<strong>İmkan daxilində</strong> seçsəniz həmin fənn eyni gündə mütləq 2 dəfə olmalıdır (mümkünsə ardıcıl, deyilsə yenə 2 dəfə).
+<strong>Mütləq</strong> seçsəniz həmin fənn eyni gündə mütləq 2 dəfə ardıcıl olmalıdır.
+
                 </div>
 
                 <table class="config-table" id="lessonTable">
@@ -1585,125 +1584,124 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ensureVisibleStable(globalError, { topGap: 18, bottomGap: 16 });
       }
 
-      function readConfig() {
-        globalError.classList.add('hidden');
-        globalError.textContent = '';
+function readConfig() {
+  globalError.classList.add('hidden');
+  globalError.textContent = '';
 
-        const daysCount = currentDaysCount();
-        const lessonsPerDay = currentLessonsPerDay();
+  const daysCount = currentDaysCount();
+  const lessonsPerDay = currentLessonsPerDay();
 
-        const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
-        const optLimitSameSubject = document.getElementById('optLimitSameSubject').checked;
-        const optNoClassGaps = document.getElementById('optNoClassGaps').checked;
+  const optHeavyAvoidEdges = document.getElementById('optHeavyAvoidEdges').checked;
+  const optNoClassGaps = document.getElementById('optNoClassGaps').checked;
 
-        const teachers = [];
-        teacherTbody.querySelectorAll('tr').forEach(tr => {
-          const name = tr.querySelector('.t-name')?.value.trim();
-          const code = tr.querySelector('.t-code')?.value.trim();
-          if (!name && !code) return;
+  const teachers = [];
+  teacherTbody.querySelectorAll('tr').forEach(tr => {
+    const name = tr.querySelector('.t-name')?.value.trim();
+    const code = tr.querySelector('.t-code')?.value.trim();
+    if (!name && !code) return;
 
-          // Days
-          const dayCbs = tr.querySelectorAll('.t-avday[data-d]');
-          let availableDays = [];
-          dayCbs.forEach(cb => {
-            if (cb.checked) {
-              const idx = parseInt(cb.dataset.d, 10);
-              if (!Number.isNaN(idx)) availableDays.push(idx);
-            }
-          });
-          availableDays = availableDays.filter(d => d < daysCount);
-          if (!availableDays.length) availableDays = Array.from({ length: daysCount }, (_, i) => i);
-
-          // Hours
-          const hourCbs = tr.querySelectorAll('.t-avhour[data-h]');
-          let availableHours = [];
-          hourCbs.forEach(cb => {
-            if (cb.checked) {
-              const idx = parseInt(cb.dataset.h, 10);
-              if (!Number.isNaN(idx)) availableHours.push(idx);
-            }
-          });
-          availableHours = availableHours.filter(h => h < lessonsPerDay);
-          if (!availableHours.length) availableHours = Array.from({ length: lessonsPerDay }, (_, i) => i);
-
-          const availableHoursMask = new Array(lessonsPerDay).fill(false);
-          availableHours.forEach(h => {
-            if (h >= 0 && h < lessonsPerDay) availableHoursMask[h] = true;
-          });
-
-          teachers.push({
-            id: teachers.length,
-            name: name || code,
-            code: code || name,
-            weeklyMax: Number(tr.querySelector('.t-week')?.value) || 0,
-            dailyMax: Number(tr.querySelector('.t-daymax')?.value) || 0,
-            availableDays,
-            availableHours,
-            availableHoursMask
-          });
-        });
-
-        const classes = [];
-        classTbody.querySelectorAll('tr').forEach(tr => {
-          const name = tr.querySelector('.c-name')?.value.trim();
-          if (!name) return;
-          const level = tr.querySelector('.c-level')?.value || 'esas';
-          const shift = tr.querySelector('.c-shift')?.value || 'seher';
-
-          const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
-          const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
-
-          classes.push({
-            id: classes.length,
-            name,
-            level,
-            shift,
-            maxPerDay: maxDay
-          });
-        });
-
-        const lessons = [];
-        lessonTbody.querySelectorAll('tr').forEach(tr => {
-          const className = tr.querySelector('.l-class')?.value.trim();
-          const subject   = tr.querySelector('.l-subj')?.value.trim();
-          const teacher   = tr.querySelector('.l-teacher')?.value.trim();
-          const hours     = Number(tr.querySelector('.l-hours')?.value) || 0;
-          if (!className || !subject || !teacher || hours <= 0) return;
-
-          const dmRaw = tr.querySelector('.l-doubleMode')?.value || 'none';
-          const doubleMode = (dmRaw === 'prefer' || dmRaw === 'required') ? dmRaw : 'none';
-
-          lessons.push({
-            className,
-            subject,
-            teacherRef: teacher,
-            hours,
-            heavy: tr.querySelector('.l-heavy')?.checked || false,
-            doubleMode
-          });
-        });
-
-        if (!teachers.length || !classes.length || !lessons.length) {
-          throw new Error('Ən azı 1 müəllim, 1 sinif və 1 dərs əlavə edilməlidir.');
-        }
-        if (lessonsPerDay > 8 || lessonsPerDay < 1) {
-          throw new Error('Gündə dərs saatı 1–8 aralığında olmalıdır.');
-        }
-
-        return {
-          daysCount,
-          lessonsPerDay,
-          optHeavyAvoidEdges,
-          optLimitSameSubject,
-          optNoClassGaps,
-          teachers,
-          classes,
-          lessons,
-
-          _blocks: null,
-          _targetHours: 0
-        };
+    // Days
+    const dayCbs = tr.querySelectorAll('.t-avday[data-d]');
+    let availableDays = [];
+    dayCbs.forEach(cb => {
+      if (cb.checked) {
+        const idx = parseInt(cb.dataset.d, 10);
+        if (!Number.isNaN(idx)) availableDays.push(idx);
       }
+    });
+    availableDays = availableDays.filter(d => d < daysCount);
+    if (!availableDays.length) availableDays = Array.from({ length: daysCount }, (_, i) => i);
+
+    // Hours
+    const hourCbs = tr.querySelectorAll('.t-avhour[data-h]');
+    let availableHours = [];
+    hourCbs.forEach(cb => {
+      if (cb.checked) {
+        const idx = parseInt(cb.dataset.h, 10);
+        if (!Number.isNaN(idx)) availableHours.push(idx);
+      }
+    });
+    availableHours = availableHours.filter(h => h < lessonsPerDay);
+    if (!availableHours.length) availableHours = Array.from({ length: lessonsPerDay }, (_, i) => i);
+
+    const availableHoursMask = new Array(lessonsPerDay).fill(false);
+    availableHours.forEach(h => {
+      if (h >= 0 && h < lessonsPerDay) availableHoursMask[h] = true;
+    });
+
+    teachers.push({
+      id: teachers.length,
+      name: name || code,
+      code: code || name,
+      weeklyMax: Number(tr.querySelector('.t-week')?.value) || 0,
+      dailyMax: Number(tr.querySelector('.t-daymax')?.value) || 0,
+      availableDays,
+      availableHours,
+      availableHoursMask
+    });
+  });
+
+  const classes = [];
+  classTbody.querySelectorAll('tr').forEach(tr => {
+    const name = tr.querySelector('.c-name')?.value.trim();
+    if (!name) return;
+    const level = tr.querySelector('.c-level')?.value || 'esas';
+    const shift = tr.querySelector('.c-shift')?.value || 'seher';
+
+    const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
+    const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
+
+    classes.push({
+      id: classes.length,
+      name,
+      level,
+      shift,
+      maxPerDay: maxDay
+    });
+  });
+
+  const lessons = [];
+  lessonTbody.querySelectorAll('tr').forEach(tr => {
+    const className = tr.querySelector('.l-class')?.value.trim();
+    const subject   = tr.querySelector('.l-subj')?.value.trim();
+    const teacher   = tr.querySelector('.l-teacher')?.value.trim();
+    const hours     = Number(tr.querySelector('.l-hours')?.value) || 0;
+    if (!className || !subject || !teacher || hours <= 0) return;
+
+    const dmRaw = tr.querySelector('.l-doubleMode')?.value || 'none';
+    const doubleMode = (dmRaw === 'prefer' || dmRaw === 'required') ? dmRaw : 'none';
+
+    lessons.push({
+      className,
+      subject,
+      teacherRef: teacher,
+      hours,
+      heavy: tr.querySelector('.l-heavy')?.checked || false,
+      doubleMode
+    });
+  });
+
+  if (!teachers.length || !classes.length || !lessons.length) {
+    throw new Error('Ən azı 1 müəllim, 1 sinif və 1 dərs əlavə edilməlidir.');
+  }
+  if (lessonsPerDay > 8 || lessonsPerDay < 1) {
+    throw new Error('Gündə dərs saatı 1–8 aralığında olmalıdır.');
+  }
+
+  return {
+    daysCount,
+    lessonsPerDay,
+    optHeavyAvoidEdges,
+    optNoClassGaps,
+    teachers,
+    classes,
+    lessons,
+
+    _blocks: null,
+    _targetHours: 0
+  };
+}
+
 
       function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -1712,55 +1710,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
       }
 
-      function generateBlocks(config) {
-        const { lessons, classes, teachers } = config;
+function generateBlocks(config) {
+  const { lessons, classes, teachers } = config;
 
-        const classIndexByName = new Map();
-        classes.forEach(c => classIndexByName.set(c.name.trim(), c.id));
+  const classIndexByName = new Map();
+  classes.forEach(c => classIndexByName.set(c.name.trim(), c.id));
 
-        const teacherIndexByKey = new Map();
-        teachers.forEach(t => {
-          if ((t.code || '').trim()) teacherIndexByKey.set((t.code || '').trim(), t.id);
-          if ((t.name || '').trim()) teacherIndexByKey.set((t.name || '').trim(), t.id);
-        });
+  const teacherIndexByKey = new Map();
+  teachers.forEach(t => {
+    if ((t.code || '').trim()) teacherIndexByKey.set((t.code || '').trim(), t.id);
+    if ((t.name || '').trim()) teacherIndexByKey.set((t.name || '').trim(), t.id);
+  });
 
-        const blocks = [];
-        const unknown = [];
+  const blocks = [];
+  const unknown = [];
 
-        lessons.forEach(l => {
-          const cId = classIndexByName.get(l.className.trim());
-          const tId = teacherIndexByKey.get(l.teacherRef.trim());
-          if (cId == null || tId == null) {
-            unknown.push(l);
-            return;
-          }
+  lessons.forEach(l => {
+    const cId = classIndexByName.get(l.className.trim());
+    const tId = teacherIndexByKey.get(l.teacherRef.trim());
+    if (cId == null || tId == null) {
+      unknown.push(l);
+      return;
+    }
 
-          let remaining = l.hours;
-          const base = {
-            classId: cId,
-            teacherId: tId,
-            subject: l.subject,
-            heavy: !!l.heavy
-          };
+    let remaining = l.hours;
 
-          if ((l.doubleMode === 'required' || l.doubleMode === 'prefer') && remaining >= 2) {
-            const splitAllowed = (l.doubleMode === 'prefer');
-            const doublePolicy = l.doubleMode;
+    // ✅ Yeni qayda: Qoşa=Yox => gündə cap 1; əks halda cap 2
+    const dailyCap = (l.doubleMode === 'none') ? 1 : 2;
 
-            while (remaining >= 2) {
-              blocks.push({ ...base, length: 2, splitAllowed, doublePolicy });
-              remaining -= 2;
-            }
-          }
+    const base = {
+      classId: cId,
+      teacherId: tId,
+      subject: l.subject,
+      heavy: !!l.heavy,
+      dailyCap
+    };
 
-          while (remaining > 0) {
-            blocks.push({ ...base, length: 1, splitAllowed: false, doublePolicy: 'none' });
-            remaining -= 1;
-          }
-        });
+    // Qoşa=prefer/required => mümkün qədər 2-lik bloklar (həmin fənn eyni gündə 2 dəfə)
+    if ((l.doubleMode === 'required' || l.doubleMode === 'prefer') && remaining >= 2) {
+      const splitAllowed = (l.doubleMode === 'prefer');
+      const doublePolicy = l.doubleMode;
 
-        return { blocks, unknownUnmapped: unknown };
+      while (remaining >= 2) {
+        blocks.push({ ...base, length: 2, splitAllowed, doublePolicy });
+        remaining -= 2;
       }
+    }
+
+    // Qalan tək saatlar (odd qalıq və ya Qoşa=Yox)
+    while (remaining > 0) {
+      blocks.push({ ...base, length: 1, splitAllowed: false, doublePolicy: 'none' });
+      remaining -= 1;
+    }
+  });
+
+  return { blocks, unknownUnmapped: unknown };
+}
+
 
       function sumRequiredHours(lessons){
         return lessons.reduce((sum, l) => sum + (Number(l.hours) || 0), 0);
@@ -1829,28 +1835,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
         });
 
-        // Eyni fənn gündə 2 (sərt) -> həftəlik upper bound: 2 * gün
-        if (config.optLimitSameSubject) {
-          const byClass = new Map();
-          blocks.forEach(b => {
-            let m = byClass.get(b.classId);
-            if (!m) { m = new Map(); byClass.set(b.classId, m); }
-            m.set(b.subject, (m.get(b.subject) || 0) + b.length);
-          });
+// ===== ✅ Eyni fənn qaydası (yeni) - FAIL-FAST =====
+// Ümumi qayda: eyni sinifdə eyni fənn bir gündə max 2.
+// Qoşa=Yox olan lesson sətri üçün isə gündə max 1 deməkdir.
+//
+// 1) Hər lesson sətri üzrə maksimum (gündə cap × gün sayı)
+const classIndexByNameFF = new Map();
+config.classes.forEach(c => classIndexByNameFF.set(c.name.trim(), c.id));
 
-          const weeklyCapPerSubject = 2 * config.daysCount;
-          byClass.forEach((m, classId) => {
-            const cls = config.classes[classId];
-            m.forEach((total, subject) => {
-              if (total > weeklyCapPerSubject) {
-                throw new Error(
-                  `Mümkünsüz konfiqurasiya: "${cls?.name || '?'}" sinfində "${subject}" fənni həftəlik ${total} saatdır, ` +
-                  `amma qaydaya görə bir gündə maksimum 2 saat olduğundan maksimum ${weeklyCapPerSubject} saat ola bilər.`
-                );
-              }
-            });
-          });
-        }
+config.lessons.forEach(l => {
+  const cId = classIndexByNameFF.get(l.className.trim());
+  if (cId == null) return;
+
+  const dm = l.doubleMode || 'none';
+  const capPerDay = (dm === 'none') ? 1 : 2;
+  const weeklyCap = capPerDay * config.daysCount;
+
+  if ((Number(l.hours) || 0) > weeklyCap) {
+    const cls = config.classes[cId]?.name || l.className;
+    const dmTxt = (dm === 'none') ? 'Yox' : (dm === 'prefer' ? 'İmkan daxilində' : 'Mütləq');
+    throw new Error(
+      `Mümkünsüz konfiqurasiya: "${cls}" sinfində "${l.subject}" fənni həftəlik ${l.hours} saatdır, ` +
+      `amma Qoşa=${dmTxt} olduğuna görə maksimum ${weeklyCap} saat ola bilər (gündə max ${capPerDay} × ${config.daysCount} gün).`
+    );
+  }
+});
+
+// 2) Sinif+fənn üzrə ümumi maksimum (həmişə 2 × gün)
+{
+  const byClass = new Map();
+  blocks.forEach(b => {
+    let m = byClass.get(b.classId);
+    if (!m) { m = new Map(); byClass.set(b.classId, m); }
+    m.set(b.subject, (m.get(b.subject) || 0) + b.length);
+  });
+
+  const weeklyCapPerSubject = 2 * config.daysCount;
+  byClass.forEach((m, classId) => {
+    const cls = config.classes[classId];
+    m.forEach((total, subject) => {
+      if (total > weeklyCapPerSubject) {
+        throw new Error(
+          `Mümkünsüz konfiqurasiya: "${cls?.name || '?'}" sinfində "${subject}" fənni həftəlik ${total} saatdır, ` +
+          `amma qaydaya görə eyni fənn bir gündə maksimum 2 dəfə ola bildiyindən maksimum ${weeklyCapPerSubject} saat ola bilər.`
+        );
+      }
+    });
+  });
+}
+
 
         // Qoşa=required: müəllim seçdiyi saatlarda ardıcıl 2 saat olmalıdır
         const requiredDoubleTeachers = new Set();
@@ -1880,15 +1913,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // ===== PRO placement + "boş saat olmasın" =====
       function attemptBuild(config) {
-        const {
-          daysCount,
-          lessonsPerDay,
-          teachers,
-          classes,
-          optHeavyAvoidEdges,
-          optLimitSameSubject,
-          optNoClassGaps
-        } = config;
+const {
+  daysCount,
+  lessonsPerDay,
+  teachers,
+  classes,
+  optHeavyAvoidEdges,
+  optNoClassGaps
+} = config;
 
         const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
           ? config._blocks
@@ -2009,12 +2041,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           if (classDaily[classId][day] + length > classMaxPerDay[classId]) return 'Sinif gündəlik limit dolub';
 
-          if (optLimitSameSubject) {
-            const subjMap = classSubjPerDay[classId];
-            const arr = subjMap[subject];
-            const cur = arr ? arr[day] : 0;
-            if (cur + length > 2) return 'Eyni fənn gündə maksimum 2';
-          }
+// ✅ Eyni fənn qaydası (yeni)
+// Ümumi cap: gündə max 2.
+// Qoşa=Yox blokları üçün cap=1.
+{
+  const subjMap = classSubjPerDay[classId];
+  const arr = subjMap[subject];
+  const cur = arr ? arr[day] : 0;
+
+  const cap = Math.min(2, (block.dailyCap === 1 ? 1 : 2));
+  if (cur + length > cap) return cap === 1 ? 'Eyni fənn gündə maksimum 1' : 'Eyni fənn gündə maksimum 2';
+}
+
 
           if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) {
             return 'Ağır fənn kənar saat';
@@ -2133,34 +2171,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           pick = pickFromTopK(cands, 8);
           if (pick) { place(block, pick.d, pick.s); return true; }
 
-          // 3) splittable double -> try split into two singles
-          if (block.length === 2 && block.splitAllowed) {
-            const singleA = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
-            const singleB = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
+// 3) Qoşa=İmkan daxilində (splitAllowed) -> ardıcıl alınmasa, eyni gündə 2 ayrı saat kimi yerləşdir (mütləq eyni gün)
+if (block.length === 2 && block.splitAllowed) {
+  const singleA = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
+  const singleB = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
 
-            const trySplit = (avoidEdgesHard) => {
-              const aCands = getCandidates(singleA, avoidEdgesHard);
-              aCands.sort((x,y)=>x.score-y.score);
-              const limit = Math.min(12, aCands.length);
-              for (let i = 0; i < limit; i++) {
-                const a = aCands[i];
-                place(singleA, a.d, a.s);
+  const trySplitSameDay = (avoidEdgesHard) => {
+    const aCands = getCandidates(singleA, avoidEdgesHard);
+    aCands.sort((x, y) => x.score - y.score);
 
-                const bCands = getCandidates(singleB, avoidEdgesHard);
-                const bPick = pickFromTopK(bCands, 8);
-                if (bPick) {
-                  place(singleB, bPick.d, bPick.s);
-                  return true;
-                }
+    const limit = Math.min(14, aCands.length);
+    for (let i = 0; i < limit; i++) {
+      const a = aCands[i];
+      place(singleA, a.d, a.s);
 
-                unplace(singleA, a.d, a.s);
-              }
-              return false;
-            };
+      let bCands = getCandidates(singleB, avoidEdgesHard).filter(x => x.d === a.d);
+      if (bCands.length) {
+        bCands.sort((x, y) => {
+          const dx = Math.abs(x.s - a.s);
+          const dy = Math.abs(y.s - a.s);
+          if (dx !== dy) return dx - dy;   // əvvəl mümkün qədər yan-yana/ardıcıl
+          return x.score - y.score;
+        });
+        const b = bCands[0];
+        place(singleB, b.d, b.s);
+        return true;
+      }
 
-            if (trySplit(avoidEdgesStage1)) return true;
-            if (trySplit(false)) return true;
-          }
+      unplace(singleA, a.d, a.s);
+    }
+    return false;
+  };
+
+  if (trySplitSameDay(avoidEdgesStage1)) return true;
+  if (trySplitSameDay(false)) return true;
+}
+
 
           return false;
         }
@@ -2250,7 +2296,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       function renderTimetable(config, result) {
-        const { classes, teachers, daysCount, lessonsPerDay, optLimitSameSubject, optNoClassGaps } = config;
+        const { classes, teachers, daysCount, lessonsPerDay, optNoClassGaps } = config;
         const { timetable, unplaced, placedCount, meta } = result;
 
         const daysLabels = (daysCount === 5 ? DAYS_LABELS_5 : DAYS_LABELS_6).slice(0, daysCount);
@@ -2367,11 +2413,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               if (meta.classDaily[classId][d] + length > meta.classMaxPerDay[classId]) { add('Sinif gündəlik limit'); continue; }
 
               if (optLimitSameSubject) {
-                const subjMap = meta.classSubjPerDay[classId];
-                const arr = subjMap[subject];
-                const cur = arr ? arr[d] : 0;
-                if (cur + length > 2) { add('Eyni fənn gündə maksimum 2'); continue; }
-              }
+  const subjMap = meta.classSubjPerDay[classId];
+  const arr = subjMap[subject];
+  const cur = arr ? arr[d] : 0;
+
+  const cap = Math.min(2, (block.dailyCap === 1 ? 1 : 2));
+  if (cur + length > cap) {
+    add(cap === 1 ? 'Eyni fənn gündə maksimum 1' : 'Eyni fənn gündə maksimum 2');
+    continue;
+  }
+}
+
 
               add('Slot var, amma kombinasiya çətindir');
             }
@@ -2400,9 +2452,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           unplacedContainer.textContent = '';
         }
 
-        softWarnings.textContent =
-          'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri, eyni fənnin gündə max 2 (aktivdirsə) və sinifdə boş saat olmaması (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
-          '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır. “Qoşa = İmkan daxilində” seçilmiş dərslər əvvəlcə ardıcıl yerləşdirilməyə çalışılır, alınmasa bölünə bilər.';
+softWarnings.textContent =
+  'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və sinifdə boş saat olmaması (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
+  'Eyni fənn üçün yeni qayda: standart halda eyni gündə max 1 dəfə; Qoşa=İmkan daxilində/Mütləq olan dərslər həmin fənni eyni gündə 2 dəfə etməyə məcbur edir (Mütləq: ardıcıl, İmkan daxilində: mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 dəfə). ' +
+  '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır.';
+
 
         const firstClassId = classes[0]?.id;
         if (firstClassId != null) renderForClass(firstClassId);

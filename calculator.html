@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="canonical" href="https://www.eduplan.az/calculator.html" />
-  <meta name="keywords" content="ksq bsq hesablama, Yarımillik və İllik hesablama, Yarımillik və İllik hesablama Online, Ksq bsq hesablama kalkulyatoru, ksq ve bsq ballarinin hesablanmasi" />
+  <meta name="keywords" content="ksq bsq hesablama, Yarımillik və İllik hesablama, Yarımillik və İllik hesablama Online, Ksq bsq hesablama kalkulyatoru, ksq ve bsq ballarinin hesablanmasi, yarimil qiymet hesablama, yarımil qiymət hesablama" />
   <meta name="description" content="KSQ 40% / BSQ 60% çəkili bal kalkulyatoru — EduPlan.az" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="EduPlan.az" />
@@ -1201,20 +1201,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // ✅ RESET SCROLL (CONSISTENT on mobile)
       // Anchor = mode-area (Hesablama rejimi). Stabilize during keyboard/vv changes.
       // ===========================
-      function computeResetTargetY() {
-        const headerH = getHeaderHeight();
-        const topGap = 18;
+function computeResetTargetY() {
+  const headerH = getHeaderHeight();
+  const topGap = 8; // ✅ 2-ci şəkildəki yer
 
-        const anchor =
-          modeArea ||
-          ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
-          panel;
+  const anchor =
+    modeArea ||
+    ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
+    panel;
 
-        const rA = pageRect(anchor);
-        const y = rA.top - (headerH + topGap);
+  const rA = pageRect(anchor);
+  const y = rA.top - (headerH + topGap);
 
-        return clamp(y, 0, getMaxScrollY());
-      }
+  return clamp(y, 0, getMaxScrollY());
+}
+
+
+
 
       function scrollToResetSpotStable() {
         const job = _scrollJobId;

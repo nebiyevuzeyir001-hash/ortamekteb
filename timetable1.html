@@ -893,20 +893,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <strong>Ağır fənlər mümkün qədər 1-ci/sonuncu saatda olmasın</strong> — bu seçim aktivdirsə,
                     “Ağır?” işarələdiyiniz dərslər mümkün olduqca 1-ci və sonuncu saata salınmır (optimallaşdırma).
                   </li>
-                  <li>
-                    <strong>Eyni gündə eyni fənn maksimum 2 dəfə təkrarlansın</strong> — aktivdirsə,
-                    bir sinifdə eyni fənnin bir gündə toplamı <strong>2 saatdan çox</strong> ola bilməz (qayda kimi tətbiq olunur).
-                  </li>
+<li>
+  <strong>Eyni fənn qaydası</strong> — sistem hər zaman eyni sinifdə eyni fənni bir gündə maksimum <strong>2 saat</strong> ilə məhdudlaşdırır.
+  “Qoşa” <strong>Yox</strong> olan sətirlər üçün əlavə olaraq max <strong>1 saat/gün</strong> tətbiq olunur.
+  “Qoşa” <strong>İmkan daxilində</strong>/<strong>Mütləq</strong> olan sətirlər həmin fənni <strong>eyni gündə 2 saat</strong> etməyə çalışır
+  (Mütləq: ardıcıl; İmkan daxilində: mümkünsə ardıcıl).
+</li>
+
                   <li>
                     <strong>Siniflər üzrə gün ərzində boş saat olmasın</strong> — aktivdirsə,
                     sinifdə dərslər gün ərzində <strong>1-ci saatdan başlayıb ardıcıl</strong> gedir, arada boşluq yaranmır (qayda kimi tətbiq olunur).
                   </li>
                 </ul>
 
-                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                  Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
-                  Digər seçimlər (müəllim gün/saat uyğunluğu, eyni fənnin gündə max 2, boş saat olmaması, Qoşa=Mütləq) qayda kimi tətbiq olunur və pozulmur.
-                </p>
+<p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+  Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
+  Qayda kimi tətbiq olunanlar: müəllim konfliktləri, müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri,
+  sinifdə boş saat olmaması (aktivdirsə) və “Eyni fənn” qaydası (standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2).
+</p>
+
               </div>
 
               <div>
@@ -981,9 +986,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <li>
                     <strong>Qoşa</strong> rejimi:
                     <ul class="list-disc pl-6 mt-1 space-y-1">
-                      <li><strong>Yox</strong> → normal yerləşdirmə.</li>
-                      <li><strong>İmkan daxilində</strong> → 2 saatlıq blokları ardıcıl yerləşdirməyə çalışır, alınmasa bölə bilər.</li>
-                      <li><strong>Mütləq</strong> → 2 saatlıq bloklar mütləq ardıcıl olmalıdır (pozulmur).</li>
+<li><strong>Yox</strong> → həmin fənn eyni gündə maksimum 1 saat ola bilər.</li>
+<li><strong>İmkan daxilində</strong> → həmin fənn eyni gündə mütləq 2 saat olmalıdır (mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 ayrı saat).</li>
+<li><strong>Mütləq</strong> → həmin fənn eyni gündə mütləq 2 saat ardıcıl olmalıdır (pozulmur).</li>
+
                     </ul>
                   </li>
                   <li>
@@ -1001,9 +1007,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <li>
                     Sistem “dərs bloklarını” müxtəlif ardıcıllıqlarda və slot kombinasiyalarında yerləşdirməyə çalışır.
                   </li>
-                  <li>
-                    <strong>Qayda kimi tətbiq olunan məhdudiyyətlər</strong> (müəllim konfliktləri, gəlmə günləri, müəllim saat seçimi, limitlər, sinif tutumu, eyni fənnin gündə max 2, boş saat olmaması, Qoşa=Mütləq) pozulmur.
-                  </li>
+<li>
+  <strong>Qayda kimi tətbiq olunan məhdudiyyətlər</strong>
+  (müəllim konfliktləri, gəlmə günləri, müəllim saat seçimi, limitlər, sinif tutumu,
+  “Eyni fənn” qaydası: standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2,
+  boş saat olmaması, Qoşa=Mütləq) pozulmur.
+</li>
+
                   <li>
                     <strong>Optimallaşdırmalar</strong> (ağır fənnin kənar saatlara düşməməsi, Qoşa=İmkan daxilində ardıcıllıq) mümkün olduqca qorunur.
                   </li>
@@ -2412,7 +2422,7 @@ if (block.length === 2 && block.splitAllowed) {
               if (meta.teacherDaily[teacherId][d] + length > meta.teacherDayMax[teacherId]) { add('Müəllim gündəlik limit'); continue; }
               if (meta.classDaily[classId][d] + length > meta.classMaxPerDay[classId]) { add('Sinif gündəlik limit'); continue; }
 
-              if (optLimitSameSubject) {
+{
   const subjMap = meta.classSubjPerDay[classId];
   const arr = subjMap[subject];
   const cur = arr ? arr[d] : 0;
@@ -2423,6 +2433,7 @@ if (block.length === 2 && block.splitAllowed) {
     continue;
   }
 }
+
 
 
               add('Slot var, amma kombinasiya çətindir');

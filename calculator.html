@@ -845,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic -->
+  <!-- Calculator logic (FINAL: Reset scroll = directly like 2nd screenshot) -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -877,6 +877,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const TERM_KSQ_IDS = idsFor('term');
 
+      // ----- number parsing (supports comma decimals) -----
       const normalizeNumberString = (s) => s.replace(/\s/g, '').replace(',', '.');
 
       const numOrNull = (v) => {
@@ -890,6 +891,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
+      // 0–30 => 2, 31–60 => 3, 61–80 => 4, 81–100 => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -897,11 +899,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return 5;
       };
 
+      // ----- motion preference -----
       const prefersReduceMotion = () => {
         try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
         catch (e) { return false; }
       };
 
+      // ===== viewport helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -932,7 +936,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // Scroll Job Manager
+      // Scroll Job Manager (HARD FIX)
       // ===========================
       let _scrollJobId = 0;
       let _scrollTimers = new Set();
@@ -954,9 +958,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function _newScrollJob() {
         _scrollJobId += 1;
         _stopScrollJobs();
+
+        // smooth scroll varsa "kəs"
+        try {
+          const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+          window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+        } catch (e) {}
+
         return _scrollJobId;
       }
 
+      // ===== safe-zone scroll (for errors/output) =====
       function safeBand(opts = {}) {
         const topGap = opts.topGap ?? 18;
         const bottomGap = opts.bottomGap ?? 16;
@@ -1064,6 +1076,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         _trackTimer(setTimeout(run, 260));
       }
 
+      // ===== Input invalid state =====
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
         if (!el) return;
@@ -1097,6 +1110,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       ALL_INPUT_IDS.forEach(id => attachInputHygiene($id(id)));
 
+      // ===== Error / focus management =====
       function tryFocus(el) {
         if (!el) return;
         try { el.focus({ preventScroll: true }); }
@@ -1183,23 +1197,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         outYearCard?.classList.add('hidden');
       }
 
-      // ✅ RESET SCROLL: həmişə 2-ci şəkildəki kimi (bir dəfə scroll)
+      // ===========================
+      // ✅ RESET SCROLL (exact target)
+      // ===========================
       function computeResetTargetY() {
         const headerH = getHeaderHeight();
+        const vh = getViewportHeight();
+        const topGap = 18;
+        const bottomGap = 18;
 
-        // 2-ci şəkil üçün lazım olan yüngül “aşağı düşmə” (təxminən +9px boşluq)
-        const topGap = 27; // əvvəl 18 idi
+        const actions = $id('calc-actions');
 
-        const anchor = modeArea || panel;
+        const fs = (mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null;
+
+        const anchor = fs || modeArea || panel;
+
+        const modeH = (fs && modeArea) ? modeArea.getBoundingClientRect().height : 0;
+        const extraAbove = fs ? (modeH + 12) : 0;
+
         const rA = pageRect(anchor);
-        const y = rA.top - (headerH + topGap);
+        let y = rA.top - (headerH + topGap + extraAbove);
+
+        if (actions) {
+          const rB = pageRect(actions);
+          const bottomLimit = y + vh - bottomGap;
+          if (rB.bottom > bottomLimit) {
+            y += (rB.bottom - bottomLimit);
+          }
+        }
 
         return clamp(y, 0, getMaxScrollY());
       }
 
-      function scrollToResetSpotOnce() {
-        const behavior = prefersReduceMotion() ? 'auto' : 'smooth';
-        scrollToY(computeResetTargetY(), behavior);
+      function scrollToResetSpot(behavior) {
+        const b = prefersReduceMotion() ? 'auto' : (behavior || 'smooth');
+        const y = computeResetTargetY();
+        scrollToY(y, b);
+      }
+
+      function scrollToResetSpotStable() {
+        scrollToResetSpot('smooth');
+
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 260));
+
+        _trackTimer(setTimeout(() => {
+          scrollToResetSpot('auto');
+        }, 520));
       }
 
       // Mode switches
@@ -1234,6 +1279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       updateModeUI();
 
+      // ===== Read & compute rules =====
       function readHalfYearFromForm() {
         const ksq = [];
 
@@ -1347,7 +1393,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         warn.classList.add('hidden');
       }
 
-      // ✅ RESET: yalnız 1 dəfə scroll + həmişə eyni yer (2-ci şəkil)
+      // ✅ RESET: tək scroll (jump yoxdur), dərhal cursor
       function resetCalc() {
         _newScrollJob();
 
@@ -1370,8 +1416,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         clearOutputs();
         out.classList.add('hidden');
 
-        // layout yenilənsin, sonra 1 dəfə scroll et (başqa əlavə “stabilizer” YOX)
-        requestAnimationFrame(scrollToResetSpotOnce);
+        // tək dəfə smooth (sonradan auto/ikinci scroll YOX)
+        scrollToResetSpot('smooth');
+
+        // dərhal cursor (mode-ə görə)
+        if (mode === 'term') tryFocus($id('term-ksq1'));
+        else if (mode === 'year') tryFocus($id('year-t1'));
       }
 
       resetBtn?.addEventListener('click', resetCalc);

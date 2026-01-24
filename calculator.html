@@ -1203,7 +1203,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // ===========================
 function computeResetTargetY() {
   const headerH = getHeaderHeight();
-  const topGap = 0; // ✅ 2-ci şəkildəki kimi yuxarıya gətirir
+  const topGap = 6; // ✅ 2-ci şəkildəki yer
 
   const anchor =
     modeArea ||
@@ -1215,6 +1215,7 @@ function computeResetTargetY() {
 
   return clamp(y, 0, getMaxScrollY());
 }
+
 
 
 

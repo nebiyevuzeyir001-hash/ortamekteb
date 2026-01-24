@@ -1203,12 +1203,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // ===========================
 function computeResetTargetY() {
   const headerH = getHeaderHeight();
-  const topGap = 18;
+  const topGap = 0; // ✅ 2-ci şəkildəki kimi yuxarıya gətirir
 
-  // RESET zamanı hər rejimdə birbaşa həmin rejimin input blokunun üstünə gedək
   const anchor =
-    (mode === 'term') ? fsTerm :
-    (mode === 'year') ? fsYear :
+    modeArea ||
+    ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
     panel;
 
   const rA = pageRect(anchor);
@@ -1216,6 +1215,7 @@ function computeResetTargetY() {
 
   return clamp(y, 0, getMaxScrollY());
 }
+
 
 
       function scrollToResetSpotStable() {

@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="canonical" href="https://www.eduplan.az/calculator.html" />
-  <meta name="keywords" content="ksq bsq hesablama, Yarımillik və İllik hesablama, Yarımillik və İllik hesablama Online, Ksq bsq hesablama kalkulyatoru, ksq ve bsq ballarinin hesablanmasi, yarimil qiymet hesablama, yarımil qiymət hesablama" />
+  <meta name="keywords" content="ksq bsq hesablama, Yarımillik və İllik hesablama, Yarımillik və İllik hesablama Online, Ksq bsq hesablama kalkulyatoru, ksq ve bsq ballarinin hesablanmasi" />
   <meta name="description" content="KSQ 40% / BSQ 60% çəkili bal kalkulyatoru — EduPlan.az" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="EduPlan.az" />
@@ -845,7 +845,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   </script>
 
-  <!-- Calculator logic (FULL HTML with fixed mobile reset scroll consistency) -->
+  <!-- Calculator logic -->
   <script>
     (function initCalculator() {
       const W_KSQ = 0.40, W_BSQ = 0.60;
@@ -877,7 +877,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const idsFor = (prefix) => Array.from({ length: KSQ_COUNT }, (_, i) => `${prefix}-ksq${i + 1}`);
       const TERM_KSQ_IDS = idsFor('term');
 
-      // ----- number parsing (supports comma decimals) -----
       const normalizeNumberString = (s) => s.replace(/\s/g, '').replace(',', '.');
 
       const numOrNull = (v) => {
@@ -891,7 +890,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
 
-      // 0–30 => 2, 31–60 => 3, 61–80 => 4, 81–100 => 5
       const to5 = (x) => {
         if (x <= 30) return 2;
         if (x <= 60) return 3;
@@ -899,13 +897,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return 5;
       };
 
-      // ----- motion preference -----
       const prefersReduceMotion = () => {
         try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
         catch (e) { return false; }
       };
 
-      // ===== viewport helpers =====
       function getViewportHeight() {
         return window.visualViewport ? window.visualViewport.height : window.innerHeight;
       }
@@ -936,7 +932,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
 
       // ===========================
-      // Scroll Job Manager (HARD FIX)
+      // Scroll Job Manager
       // ===========================
       let _scrollJobId = 0;
       let _scrollTimers = new Set();
@@ -958,17 +954,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function _newScrollJob() {
         _scrollJobId += 1;
         _stopScrollJobs();
-
-        // smooth scroll varsa "kəs"
-        try {
-          const y = window.pageYOffset || document.documentElement.scrollTop || 0;
-          window.scrollTo({ top: y, left: 0, behavior: 'auto' });
-        } catch (e) {}
-
         return _scrollJobId;
       }
 
-      // ===== safe-zone scroll (for errors/output) =====
       function safeBand(opts = {}) {
         const topGap = opts.topGap ?? 18;
         const bottomGap = opts.bottomGap ?? 16;
@@ -1076,7 +1064,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         _trackTimer(setTimeout(run, 260));
       }
 
-      // ===== Input invalid state =====
       const INVALID_CLS = ['ring-2','ring-rose-400/50','border-rose-400/70'];
       function setInvalid(el, on) {
         if (!el) return;
@@ -1110,7 +1097,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       ALL_INPUT_IDS.forEach(id => attachInputHygiene($id(id)));
 
-      // ===== Error / focus management =====
       function tryFocus(el) {
         if (!el) return;
         try { el.focus({ preventScroll: true }); }
@@ -1197,73 +1183,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         outYearCard?.classList.add('hidden');
       }
 
-      // ===========================
-      // ✅ RESET SCROLL (CONSISTENT on mobile)
-      // Anchor = mode-area (Hesablama rejimi). Stabilize during keyboard/vv changes.
-      // ===========================
-function computeResetTargetY() {
-  const headerH = getHeaderHeight();
-  const topGap = 8; // ✅ 2-ci şəkildəki yer
+      // ✅ RESET SCROLL: həmişə 2-ci şəkildəki kimi (bir dəfə scroll)
+      function computeResetTargetY() {
+        const headerH = getHeaderHeight();
 
-  const anchor =
-    modeArea ||
-    ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
-    panel;
+        // 2-ci şəkil üçün lazım olan yüngül “aşağı düşmə” (təxminən +9px boşluq)
+        const topGap = 27; // əvvəl 18 idi
 
-  const rA = pageRect(anchor);
-  const y = rA.top - (headerH + topGap);
+        const anchor = modeArea || panel;
+        const rA = pageRect(anchor);
+        const y = rA.top - (headerH + topGap);
 
-  return clamp(y, 0, getMaxScrollY());
-}
+        return clamp(y, 0, getMaxScrollY());
+      }
 
-
-
-
-      function scrollToResetSpotStable() {
-        const job = _scrollJobId;
-
-        const fix = (forcedBehavior = null) => {
-          if (job !== _scrollJobId) return;
-
-          const target = computeResetTargetY();
-          const now = window.pageYOffset || document.documentElement.scrollTop || 0;
-          const delta = Math.abs(target - now);
-
-          const behavior = prefersReduceMotion()
-            ? 'auto'
-            : (forcedBehavior || (delta > 80 ? 'smooth' : 'auto'));
-
-          scrollToY(target, behavior);
-        };
-
-        // first move
-        fix('smooth');
-
-        // quick stabilizers (keyboard/vv may shift layout)
-        _trackTimer(setTimeout(() => fix(), 180));
-        _trackTimer(setTimeout(() => fix(), 360));
-
-        const vv = window.visualViewport;
-        if (vv) {
-          let active = true;
-          const onVV = () => { if (active) fix(); };
-
-          vv.addEventListener('resize', onVV);
-          vv.addEventListener('scroll', onVV);
-
-          const cleanup = () => {
-            if (!active) return;
-            active = false;
-            vv.removeEventListener('resize', onVV);
-            vv.removeEventListener('scroll', onVV);
-          };
-
-          _scrollCleanups.add(cleanup);
-          _trackTimer(setTimeout(() => {
-            _scrollCleanups.delete(cleanup);
-            cleanup();
-          }, 520));
-        }
+      function scrollToResetSpotOnce() {
+        const behavior = prefersReduceMotion() ? 'auto' : 'smooth';
+        scrollToY(computeResetTargetY(), behavior);
       }
 
       // Mode switches
@@ -1298,7 +1234,6 @@ function computeResetTargetY() {
 
       updateModeUI();
 
-      // ===== Read & compute rules =====
       function readHalfYearFromForm() {
         const ksq = [];
 
@@ -1412,7 +1347,7 @@ function computeResetTargetY() {
         warn.classList.add('hidden');
       }
 
-      // ✅ RESET: same scroll spot in BOTH cases (result/error) on mobile
+      // ✅ RESET: yalnız 1 dəfə scroll + həmişə eyni yer (2-ci şəkil)
       function resetCalc() {
         _newScrollJob();
 
@@ -1435,25 +1370,8 @@ function computeResetTargetY() {
         clearOutputs();
         out.classList.add('hidden');
 
-        // always go back to the SAME anchor, stabilized across mobile keyboard changes
-        scrollToResetSpotStable();
-
-        // optional: keep the first input ready, without letting browser push scroll elsewhere
-        const focusEl = (mode === 'term') ? $id('term-ksq1') : (mode === 'year') ? $id('year-t1') : null;
-        if (focusEl) {
-          _trackTimer(setTimeout(() => {
-            tryFocus(focusEl);
-
-            // after keyboard/vv shift, lock again to the same anchor
-            _trackTimer(setTimeout(() => {
-              const target = computeResetTargetY();
-              const now = window.pageYOffset || document.documentElement.scrollTop || 0;
-              const delta = Math.abs(target - now);
-              const behavior = prefersReduceMotion() ? 'auto' : (delta > 80 ? 'smooth' : 'auto');
-              scrollToY(target, behavior);
-            }, 180));
-          }, 140));
-        }
+        // layout yenilənsin, sonra 1 dəfə scroll et (başqa əlavə “stabilizer” YOX)
+        requestAnimationFrame(scrollToResetSpotOnce);
       }
 
       resetBtn?.addEventListener('click', resetCalc);

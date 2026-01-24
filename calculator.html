@@ -1201,20 +1201,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // ✅ RESET SCROLL (CONSISTENT on mobile)
       // Anchor = mode-area (Hesablama rejimi). Stabilize during keyboard/vv changes.
       // ===========================
-      function computeResetTargetY() {
-        const headerH = getHeaderHeight();
-        const topGap = 18;
+function computeResetTargetY() {
+  const headerH = getHeaderHeight();
+  const topGap = 18;
 
-        const anchor =
-          modeArea ||
-          ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
-          panel;
+  // RESET zamanı hər rejimdə birbaşa həmin rejimin input blokunun üstünə gedək
+  const anchor =
+    (mode === 'term') ? fsTerm :
+    (mode === 'year') ? fsYear :
+    panel;
 
-        const rA = pageRect(anchor);
-        const y = rA.top - (headerH + topGap);
+  const rA = pageRect(anchor);
+  const y = rA.top - (headerH + topGap);
 
-        return clamp(y, 0, getMaxScrollY());
-      }
+  return clamp(y, 0, getMaxScrollY());
+}
+
 
       function scrollToResetSpotStable() {
         const job = _scrollJobId;

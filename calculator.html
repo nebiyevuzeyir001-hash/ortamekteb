@@ -1203,11 +1203,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       // ===========================
 function computeResetTargetY() {
   const headerH = getHeaderHeight();
-  const topGap = 10; // səndə əvvəl hansı dəydisə (məs: 10) ELƏ SAXLA
+  const topGap = 10; // ✅ 2-ci şəkildəki yer
 
   const anchor =
-    (mode === 'term') ? fsTerm :
-    (mode === 'year') ? fsYear :
+    modeArea ||
+    ((mode === 'term') ? fsTerm : (mode === 'year') ? fsYear : null) ||
     panel;
 
   const rA = pageRect(anchor);
@@ -1215,7 +1215,6 @@ function computeResetTargetY() {
 
   return clamp(y, 0, getMaxScrollY());
 }
-
 
 
 
@@ -1268,39 +1267,34 @@ function computeResetTargetY() {
       }
 
       // Mode switches
-modeButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    _newScrollJob();
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          _newScrollJob();
 
-    mode = btn.dataset.mode;
+          mode = btn.dataset.mode;
 
-    updateModeUI();
-    clearAllInvalid();
-    clearError();
-    warn.classList.add('hidden');
-    clearOutputs();
-    out.classList.add('hidden');
+          updateModeUI();
+          clearAllInvalid();
+          clearError();
+          warn.classList.add('hidden');
+          clearOutputs();
+          out.classList.add('hidden');
 
-    btn.blur();
+          btn.blur();
 
-    // ✅ mobil/desktop fərqi olmadan: Sıfırla hansı yerə gətirirsə, rejim seçimi də ora gətirsin
-    scrollToResetSpotStable();
+          if (isDesktop()) {
+            const target = (mode === 'term') ? fsTerm : fsYear;
+            scrollToElementTopStable(target, { topGap: 18 });
+          } else {
+            ensureVisibleStable(panel || fsTerm || fsYear, { topGap: 18, bottomGap: 18 });
+          }
 
-    // ✅ inputa fokusla (keyboard açılıb scroll pozulsa belə yenə eyni yerə qaytar)
-    const focusEl =
-      (mode === 'term') ? $id('term-ksq1') :
-      (mode === 'year') ? $id('year-t1') :
-      null;
-
-    _trackTimer(setTimeout(() => {
-      if (focusEl) {
-        tryFocus(focusEl);
-        scrollToResetSpotStable();
-      }
-    }, 160));
-  });
-});
-
+          requestAnimationFrame(() => {
+            if (mode === 'term') tryFocus($id('term-ksq1'));
+            else if (mode === 'year') tryFocus($id('year-t1'));
+          });
+        });
+      });
 
       updateModeUI();
 

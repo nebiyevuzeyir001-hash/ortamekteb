@@ -1454,8 +1454,8 @@ function scrollToResetSpotStable() {
               const target = computeResetTargetY();
               const now = window.pageYOffset || document.documentElement.scrollTop || 0;
               const delta = Math.abs(target - now);
-              const behavior = prefersReduceMotion() ? 'auto' : (delta > 80 ? 'smooth' : 'auto');
-              scrollToY(target, behavior);
+const behavior = prefersReduceMotion() ? 'auto' : 'auto';
+scrollToY(target, behavior);
             }, 180));
           }, 140));
         }

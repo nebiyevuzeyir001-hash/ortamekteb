@@ -902,7 +902,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
 
 <li>
-  <strong>Dərslər mütləq birinci saatdan ardıcıl başlasın</strong> — aktivdirsə,
+  <strong>Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)</strong> — aktivdirsə,
   sinifdə dərs olan günlərdə dərslər <strong>1-ci saatdan başlayır</strong> və günün son dərsinə qədər <strong>ardıcıl</strong> gedir.
   Boşluq yalnız <strong>günün sonunda</strong> ola bilər.
 </li>
@@ -912,7 +912,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
   Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
   Qayda kimi tətbiq olunanlar: müəllim konfliktləri, müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri,
-  “Dərslər mütləq birinci saatdan ardıcıl başlasın” (aktivdirsə) və “Eyni fənn” qaydası (standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2).
+  “Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)” (aktivdirsə) və “Eyni fənn” qaydası (standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2).
 </p>
 
               </div>
@@ -2028,7 +2028,7 @@ config.lessons.forEach(l => {
             throw new Error(`Mümkünsüz konfiqurasiya: "${label}" müəlliminin seçdiyi dərs saatlarında ardıcıl 2 saat yoxdur, amma “Qoşa = Mütləq” dərsləri mövcuddur.`);
           }
         });
-// ===== ✅ FAIL-FAST: optNoClassGaps ("Dərslər mütləq birinci saatdan ardıcıl başlasın") =====
+// ===== ✅ FAIL-FAST: optNoClassGaps ("Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)") =====
 if (config.optNoClassGaps) {
   const daysCount = config.daysCount;
   const lessonsPerDay = config.lessonsPerDay;
@@ -2090,7 +2090,7 @@ if (config.optNoClassGaps) {
     if (usableDays === 0) {
       throw new Error(
         `Mümkünsüz konfiqurasiya: "${config.classes[cId]?.name || '?'}" sinfi üçün ` +
-        `“Dərslər mütləq birinci saatdan ardıcıl başlasın” aktivdir, amma heç bir gün 1-ci saatda başlaya bilən dərs yoxdur.`
+        `“Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)” aktivdir, amma heç bir gün 1-ci saatda başlaya bilən dərs yoxdur.`
       );
     }
 
@@ -2771,7 +2771,7 @@ function attemptBuild(config) {
         }
 
 softWarnings.textContent =
-  'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və “Dərslər mütləq birinci saatdan ardıcıl başlasın” (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
+  'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və “Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)” (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
   'Eyni fənn üçün yeni qayda: standart halda eyni gündə max 1 dəfə; Qoşa=İmkan daxilində/Mütləq olan dərslər həmin fənni eyni gündə 2 dəfə etməyə məcbur edir (Mütləq: ardıcıl, İmkan daxilində: mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 dəfə). ' +
   '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır.';
 

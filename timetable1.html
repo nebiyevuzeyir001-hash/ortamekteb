@@ -690,10 +690,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <span>Ağır fənlər mümkün qədər 1-ci və sonuncu saatda olmasın</span>
   </label>
 
-  <label class="inline-flex items-start gap-2 md:col-span-2">
-    <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
-    <span>Dərslər mütləq birinci saatdan ardıcıl başlasın</span>
-  </label>
+<label class="inline-flex items-start gap-2 md:col-span-2">
+  <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
+  <span>Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)</span>
+</label>
+
 </div>
 
 
@@ -1861,6 +1862,40 @@ function generateBlocks(config) {
             throw new Error(`Mümkünsüz konfiqurasiya: "${c.name}" sinfində ${h} saat var, amma tutum ${cap}-dır (gündə ${maxDay} × ${config.daysCount} gün).`);
           }
         });
+// ===== ✅ FAIL-FAST: Qoşa=Mütləq üçün sinif gündə max < 2 ola bilməz =====
+{
+  // sinif adından id tapmaq üçün
+  const classIndexByName__dd = new Map();
+  config.classes.forEach(c => classIndexByName__dd.set(c.name.trim(), c.id));
+
+  // solver-in istifadə etdiyi real gündəlik limit (0 -> default lessonsPerDay)
+  const classMaxPerDay__dd = config.classes.map(c => {
+    const raw = Number(c.maxPerDay) || 0;
+    const maxDayRaw = raw > 0 ? raw : config.lessonsPerDay;
+    return Math.min(maxDayRaw, config.lessonsPerDay);
+  });
+
+  config.lessons.forEach(l => {
+    const dm = l.doubleMode || 'none';
+    if (dm !== 'required') return;
+
+    // həftəlik saat 2-dən azdırsa, real 2-lik blok yaranmır (səndəki generateBlocks belə işləyir)
+    // ona görə yalnız 2+ olanda bu check işə düşür:
+    if ((Number(l.hours) || 0) < 2) return;
+
+    const cId = classIndexByName__dd.get((l.className || '').trim());
+    if (cId == null) return;
+
+    if (classMaxPerDay__dd[cId] < 2) {
+      const cls = config.classes[cId]?.name || l.className || '?';
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${cls}" sinfində Qoşa=Mütləq seçilib, amma ` +
+        `"Gündə max dərs" 2-dən azdır. Həll: sinif üçün gündə max dərsi ≥ 2 edin ` +
+        `və ya Qoşa rejimini dəyişin.`
+      );
+    }
+  });
+}
 
 // ===== ✅ Eyni fənn qaydası (yeni) - FAIL-FAST =====
 // Ümumi qayda: eyni sinifdə eyni fənn bir gündə max 2.
@@ -1911,6 +1946,65 @@ config.lessons.forEach(l => {
   });
 }
 
+// ===== ✅ FAIL-FAST: Qoşa=Mütləq üçün saatların cüt olması + sinif gündə max >= 2 =====
+{
+  const daysCount = config.daysCount;
+  const lessonsPerDay = config.lessonsPerDay;
+
+  // sinif adı -> id
+  const classIdByName = new Map();
+  config.classes.forEach(c => classIdByName.set((c.name || '').trim(), c.id));
+
+  // sinif üzrə real gündəlik limit (0 => default lessonsPerDay)
+  const classMaxPerDay = config.classes.map(c => {
+    const raw = Number(c.maxPerDay) || 0;
+    const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
+    return Math.min(maxDayRaw, lessonsPerDay);
+  });
+
+  config.lessons.forEach(l => {
+    const dm = l.doubleMode || 'none';
+    if (dm !== 'required') return;
+
+    const hours = Number(l.hours) || 0;
+    const clsName = (l.className || '').trim();
+    const subj = l.subject || '';
+
+    // 1) Mütləq qoşa üçün minimum 2 saat olmalıdır
+    if (hours < 2) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${clsName}" sinfində "${subj}" üçün Qoşa=Mütləq seçilib, ` +
+        `amma həftəlik saat ${hours}-dır. Qoşa=Mütləq üçün minimum 2 saat olmalıdır.`
+      );
+    }
+
+    // 2) Mütləq qoşa üçün saatlar cüt olmalıdır (yoxsa 1 saat “tək” qalır və qaydanı pozur)
+    if (hours % 2 !== 0) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${clsName}" sinfində "${subj}" üçün Qoşa=Mütləq seçilib, ` +
+        `amma həftəlik saat ${hours}-dır (təkdir). Qoşa=Mütləq üçün həftəlik saat cüt olmalıdır (2,4,6,...).`
+      );
+    }
+
+    // 3) Sinif gündə max < 2 ola bilməz (çünki qoşa ardıcıl 2 saat tələb edir)
+    const cId = classIdByName.get(clsName);
+    if (cId != null && classMaxPerDay[cId] < 2) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${config.classes[cId]?.name || clsName}" sinfində Qoşa=Mütləq seçilib, ` +
+        `amma "Gündə max dərs" 2-dən azdır. Həll: sinif üçün gündə max dərsi ≥ 2 edin və ya Qoşa rejimini dəyişin.`
+      );
+    }
+
+    // əlavə: 5/6 gün seçimi ilə maksimum həftəlik limit (gündə max 2)
+    const weeklyCap = 2 * daysCount;
+    if (hours > weeklyCap) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${clsName}" sinfində "${subj}" Qoşa=Mütləqdir, ` +
+        `amma həftəlik ${hours} saatdır. Qaydaya görə maksimum ${weeklyCap} ola bilər (gündə 2 × ${daysCount} gün).`
+      );
+    }
+  });
+}
 
         // Qoşa=required: müəllim seçdiyi saatlarda ardıcıl 2 saat olmalıdır
         const requiredDoubleTeachers = new Set();

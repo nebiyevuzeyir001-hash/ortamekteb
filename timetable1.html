@@ -692,7 +692,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <label class="inline-flex items-start gap-2 md:col-span-2">
     <input id="optNoClassGaps" type="checkbox" class="mt-0.5" checked />
-    <span>Siniflər üzrə gün ərzində boş saat olmasın (dərslər 1-ci saatdan ardıcıl olsun)</span>
+    <span>Dərslər mütləq birinci saatdan ardıcıl başlasın</span>
   </label>
 </div>
 
@@ -900,16 +900,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   (Mütləq: ardıcıl; İmkan daxilində: mümkünsə ardıcıl).
 </li>
 
-                  <li>
-                    <strong>Siniflər üzrə gün ərzində boş saat olmasın</strong> — aktivdirsə,
-                    sinifdə dərslər gün ərzində <strong>1-ci saatdan başlayıb ardıcıl</strong> gedir, arada boşluq yaranmır (qayda kimi tətbiq olunur).
-                  </li>
+<li>
+  <strong>Dərslər mütləq birinci saatdan ardıcıl başlasın</strong> — aktivdirsə,
+  sinifdə dərs olan günlərdə dərslər <strong>1-ci saatdan başlayır</strong> və günün son dərsinə qədər <strong>ardıcıl</strong> gedir.
+  Boşluq yalnız <strong>günün sonunda</strong> ola bilər.
+</li>
+
                 </ul>
 
 <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
   Qeyd: “Ağır fənn kənar saat olmasın” optimallaşdırmadır.
   Qayda kimi tətbiq olunanlar: müəllim konfliktləri, müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri,
-  sinifdə boş saat olmaması (aktivdirsə) və “Eyni fənn” qaydası (standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2).
+  “Dərslər mütləq birinci saatdan ardıcıl başlasın” (aktivdirsə) və “Eyni fənn” qaydası (standart max 1; Qoşa=İmkan daxilində/Mütləq üçün eyni gündə 2; ümumi max 2).
 </p>
 
               </div>
@@ -1721,7 +1723,7 @@ function readConfig() {
       }
 
 function generateBlocks(config) {
-  const { lessons, classes, teachers } = config;
+  const { lessons, classes, teachers, daysCount, lessonsPerDay } = config;
 
   const classIndexByName = new Map();
   classes.forEach(c => classIndexByName.set(c.name.trim(), c.id));
@@ -1735,6 +1737,8 @@ function generateBlocks(config) {
   const blocks = [];
   const unknown = [];
 
+  let pairSeq = 0;
+
   lessons.forEach(l => {
     const cId = classIndexByName.get(l.className.trim());
     const tId = teacherIndexByKey.get(l.teacherRef.trim());
@@ -1745,37 +1749,50 @@ function generateBlocks(config) {
 
     let remaining = l.hours;
 
-    // ✅ Yeni qayda: Qoşa=Yox => gündə cap 1; əks halda cap 2
-    const dailyCap = (l.doubleMode === 'none') ? 1 : 2;
+    const dmRaw = l.doubleMode || 'none';
+    const doubleMode = (dmRaw === 'prefer' || dmRaw === 'required') ? dmRaw : 'none';
+
+    // ✅ gündəlik cap: Qoşa=Yox => 1, əks halda 2
+    const dailyCap = (doubleMode === 'none') ? 1 : 2;
 
     const base = {
       classId: cId,
       teacherId: tId,
       subject: l.subject,
       heavy: !!l.heavy,
-      dailyCap
+      dailyCap,
+      doublePolicy: doubleMode // 'none' | 'prefer' | 'required'
     };
 
-    // Qoşa=prefer/required => mümkün qədər 2-lik bloklar (həmin fənn eyni gündə 2 dəfə)
-    if ((l.doubleMode === 'required' || l.doubleMode === 'prefer') && remaining >= 2) {
-      const splitAllowed = (l.doubleMode === 'prefer');
-      const doublePolicy = l.doubleMode;
-
+    // ✅ Qoşa=Mütləq -> 2-lik ardıcıl bloklar (hard)
+    if (doubleMode === 'required') {
       while (remaining >= 2) {
-        blocks.push({ ...base, length: 2, splitAllowed, doublePolicy });
+        blocks.push({ ...base, length: 2, pairGroupId: null });
         remaining -= 2;
       }
     }
 
-    // Qalan tək saatlar (odd qalıq və ya Qoşa=Yox)
+    // ✅ Qoşa=İmkan daxilində -> 2 saat eyni gündə olmağa çalışacaq
+    // Bunun üçün 2 saatı iki ayrı 1-lik blok kimi saxlayırıq (solver onları eyni günə yığmağa çalışır)
+    if (doubleMode === 'prefer') {
+      while (remaining >= 2) {
+        const gid = 'P' + (++pairSeq);
+        blocks.push({ ...base, length: 1, pairGroupId: gid, pairNeed: 2 });
+        blocks.push({ ...base, length: 1, pairGroupId: gid, pairNeed: 2 });
+        remaining -= 2;
+      }
+    }
+
+    // qalan tək saatlar
     while (remaining > 0) {
-      blocks.push({ ...base, length: 1, splitAllowed: false, doublePolicy: 'none' });
+      blocks.push({ ...base, length: 1, pairGroupId: null });
       remaining -= 1;
     }
   });
 
   return { blocks, unknownUnmapped: unknown };
 }
+
 
 
       function sumRequiredHours(lessons){
@@ -1917,331 +1934,527 @@ config.lessons.forEach(l => {
             throw new Error(`Mümkünsüz konfiqurasiya: "${label}" müəlliminin seçdiyi dərs saatlarında ardıcıl 2 saat yoxdur, amma “Qoşa = Mütləq” dərsləri mövcuddur.`);
           }
         });
+// ===== ✅ FAIL-FAST: optNoClassGaps ("Dərslər mütləq birinci saatdan ardıcıl başlasın") =====
+if (config.optNoClassGaps) {
+  const daysCount = config.daysCount;
+  const lessonsPerDay = config.lessonsPerDay;
+
+  const classMaxPerDay = config.classes.map(c => {
+    const raw = Number(c.maxPerDay) || 0;
+    const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
+    return Math.min(maxDayRaw, lessonsPerDay);
+  });
+
+  const teacherHourMask = config.teachers.map(t => {
+    const m = t.availableHoursMask;
+    if (Array.isArray(m) && m.length === lessonsPerDay) return m;
+    return new Array(lessonsPerDay).fill(true);
+  });
+
+  const teacherDayMask = config.teachers.map(t => {
+    const m = new Array(daysCount).fill(false);
+    (t.availableDays || []).forEach(d => { if (d >= 0 && d < daysCount) m[d] = true; });
+    return m;
+  });
+
+  // sinif üzrə ümumi tələb olunan saat
+  const classTotalHours = new Array(config.classes.length).fill(0);
+  blocks.forEach(b => { classTotalHours[b.classId] += b.length; });
+
+  // 1) Hər sinif üçün “dərs olan gün” başlaya bilən günlər tapılır (1-ci saatda yerləşə bilən ən azı 1 dərs olmalıdır)
+  for (let cId = 0; cId < config.classes.length; cId++) {
+    const maxDay = classMaxPerDay[cId];
+    const total = classTotalHours[cId];
+
+    // sinifdə ümumiyyətlə dərs yoxdursa skip
+    if (total <= 0) continue;
+
+    let usableDays = 0;
+
+    for (let d = 0; d < daysCount; d++) {
+      let canStart = false;
+
+      for (const b of blocks) {
+        if (b.classId !== cId) continue;
+
+        const tId = b.teacherId;
+        if (!teacherDayMask[tId][d]) continue;
+
+        // 1-ci saat (slot 0) mütləq dolmalıdır.
+        if (b.length === 1) {
+          if (maxDay >= 1 && teacherHourMask[tId][0]) { canStart = true; break; }
+        } else if (b.length === 2) {
+          // Qoşa=Mütləq 2-lik bloklar slot0-da başlaya bilər (0 və 1 açıq olmalıdır)
+          if (maxDay >= 2 && teacherHourMask[tId][0] && teacherHourMask[tId][1]) { canStart = true; break; }
+        }
+      }
+
+      if (canStart) usableDays++;
+    }
+
+    const capacity = usableDays * maxDay;
+    if (usableDays === 0) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${config.classes[cId]?.name || '?'}" sinfi üçün ` +
+        `“Dərslər mütləq birinci saatdan ardıcıl başlasın” aktivdir, amma heç bir gün 1-ci saatda başlaya bilən dərs yoxdur.`
+      );
+    }
+
+    if (total > capacity) {
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${config.classes[cId]?.name || '?'}" sinfində ${total} saat var, ` +
+        `amma “1-ci saatdan ardıcıl” qaydasına görə istifadə oluna bilən günlərin tutumu ${capacity}-dır ` +
+        `(istifadə oluna bilən gün: ${usableDays}, gündə max: ${maxDay}).`
+      );
+    }
+  }
+}
+
+// ===== ✅ FAIL-FAST: Qoşa=İmkan daxilində (same-day 2 saat) mümkünlüyü =====
+{
+  const daysCount = config.daysCount;
+  const lessonsPerDay = config.lessonsPerDay;
+
+  const classMaxPerDay = config.classes.map(c => {
+    const raw = Number(c.maxPerDay) || 0;
+    const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
+    return Math.min(maxDayRaw, lessonsPerDay);
+  });
+
+  const teacherHourMask = config.teachers.map(t => {
+    const m = t.availableHoursMask;
+    if (Array.isArray(m) && m.length === lessonsPerDay) return m;
+    return new Array(lessonsPerDay).fill(true);
+  });
+
+  const teacherDayMask = config.teachers.map(t => {
+    const m = new Array(daysCount).fill(false);
+    (t.availableDays || []).forEach(d => { if (d >= 0 && d < daysCount) m[d] = true; });
+    return m;
+  });
+
+  // prefer pair-lar üçün: ən azı 1 gündə 2 uyğun slot olmalıdır
+  const preferPairs = new Map(); // key: classId|teacherId|subject -> true
+  blocks.forEach(b => {
+    if (b.doublePolicy === 'prefer' && b.pairGroupId) {
+      const key = `${b.classId}|${b.teacherId}|${b.subject}|${b.pairGroupId}`;
+      preferPairs.set(key, b);
+    }
+  });
+
+  preferPairs.forEach((b) => {
+    const cId = b.classId;
+    const tId = b.teacherId;
+    const maxDay = classMaxPerDay[cId];
+
+    let ok = false;
+    for (let d = 0; d < daysCount; d++) {
+      if (!teacherDayMask[tId][d]) continue;
+
+      let cnt = 0;
+      for (let s = 0; s < maxDay; s++) {
+        if (teacherHourMask[tId][s]) cnt++;
+        if (cnt >= 2) { ok = true; break; }
+      }
+      if (ok) break;
+    }
+
+    if (!ok) {
+      const cls = config.classes[cId]?.name || '?';
+      const t = config.teachers[tId];
+      const tLabel = t ? (t.code || t.name) : '?';
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${cls}" sinfində "${b.subject}" dərsi Qoşa=İmkan daxilindədir, ` +
+        `amma "${tLabel}" müəlliminin seçdiyi saatlarda eyni günə 2 dəfə sığdırmaq mümkün deyil. ` +
+        `Həll: müəllimin uyğun saatlarını genişləndirin və ya Qoşa rejimini dəyişin.`
+      );
+    }
+  });
+}
 
         return config;
       }
 
       // ===== PRO placement + "boş saat olmasın" =====
-      function attemptBuild(config) {
-const {
-  daysCount,
-  lessonsPerDay,
-  teachers,
-  classes,
-  optHeavyAvoidEdges,
-  optNoClassGaps
-} = config;
+function attemptBuild(config) {
+  const {
+    daysCount,
+    lessonsPerDay,
+    teachers,
+    classes,
+    optHeavyAvoidEdges,
+    optNoClassGaps
+  } = config;
 
-        const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
-          ? config._blocks
-          : generateBlocks(config).blocks;
+  const baseBlocks = (Array.isArray(config._blocks) && config._blocks.length)
+    ? config._blocks
+    : generateBlocks(config).blocks;
 
-        // Precompute masks and allowed slots for speed
-        const teacherWeekMax = teachers.map(t => t.weeklyMax > 0 ? t.weeklyMax : Infinity);
-        const teacherDayMax  = teachers.map(t => t.dailyMax > 0 ? t.dailyMax : Infinity);
+  // Precompute
+  const teacherWeekMax = teachers.map(t => t.weeklyMax > 0 ? t.weeklyMax : Infinity);
+  const teacherDayMax  = teachers.map(t => t.dailyMax > 0 ? t.dailyMax : Infinity);
 
-        const teacherDayMask = teachers.map(t => {
-          const m = new Array(daysCount).fill(false);
-          (t.availableDays || []).forEach(d => { if (d >= 0 && d < daysCount) m[d] = true; });
-          return m;
-        });
+  const teacherDayMask = teachers.map(t => {
+    const m = new Array(daysCount).fill(false);
+    (t.availableDays || []).forEach(d => { if (d >= 0 && d < daysCount) m[d] = true; });
+    return m;
+  });
 
-        const teacherHourMask = teachers.map(t => {
-          const m = t.availableHoursMask;
-          if (Array.isArray(m) && m.length === lessonsPerDay) return m.slice();
-          return new Array(lessonsPerDay).fill(true);
-        });
+  const teacherHourMask = teachers.map(t => {
+    const m = t.availableHoursMask;
+    if (Array.isArray(m) && m.length === lessonsPerDay) return m.slice();
+    return new Array(lessonsPerDay).fill(true);
+  });
 
-        const teacherAllowedSlots = teachers.map((t, tid) => {
-          const m = teacherHourMask[tid];
-          const slots1 = [];
-          for (let s = 0; s < lessonsPerDay; s++) if (m[s]) slots1.push(s);
-          const slots2 = [];
-          for (let s = 0; s < lessonsPerDay - 1; s++) if (m[s] && m[s + 1]) slots2.push(s);
-          return { 1: slots1, 2: slots2 };
-        });
+  const teacherAllowedSlots = teachers.map((t, tid) => {
+    const m = teacherHourMask[tid];
+    const slots1 = [];
+    for (let s = 0; s < lessonsPerDay; s++) if (m[s]) slots1.push(s);
 
-        const classMaxPerDay = classes.map(c => {
-          const raw = Number(c.maxPerDay) || 0;
-          const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
-          return Math.min(maxDayRaw, lessonsPerDay);
-        });
+    const slots2 = [];
+    for (let s = 0; s < lessonsPerDay - 1; s++) if (m[s] && m[s + 1]) slots2.push(s);
 
-        // Order blocks by difficulty
-        const blocks = baseBlocks.slice().map(b => ({ ...b, __r: Math.random() }));
-        blocks.forEach(b => {
-          const tid = b.teacherId;
-          const daysAvail = (teachers[tid]?.availableDays?.length || daysCount);
-          const slotsAvail2 = teacherAllowedSlots[tid][2].length;
-          const slotsAvail1 = teacherAllowedSlots[tid][1].length;
+    return { 1: slots1, 2: slots2 };
+  });
 
-          let slotsAvail = teacherAllowedSlots[tid][b.length].length;
-          if (b.length === 2 && b.splitAllowed) {
-            slotsAvail = Math.max(slotsAvail2, slotsAvail1);
-          }
-          const domain = Math.max(1, daysAvail * Math.max(1, slotsAvail));
-          b.__difficulty = domain;
-          b.__hardDouble = (b.length === 2 && b.doublePolicy === 'required') ? 0 : 1;
-        });
+  const classMaxPerDay = classes.map(c => {
+    const raw = Number(c.maxPerDay) || 0;
+    const maxDayRaw = raw > 0 ? raw : lessonsPerDay;
+    return Math.min(maxDayRaw, lessonsPerDay);
+  });
 
-        blocks.sort((a, b) => {
-          if (a.__hardDouble !== b.__hardDouble) return a.__hardDouble - b.__hardDouble;
-          if (a.__difficulty !== b.__difficulty) return a.__difficulty - b.__difficulty;
-          if (b.length !== a.length) return b.length - a.length;
-          if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
-          return a.__r - b.__r;
-        });
+  // Blocks: difficulty ordering
+  const blocks = baseBlocks.slice().map((b, idx) => ({ ...b, __id: idx + 1, __r: Math.random() }));
 
-        // Timetable matrices
-        const timetable = {};
-        classes.forEach(c => {
-          const matrix = [];
-          for (let d = 0; d < daysCount; d++) matrix.push(new Array(lessonsPerDay).fill(null));
-          timetable[c.id] = matrix;
-        });
+  blocks.forEach(b => {
+    const tid = b.teacherId;
 
-        // State
-        const teacherWeekly = new Array(teachers.length).fill(0);
-        const teacherDaily  = new Array(teachers.length).fill(null).map(() => new Array(daysCount).fill(0));
-        const classDaily    = new Array(classes.length).fill(null).map(() => new Array(daysCount).fill(0));
-        const classSubjPerDay = new Array(classes.length).fill(null).map(() => Object.create(null));
-
-        // teacherBusy[tid][day][slot] = true/false
-        const teacherBusy = new Array(teachers.length).fill(null).map(() =>
-          new Array(daysCount).fill(null).map(() => new Array(lessonsPerDay).fill(false))
-        );
-
-        const lastSlotIndex = lessonsPerDay - 1;
-        const unplaced = [];
-        let placedCount = 0;
-
-        function isEdge(slot, len){
-          return slot === 0 || (slot + len - 1) === lastSlotIndex;
-        }
-
-        function checkPlaceReason(block, day, slot, avoidEdgesHard){
-          const { classId, teacherId, subject, length } = block;
-
-          if (slot + length - 1 >= lessonsPerDay) return 'Saat aralığına sığmır';
-
-          // ✅ boş saat olmasın: sinifdə yalnız "növbəti boş slot"a yerləşdir
-          if (optNoClassGaps) {
-            const nextSlot = classDaily[classId][day];
-            if (slot !== nextSlot) return 'Sinifdə boşluq qaydası (ardıcıllıq)';
-          }
-
-          const matrix = timetable[classId];
-          for (let i = 0; i < length; i++) {
-            if (matrix[day][slot + i] != null) return 'Sinif slotu doludur';
-          }
-
-          if (!teacherDayMask[teacherId][day]) return 'Müəllim həmin gün gəlmir';
-
-          const hm = teacherHourMask[teacherId];
-          for (let i = 0; i < length; i++) {
-            if (!hm[slot + i]) return 'Müəllim həmin saatı seçməyib';
-          }
-
-          for (let i = 0; i < length; i++) {
-            if (teacherBusy[teacherId][day][slot + i]) return 'Müəllim conflict (başqa dərs)';
-          }
-
-          if (teacherWeekly[teacherId] + length > teacherWeekMax[teacherId]) return 'Müəllim həftəlik limit dolub';
-          if (teacherDaily[teacherId][day] + length > teacherDayMax[teacherId]) return 'Müəllim gündəlik limit dolub';
-
-          if (classDaily[classId][day] + length > classMaxPerDay[classId]) return 'Sinif gündəlik limit dolub';
-
-// ✅ Eyni fənn qaydası (yeni)
-// Ümumi cap: gündə max 2.
-// Qoşa=Yox blokları üçün cap=1.
-{
-  const subjMap = classSubjPerDay[classId];
-  const arr = subjMap[subject];
-  const cur = arr ? arr[day] : 0;
-
-  const cap = Math.min(2, (block.dailyCap === 1 ? 1 : 2));
-  if (cur + length > cap) return cap === 1 ? 'Eyni fənn gündə maksimum 1' : 'Eyni fənn gündə maksimum 2';
-}
-
-
-          if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) {
-            return 'Ağır fənn kənar saat';
-          }
-
-          return null; // OK
-        }
-
-        function canPlace(block, day, slot, avoidEdgesHard){
-          return checkPlaceReason(block, day, slot, avoidEdgesHard) === null;
-        }
-
-        function place(block, day, slot){
-          const { classId, teacherId, subject, length } = block;
-          const matrix = timetable[classId];
-
-          for (let i = 0; i < length; i++) {
-            matrix[day][slot + i] = { block, part: i };
-            teacherBusy[teacherId][day][slot + i] = true;
-          }
-
-          teacherWeekly[teacherId] += length;
-          teacherDaily[teacherId][day] += length;
-          classDaily[classId][day] += length;
-
-          const subjMap = classSubjPerDay[classId];
-          if (!subjMap[subject]) subjMap[subject] = new Array(daysCount).fill(0);
-          subjMap[subject][day] += length;
-
-          placedCount += length;
-        }
-
-        function unplace(block, day, slot){
-          const { classId, teacherId, subject, length } = block;
-          const matrix = timetable[classId];
-
-          for (let i = 0; i < length; i++) {
-            matrix[day][slot + i] = null;
-            teacherBusy[teacherId][day][slot + i] = false;
-          }
-
-          teacherWeekly[teacherId] -= length;
-          teacherDaily[teacherId][day] -= length;
-          classDaily[classId][day] -= length;
-
-          const subjMap = classSubjPerDay[classId];
-          if (subjMap[subject]) subjMap[subject][day] -= length;
-
-          placedCount -= length;
-        }
-
-        function candidateScore(block, day, slot){
-          const { classId, teacherId, length } = block;
-
-          let score = 0;
-          score += classDaily[classId][day] * 6;
-          score += teacherDaily[teacherId][day] * 3;
-
-          // prefer earlier slots a bit
-          score += slot * 0.35;
-
-          if (optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) score += 18;
-
-          score += Math.random() * 0.6;
-          return score;
-        }
-
-        function getCandidates(block, avoidEdgesHard){
-          const { teacherId, length, classId } = block;
-          const days = teachers[teacherId].availableDays || [];
-          const slots = teacherAllowedSlots[teacherId][length] || [];
-
-          const cands = [];
-
-          for (const d of days) {
-            if (teacherDaily[teacherId][d] + length > teacherDayMax[teacherId]) continue;
-            if (classDaily[classId][d] + length > classMaxPerDay[classId]) continue;
-
-            if (optNoClassGaps) {
-              const s = classDaily[classId][d]; // next slot
-              if (s + length - 1 >= lessonsPerDay) continue;
-              if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
-              if (!canPlace(block, d, s, avoidEdgesHard)) continue;
-              cands.push({ d, s, score: candidateScore(block, d, s) });
-              continue;
-            }
-
-            for (const s of slots) {
-              if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
-              if (!canPlace(block, d, s, avoidEdgesHard)) continue;
-              cands.push({ d, s, score: candidateScore(block, d, s) });
-            }
-          }
-
-          return cands;
-        }
-
-        function pickFromTopK(cands, k){
-          if (!cands.length) return null;
-          cands.sort((a, b) => a.score - b.score);
-          const kk = Math.max(1, Math.min(k, cands.length));
-          const idx = Math.floor(Math.random() * kk);
-          return cands[idx];
-        }
-
-        function tryPlaceBlock(block){
-          const avoidEdgesStage1 = !!(optHeavyAvoidEdges && block.heavy);
-
-          // 1) stage-1 (avoid edges for heavy)
-          let cands = getCandidates(block, avoidEdgesStage1);
-          let pick = pickFromTopK(cands, 8);
-          if (pick) { place(block, pick.d, pick.s); return true; }
-
-          // 2) stage-2 (allow edges)
-          cands = getCandidates(block, false);
-          pick = pickFromTopK(cands, 8);
-          if (pick) { place(block, pick.d, pick.s); return true; }
-
-// 3) Qoşa=İmkan daxilində (splitAllowed) -> ardıcıl alınmasa, eyni gündə 2 ayrı saat kimi yerləşdir (mütləq eyni gün)
-if (block.length === 2 && block.splitAllowed) {
-  const singleA = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
-  const singleB = { ...block, length: 1, splitAllowed: false, doublePolicy: 'none' };
-
-  const trySplitSameDay = (avoidEdgesHard) => {
-    const aCands = getCandidates(singleA, avoidEdgesHard);
-    aCands.sort((x, y) => x.score - y.score);
-
-    const limit = Math.min(14, aCands.length);
-    for (let i = 0; i < limit; i++) {
-      const a = aCands[i];
-      place(singleA, a.d, a.s);
-
-      let bCands = getCandidates(singleB, avoidEdgesHard).filter(x => x.d === a.d);
-      if (bCands.length) {
-        bCands.sort((x, y) => {
-          const dx = Math.abs(x.s - a.s);
-          const dy = Math.abs(y.s - a.s);
-          if (dx !== dy) return dx - dy;   // əvvəl mümkün qədər yan-yana/ardıcıl
-          return x.score - y.score;
-        });
-        const b = bCands[0];
-        place(singleB, b.d, b.s);
-        return true;
-      }
-
-      unplace(singleA, a.d, a.s);
+    // min slot (no-gaps aktivdirsə çox kömək edir)
+    const hm = teacherHourMask[tid];
+    let minSlot = 999;
+    if (b.length === 1) {
+      for (let s = 0; s < lessonsPerDay; s++) { if (hm[s]) { minSlot = s; break; } }
+    } else {
+      for (let s = 0; s < lessonsPerDay - 1; s++) { if (hm[s] && hm[s + 1]) { minSlot = s; break; } }
     }
-    return false;
-  };
+    b.__minSlot = (minSlot === 999) ? 999 : minSlot;
 
-  if (trySplitSameDay(avoidEdgesStage1)) return true;
-  if (trySplitSameDay(false)) return true;
+    // required qoşa daha “hard”
+    b.__hardDouble = (b.length === 2 && b.doublePolicy === 'required') ? 0 : 1;
+
+    // prefer pair-lar bir az daha çətin
+    b.__pair = (b.pairGroupId ? 0 : 1);
+
+    const daysAvail = (teachers[tid]?.availableDays?.length || daysCount);
+    const slotsAvail = teacherAllowedSlots[tid][b.length]?.length || 0;
+    b.__difficulty = Math.max(1, daysAvail * Math.max(1, slotsAvail));
+  });
+
+  blocks.sort((a, b) => {
+    if (a.__hardDouble !== b.__hardDouble) return a.__hardDouble - b.__hardDouble;
+    if (a.__pair !== b.__pair) return a.__pair - b.__pair;
+    if (optNoClassGaps && a.__minSlot !== b.__minSlot) return a.__minSlot - b.__minSlot;
+    if (a.__difficulty !== b.__difficulty) return a.__difficulty - b.__difficulty;
+    if (b.length !== a.length) return b.length - a.length;
+    if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
+    return a.__r - b.__r;
+  });
+
+  // Timetable matrices
+  const timetable = {};
+  classes.forEach(c => {
+    const matrix = [];
+    for (let d = 0; d < daysCount; d++) matrix.push(new Array(lessonsPerDay).fill(null));
+    timetable[c.id] = matrix;
+  });
+
+  // State
+  const teacherWeekly = new Array(teachers.length).fill(0);
+  const teacherDaily  = new Array(teachers.length).fill(null).map(() => new Array(daysCount).fill(0));
+  const classDaily    = new Array(classes.length).fill(null).map(() => new Array(daysCount).fill(0));
+  const classSubjPerDay = new Array(classes.length).fill(null).map(() => Object.create(null));
+
+  const teacherBusy = new Array(teachers.length).fill(null).map(() =>
+    new Array(daysCount).fill(null).map(() => new Array(lessonsPerDay).fill(false))
+  );
+
+  // Qoşa=prefer (same-day 2) üçün state
+  const pairRemaining = Object.create(null); // gid -> count
+  const pairDay = Object.create(null);       // gid -> day
+  const pairFirstSlot = Object.create(null); // gid -> slot
+
+  blocks.forEach(b => {
+    if (b.pairGroupId) {
+      pairRemaining[b.pairGroupId] = (pairRemaining[b.pairGroupId] || 0) + 1;
+    }
+  });
+
+  const lastSlotIndex = lessonsPerDay - 1;
+  const unplaced = [];
+  let placedCount = 0;
+
+  function isEdge(slot, len){
+    return slot === 0 || (slot + len - 1) === lastSlotIndex;
+  }
+
+  function subjectCount(classId, day, subject){
+    const m = classSubjPerDay[classId];
+    const arr = m[subject];
+    return arr ? arr[day] : 0;
+  }
+
+  function checkPlaceReason(block, day, slot, avoidEdgesHard){
+    const { classId, teacherId, subject, length } = block;
+
+    if (slot + length - 1 >= lessonsPerDay) return 'Saat aralığına sığmır';
+
+    // ✅ “1-ci saatdan ardıcıl” aktivdirsə: yalnız növbəti boş slota yerləşdir
+    if (optNoClassGaps) {
+      const nextSlot = classDaily[classId][day];
+      if (slot !== nextSlot) return 'Ardıcıl dərs qaydası';
+    }
+
+    // prefer pair: eyni gün məcburiyyəti (day seçilibsə)
+    if (block.pairGroupId && pairDay[block.pairGroupId] != null && day !== pairDay[block.pairGroupId]) {
+      return 'Qoşa=İmkan daxilində: eyni gün şərti';
+    }
+
+    const matrix = timetable[classId];
+    for (let i = 0; i < length; i++) {
+      if (matrix[day][slot + i] != null) return 'Sinif slotu doludur';
+    }
+
+    if (!teacherDayMask[teacherId][day]) return 'Müəllim həmin gün gəlmir';
+
+    const hm = teacherHourMask[teacherId];
+    for (let i = 0; i < length; i++) {
+      if (!hm[slot + i]) return 'Müəllim həmin saatı seçməyib';
+    }
+
+    for (let i = 0; i < length; i++) {
+      if (teacherBusy[teacherId][day][slot + i]) return 'Müəllim conflict';
+    }
+
+    if (teacherWeekly[teacherId] + length > teacherWeekMax[teacherId]) return 'Müəllim həftəlik limit';
+    if (teacherDaily[teacherId][day] + length > teacherDayMax[teacherId]) return 'Müəllim gündəlik limit';
+
+    if (classDaily[classId][day] + length > classMaxPerDay[classId]) return 'Sinif gündəlik limit';
+
+    // ✅ Eyni fənn qaydası (cap 1/2)
+    const cur = subjectCount(classId, day, subject);
+    const cap = (block.dailyCap === 1 ? 1 : 2);
+    if (cur + length > cap) return cap === 1 ? 'Eyni fənn gündə max 1' : 'Eyni fənn gündə max 2';
+
+    if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) {
+      return 'Ağır fənn kənar saat';
+    }
+
+    return null;
+  }
+
+  function canPlace(block, day, slot, avoidEdgesHard){
+    return checkPlaceReason(block, day, slot, avoidEdgesHard) === null;
+  }
+
+  function place(block, day, slot){
+    const { classId, teacherId, subject, length } = block;
+    const matrix = timetable[classId];
+
+    for (let i = 0; i < length; i++) {
+      matrix[day][slot + i] = { block, part: i };
+      teacherBusy[teacherId][day][slot + i] = true;
+    }
+
+    teacherWeekly[teacherId] += length;
+    teacherDaily[teacherId][day] += length;
+    classDaily[classId][day] += length;
+
+    const subjMap = classSubjPerDay[classId];
+    if (!subjMap[subject]) subjMap[subject] = new Array(daysCount).fill(0);
+    subjMap[subject][day] += length;
+
+    // prefer pair state update
+    if (block.pairGroupId) {
+      const gid = block.pairGroupId;
+      if (pairDay[gid] == null) {
+        pairDay[gid] = day;
+        pairFirstSlot[gid] = slot;
+      }
+      pairRemaining[gid] = (pairRemaining[gid] || 0) - 1;
+      if (pairRemaining[gid] <= 0) {
+        delete pairDay[gid];
+        delete pairFirstSlot[gid];
+      }
+    }
+
+    placedCount += length;
+  }
+
+  function candidateScore(block, day, slot){
+    const { classId, teacherId, length } = block;
+
+    let score = 0;
+    score += classDaily[classId][day] * 6;
+    score += teacherDaily[teacherId][day] * 3;
+    score += slot * 0.35;
+
+    if (optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) score += 18;
+
+    // Qoşa=İmkan daxilində: 2-ci saatı 1-cinin yaxınında seçməyə çalış
+    if (block.pairGroupId && pairDay[block.pairGroupId] != null) {
+      const fs = pairFirstSlot[block.pairGroupId];
+      if (typeof fs === 'number') score += Math.abs(slot - fs) * 0.9;
+    }
+
+    score += Math.random() * 0.6;
+    return score;
+  }
+
+  function hasFutureSlotForPairFirst(block, day, slot){
+    // bu funksiya yalnız “pairDay seçilməyibsə” (yəni 1-ci yerləşdirmə) üçün işlədilir
+    const { classId, teacherId, subject } = block;
+
+    // həmin gündə bu fənn artıq 1 dəfə varsa, bu günü seçmə (çünki 2-ciyə yer qalmaz)
+    if (subjectCount(classId, day, subject) !== 0) return false;
+
+    const maxDay = classMaxPerDay[classId];
+    if (maxDay < 2) return false;
+
+    const hm = teacherHourMask[teacherId];
+
+    // 2-ci dəfə üçün “hansısa başqa slot” olmalıdır
+    if (optNoClassGaps) {
+      for (let s2 = slot + 1; s2 < maxDay; s2++) {
+        if (hm[s2]) return true;
+      }
+      return false;
+    } else {
+      // gaps rejimində: sadəcə həmin gündə ən azı 2 uyğun slot olsun (slotdan fərqli)
+      let cnt = 0;
+      for (let s2 = 0; s2 < maxDay; s2++) {
+        if (hm[s2]) cnt++;
+        if (cnt >= 2) return true;
+      }
+      return false;
+    }
+  }
+
+  function getCandidates(block, avoidEdgesHard){
+    const { teacherId, length, classId } = block;
+
+    let days = teachers[teacherId].availableDays || [];
+    if (block.pairGroupId && pairDay[block.pairGroupId] != null) {
+      days = [pairDay[block.pairGroupId]];
+    }
+
+    const slots = teacherAllowedSlots[teacherId][length] || [];
+    const cands = [];
+
+    for (const d of days) {
+      if (d < 0 || d >= daysCount) continue;
+
+      if (teacherDaily[teacherId][d] + length > teacherDayMax[teacherId]) continue;
+      if (classDaily[classId][d] + length > classMaxPerDay[classId]) continue;
+
+      if (optNoClassGaps) {
+        const s = classDaily[classId][d];
+
+        if (s + length - 1 >= lessonsPerDay) continue;
+        if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
+
+        // prefer pair-in 1-ci yerləşdirilməsi üçün: 2-ci üçün gələcək slot olmalıdır
+        if (block.pairGroupId && pairDay[block.pairGroupId] == null) {
+          if (!hasFutureSlotForPairFirst(block, d, s)) continue;
+        }
+
+        if (!canPlace(block, d, s, avoidEdgesHard)) continue;
+        cands.push({ d, s, score: candidateScore(block, d, s) });
+        continue;
+      }
+
+      for (const s of slots) {
+        if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(s, length)) continue;
+
+        if (block.pairGroupId && pairDay[block.pairGroupId] == null) {
+          if (!hasFutureSlotForPairFirst(block, d, s)) continue;
+        }
+
+        if (!canPlace(block, d, s, avoidEdgesHard)) continue;
+        cands.push({ d, s, score: candidateScore(block, d, s) });
+      }
+    }
+
+    return cands;
+  }
+
+  function pickFromTopK(cands, k){
+    if (!cands.length) return null;
+    cands.sort((a, b) => a.score - b.score);
+    const kk = Math.max(1, Math.min(k, cands.length));
+    const idx = Math.floor(Math.random() * kk);
+    return cands[idx];
+  }
+
+  function tryPlaceBlock(block){
+    const avoidEdgesStage1 = !!(optHeavyAvoidEdges && block.heavy);
+
+    // stage-1 (heavy kənar olmasın)
+    let cands = getCandidates(block, avoidEdgesStage1);
+    let pick = pickFromTopK(cands, 8);
+    if (pick) { place(block, pick.d, pick.s); return true; }
+
+    // stage-2 (kənara icazə ver)
+    cands = getCandidates(block, false);
+    pick = pickFromTopK(cands, 8);
+    if (pick) { place(block, pick.d, pick.s); return true; }
+
+    return false;
+  }
+
+  // ✅ Queue + retry: optNoClassGaps ssenarisində “indi mümkün deyil, sonra mümkün olar” halını həll edir
+  const retryCount = new Map();
+  const MAX_RETRY = optNoClassGaps ? (lessonsPerDay * 2 + 6) : 5;
+  const MAX_STEPS = blocks.length * (MAX_RETRY + 3);
+
+  const queue = blocks.slice();
+  let qi = 0;
+  let steps = 0;
+
+  while (qi < queue.length && steps < MAX_STEPS) {
+    const b = queue[qi++];
+    const ok = tryPlaceBlock(b);
+
+    if (!ok) {
+      const r = (retryCount.get(b.__id) || 0) + 1;
+      retryCount.set(b.__id, r);
+
+      if (r <= MAX_RETRY) queue.push(b);
+      else unplaced.push(b);
+    }
+
+    steps++;
+  }
+
+  // qalan (limitə görə işlənməyən) bloklar unplaced
+  for (; qi < queue.length; qi++) unplaced.push(queue[qi]);
+
+  return {
+    timetable,
+    unplaced,
+    placedCount,
+    meta: {
+      teacherWeekly,
+      teacherDaily,
+      classDaily,
+      classSubjPerDay,
+      teacherBusy,
+      teacherWeekMax,
+      teacherDayMax,
+      classMaxPerDay
+    }
+  };
 }
 
-
-          return false;
-        }
-
-        for (const b of blocks) {
-          const ok = tryPlaceBlock(b);
-          if (!ok) unplaced.push(b);
-        }
-
-        return {
-          timetable,
-          unplaced,
-          placedCount,
-          meta: {
-            teacherWeekly,
-            teacherDaily,
-            classDaily,
-            classSubjPerDay,
-            teacherBusy,
-            teacherWeekMax,
-            teacherDayMax,
-            classMaxPerDay
-          }
-        };
-      }
 
       async function buildUntilSolved(config, shouldStop){
         const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
@@ -2464,7 +2677,7 @@ if (block.length === 2 && block.splitAllowed) {
         }
 
 softWarnings.textContent =
-  'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və sinifdə boş saat olmaması (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
+  'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və “Dərslər mütləq birinci saatdan ardıcıl başlasın” (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
   'Eyni fənn üçün yeni qayda: standart halda eyni gündə max 1 dəfə; Qoşa=İmkan daxilində/Mütləq olan dərslər həmin fənni eyni gündə 2 dəfə etməyə məcbur edir (Mütləq: ardıcıl, İmkan daxilində: mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 dəfə). ' +
   '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır.';
 

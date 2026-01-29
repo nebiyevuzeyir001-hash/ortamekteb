@@ -1598,9 +1598,7 @@ classTbody.addEventListener('click', (e) => {
   }
 });
 
-      classTbody.addEventListener('click', (e) => {
-        if (e.target.classList.contains('c-del')) e.target.closest('tr')?.remove();
-      });
+
 lessonTbody.addEventListener('click', (e) => {
   if (e.target.classList.contains('l-del')) {
     const tr = e.target.closest('tr');
@@ -1609,16 +1607,15 @@ lessonTbody.addEventListener('click', (e) => {
   }
 });
 
-      lessonTbody.addEventListener('click', (e) => {
-        if (e.target.classList.contains('l-del')) e.target.closest('tr')?.remove();
-      });
+
 
       btnResetAll.addEventListener('click', () => {
         __stopRequested = true;
         __runId++;
         __solverRunning = false;
         if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
-
+        cleanupPrettySelects(classTbody);
+        cleanupPrettySelects(lessonTbody);
         teacherTbody.innerHTML = '';
         classTbody.innerHTML = '';
         lessonTbody.innerHTML = '';
@@ -1729,27 +1726,24 @@ function readConfig() {
     seenClasses.add(key);
   });
 
-  const seenTeacherCodes = new Set();
-  const seenTeacherNames = new Set();
+  // ✅ müəllim üçün: kod + ad eyni “açar məkanı”nda unikal olmalıdır
+  const seenTeacherKeys = new Set();
 
   teachers.forEach(t => {
     const code = (t.code || '').trim();
     const name = (t.name || '').trim();
 
-    if (code) {
-      if (seenTeacherCodes.has(code)) {
-        throw new Error(`Dublikat müəllim kodu: "${code}". Müəllim kodları unikal olmalıdır.`);
+    // kod və ad hər ikisi ayrı “key” kimi yoxlanır
+    [code, name].forEach(k => {
+      if (!k) return;
+      if (seenTeacherKeys.has(k)) {
+        throw new Error(`Müəllim kod/ad toqquşması: "${k}". Kod və adlar ümumilikdə unikal olmalıdır.`);
       }
-      seenTeacherCodes.add(code);
-    }
-    if (name) {
-      if (seenTeacherNames.has(name)) {
-        throw new Error(`Dublikat müəllim adı: "${name}". Müəllim adları unikal olmalıdır.`);
-      }
-      seenTeacherNames.add(name);
-    }
+      seenTeacherKeys.add(k);
+    });
   });
 }
+
 
   const lessons = [];
   lessonTbody.querySelectorAll('tr').forEach(tr => {
@@ -1896,10 +1890,7 @@ if (doubleMode === 'required') {
 
       function prepareSolve(config){
         const { blocks, unknownUnmapped } = generateBlocks(config);
-      if (config._preWarnings && config._preWarnings.length) {
-  softWarnings.textContent = (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') +
-    config._preWarnings.join('\n');
-}
+
 
         if (unknownUnmapped && unknownUnmapped.length){
           const lines = unknownUnmapped.map(l => `• ${l.className} – ${l.subject} (${l.teacherRef})`);
@@ -2342,6 +2333,12 @@ if (total > capacity) {
       );
     }
   });
+}
+// ✅ preWarnings varsa, UI-da göstər (overwite etmədən)
+if (config._preWarnings?.length) {
+  softWarnings.textContent =
+    (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') +
+    config._preWarnings.join('\n');
 }
 
         return config;
@@ -3098,10 +3095,14 @@ if (cur + length > cap) {
           unplacedContainer.textContent = '';
         }
 
-softWarnings.textContent =
+const NOTE_TEXT =
   'Qeyd: Müəllimin gəlmə günləri, müəllimin seçdiyi dərs saatları, müəllim/sinif limitləri və “Sinifdə boşluq olmasın (dərs olan günlər 1-ci saatdan başlayır)” (aktivdirsə) qayda kimi tətbiq olunur və pozulmur. ' +
   'Eyni fənn üçün yeni qayda: standart halda eyni gündə max 1 dəfə; Qoşa=İmkan daxilində/Mütləq olan dərslər həmin fənni eyni gündə 2 dəfə etməyə məcbur edir (Mütləq: ardıcıl, İmkan daxilində: mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 dəfə). ' +
   '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır.';
+
+// ✅ əvvəl warning varsa saxla, üstünə note əlavə et
+softWarnings.textContent = (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') + NOTE_TEXT;
+
 
 
         const firstClassId = classes[0]?.id;

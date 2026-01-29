@@ -2340,12 +2340,7 @@ if (total > capacity) {
     }
   });
 }
-// ✅ preWarnings varsa, UI-da göstər (overwite etmədən)
-if (config._preWarnings?.length) {
-  softWarnings.textContent =
-    (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') +
-    config._preWarnings.join('\n');
-}
+
 
         return config;
       }
@@ -3106,8 +3101,12 @@ const NOTE_TEXT =
   'Eyni fənn üçün yeni qayda: standart halda eyni gündə max 1 dəfə; Qoşa=İmkan daxilində/Mütləq olan dərslər həmin fənni eyni gündə 2 dəfə etməyə məcbur edir (Mütləq: ardıcıl, İmkan daxilində: mümkünsə ardıcıl, deyilsə yenə eyni gündə 2 dəfə). ' +
   '“Ağır fənn 1-ci/sonuncu saatda olmasın” optimallaşdırmadır.';
 
-// ✅ əvvəl warning varsa saxla, üstünə note əlavə et
-softWarnings.textContent = (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') + NOTE_TEXT;
+// ✅ softWarnings-i hər renderdə sıfırdan yığ (təkrar artmasın)
+const parts = [];
+if (config._preWarnings?.length) parts.push(config._preWarnings.join('\n'));
+parts.push(NOTE_TEXT);
+softWarnings.textContent = parts.join('\n\n');
+
 
 
 

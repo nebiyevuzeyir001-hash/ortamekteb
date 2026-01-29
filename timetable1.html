@@ -1194,6 +1194,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const HOUR_LABELS_FULL = ['1','2','3','4','5','6','7','8'];
 
       const __epSelectInstances = new Set();
+let __epSelectDocBound = false;
+function bindPrettySelectDocCloser(){
+  if (__epSelectDocBound) return;
+  __epSelectDocBound = true;
+
+  document.addEventListener('mousedown', (e) => {
+    __epSelectInstances.forEach(inst => {
+      if (!inst?.wrap) return;
+      if (!inst.wrap.contains(e.target)) inst.close();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') __epSelectInstances.forEach(inst => inst.close());
+  });
+}
 
       const GENERATE_LABEL = '⚙️ Cədvəli qur';
       const STOP_LABEL = '🛑 Dayandır';
@@ -1275,7 +1291,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }, 420);
         }
       }
-
+bindPrettySelectDocCloser();
       function makePrettySelect(selectEl, opts = {}) {
         if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
 
@@ -1348,16 +1364,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
         btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
-        function onDocDown(e){ if (!wrap.contains(e.target)) close(); }
-        document.addEventListener('mousedown', onDocDown);
-
         selectEl.addEventListener('change', render);
 
-        const api = { close, wrap };
-        __epSelectInstances.add(api);
+function destroy(){
+  close();
+  try { selectEl.removeEventListener('change', render); } catch(e){}
+  __epSelectInstances.delete(api);
+  try { selectEl.__epSelectApi = null; } catch(e){}
+}
+
+const api = { close, wrap, destroy };
+try { selectEl.__epSelectApi = api; } catch(e){}
+__epSelectInstances.add(api);
+
 
         render();
       }
+function cleanupPrettySelects(root){
+  if (!root) return;
+  root.querySelectorAll('select[data-ep-pretty-select="1"]').forEach(sel => {
+    if (sel && sel.__epSelectApi && typeof sel.__epSelectApi.destroy === 'function') {
+      sel.__epSelectApi.destroy();
+    }
+  });
+}
 
       makePrettySelect(daysCountSelect, { size: 'md' });
 
@@ -1560,10 +1590,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           return;
         }
       });
+classTbody.addEventListener('click', (e) => {
+  if (e.target.classList.contains('c-del')) {
+    const tr = e.target.closest('tr');
+    cleanupPrettySelects(tr);
+    tr?.remove();
+  }
+});
 
       classTbody.addEventListener('click', (e) => {
         if (e.target.classList.contains('c-del')) e.target.closest('tr')?.remove();
       });
+lessonTbody.addEventListener('click', (e) => {
+  if (e.target.classList.contains('l-del')) {
+    const tr = e.target.closest('tr');
+    cleanupPrettySelects(tr);
+    tr?.remove();
+  }
+});
+
       lessonTbody.addEventListener('click', (e) => {
         if (e.target.classList.contains('l-del')) e.target.closest('tr')?.remove();
       });
@@ -1672,6 +1717,39 @@ function readConfig() {
       maxPerDay: maxDay
     });
   });
+// ✅ Dublikat sinif adı / müəllim kodu-adı yoxlaması (overwrite olmasın)
+{
+  const seenClasses = new Set();
+  classes.forEach(c => {
+    const key = (c.name || '').trim();
+    if (!key) return;
+    if (seenClasses.has(key)) {
+      throw new Error(`Dublikat sinif adı: "${key}". Sinif adları unikal olmalıdır.`);
+    }
+    seenClasses.add(key);
+  });
+
+  const seenTeacherCodes = new Set();
+  const seenTeacherNames = new Set();
+
+  teachers.forEach(t => {
+    const code = (t.code || '').trim();
+    const name = (t.name || '').trim();
+
+    if (code) {
+      if (seenTeacherCodes.has(code)) {
+        throw new Error(`Dublikat müəllim kodu: "${code}". Müəllim kodları unikal olmalıdır.`);
+      }
+      seenTeacherCodes.add(code);
+    }
+    if (name) {
+      if (seenTeacherNames.has(name)) {
+        throw new Error(`Dublikat müəllim adı: "${name}". Müəllim adları unikal olmalıdır.`);
+      }
+      seenTeacherNames.add(name);
+    }
+  });
+}
 
   const lessons = [];
   lessonTbody.querySelectorAll('tr').forEach(tr => {
@@ -1752,6 +1830,22 @@ function generateBlocks(config) {
 
     const dmRaw = l.doubleMode || 'none';
     const doubleMode = (dmRaw === 'prefer' || dmRaw === 'required') ? dmRaw : 'none';
+// ✅ Qoşa=Mütləq üçün semantika: minimum 2 və mütləq cüt olmalıdır
+if (doubleMode === 'required') {
+  const h = Number(l.hours) || 0;
+  if (h < 2) {
+    throw new Error(
+      `Mümkünsüz konfiqurasiya: "${l.className}" sinfində "${l.subject}" üçün Qoşa=Mütləq seçilib, ` +
+      `amma həftəlik saat ${h}-dır. Minimum 2 olmalıdır.`
+    );
+  }
+  if (h % 2 !== 0) {
+    throw new Error(
+      `Mümkünsüz konfiqurasiya: "${l.className}" sinfində "${l.subject}" üçün Qoşa=Mütləq seçilib, ` +
+      `amma həftəlik saat ${h}-dır (təkdir). Cüt olmalıdır (2,4,6,...).`
+    );
+  }
+}
 
     // ✅ gündəlik cap: Qoşa=Yox => 1, əks halda 2
     const dailyCap = (doubleMode === 'none') ? 1 : 2;
@@ -1802,6 +1896,10 @@ function generateBlocks(config) {
 
       function prepareSolve(config){
         const { blocks, unknownUnmapped } = generateBlocks(config);
+      if (config._preWarnings && config._preWarnings.length) {
+  softWarnings.textContent = (softWarnings.textContent ? softWarnings.textContent + '\n\n' : '') +
+    config._preWarnings.join('\n');
+}
 
         if (unknownUnmapped && unknownUnmapped.length){
           const lines = unknownUnmapped.map(l => `• ${l.className} – ${l.subject} (${l.teacherRef})`);
@@ -1811,6 +1909,29 @@ function generateBlocks(config) {
         }
 
         config._blocks = blocks;
+        // ✅ Sinif+fənn üzrə gündəlik cap: default 1, Qoşa varsa 2
+const classIndexByNameCap = new Map();
+config.classes.forEach(c => classIndexByNameCap.set((c.name || '').trim(), c.id));
+
+const subjectDailyCap = new Array(config.classes.length)
+  .fill(null)
+  .map(() => Object.create(null));
+
+config.lessons.forEach(l => {
+  const cId = classIndexByNameCap.get((l.className || '').trim());
+  if (cId == null) return;
+
+  const subj = (l.subject || '').trim();
+  if (!subj) return;
+
+  const dm = l.doubleMode || 'none';
+  const cap = (dm === 'none') ? 1 : 2;
+
+  subjectDailyCap[cId][subj] = Math.max(subjectDailyCap[cId][subj] || 1, cap);
+});
+
+config._subjectDailyCap = subjectDailyCap;
+
         config._targetHours = blocks.reduce((s, b) => s + b.length, 0);
 
         // ===== FAIL-FAST checklər =====
@@ -1851,6 +1972,61 @@ function generateBlocks(config) {
             );
           }
         });
+// ✅ FAIL-FAST: müəllim üçün Qoşa=Mütləq (2-lik) tutumu ardıcıl cüt saatlara görə
+{
+  const reqDoubleHours = new Array(config.teachers.length).fill(0);
+
+  // tələb olunan 2-lik saatlar
+  config._blocks.forEach(b => {
+    if (b.doublePolicy === 'required' && b.length === 2) {
+      reqDoubleHours[b.teacherId] += 2;
+    }
+  });
+
+  // ardıcıl true run-lardan non-overlap pair sayı: floor(runLen/2)
+  function maxNonOverlapPairs(mask) {
+    let pairs = 0;
+    let run = 0;
+    for (let i = 0; i < mask.length; i++) {
+      if (mask[i]) run++;
+      else { pairs += Math.floor(run / 2); run = 0; }
+    }
+    pairs += Math.floor(run / 2);
+    return pairs;
+  }
+
+  reqDoubleHours.forEach((need, tId) => {
+    if (need <= 0) return;
+
+    const t = config.teachers[tId];
+    const weeklyMax = (t.weeklyMax > 0) ? t.weeklyMax : Infinity;
+    const dailyMax  = (t.dailyMax > 0) ? t.dailyMax : Infinity;
+
+    const daysAvail = (Array.isArray(t.availableDays) && t.availableDays.length)
+      ? t.availableDays.length
+      : config.daysCount;
+
+    const mask = t.availableHoursMask;
+    const hm = (Array.isArray(mask) && mask.length === config.lessonsPerDay)
+      ? mask
+      : new Array(config.lessonsPerDay).fill(true);
+
+    const pairsPerDay = maxNonOverlapPairs(hm);
+    const doubleHoursCapPerDay = 2 * pairsPerDay;
+
+    const capBySelection = daysAvail * Math.min(doubleHoursCapPerDay, dailyMax);
+    const overallCap = Math.min(weeklyMax, capBySelection);
+
+    if (need > overallCap) {
+      const label = t.code || t.name || `#${tId}`;
+      throw new Error(
+        `Mümkünsüz konfiqurasiya: "${label}" müəllimində Qoşa=Mütləq üçün ${need} saat tələb olunur, ` +
+        `amma seçilmiş ardıcıl saatlara görə maksimum ${overallCap} mümkündür. ` +
+        `(gün: ${daysAvail}, gündə max: ${dailyMax === Infinity ? 'limitsiz' : dailyMax})`
+      );
+    }
+  });
+}
 
         // Sinif tutumu: default max = lessonsPerDay
         classHours.forEach((h, cId) => {
@@ -2094,13 +2270,15 @@ if (config.optNoClassGaps) {
       );
     }
 
-    if (total > capacity) {
-      throw new Error(
-        `Mümkünsüz konfiqurasiya: "${config.classes[cId]?.name || '?'}" sinfində ${total} saat var, ` +
-        `amma “1-ci saatdan ardıcıl” qaydasına görə istifadə oluna bilən günlərin tutumu ${capacity}-dır ` +
-        `(istifadə oluna bilən gün: ${usableDays}, gündə max: ${maxDay}).`
-      );
-    }
+config._preWarnings = config._preWarnings || [];
+if (total > capacity) {
+  config._preWarnings.push(
+    `Xəbərdarlıq: "${config.classes[cId]?.name || '?'}" sinfində ${total} saat var, ` +
+    `amma “1-ci saatdan ardıcıl” qaydasında start edə bilən günlərə görə nəzəri tutum ${capacity}-dır ` +
+    `(start ola bilən gün: ${usableDays}, gündə max: ${maxDay}). ` +
+    `Bu, çox vaxt konfiqurasiyanın çətin və ya mümkünsüz olduğunu göstərir.`
+  );
+}
   }
 }
 
@@ -2336,8 +2514,8 @@ function attemptBuild(config) {
 
     // ✅ Eyni fənn qaydası (cap 1/2)
     const cur = subjectCount(classId, day, subject);
-    const cap = (block.dailyCap === 1 ? 1 : 2);
-    if (cur + length > cap) return cap === 1 ? 'Eyni fənn gündə max 1' : 'Eyni fənn gündə max 2';
+const cap = (config._subjectDailyCap?.[classId]?.[subject]) || 1;
+if (cur + length > cap) return cap === 1 ? 'Eyni fənn gündə max 1' : 'Eyni fənn gündə max 2';
 
     if (avoidEdgesHard && optHeavyAvoidEdges && block.heavy && isEdge(slot, length)) {
       return 'Ağır fənn kənar saat';
@@ -2379,10 +2557,76 @@ function attemptBuild(config) {
         delete pairDay[gid];
         delete pairFirstSlot[gid];
       }
+      
     }
+// ✅ prefer pair: partner-i sırada önə çək (same-day şansını artırır)
+if (block.pairGroupId) {
+  const gid = block.pairGroupId;
+  // sırada qalan eyni gid bloklarını önə gətir
+  const rest = [];
+  const moved = [];
+
+  for (let i = qi; i < queue.length; i++) {
+    if (queue[i]?.pairGroupId === gid) moved.push(queue[i]);
+    else rest.push(queue[i]);
+  }
+
+  if (moved.length) {
+    queue.length = qi;
+    queue.push(...moved, ...rest);
+  }
+}
 
     placedCount += length;
   }
+function normalizeCell(classId, day, slot){
+  const cell = timetable[classId]?.[day]?.[slot];
+  if (!cell) return null;
+  if (cell.part === 0) return { block: cell.block, startSlot: slot };
+  return { block: cell.block, startSlot: slot - 1 };
+}
+
+function unplaceBlockAt(classId, day, slot){
+  const info = normalizeCell(classId, day, slot);
+  if (!info) return null;
+
+  const b = info.block;
+  const s0 = info.startSlot;
+  const len = b.length || 1;
+
+  // konservativ: yalnız 1-lik evict edirik
+  if (len !== 1) return null;
+
+  // clear class matrix + teacherBusy
+  timetable[classId][day][s0] = null;
+  teacherBusy[b.teacherId][day][s0] = false;
+
+  teacherWeekly[b.teacherId] -= 1;
+  teacherDaily[b.teacherId][day] -= 1;
+  classDaily[classId][day] -= 1;
+
+  const subjMap = classSubjPerDay[classId];
+  if (subjMap && subjMap[b.subject]) {
+    subjMap[b.subject][day] = Math.max(0, (subjMap[b.subject][day] || 0) - 1);
+  }
+
+  placedCount -= 1;
+  return b;
+}
+
+function findTeacherConflictBlock(teacherId, day, slot){
+  // həmin saatda bu müəllim harada dərsdədir?
+  for (let cId = 0; cId < classes.length; cId++) {
+    const cell = timetable[cId]?.[day]?.[slot];
+    if (!cell) continue;
+    const blk = cell.block;
+    if (blk && blk.teacherId === teacherId) {
+      const start = (cell.part === 0) ? slot : slot - 1;
+      return { classId: cId, slot: start, block: blk };
+    }
+  }
+  return null;
+}
 
   function candidateScore(block, day, slot){
     const { classId, teacherId, length } = block;
@@ -2501,9 +2745,84 @@ function attemptBuild(config) {
     cands = getCandidates(block, false);
     pick = pickFromTopK(cands, 8);
     if (pick) { place(block, pick.d, pick.s); return true; }
+function tryPlaceWithEvict(block){
+  // evict yalnız gaps rejimində mənalıdır
+  if (optNoClassGaps) return false;
+  if (block.length !== 1) return false; // təhlükəsizlik
 
-    return false;
+  const { classId, teacherId } = block;
+  let days = teachers[teacherId].availableDays || [];
+  if (block.pairGroupId && pairDay[block.pairGroupId] != null) days = [pairDay[block.pairGroupId]];
+
+  const slots = teacherAllowedSlots[teacherId][1] || [];
+
+  for (const d of days) {
+    if (d < 0 || d >= daysCount) continue;
+
+    for (const s of slots) {
+      // əvvəl normal qaydada yoxla (stage2 kimi kənara icazə)
+      const reason = checkPlaceReason(block, d, s, false);
+      if (reason === null) {
+        place(block, d, s);
+        return true;
+      }
+
+      // yalnız bu iki səbəbdə 1 blok evict edirik
+      let victim = null;
+
+      if (reason === 'Sinif slotu doludur') {
+        const info = normalizeCell(classId, d, s);
+        if (info && isEvictableBlock(info.block)) {
+          victim = { classId, day: d, slot: info.startSlot, block: info.block };
+        }
+      } else if (reason === 'Müəllim conflict') {
+        const conf = findTeacherConflictBlock(teacherId, d, s);
+        if (conf && isEvictableBlock(conf.block)) {
+          victim = { classId: conf.classId, day: d, slot: conf.slot, block: conf.block };
+        }
+      }
+
+      if (!victim) continue;
+
+      const vid = victim.block.__id;
+      const ec = (evictCount.get(vid) || 0) + 1;
+      if (ec > MAX_EVICT) continue;
+
+      // evict et
+      const removed = unplaceBlockAt(victim.classId, victim.day, victim.slot);
+      if (!removed) continue;
+
+      // indi yenə yoxla və yerləşdir
+      const after = checkPlaceReason(block, d, s, false);
+      if (after === null) {
+        evictCount.set(vid, ec);
+        place(block, d, s);
+
+        // evicted bloku yenidən sıraya qaytar
+        retryCount.set(removed.__id, 0);
+        queue.push(removed);
+        return true;
+      } else {
+        // alınmadısa geri qaytarmağa çalışmırıq (konservativ addım)
+        // Bu nadir hal üçün: removed bloku sıraya qaytarırıq ki, it-bat olmasın.
+        queue.push(removed);
+      }
+    }
   }
+
+  return false;
+}
+
+// əlavə repair cəhdi
+if (tryPlaceWithEvict(block)) return true;
+return false;
+  }
+const evictCount = new Map();
+const MAX_EVICT = 2;
+
+function isEvictableBlock(b){
+  return !!b && b.length === 1 && !b.pairGroupId && b.doublePolicy !== 'required';
+}
 
   // ✅ Queue + retry: optNoClassGaps ssenarisində “indi mümkün deyil, sonra mümkün olar” halını həll edir
   const retryCount = new Map();
@@ -2554,7 +2873,9 @@ function attemptBuild(config) {
         const target = Number(config._targetHours) || sumRequiredHours(config.lessons);
         const startedAt = performance.now();
 
-        const BATCH = 260;
+const nBlocks = (config._blocks && config._blocks.length) ? config._blocks.length : 200;
+// böyük konfiqdə batch kiçilsin ki, UI tez-tez nəfəs alsın
+const BATCH = Math.max(40, Math.min(140, Math.floor(8000 / Math.max(1, nBlocks))));
 
         let attempts = 0;
         let best = null;
@@ -2613,6 +2934,12 @@ function attemptBuild(config) {
       }
 
       function renderTimetable(config, result) {
+        function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (ch) => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
         const { classes, teachers, daysCount, lessonsPerDay, optNoClassGaps } = config;
         const { timetable, unplaced, placedCount, meta } = result;
 
@@ -2647,8 +2974,8 @@ function attemptBuild(config) {
                 html += `<td><span class="tt-slot-muted">—</span></td>`;
               } else if (cell.part === 0) {
                 const b = cell.block;
-                const subj = b.subject;
-                const tLab = teacherLabel(teachers, b.teacherId);
+const subj = escapeHtml(b.subject);
+const tLab = escapeHtml(teacherLabel(teachers, b.teacherId));
                 const rowspan = b.length > 1 ? b.length : 1;
                 html += `<td rowspan="${rowspan}">
                           <div class="font-semibold">${subj}</div>
@@ -2734,11 +3061,12 @@ function attemptBuild(config) {
   const arr = subjMap[subject];
   const cur = arr ? arr[d] : 0;
 
-  const cap = Math.min(2, (block.dailyCap === 1 ? 1 : 2));
-  if (cur + length > cap) {
-    add(cap === 1 ? 'Eyni fənn gündə maksimum 1' : 'Eyni fənn gündə maksimum 2');
-    continue;
-  }
+const cap = (config._subjectDailyCap?.[classId]?.[subject]) || 1;
+if (cur + length > cap) {
+  add(cap === 1 ? 'Eyni fənn gündə maksimum 1' : 'Eyni fənn gündə maksimum 2');
+  continue;
+}
+
 }
 
 

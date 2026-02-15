@@ -1,18 +1,24 @@
 <!doctype html>
-<html lang="az">
+<html lang="az" class="scroll-smooth">
 <head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M3CQTM2P');</script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hazırlanır — EduPlan</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
-  <meta name="robots" content="noindex, nofollow" />
-  <link rel="canonical" href="https://www.eduplan.az/coming-soon.html" />
-  <meta name="language" content="az" />
-  <meta name="author" content="EduPlan.az" />
+  <title>KSQ/BSQ faylları — EduPlan</title>
+  <meta name="description" content="Sinif, fənn, növ və nömrə üzrə KSQ/BSQ faylları." />
 
-  <link rel="icon" href="favicon.ico" sizes="any"> 
+  <!-- ✅ 1-ci səhifə ilə eyni -->
+  <meta name="theme-color" content="#f8fafc" id="theme-color" />
+
+  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/svg+xml" href="logo.svg">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="favicon-48x48.png" sizes="48x48">
@@ -20,102 +26,1088 @@
   <link rel="icon" type="image/png" href="android-chrome-192x192.png" sizes="192x192">
   <link rel="icon" type="image/png" href="android-chrome-512x512.png" sizes="512x512">
   <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
-<link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
-<link rel="manifest" href="manifest.webmanifest">
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
+  <link rel="manifest" href="manifest.webmanifest">
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Hazırlanır — EduPlan">
-  <meta property="og:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq.">
-  <meta property="og:url" content="https://www.eduplan.az/coming-soon.html">
-  <meta property="og:site_name" content="EduPlan">
-  <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg">
+  <!-- ✅ Tema: FOUC olmasın (Tailwind-dən əvvəl) — 1-ci səhifə ilə eyni -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme');
+        const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = (saved === 'dark' || saved === 'light') ? saved : (systemDark ? 'dark' : 'light');
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Hazırlanır — EduPlan" />
-  <meta name="twitter:description" content="Bu bölmə hazırlandığı üçün hələlik əlçatmazdır. Tezliklə aktiv olacaq." />
-  <meta name="twitter:image" content="https://www.eduplan.az/assets/og-image.jpg" />
+        const root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.dataset.theme = theme;
 
-  <!-- Styles / Tailwind -->
+        const meta = document.getElementById('theme-color');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8fafc');
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
 
   <style>
+    html, body { overflow-x: hidden; }
+    :root { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+    html { scroll-padding-top: 80px; }
+
+    .ep-btn-primary{ background: linear-gradient(90deg,#1e3a8a 0%,#4f46e5 50%,#9333ea 100%); }
+    html.dark .ep-btn-primary{ background: linear-gradient(90deg,#312e81 0%,#4338ca 50%,#7e22ce 100%); }
+
+    /* =========================================================
+       ✅ 1-ci səhifənin token sistemi (kalkulyator/timetable ilə eyni)
+    ========================================================= */
     :root{
-      --bg-from:#0f172a; --bg-to:#111827; --card:#0b1020cc; --border:#233155; --glass:#0b1020cc;
+      --ep-field-h: 42px;
+      --ep-field-h-sm: 36px;
+
+      --ep-radius-lg: 1rem;
+      --ep-radius-sm: .95rem;
+
+      /* ===== Reklam relsləri ===== */
+      --ep-rail-w: clamp(160px, 14vw, 300px);
+      --ep-rail-min-h: 600px;
+      --ep-rail-gap: 24px;
+
+      /* Mərkəz sütunun max eni (reklam olanda) */
+      --ep-center-max: 1100px;
+
+      /* Reklam olanda səhifənin max eni */
+      --ep-shell-max: 1600px;
+
+      /* Header max-w-7xl = 80rem */
+      --ep-frame-max: 80rem;
+
+      /* ===== Light mode: layer separation ===== */
+      --ep-bg-from: #f8fafc;
+      --ep-bg-mid:  #eef2ff;
+      --ep-bg-to:   #ecfeff;
+
+      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.86), rgba(238,242,255,.60));
+      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.84), rgba(241,245,249,.64));
+
+      --ep-border: rgba(79,70,229,.12);
+      --ep-panel-border: rgba(79,70,229,.28);
+
+      /* secondary buttons / pills */
+      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.88), rgba(238,242,255,.70));
+      --ep-mode-idle-border: rgba(79,70,229,.16);
+      --ep-mode-hover-bg: linear-gradient(180deg, rgba(255,255,255,.92), rgba(224,231,255,.78));
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(30,58,138,.10), rgba(79,70,229,.12), rgba(147,51,234,.10));
+      --ep-mode-active-border: rgba(79,70,229,.55);
+      --ep-mode-active-shadow: 0 10px 24px rgba(79,70,229,.16), 0 2px 8px rgba(15,23,42,.06);
+
+      --ep-focus: rgba(79,70,229,.28);
     }
-    .gradient-bg{
-      background: radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.20), transparent 60%),
-                  radial-gradient(900px 500px at 110% 30%, rgba(167,139,250,.18), transparent 55%),
-                  linear-gradient(180deg, var(--bg-from), var(--bg-to));
+
+    html.dark{
+      --ep-bg-from: #020617;
+      --ep-bg-mid:  #0b1220;
+      --ep-bg-to:   #0f172a;
+
+      --ep-surface: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      --ep-surface-2: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+
+      --ep-border: rgba(148,163,184,.18);
+      --ep-panel-border: rgba(99,102,241,.18);
+
+      --ep-mode-idle-bg: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      --ep-mode-idle-border: rgba(148,163,184,.16);
+      --ep-mode-hover-bg: linear-gradient(180deg, rgba(15,23,42,.78), rgba(15,23,42,.62));
+
+      --ep-mode-active-bg: linear-gradient(90deg, rgba(49,46,129,.45), rgba(67,56,202,.40), rgba(126,34,206,.35));
+      --ep-mode-active-border: rgba(99,102,241,.55);
+      --ep-mode-active-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+
+      --ep-focus: rgba(99,102,241,.34);
     }
-    .glass {
+
+    /* ✅ Tailwind bg-ni override et (timetable kimi) */
+    body{
+      background-image: linear-gradient(to bottom, var(--ep-bg-from), var(--ep-bg-mid) 45%, var(--ep-bg-to)) !important;
+    }
+
+    /* =========================================================
+       ✅ Panel + cards (timetable hissi)
+    ========================================================= */
+    #tt-panel{
+      background: var(--ep-surface) !important;
+      border-color: var(--ep-panel-border) !important;
+      box-shadow: 0 18px 60px rgba(15,23,42,.08);
+      overflow: hidden;
+    }
+    html.dark #tt-panel{ box-shadow: 0 18px 70px rgba(0,0,0,.55); }
+
+    #tt-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(79,70,229,.10), rgba(16,185,129,.08), rgba(245,158,11,.08));
+    }
+    html.dark #tt-panel > div:first-child{
+      background: linear-gradient(90deg, rgba(99,102,241,.12), rgba(16,185,129,.09), rgba(245,158,11,.09));
+    }
+
+    .ep-card{
+      background: var(--ep-surface-2) !important;
+      border-color: var(--ep-border) !important;
+      box-shadow: 0 12px 34px rgba(15,23,42,.06);
+    }
+    html.dark .ep-card{ box-shadow: 0 14px 40px rgba(0,0,0,.40); }
+
+    /* =========================================================
+       ✅ Secondary buttons (timetable kimi)
+    ========================================================= */
+    .ep-btn-secondary{
+      background: var(--ep-mode-idle-bg) !important;
+      border-color: var(--ep-mode-idle-border) !important;
+      box-shadow: 0 8px 20px rgba(15,23,42,.06);
+      transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+    }
+    html.dark .ep-btn-secondary{ box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+
+    .ep-btn-secondary:hover{ background: var(--ep-mode-hover-bg) !important; transform: translateY(-1px); }
+    .ep-btn-secondary:active{ transform: translateY(0px); }
+
+    .ep-btn-secondary:focus-visible{
+      outline: none !important;
+      box-shadow: 0 0 0 4px var(--ep-focus), 0 12px 28px rgba(15,23,42,.06) !important;
+    }
+    html.dark .ep-btn-secondary:focus-visible{
+      box-shadow: 0 0 0 4px var(--ep-focus), 0 14px 34px rgba(0,0,0,.45) !important;
+    }
+
+    /* ==== Form controls (timetable kimi) ==== */
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      border-radius: var(--ep-radius-lg);
+      border: 1px solid rgba(226,232,240,.75);
+      background-color: rgba(255,255,255,.82);
+      padding: .58rem .9rem;
+      font-size: 13px;
+      line-height: 1.35;
+      min-height: var(--ep-field-h);
+      outline: none;
+      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    html.dark input[type="text"], html.dark input[type="number"], html.dark select {
+      border-color: rgba(30,41,59,.7);
+      background-color: rgba(255,255,255,.05);
+      color: rgb(226,232,240);
+    }
+
+    input[type="text"]::placeholder, input[type="number"]::placeholder { color: rgb(148,163,184); }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus{
+      border-color: rgb(99,102,241);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.22);
+    }
+
+    select{
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 2.25rem;
+      background-repeat: no-repeat;
+      background-position: right .75rem center;
+      background-size: 1rem 1rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    html.dark select{
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    select option, select optgroup{
+      color: #0f172a;
+      background-color: #ffffff;
+    }
+
+    .section-title{
+      font-size:.8rem;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color: rgb(100 116 139);
+    }
+    html.dark .section-title{ color: rgb(148 163 184); }
+
+    /* ===== Premium custom select (dropdown) — timetable-dəki ep-select ===== */
+    .ep-native-select{
+      position:absolute !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+      width:1px !important;
+      height:1px !important;
+      left:-9999px !important;
+    }
+
+    .ep-select{ position:relative; width:100%; overflow: visible; }
+    .ep-select-btn{
+      width:100%;
+      min-height: var(--ep-field-h);
+      border-radius: var(--ep-radius-lg);
+      border: 1px solid rgba(226,232,240,.75);
+      background: rgba(255,255,255,.70);
+      padding: .62rem 1rem;
+      font-size: 13px;
+      line-height: 1.35;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      cursor:pointer;
+      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+    .ep-select-btn:hover{ background: rgba(255,255,255,.82); }
+    .ep-select-btn:active{ transform: translateY(1px); }
+    .ep-select-btn:focus{
+      outline:none;
+      border-color: rgb(99,102,241);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.22);
+    }
+    .ep-select-btn:disabled{
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    html.dark .ep-select-btn{
+      border-color: rgba(30,41,59,.7);
+      background: rgba(255,255,255,.05);
+      color: rgb(226,232,240);
+    }
+
+    .ep-select-menu{
+      position:absolute;
+      inset-inline:0;
+      top: calc(100% + .35rem);
+      z-index: 9999;
+      border-radius: 1rem;
+      border: 1px solid rgba(226,232,240,.9);
+      background: rgba(255,255,255,.92);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      background: var(--glass);
-      border: 1px solid var(--border);
+      padding: .35rem;
+      box-shadow: 0 18px 55px rgba(2,6,23,.18);
+      display:none;
+      max-height: 260px;
+      overflow:auto;
     }
-    .shine {
-      position: relative; overflow: hidden;
+    html.dark .ep-select-menu{
+      border-color: rgba(51,65,85,.9);
+      background: rgba(2,6,23,.92);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
-    .shine::after{
-      content:""; position:absolute; inset:0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.08), transparent);
-      transform: translateX(-100%); animation: shine 2.2s infinite;
+    .ep-select.open .ep-select-menu{ display:block; }
+
+    .ep-select-item{
+      width:100%;
+      border:0;
+      background: transparent;
+      color: inherit;
+      border-radius: .85rem;
+      padding: .55rem .75rem;
+      font-size: 13px;
+      text-align:left;
+      cursor:pointer;
+      transition: background-color .12s ease, opacity .12s ease;
     }
-    @keyframes shine { to { transform: translateX(100%);} }
+    .ep-select-item:hover{ background: rgba(99,102,241,.10); }
+    html.dark .ep-select-item:hover{ background: rgba(129,140,248,.14); }
+
+    .ep-select-item[aria-selected="true"]{
+      background: rgba(99,102,241,.16);
+      font-weight: 600;
+    }
+    html.dark .ep-select-item[aria-selected="true"]{ background: rgba(129,140,248,.18); }
+
+    .ep-select-item[aria-disabled="true"]{
+      opacity: .55;
+      cursor: not-allowed;
+    }
+    .ep-select-item[aria-disabled="true"]:hover{
+      background: transparent;
+    }
+
+    /* =========================================================
+       ✅ PARALLEL LAYOUT (Header ilə 1:1)
+    ========================================================= */
+    .ep-frame{
+      width: 100%;
+      max-width: var(--ep-frame-max);
+      margin: 0 auto;
+      padding-left: 16px;  /* px-4 */
+      padding-right: 16px; /* px-4 */
+      transition: max-width .22s ease, padding .22s ease;
+    }
+    @media (min-width: 640px){ /* sm:px-6 */
+      .ep-frame{ padding-left: 24px; padding-right: 24px; }
+    }
+    @media (min-width: 1024px){ /* lg:px-8 */
+      .ep-frame{ padding-left: 32px; padding-right: 32px; }
+    }
+
+    .ep-frame.has-ads{
+      max-width: var(--ep-shell-max);
+    }
+
+    .ep-shell{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items:start;
+      width:100%;
+    }
+    .ep-center{ min-width:0; }
+
+    .ep-ad-slot{
+      display:none;
+      width: 100%;
+      min-height: var(--ep-rail-min-h);
+      align-items:flex-start;
+      justify-content:center;
+      overflow:hidden;
+
+      position: sticky;
+      top: 88px;
+      height: fit-content;
+    }
+    .ep-ad-slot > div{ width:100%; max-width: 100%; }
+
+    .ep-shell.has-left-ad,
+    .ep-shell.has-right-ad{
+      gap: var(--ep-rail-gap);
+    }
+
+    .ep-shell.has-left-ad .ep-ad-left{ display:flex; }
+    .ep-shell.has-right-ad .ep-ad-right{ display:flex; }
+
+    .ep-shell.has-left-ad.has-right-ad{
+      grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
+    }
+    .ep-shell.has-left-ad:not(.has-right-ad){
+      grid-template-columns: minmax(0, var(--ep-rail-w)) minmax(0, var(--ep-center-max)) 1fr;
+    }
+    .ep-shell.has-right-ad:not(.has-left-ad){
+      grid-template-columns: 1fr minmax(0, var(--ep-center-max)) minmax(0, var(--ep-rail-w));
+    }
+
+    @media (max-width: 1024px){
+      .ep-frame.has-ads{ max-width: var(--ep-frame-max); }
+      .ep-shell{
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+      }
+      .ep-ad-slot{ display:none !important; }
+    }
+
+    /* KSQ xüsusi xırda düzəlişlər */
+    #ksq-results-card{ min-height: 260px; }
+    .ksq-pill{
+      display:inline-flex;
+      align-items:center;
+      border-radius:9999px;
+      border: 1px solid rgba(148,163,184,.40);
+      padding: .18rem .55rem;
+      font-size: 10px;
+      line-height: 1.1;
+      color: rgb(51,65,85);
+      background: rgba(148,163,184,.08);
+    }
+    html.dark .ksq-pill{
+      color: rgb(226,232,240);
+      border-color: rgba(148,163,184,.35);
+      background: rgba(148,163,184,.14);
+    }
+    .ksq-pill[data-ext="PDF"]{
+      border-color: rgba(239,68,68,.40);
+      background: rgba(239,68,68,.10);
+      color: rgb(127,29,29);
+    }
+    html.dark .ksq-pill[data-ext="PDF"]{
+      background: rgba(239,68,68,.18);
+      border-color: rgba(239,68,68,.40);
+      color: rgb(254,226,226);
+    }
+    .ksq-pill[data-ext="DOCX"]{
+      border-color: rgba(59,130,246,.40);
+      background: rgba(59,130,246,.10);
+      color: rgb(30,58,138);
+    }
+    html.dark .ksq-pill[data-ext="DOCX"]{
+      background: rgba(59,130,246,.18);
+      border-color: rgba(59,130,246,.40);
+      color: rgb(219,234,254);
+    }
   </style>
 </head>
 
-<body class="min-h-screen gradient-bg text-slate-100 antialiased">
-  <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-2xl glass rounded-3xl p-8 sm:p-10 shadow-2xl">
-      <div class="flex items-center gap-3 mb-6">
-        <img src="assets/ep-favicon-dark.svg"
-     class="h-9 w-9 overflow-hidden"
-     alt="EduPlan" />
+<body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M3CQTM2P"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-        <span class="text-xl font-semibold tracking-tight">EduPlan</span>
-      </div>
+  <a href="#main"
+     class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
+    Kontentə keç
+  </a>
 
-      <h1 class="text-3xl sm:text-4xl font-bold leading-tight">
-        Bölmə hazırlanır<span class="text-sky-400">.</span>
-      </h1>
-      <p class="mt-3 text-slate-300 leading-7">
-        Bu funksiya üzərində hazırda işləyirik. Məqsədimiz — müəllimlər üçün
-        daha sürətli, daha rahat və etibarlı bir təcrübə təqdim etməkdir.
-        <br class="hidden sm:block">Tezliklə istifadəyə veriləcək.
-      </p>
-
-      <!-- Status kartları -->
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="shine rounded-2xl border border-slate-700/60 p-4">
-          <div class="text-sm text-slate-400">Status</div>
-          <div class="mt-1 text-base font-medium">Aktiv inkişaf</div>
-        </div>
-        <div class="shine rounded-2xl border border-slate-700/60 p-4">
-          <div class="text-sm text-slate-400">Növbəti addım</div>
-          <div class="mt-1 text-base font-medium">İstifadəçi testləri</div>
-        </div>
-        <div class="shine rounded-2xl border border-slate-700/60 p-4">
-          <div class="text-sm text-slate-400">Buraxılış</div>
-          <div class="mt-1 text-base font-medium">Tezliklə</div>
-        </div>
-      </div>
-
-      <!-- Düymələr -->
-      <div class="mt-8 flex flex-col sm:flex-row gap-3">
-        <a href="/" class="inline-flex items-center justify-center rounded-2xl px-5 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-semibold transition">
-          Ana səhifəyə qayıt
-        </a>
-        <a href="mailto:eduplan.az@gmail.com?subject=Bildiriş%20tələbi%20-%20EduPlan&body=Hazır%20olan%20kimi%20məni%20xəbərdar%20edin."
-           class="inline-flex items-center justify-center rounded-2xl px-5 py-3 border border-slate-700 hover:border-slate-600 text-slate-100 font-medium transition">
-          Hazır olanda xəbərdar et
-        </a>
-      </div>
-
-
-    </div>
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
+    <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
   </div>
+
+  <!-- ✅ HEADER (1-ci səhifə ilə eyni) -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="h-16 flex items-center justify-between gap-3">
+        <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          <img src="assets/ep-favicon-light.svg" alt="EduPlan" class="h-9 w-9 dark:hidden" width="36" height="36" />
+          <img src="assets/ep-favicon-dark.svg" alt="" aria-hidden="true" class="h-9 w-9 hidden dark:block" width="36" height="36" />
+          <span class="font-semibold tracking-tight">EduPlan AZ</span>
+        </a>
+
+        <button
+          id="theme-toggle"
+          type="button"
+          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          aria-label="Tema dəyişdir"
+          aria-pressed="false"
+        >
+          <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ✅ MAIN (1-ci səhifə ilə eyni wrapper) -->
+  <main id="main" class="pt-4 pb-0">
+    <div class="ep-frame" id="ep-frame">
+      <div class="ep-shell" id="ep-shell">
+
+        <!-- SOL reklam slotu -->
+        <aside class="ep-ad-slot ep-ad-left no-print" data-ad-slot="left" aria-label="Reklam (sol)">
+          <!-- SOL reklam kodu bura -->
+        </aside>
+
+        <div class="ep-center">
+          <section class="py-6 sm:py-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">KSQ/BSQ faylları</h1>
+            <p class="mt-2 text-slate-600 dark:text-slate-300">
+              Sinif, fənn, növ və nömrəyə görə faylları seçin və birbaşa yükləyin.
+            </p>
+          </section>
+
+          <!-- ✅ PANEL (timetable paneli ilə eyni) -->
+          <section id="tt-panel" class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200/70 dark:border-slate-800/70 flex items-center justify-between gap-4">
+              <div class="font-semibold">📁 KSQ/BSQ seçimi və fayllar</div>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <div class="grid lg:grid-cols-3 gap-6 items-stretch">
+                <!-- Filtrlər -->
+                <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                  <div class="section-title mb-3">Filtrlər</div>
+
+                  <div class="space-y-3">
+                    <div>
+                      <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Sinif</label>
+                      <select id="grade"></select>
+                    </div>
+                    <div>
+                      <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Fənn</label>
+                      <select id="subject"></select>
+                    </div>
+                    <div>
+                      <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Növ</label>
+                      <select id="ksqType"></select>
+                    </div>
+                    <div>
+                      <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Nömrə</label>
+                      <select id="examIndex"></select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nəticə -->
+                <div class="lg:col-span-2 ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 relative" id="ksq-results-card">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="section-title">Nəticə</div>
+                    <div id="ksq-count" class="text-[11px] text-slate-500 dark:text-slate-400"></div>
+                  </div>
+
+                  <div id="ksq-results" class="grid sm:grid-cols-2 gap-3">
+                    <div class="col-span-full text-[12px] text-slate-500 dark:text-slate-400">
+                      Zəhmət olmasa seçim edin: sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ✅ MƏLUMAT (1-ci səhifənin info kartı ilə eyni hiss) -->
+          <section class="ep-card mt-10 rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+            <h2 class="text-2xl sm:text-3xl font-semibold">Məlumat</h2>
+
+            <div class="mt-5 space-y-4 text-base leading-7 text-slate-700 dark:text-slate-200">
+              <p>
+                KSQ (Kiçik Summativ Qiymətləndirmə) və BSQ (Böyük Summativ Qiymətləndirmə) ümumi təhsil sistemində tətbiq olunan
+                qiymətləndirmə formalarıdır. Qiymətləndirmələr dövlət standartlarına uyğun olaraq şagirdlərin bilik, bacarıq və
+                kompetensiyalarını obyektiv ölçməyi hədəfləyir.
+              </p>
+              <p>
+                KSQ adətən yarımildə bir neçə dəfə keçirilir və konkret mövzuları əhatə edir. Test və ya yazılı iş formatında ola bilər
+                və cari mövzular üzrə anlayış səviyyəsini ölçür.
+              </p>
+              <p>
+                BSQ yarımilin sonunda keçirilən yekun qiymətləndirmədir. Geniş mövzu dairəsini əhatə edir və yarımil boyu əldə edilən
+                bilik və bacarıqları ümumi şəkildə yoxlayır.
+              </p>
+              <p>
+                EduPlan.az faylları sinif, fənn, növ (KSQ/BSQ) və nömrə üzrə təsnifləşdirir. Seçim etdikdən sonra materialları birbaşa
+                yükləyə bilərsiniz.
+              </p>
+              <p>
+                Fayllar əsasən PDF və DOCX formatındadır, qeydiyyat tələb etmir və müəllimlər, şagirdlər, təhsil işçiləri üçün açıqdır.
+              </p>
+              <p>
+                Hər hansı uyğunsuzluq aşkar etsəniz, <a href="mailto:eduplan.az@gmail.com" class="underline">eduplan.az@gmail.com</a>
+                ünvanına yazın. Müraciətlər nəzərdən keçirilir və fayllar yenilənir.
+              </p>
+              <p class="mb-0">
+                Platforma pulsuzdur və yalnız tədris məqsədi daşıyır. Gələcəkdə funksiyalar genişləndirilə bilər.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <!-- SAĞ reklam slotu -->
+        <aside class="ep-ad-slot ep-ad-right no-print" data-ad-slot="right" aria-label="Reklam (sağ)">
+          <!-- SAĞ reklam kodu bura -->
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ✅ FOOTER (1-ci səhifə ilə eyni) -->
+  <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+      <div>
+        © <span id="year"></span> <span class="font-semibold text-slate-900 dark:text-slate-100">EduPlan AZ</span> · Bütün hüquqlar qorunur
+      </div>
+
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <a class="hover:underline underline-offset-4" href="/about.html">Haqqımızda</a>
+        <a class="hover:underline underline-offset-4" href="/contact.html">Əlaqə</a>
+        <a class="hover:underline underline-offset-4" href="/terms.html">Şərtlər</a>
+        <a class="hover:underline underline-offset-4" href="/privacy.html">Məxfilik</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ✅ Tema toggle + il (1-ci səhifə ilə eyni) -->
+  <script>
+    (function () {
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const btn = document.getElementById('theme-toggle');
+      const meta = document.getElementById('theme-color');
+      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+
+      const hasUserPref = () => {
+        try { return !!localStorage.getItem('theme'); } catch (e) { return false; }
+      };
+
+      const getTheme = () => (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+      function applyTheme(theme, persist) {
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.dataset.theme = theme;
+
+        if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
+
+        if (persist) {
+          try { localStorage.setItem('theme', theme); } catch (e) {}
+        }
+      }
+
+      applyTheme(getTheme(), false);
+
+      btn && btn.addEventListener('click', function () {
+        const next = (getTheme() === 'dark') ? 'light' : 'dark';
+        applyTheme(next, true);
+      });
+
+      const onSystemChange = function (e) {
+        if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
+      };
+
+      if (mq) {
+        if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+        else if (mq.addListener) mq.addListener(onSystemChange);
+      }
+    })();
+  </script>
+
+  <!-- ✅ Reklam gəlsə: avtomatik 3 sütun + frame genişlənir (1-ci səhifə ilə eyni) -->
+  <script>
+    (function () {
+      const frame = document.getElementById('ep-frame');
+      const shell = document.getElementById('ep-shell');
+      if (!frame || !shell) return;
+
+      const left  = shell.querySelector('[data-ad-slot="left"]');
+      const right = shell.querySelector('[data-ad-slot="right"]');
+
+      const hasContent = (el) => {
+        if (!el) return false;
+        return Array.from(el.childNodes).some(n => {
+          if (n.nodeType === Node.ELEMENT_NODE) return true;
+          if (n.nodeType === Node.TEXT_NODE) return n.textContent.trim().length > 0;
+          return false;
+        });
+      };
+
+      const update = () => {
+        const hasLeft = hasContent(left);
+        const hasRight = hasContent(right);
+
+        shell.classList.toggle('has-left-ad', hasLeft);
+        shell.classList.toggle('has-right-ad', hasRight);
+
+        const hasAds = hasLeft || hasRight;
+        frame.classList.toggle('has-ads', hasAds);
+      };
+
+      update();
+
+      const obs = new MutationObserver(update);
+      if (left)  obs.observe(left,  { childList: true, subtree: true });
+      if (right) obs.observe(right, { childList: true, subtree: true });
+    })();
+  </script>
+
+  <!-- ✅ ep-select (timetable-dəki premium dropdown) — KSQ select-ləri üçün -->
+  <script>
+    const __epSelectInstances = new Set();
+    let __epSelectDocBound = false;
+
+    function bindPrettySelectDocCloser(){
+      if (__epSelectDocBound) return;
+      __epSelectDocBound = true;
+
+      document.addEventListener('mousedown', (e) => {
+        __epSelectInstances.forEach(inst => {
+          if (!inst?.wrap) return;
+          if (!inst.wrap.contains(e.target)) inst.close();
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') __epSelectInstances.forEach(inst => inst.close());
+      });
+    }
+
+    bindPrettySelectDocCloser();
+
+    function makePrettySelect(selectEl) {
+      if (!selectEl) return;
+
+      // artıq mount olunubsa: sadəcə refresh
+      if (selectEl.dataset.epPrettySelect === '1' && selectEl.__epSelectApi?.refresh) {
+        selectEl.__epSelectApi.refresh();
+        return;
+      }
+      if (selectEl.dataset.epPrettySelect === '1') return;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'ep-select';
+
+      selectEl.parentNode.insertBefore(wrap, selectEl);
+      wrap.appendChild(selectEl);
+
+      selectEl.classList.add('ep-native-select');
+      selectEl.dataset.epPrettySelect = '1';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ep-select-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+
+      const menu = document.createElement('div');
+      menu.className = 'ep-select-menu';
+      menu.setAttribute('role', 'listbox');
+
+      wrap.appendChild(btn);
+      wrap.appendChild(menu);
+
+      function close() {
+        wrap.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+      function open() {
+        if (btn.disabled) return;
+        __epSelectInstances.forEach(inst => { if (inst !== api) inst.close(); });
+        wrap.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+      function toggle() { wrap.classList.contains('open') ? close() : open(); }
+
+      function render() {
+        // disabled state sync
+        btn.disabled = !!selectEl.disabled;
+        if (btn.disabled) close();
+
+        const selected = selectEl.options[selectEl.selectedIndex];
+        const label = selected ? selected.textContent : 'Seçin';
+
+        btn.innerHTML = `
+          <span style="min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true" style="flex:0 0 auto;opacity:.9">
+            <path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        `;
+
+        menu.innerHTML = '';
+
+        Array.from(selectEl.options).forEach((opt, idx) => {
+          // placeholder hidden option-u menyuda göstərmə
+          if (opt.hidden) return;
+
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'ep-select-item';
+          item.textContent = opt.textContent;
+          item.setAttribute('role', 'option');
+          item.setAttribute('aria-selected', idx === selectEl.selectedIndex ? 'true' : 'false');
+
+          if (opt.disabled) {
+            item.setAttribute('aria-disabled','true');
+          }
+
+          item.addEventListener('click', () => {
+            if (opt.disabled) return;
+            selectEl.selectedIndex = idx;
+            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            render();
+            close();
+          });
+
+          menu.appendChild(item);
+        });
+      }
+
+      btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+      btn.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+      selectEl.addEventListener('change', render);
+
+      function destroy(){
+        close();
+        try { selectEl.removeEventListener('change', render); } catch(e){}
+        __epSelectInstances.delete(api);
+        try { selectEl.__epSelectApi = null; } catch(e){}
+      }
+
+      const api = { close, wrap, destroy, refresh: render };
+      try { selectEl.__epSelectApi = api; } catch(e){}
+      __epSelectInstances.add(api);
+
+      render();
+    }
+  </script>
+
+  <!-- ✅ KSQ/BSQ logic (sənin 2-ci kodun funksiyası saxlanılıb, only UI uyğunlaşdırılıb) -->
+  <script>
+    (function(){
+      const FEED_URL = "https://script.google.com/macros/s/AKfycbxnt6tDu5YJ_P_FUgobNTu_Q-2dbyZjaXSWwyjIKysTJ3UwnWZKqm0ZxoNwoyT4M0w7/exec";
+
+      const translations = {
+        subjects: {
+          az:'Azərbaycan dili', lit:'Ədəbiyyat', science:'Təbiət', eng:'İngilis dili', rus:'Rus dili', math:'Riyaziyyat',
+          physics:'Fizika', chemistry:'Kimya', biology:'Biologiya',
+          az_history:'Azərbaycan tarixi', world_history:'Ümumi tarix', geography:'Coğrafiya',
+          it:'İnformatika', life:'Həyat bilgisi', tech:'Texnologiya', art:'Təsviri incəsənət', music:'Musiqi',
+          pe:'Fiziki tərbiyə', premilitary:'Çağırışaqədərki hazırlıq'
+        }
+      };
+
+      const subjectKeysByGrade = {
+        I:['az','life','math','eng','rus','art','music','pe','tech','it'],
+        II:['az','life','math','eng','rus','art','music','pe','tech','it'],
+        III:['az','life','math','eng','rus','art','music','pe','tech','it'],
+        IV:['az','life','math','eng','rus','art','music','pe','tech','it'],
+        V:['az','lit','eng','rus','math','science','it','az_history','life','art','music','pe','tech'],
+        VI:['az','lit','eng','rus','math','physics','science','it','biology','az_history','world_history','geography','life','art','music','pe','tech'],
+        VII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','life','art','music','tech'],
+        VIII:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','life','art','music','tech'],
+        IX:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','life','art','music','tech'],
+        X:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','premilitary'],
+        XI:['az','lit','eng','rus','math','physics','chemistry','biology','az_history','world_history','geography','it','pe','premilitary'],
+      };
+
+      const state = {
+        grade: null,
+        subject: null,
+        ksqType: null,
+        examIndex: null,
+        catalog: [],
+        isCatalogLoaded: false,
+        error: null
+      };
+
+      const $ = s => document.querySelector(s);
+
+      function esc(s){
+        return String(s ?? '').replace(/[&<>"']/g, ch => ({
+          '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        }[ch]));
+      }
+
+      function option(el,v,t){
+        const o = document.createElement('option');
+        o.value = v;
+        o.textContent = t;
+        el.appendChild(o);
+      }
+
+      function addPlaceholder(selectEl, label){
+        const o = document.createElement('option');
+        o.value = "";
+        o.textContent = label;
+        o.disabled = true;
+        o.selected = true;
+        o.hidden = true;
+        selectEl.appendChild(o);
+      }
+
+      function subjectsFor(grade){
+        const keys = subjectKeysByGrade[grade] || Object.keys(translations.subjects);
+        return keys.map(k => translations.subjects[k]).filter(Boolean);
+      }
+
+      function allChosen(){
+        return !!(state.grade && state.subject && state.ksqType && state.examIndex);
+      }
+
+      function mountPrettySelects(){
+        makePrettySelect($('#grade'));
+        makePrettySelect($('#subject'));
+        makePrettySelect($('#ksqType'));
+        makePrettySelect($('#examIndex'));
+      }
+
+      function renderSelects(){
+        const grades = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+
+        const gradeEl = $('#grade');
+        gradeEl.innerHTML = '';
+        addPlaceholder(gradeEl, 'Sinfi seçin');
+        grades.forEach(g => option(gradeEl, g, g));
+        gradeEl.value = state.grade ?? "";
+
+        const subjEl = $('#subject');
+        subjEl.innerHTML = '';
+        addPlaceholder(subjEl, 'Fənni seçin');
+        if (state.grade) subjectsFor(state.grade).forEach(s => option(subjEl, s, s));
+        subjEl.value = state.subject ?? "";
+
+        const typeEl = $('#ksqType');
+        typeEl.innerHTML = '';
+        addPlaceholder(typeEl, 'Növü seçin');
+        option(typeEl, 'KSQ', 'KSQ');
+        option(typeEl, 'BSQ', 'BSQ');
+        typeEl.value = state.ksqType ?? "";
+
+        const idxEl = $('#examIndex');
+        idxEl.innerHTML = '';
+        addPlaceholder(idxEl, 'Nömrəni seçin');
+
+        if (state.ksqType === 'KSQ') {
+          for (let i = 1; i <= 15; i++) option(idxEl, String(i), String(i));
+        } else if (state.ksqType === 'BSQ') {
+          ['1','2'].forEach(i => option(idxEl, i, i));
+        }
+
+        idxEl.value = state.examIndex ?? "";
+        idxEl.disabled = !state.ksqType;
+
+        mountPrettySelects();
+      }
+
+      function setCountText(txt){
+        const el = $('#ksq-count');
+        if (!el) return;
+        el.textContent = txt || '';
+      }
+
+      function renderPlaceholder(icon, title, desc){
+        const wrap = $('#ksq-results');
+        wrap.innerHTML = `
+          <div class="col-span-full rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-5">
+            <div class="flex items-start gap-3">
+              <div class="h-10 w-10 rounded-xl grid place-items-center bg-white/70 dark:bg-white/5 border border-slate-200/70 dark:border-slate-800/70">
+                <span style="font-size:18px">${esc(icon)}</span>
+              </div>
+              <div class="min-w-0">
+                <div class="font-semibold text-slate-900 dark:text-slate-100">${esc(title)}</div>
+                <div class="mt-1 text-[12px] text-slate-500 dark:text-slate-400">${esc(desc)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function buildTitle(it){
+        const format = (it.ext || 'FILE').toUpperCase();
+        return `${it.grade} · ${it.subject} · ${it.type}-${it.index} · ${format}`;
+      }
+
+      function renderFiles(list){
+        const wrap = $('#ksq-results');
+        wrap.innerHTML = '';
+
+        list.forEach(it => {
+          const ext = (it.ext || 'FILE').toUpperCase();
+          const title = buildTitle(it);
+
+          const card = document.createElement('div');
+          card.className = 'rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4 hover:shadow-sm transition';
+
+          card.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="h-9 w-9 rounded-xl grid place-items-center bg-white/70 dark:bg-white/5 border border-slate-200/70 dark:border-slate-800/70">📄</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-semibold break-words">${esc(title)}</div>
+                <div class="mt-2 flex items-center gap-2">
+                  <span class="ksq-pill" data-ext="${esc(ext)}">${esc(ext)}</span>
+                </div>
+
+                <div class="mt-3">
+                  <a href="${esc(it.dl)}"
+                     class="ep-btn-secondary inline-flex items-center gap-2 rounded-full border border-slate-200/70 dark:border-slate-800/70 px-3 py-2 text-xs font-semibold"
+                     download>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Yüklə
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+
+          wrap.appendChild(card);
+        });
+      }
+
+      function updateResults(){
+        if (!allChosen()) {
+          setCountText('');
+          renderPlaceholder('🗂️', 'Zəhmət olmasa seçim edin', 'Sinif, fənn, növ və nömrəni seçdikdən sonra nəticələr burada görünəcək.');
+          return;
+        }
+
+        if (!state.isCatalogLoaded) {
+          setCountText('');
+          renderPlaceholder('⏳', 'Fayllar hazırlanır…', 'Zəhmət olmasa bir neçə saniyə gözləyin.');
+          return;
+        }
+
+        if (state.error) {
+          setCountText('');
+          renderPlaceholder('⚠️', 'Xəta', state.error);
+          return;
+        }
+
+        const list = state.catalog.filter(it =>
+          it.type === state.ksqType &&
+          it.grade === state.grade &&
+          it.subject === state.subject &&
+          it.index === state.examIndex
+        );
+
+        setCountText(`Fayl: ${list.length}`);
+
+        if (!list.length) {
+          renderPlaceholder('📭', 'Fayl yoxdur', 'Bu seçim üçün fayl tapılmadı.');
+          return;
+        }
+
+        renderFiles(list);
+      }
+
+      async function loadCatalog(){
+        state.isCatalogLoaded = false;
+        state.error = null;
+        updateResults();
+
+        try{
+          const res = await fetch(FEED_URL, { cache: 'no-store' });
+          const catalog = await res.json();
+          state.catalog = Array.isArray(catalog) ? catalog : [];
+        } catch(e){
+          state.catalog = [];
+          state.error = e?.message ? String(e.message) : String(e);
+        } finally {
+          state.isCatalogLoaded = true;
+          updateResults();
+        }
+      }
+
+      // init
+      renderSelects();
+      updateResults();
+      loadCatalog();
+
+      // events
+      $('#grade').addEventListener('change', e => {
+        state.grade = e.target.value || null;
+        state.subject = null;
+        renderSelects();
+        updateResults();
+      });
+
+      $('#subject').addEventListener('change', e => {
+        state.subject = e.target.value || null;
+        updateResults();
+      });
+
+      $('#ksqType').addEventListener('change', e => {
+        state.ksqType = e.target.value || null;
+        state.examIndex = null;
+        renderSelects();
+        updateResults();
+      });
+
+      $('#examIndex').addEventListener('change', e => {
+        state.examIndex = e.target.value || null;
+        updateResults();
+      });
+    })();
+  </script>
 </body>
 </html>

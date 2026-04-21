@@ -1217,12 +1217,13 @@ function bindPrettySelectDocCloser(){
   });
 }
 
-      const GENERATE_LABEL = '⚙️ Cədvəli qur';
-      const STOP_LABEL = '🛑 Dayandır';
+const GENERATE_LABEL = '⚙️ Cədvəli qur';
+const STOP_LABEL = '🛑 Dayandır';
 
-      let __solverRunning = false;
-      let __stopRequested = false;
-      let __runId = 0;
+let __solverRunning = false;
+let __stopRequested = false;
+let __runId = 0;
+let __teacherCodeSeq = 1;
 
       // ===== ✅ nəticə çıxanda scroll (stabil) =====
       const prefersReduceMotion = () => {
@@ -1444,65 +1445,68 @@ function cleanupPrettySelects(root){
       });
 
       function addTeacherRow(initial = {}) {
-        const tr = document.createElement('tr');
+  const tr = document.createElement('tr');
 
-        const dc = currentDaysCount();
-        const defaultAvailDays = Array.from({ length: dc }, (_, i) => i);
-        const availableDays = Array.isArray(initial.availableDays) && initial.availableDays.length
-          ? initial.availableDays
-          : defaultAvailDays;
+  const dc = currentDaysCount();
+  const defaultAvailDays = Array.from({ length: dc }, (_, i) => i);
+  const availableDays = Array.isArray(initial.availableDays) && initial.availableDays.length
+    ? initial.availableDays
+    : defaultAvailDays;
 
-        // Default: bütün saatlar seçili
-        const defaultAvailHoursAll = Array.from({ length: 8 }, (_, i) => i);
-        const availableHours = Array.isArray(initial.availableHours) && initial.availableHours.length
-          ? initial.availableHours
-          : defaultAvailHoursAll;
+  // Default: bütün saatlar seçili
+  const defaultAvailHoursAll = Array.from({ length: 8 }, (_, i) => i);
+  const availableHours = Array.isArray(initial.availableHours) && initial.availableHours.length
+    ? initial.availableHours
+    : defaultAvailHoursAll;
 
-        const hoursHtml = HOUR_LABELS_FULL.map((lbl, idx) => {
-          const checked = availableHours.includes(idx) ? 'checked' : '';
-          return `<label class="t-hourlbl" data-h="${idx}">
-                    <input type="checkbox" class="t-avhour" data-h="${idx}" ${checked}>
-                    <span>${lbl}</span>
-                  </label>`;
-        }).join(' ');
+  const teacherCode = (initial.code != null && String(initial.code).trim() !== '')
+    ? String(initial.code).trim()
+    : String(__teacherCodeSeq++);
 
-        const daysHtml = DAY_LABELS_FULL.map((lbl, idx) => {
-          const checked = availableDays.includes(idx) ? 'checked' : '';
-          return `<label class="t-daylbl" data-d="${idx}">
-                    <input type="checkbox" class="t-avday" data-d="${idx}" ${checked}>
-                    <span>${lbl}</span>
-                  </label>`;
-        }).join(' ');
+  const hoursHtml = HOUR_LABELS_FULL.map((lbl, idx) => {
+    const checked = availableHours.includes(idx) ? 'checked' : '';
+    return `<label class="t-hourlbl" data-h="${idx}">
+              <input type="checkbox" class="t-avhour" data-h="${idx}" ${checked}>
+              <span>${lbl}</span>
+            </label>`;
+  }).join(' ');
 
-        tr.innerHTML = `
-          <td><input type="text" class="t-name" placeholder="Müəllim adı" value="${initial.name || ''}"></td>
-          <td><input type="text" class="t-code" placeholder="Kod" value="${initial.code || ''}"></td>
-          <td><input type="number" class="t-week" min="0" max="60" value="${initial.weeklyMax ?? 30}"></td>
-          <td><input type="number" class="t-daymax" min="0" max="10" value="${initial.dailyMax ?? 6}"></td>
-          <td>
-            <div class="t-mini-actions no-print">
-              <button type="button" class="t-mini-btn t-hour-all">Hamısı</button>
-              <button type="button" class="t-mini-btn t-hour-noedges">Kənarları çıxar</button>
-            </div>
-            <div class="t-hours">
-              ${hoursHtml}
-            </div>
-          </td>
-          <td>
-            <div class="t-days">
-              ${daysHtml}
-            </div>
-          </td>
-          <td class="no-print text-right">
-            <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
-          </td>
-        `;
-        teacherTbody.appendChild(tr);
+  const daysHtml = DAY_LABELS_FULL.map((lbl, idx) => {
+    const checked = availableDays.includes(idx) ? 'checked' : '';
+    return `<label class="t-daylbl" data-d="${idx}">
+              <input type="checkbox" class="t-avday" data-d="${idx}" ${checked}>
+              <span>${lbl}</span>
+            </label>`;
+  }).join(' ');
 
-        syncTeacherDayVisibility(dc);
-        syncTeacherHourVisibility(currentLessonsPerDay());
-      }
+  tr.innerHTML = `
+    <td><input type="text" class="t-name" placeholder="Müəllim adı" value="${initial.name || ''}"></td>
+    <td><input type="text" class="t-code" placeholder="Kod" value="${teacherCode}" readonly></td>
+    <td><input type="number" class="t-week" min="0" max="60" value="${initial.weeklyMax ?? 30}"></td>
+    <td><input type="number" class="t-daymax" min="0" max="10" value="${initial.dailyMax ?? 6}"></td>
+    <td>
+      <div class="t-mini-actions no-print">
+        <button type="button" class="t-mini-btn t-hour-all">Hamısı</button>
+        <button type="button" class="t-mini-btn t-hour-noedges">Kənarları çıxar</button>
+      </div>
+      <div class="t-hours">
+        ${hoursHtml}
+      </div>
+    </td>
+    <td>
+      <div class="t-days">
+        ${daysHtml}
+      </div>
+    </td>
+    <td class="no-print text-right">
+      <button type="button" class="text-xs text-rose-500 hover:underline t-del">Sil</button>
+    </td>
+  `;
+  teacherTbody.appendChild(tr);
 
+  syncTeacherDayVisibility(dc);
+  syncTeacherHourVisibility(currentLessonsPerDay());
+}
       function addClassRow(initial = {}) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -1619,6 +1623,7 @@ lessonTbody.addEventListener('click', (e) => {
         __stopRequested = true;
         __runId++;
         __solverRunning = false;
+        __teacherCodeSeq = 1;
         if (btnGenerate) btnGenerate.textContent = GENERATE_LABEL;
         cleanupPrettySelects(classTbody);
         cleanupPrettySelects(lessonTbody);
@@ -3178,15 +3183,15 @@ softWarnings.textContent = parts.join('\n\n');
         }
       });
 
-      // Başlanğıc nümunələr (istəsən sil)
-      addTeacherRow({ name: 'Əhmədov Firdovsi', code: 'FİR', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
-      addTeacherRow({ name: 'İsfəndiyarlı Məzahir', code: 'MƏZ', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
+// Başlanğıc nümunələr (istəsən sil)
+addTeacherRow({ name: 'Əhmədov Firdovsi', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
+addTeacherRow({ name: 'İsfəndiyarlı Məzahir', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
 
-      addClassRow({ name: '5A', level: 'esas', shift: 'seher' });
-      addClassRow({ name: '6A', level: 'esas', shift: 'seher' });
+addClassRow({ name: '5A', level: 'esas', shift: 'seher' });
+addClassRow({ name: '6A', level: 'esas', shift: 'seher' });
 
-      addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: 'FİR', hours: 4, heavy: true, doubleMode: 'prefer' });
-      addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: 'MƏZ', hours: 3, heavy: false, doubleMode: 'none' });
+addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: '1', hours: 4, heavy: true, doubleMode: 'prefer' });
+addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: '2', hours: 3, heavy: false, doubleMode: 'none' });
 
       // ilkin state
       syncTeacherDayVisibility(currentDaysCount());

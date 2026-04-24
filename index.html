@@ -144,22 +144,56 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       word-break: normal;
     }
 
-    /* Planşet aralığı: hero çox sıxılmasın */
-    @media (min-width: 640px) and (max-width: 1023px){
-      section.relative > div{
-        min-height: auto !important;
-        padding-top: 3rem !important;
-        padding-bottom: 3rem !important;
-      }
+/* Planşet və telefon: hero hissəsi mərkəzdə, səliqəli görünsün */
+@media (max-width: 1023px){
+  section.relative > div{
+    min-height: auto !important;
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+    justify-items: center;
+  }
 
-      section.relative h1{
-        max-width: 100% !important;
-      }
+  section.relative > div > div:first-child,
+  section.relative > div > div:last-child{
+    width: 100%;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-      section.relative p{
-        max-width: 70ch !important;
-      }
-    }
+  section.relative > div > div:first-child{
+    text-align: center;
+  }
+
+  section.relative h1,
+  section.relative p{
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  section.relative h1{
+    max-width: 36ch !important;
+  }
+
+  section.relative p{
+    max-width: 62ch !important;
+  }
+
+  section.relative ul{
+    justify-content: center;
+  }
+}
+
+/* Planşetdə 3 kartdan sonuncusu tək qalanda ortada dursun */
+@media (min-width: 640px) and (max-width: 1023px){
+  section.relative > div > div:last-child > .grid:last-child > a:last-child{
+    grid-column: 1 / -1;
+    width: calc(50% - .5rem);
+    min-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
   </style>
 </head>
 

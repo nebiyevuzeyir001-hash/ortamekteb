@@ -349,10 +349,29 @@
     html.dark .t-mini-btn:hover{ background: rgba(255,255,255,.07); }
 
     /* Class / Lesson tables */
-#classTable, #lessonTable{ table-layout: fixed; width:100%; min-width:0; }
-#classTable th:nth-child(1), #classTable td:nth-child(1){ width: 28%; }
-#classTable th:nth-child(2), #classTable td:nth-child(2){ width: 62%; }
-#classTable th:nth-child(3), #classTable td:nth-child(3){ width: 10%; }
+#classTable{
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+
+#classTable th:nth-child(1), #classTable td:nth-child(1){ width: 32%; }
+#classTable th:nth-child(2), #classTable td:nth-child(2){ width: 56%; }
+#classTable th:nth-child(3), #classTable td:nth-child(3){
+  width: 12%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+#classTable td{
+  vertical-align: middle;
+}
+
+#lessonTable{
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
 
 #lessonTable th:nth-child(1), #lessonTable td:nth-child(1){ width: 15%; }
 #lessonTable th:nth-child(2), #lessonTable td:nth-child(2){ width: 28%; }
@@ -732,31 +751,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </table>
               </div>
 
-              <!-- 3) Siniflər -->
-              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="section-title">Siniflər</div>
-                  <button type="button" id="btnAddClass"
-                          class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
-                    ➕ Əlavə et
-                  </button>
-                </div>
+<!-- 3) Siniflər -->
+<div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+  <div class="flex items-center justify-between mb-2">
+    <div class="section-title">Siniflər</div>
+    <button type="button" id="btnAddClass"
+            class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+      ➕ Əlavə et
+    </button>
+  </div>
 
-<div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-  “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
+  <div class="max-w-[760px]">
+    <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+      “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
+    </div>
+
+    <table class="config-table" id="classTable">
+      <thead>
+        <tr>
+          <th>Sinif</th>
+          <th>Gündə max dərs</th>
+          <th class="no-print"></th>
+        </tr>
+      </thead>
+      <tbody id="classTbody"></tbody>
+    </table>
+  </div>
 </div>
-
-<table class="config-table" id="classTable">
-  <thead>
-    <tr>
-      <th>Sinif</th>
-      <th>Gündə max dərs</th>
-      <th class="no-print"></th>
-    </tr>
-  </thead>
-  <tbody id="classTbody"></tbody>
-</table>
-              </div>
 
               <!-- 4) Fənn / dərs saatları -->
               <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">

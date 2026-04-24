@@ -1040,10 +1040,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                       <option value="6">6 gün (B.e–Ş)</option>
                     </select>
                   </div>
-                  <div>
-                    <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
-                    <input id="lessonsPerDay" type="number" min="1" max="8" value="7" />
-                  </div>
+<div>
+  <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Gündə dərs saatı (max)</label>
+  <select id="lessonsPerDay">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7" selected>7</option>
+    <option value="8">8</option>
+  </select>
+</div>
                 </div>
 
 <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
@@ -1750,6 +1759,7 @@ function cleanupPrettySelects(root){
 }
 
       makePrettySelect(daysCountSelect, { size: 'md' });
+      makePrettySelect(lessonsPerDayInput, { size: 'md' });
 
       function currentDaysCount(){
         return parseInt(daysCountSelect.value, 10) || 5;

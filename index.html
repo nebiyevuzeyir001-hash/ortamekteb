@@ -127,6 +127,39 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         0 4px 12px rgba(0, 0, 0, 0.35),
         0 0 0 1px rgba(255, 255, 255, 0.06);
     }
+
+    /* Planşetdə və dar ekranlarda kart mətnləri çərçivədən daşmasın */
+    .card-surface{
+      min-width: 0;
+    }
+
+    .card-surface *{
+      min-width: 0;
+    }
+
+    .card-surface .font-medium,
+    .card-surface .font-semibold,
+    .card-surface .text-sm{
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    /* Planşet aralığı: hero çox sıxılmasın */
+    @media (min-width: 640px) and (max-width: 1023px){
+      section.relative > div{
+        min-height: auto !important;
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+      }
+
+      section.relative h1{
+        max-width: 100% !important;
+      }
+
+      section.relative p{
+        max-width: 70ch !important;
+      }
+    }
   </style>
 </head>
 
@@ -197,7 +230,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Hero -->
   <section class="relative">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid md:grid-cols-2 gap-10 items-center min-h-[calc(100vh-64px)]">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 grid lg:grid-cols-2 gap-10 items-center min-h-[calc(100vh-64px)]">
       <div>
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-snug max-w-[36ch]">
           Müəllimlər üçün rəqəmsal resurs platforması
@@ -255,7 +288,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </a>
         </div>
 
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <a href="/calculator.html"
              class="card-surface rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-4 transition flex items-center gap-3">
             <span class="h-9 w-9 rounded-xl grid place-items-center bg-slate-100 dark:bg-white/10">🧮</span>

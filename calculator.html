@@ -76,6 +76,264 @@
     html.dark .card-surface { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.03); }
     html.dark .card-surface:hover { box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06); }
 
+    /* =========================================================
+   Premium settings menu
+========================================================= */
+.settings-wrap{
+  position: relative;
+  display: inline-flex;
+}
+
+.settings-trigger{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  border: 1px solid rgba(226,232,240,.75);
+  background: rgba(255,255,255,.64);
+  color: rgb(15 23 42);
+  box-shadow: 0 8px 22px rgba(15,23,42,.06);
+  transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease, border-color .16s ease;
+}
+
+.settings-trigger:hover{
+  transform: translateY(-1px);
+  background: rgba(248,250,252,.92);
+  box-shadow: 0 14px 34px rgba(15,23,42,.10);
+}
+
+.settings-trigger:active{
+  transform: translateY(0);
+}
+
+.settings-trigger:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99,102,241,.22), 0 14px 34px rgba(15,23,42,.10);
+}
+
+html.dark .settings-trigger{
+  border-color: rgba(51,65,85,.9);
+  background: rgba(15,23,42,.50);
+  color: rgb(226 232 240);
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+}
+
+html.dark .settings-trigger:hover{
+  background: rgba(15,23,42,.78);
+  box-shadow: 0 16px 40px rgba(0,0,0,.50);
+}
+
+.settings-menu{
+  position: absolute;
+  top: calc(100% + .75rem);
+  right: 0;
+  width: min(92vw, 330px);
+  z-index: 80;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(226,232,240,.94);
+  background:
+    radial-gradient(circle at top right, rgba(99,102,241,.055), transparent 42%),
+    linear-gradient(180deg, rgba(255,255,255,.965), rgba(248,250,252,.955));
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+  box-shadow:
+    0 24px 70px rgba(15,23,42,.20),
+    0 0 0 1px rgba(255,255,255,.58) inset;
+  padding: .75rem;
+}
+
+.settings-menu.hidden{
+  display: none;
+}
+
+html.dark .settings-menu{
+  border-color: rgba(71,85,105,.93);
+  background:
+    radial-gradient(circle at top right, rgba(129,140,248,.055), transparent 44%),
+    linear-gradient(180deg, rgba(8,15,30,.986), rgba(2,6,23,.980));
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+  box-shadow:
+    0 26px 82px rgba(0,0,0,.68),
+    0 0 0 1px rgba(255,255,255,.07) inset;
+}
+
+.settings-head{
+  padding: .75rem .75rem .65rem;
+  border-bottom: 1px solid rgba(148,163,184,.16);
+}
+
+.settings-title{
+  font-size: .92rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: rgb(15 23 42);
+}
+
+html.dark .settings-title{
+  color: rgb(241 245 249);
+}
+
+.settings-subtitle{
+  margin-top: .15rem;
+  font-size: .72rem;
+  color: rgb(100 116 139);
+}
+
+html.dark .settings-subtitle{
+  color: rgb(148 163 184);
+}
+
+.settings-section{
+  padding: .75rem;
+}
+
+.settings-section + .settings-section{
+  border-top: 1px solid rgba(148,163,184,.14);
+}
+
+.settings-label{
+  margin-bottom: .55rem;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgb(100 116 139);
+}
+
+html.dark .settings-label{
+  color: rgb(148 163 184);
+}
+
+.theme-choice{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .45rem;
+}
+
+.theme-choice-btn{
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(226,232,240,.78);
+  background: rgba(255,255,255,.62);
+  padding: .55rem .7rem;
+  color: rgb(15 23 42);
+  font-size: .82rem;
+  font-weight: 700;
+  text-align: left;
+  transition: background-color .14s ease, border-color .14s ease, transform .08s ease, box-shadow .14s ease;
+}
+
+.theme-choice-btn:hover{
+  background: rgba(248,250,252,.95);
+  border-color: rgba(99,102,241,.28);
+}
+
+.theme-choice-btn:active{
+  transform: translateY(1px);
+}
+
+.theme-choice-btn.is-active{
+  border-color: rgba(99,102,241,.50);
+  background: linear-gradient(90deg, rgba(99,102,241,.14), rgba(16,185,129,.09));
+  box-shadow: 0 10px 24px rgba(99,102,241,.12);
+}
+
+html.dark .theme-choice-btn{
+  border-color: rgba(51,65,85,.88);
+  background: rgba(255,255,255,.045);
+  color: rgb(226 232 240);
+}
+
+html.dark .theme-choice-btn:hover{
+  background: rgba(255,255,255,.07);
+  border-color: rgba(129,140,248,.30);
+}
+
+html.dark .theme-choice-btn.is-active{
+  border-color: rgba(129,140,248,.48);
+  background: linear-gradient(90deg, rgba(129,140,248,.18), rgba(16,185,129,.08));
+  box-shadow: 0 12px 30px rgba(0,0,0,.32);
+}
+
+.theme-choice-icon{
+  width: 28px;
+  height: 28px;
+  border-radius: .8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,23,42,.06);
+  flex: 0 0 auto;
+}
+
+html.dark .theme-choice-icon{
+  background: rgba(255,255,255,.08);
+}
+
+.settings-links{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .45rem;
+}
+
+.settings-links a{
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .95rem;
+  border: 1px solid rgba(226,232,240,.72);
+  background: rgba(255,255,255,.48);
+  color: rgb(51 65 85);
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color .14s ease, border-color .14s ease, transform .08s ease;
+}
+
+.settings-links a:hover{
+  background: rgba(248,250,252,.95);
+  border-color: rgba(99,102,241,.24);
+}
+
+.settings-links a:active{
+  transform: translateY(1px);
+}
+
+html.dark .settings-links a{
+  border-color: rgba(51,65,85,.82);
+  background: rgba(255,255,255,.04);
+  color: rgb(203 213 225);
+}
+
+html.dark .settings-links a:hover{
+  background: rgba(255,255,255,.07);
+  border-color: rgba(129,140,248,.28);
+}
+
+@media (max-width: 520px){
+  .settings-trigger{
+    width: 40px;
+    height: 40px;
+    border-radius: .95rem;
+  }
+
+  .settings-menu{
+    position: fixed;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+}
+
     input[type="number"]{
       width:100%;
       border-radius: 0.75rem;
@@ -496,21 +754,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="font-semibold tracking-tight">EduPlan AZ</span>
         </a>
 
-        <button
-          id="theme-toggle"
-          type="button"
-          class="inline-flex items-center justify-center rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 p-2 hover:bg-slate-200 dark:hover:bg-slate-900/60 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          aria-label="Tema dəyişdir"
-          aria-pressed="false"
-        >
-          <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l-1.5-1.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 6.9 6.9 0 1 0 21 13.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          </svg>
+<!-- Settings menu -->
+<div class="settings-wrap">
+  <button
+    id="settings-toggle"
+    type="button"
+    class="settings-trigger"
+    aria-label="Parametrlər"
+    aria-haspopup="menu"
+    aria-expanded="false"
+  >
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14 7a2 2 0 1 0 4 0 2 2 0 0 0-4 0ZM6 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </button>
+
+  <div id="settings-menu" class="settings-menu hidden" role="menu" aria-labelledby="settings-toggle">
+    <div class="settings-head">
+      <div>
+        <div class="settings-title">Parametrlər</div>
+        <div class="settings-subtitle">Görünüş və sürətli keçidlər</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Görünüş</div>
+
+      <div class="theme-choice" role="group" aria-label="Görünüş seçimi">
+        <button type="button" class="theme-choice-btn" data-theme-option="system">
+          <span class="theme-choice-icon">◐</span>
+          <span>Sistem</span>
         </button>
+
+        <button type="button" class="theme-choice-btn" data-theme-option="light">
+          <span class="theme-choice-icon">☀</span>
+          <span>Açıq</span>
+        </button>
+
+        <button type="button" class="theme-choice-btn" data-theme-option="dark">
+          <span class="theme-choice-icon">☾</span>
+          <span>Qaranlıq</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Sayt</div>
+
+      <div class="settings-links">
+        <a href="/about.html">Haqqımızda</a>
+        <a href="/contact.html">Əlaqə</a>
+        <a href="/privacy.html">Məxfilik</a>
+        <a href="/terms.html">Şərtlər</a>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </header>
@@ -763,52 +1063,115 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </footer>
 
-  <!-- JS: year + theme toggle -->
-  <script>
-    (function () {
-      const yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
+<!-- JS: year + settings menu + theme -->
+<script>
+  (function () {
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-      const btn = document.getElementById('theme-toggle');
-      const meta = document.getElementById('theme-color');
-      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsMenu = document.getElementById('settings-menu');
+    const themeButtons = document.querySelectorAll('[data-theme-option]');
+    const meta = document.getElementById('theme-color');
+    const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
 
-      const hasUserPref = () => {
-        try { return !!localStorage.getItem('theme'); } catch (e) { return false; }
-      };
-
-      const getTheme = () => (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-
-      function applyTheme(theme, persist) {
-        const isDark = theme === 'dark';
-        document.documentElement.classList.toggle('dark', isDark);
-        document.documentElement.dataset.theme = theme;
-
-        if (btn) btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
-
-        if (persist) {
-          try { localStorage.setItem('theme', theme); } catch (e) {}
-        }
+    function getStoredThemePref() {
+      try {
+        const saved = localStorage.getItem('theme');
+        return (saved === 'dark' || saved === 'light') ? saved : 'system';
+      } catch (e) {
+        return 'system';
       }
+    }
 
-      applyTheme(getTheme(), false);
+    function resolveTheme(pref) {
+      if (pref === 'dark' || pref === 'light') return pref;
+      return (mq && mq.matches) ? 'dark' : 'light';
+    }
 
-      btn && btn.addEventListener('click', function () {
-        const next = (getTheme() === 'dark') ? 'light' : 'dark';
-        applyTheme(next, true);
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.documentElement.classList.toggle('dark', isDark);
+      document.documentElement.dataset.theme = theme;
+      if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
+    }
+
+    function syncThemeButtons(pref) {
+      themeButtons.forEach(btn => {
+        const active = btn.dataset.themeOption === pref;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
+    }
 
-      const onSystemChange = function (e) {
-        if (!hasUserPref()) applyTheme(e.matches ? 'dark' : 'light', false);
-      };
+    function setThemePref(pref) {
+      const nextPref = (pref === 'dark' || pref === 'light') ? pref : 'system';
 
-      if (mq) {
-        if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
-        else if (mq.addListener) mq.addListener(onSystemChange);
+      try {
+        if (nextPref === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', nextPref);
+      } catch (e) {}
+
+      applyTheme(resolveTheme(nextPref));
+      syncThemeButtons(nextPref);
+    }
+
+    function openSettings() {
+      if (!settingsMenu || !settingsToggle) return;
+      settingsMenu.classList.remove('hidden');
+      settingsToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeSettings() {
+      if (!settingsMenu || !settingsToggle) return;
+      settingsMenu.classList.add('hidden');
+      settingsToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleSettings() {
+      if (!settingsMenu) return;
+      settingsMenu.classList.contains('hidden') ? openSettings() : closeSettings();
+    }
+
+    const initialPref = getStoredThemePref();
+    applyTheme(resolveTheme(initialPref));
+    syncThemeButtons(initialPref);
+
+    settingsToggle && settingsToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSettings();
+    });
+
+    settingsMenu && settingsMenu.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', function () {
+        setThemePref(btn.dataset.themeOption);
+      });
+    });
+
+    document.addEventListener('click', closeSettings);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSettings();
+    });
+
+    const onSystemChange = function (e) {
+      if (getStoredThemePref() === 'system') {
+        applyTheme(e.matches ? 'dark' : 'light');
+        syncThemeButtons('system');
       }
-    })();
-  </script>
+    };
+
+    if (mq) {
+      if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+      else if (mq.addListener) mq.addListener(onSystemChange);
+    }
+  })();
+</script>
 
   <!-- Ads: auto layout -->
   <script>

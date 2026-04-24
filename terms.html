@@ -1,101 +1,692 @@
 <!doctype html>
-<html lang="az">
+<html lang="az" class="scroll-smooth">
 <head>
-  <!-- Google Tag Manager -->
+<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-M3CQTM2P');</script>
 <!-- End Google Tag Manager -->
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>İstifadə Şərtləri | EduPlan</title>
-  <meta name="description" content="EduPlan istifadə şərtləri." />
-  <link rel="icon" href="favicon.ico" sizes="any"> 
-  <link rel="icon" type="image/svg+xml" href="logo.svg">
-  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="favicon-48x48.png" sizes="48x48">
-  <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
-  <link rel="icon" type="image/png" href="android-chrome-192x192.png" sizes="192x192">
-  <link rel="icon" type="image/png" href="android-chrome-512x512.png" sizes="512x512">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
-<link rel="mask-icon" href="safari-pinned-tab.svg" color="#0ea5e9">
-<link rel="manifest" href="manifest.webmanifest">  <meta name="robots" content="noindex,follow">
+  <title>İstifadə Şərtləri — EduPlan AZ</title>
+  <meta name="description" content="EduPlan istifadə şərtləri. Saytdan istifadə qaydaları, müəllif hüquqları, məsuliyyət və üçüncü tərəf linkləri haqqında məlumat." />
+  <meta name="keywords" content="EduPlan, istifadə şərtləri, terms, qaydalar, müəllif hüquqları, məsuliyyət" />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="author" content="EduPlan.az" />
+  <meta name="language" content="az" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="canonical" href="https://www.eduplan.az/terms.html" />
+
+  <!-- Favicons / PWA -->
+  <link id="favicon" rel="icon" href="/favicon-light.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <meta name="application-name" content="EduPlan" />
+  <meta name="apple-mobile-web-app-title" content="EduPlan" />
+
+  <meta name="theme-color" content="#ffffff" id="theme-color" />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="EduPlan" />
+  <meta property="og:locale" content="az_AZ" />
+  <meta property="og:title" content="İstifadə Şərtləri — EduPlan AZ" />
+  <meta property="og:description" content="EduPlan istifadə şərtləri və saytdan istifadə qaydaları." />
+  <meta property="og:url" content="https://www.eduplan.az/terms.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://www.eduplan.az/android-chrome-512x512.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="İstifadə Şərtləri — EduPlan AZ" />
+  <meta name="twitter:description" content="EduPlan istifadə şərtləri və saytdan istifadə qaydaları." />
+  <meta name="twitter:image" content="https://www.eduplan.az/android-chrome-512x512.png" />
+
+  <!-- Tema: FOUC olmaması üçün -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme');
+        const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = (saved === 'dark' || saved === 'light') ? saved : (systemDark ? 'dark' : 'light');
+
+        const root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.dataset.theme = theme;
+
+        const meta = document.getElementById('theme-color');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+
+        const favicon = document.getElementById('favicon');
+        if (favicon) {
+          favicon.setAttribute(
+            'href',
+            theme === 'dark' ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+          );
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
+
   <style>
-    body {
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      margin: 0;
-      color: #0f172a;
-      background: #fff;
+    html, body { overflow-x: hidden; }
+    :root { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+    html { scroll-padding-top: 80px; }
+
+    .card-surface {
+      transition: box-shadow 200ms ease, transform 200ms ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
     }
-    .wrap { max-width: 880px; margin: 0 auto; padding: 32px 16px; }
-    h1 { font-size: 28px; margin: 0 0 8px; }
-    h2 { font-size: 18px; margin: 24px 0 8px; }
-    p, li { line-height: 1.6; color: #334155; }
-    small { color: #64748b; }
-    a { color: #2563eb; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; }
+
+    .card-surface:hover {
+      box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.12),
+        0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+
+    html.dark .card-surface {
+      box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    html.dark .card-surface:hover {
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.55),
+        0 4px 12px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    /* =========================================================
+       Premium settings menu
+    ========================================================= */
+    .settings-wrap{
+      position: relative;
+      display: inline-flex;
+    }
+
+    .settings-trigger{
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1rem;
+      border: 1px solid rgba(226,232,240,.75);
+      background: rgba(255,255,255,.64);
+      color: rgb(15 23 42);
+      box-shadow: 0 8px 22px rgba(15,23,42,.06);
+      transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease, border-color .16s ease;
+    }
+
+    .settings-trigger:hover{
+      transform: translateY(-1px);
+      background: rgba(248,250,252,.92);
+      box-shadow: 0 14px 34px rgba(15,23,42,.10);
+    }
+
+    .settings-trigger:active{
+      transform: translateY(0);
+    }
+
+    .settings-trigger:focus-visible{
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(99,102,241,.22), 0 14px 34px rgba(15,23,42,.10);
+    }
+
+    html.dark .settings-trigger{
+      border-color: rgba(51,65,85,.9);
+      background: rgba(15,23,42,.50);
+      color: rgb(226 232 240);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    }
+
+    html.dark .settings-trigger:hover{
+      background: rgba(15,23,42,.78);
+      box-shadow: 0 16px 40px rgba(0,0,0,.50);
+    }
+
+    .settings-menu{
+      position: absolute;
+      top: calc(100% + .75rem);
+      right: 0;
+      width: min(92vw, 330px);
+      z-index: 80;
+      border-radius: 1.35rem;
+      border: 1px solid rgba(226,232,240,.94);
+      background:
+        radial-gradient(circle at top right, rgba(99,102,241,.055), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.965), rgba(248,250,252,.955));
+      backdrop-filter: blur(24px) saturate(135%);
+      -webkit-backdrop-filter: blur(24px) saturate(135%);
+      box-shadow:
+        0 24px 70px rgba(15,23,42,.20),
+        0 0 0 1px rgba(255,255,255,.58) inset;
+      padding: .75rem;
+    }
+
+    .settings-menu.hidden{
+      display: none;
+    }
+
+    html.dark .settings-menu{
+      border-color: rgba(71,85,105,.93);
+      background:
+        radial-gradient(circle at top right, rgba(129,140,248,.055), transparent 44%),
+        linear-gradient(180deg, rgba(8,15,30,.986), rgba(2,6,23,.980));
+      backdrop-filter: blur(24px) saturate(135%);
+      -webkit-backdrop-filter: blur(24px) saturate(135%);
+      box-shadow:
+        0 26px 82px rgba(0,0,0,.68),
+        0 0 0 1px rgba(255,255,255,.07) inset;
+    }
+
+    .settings-head{
+      padding: .75rem .75rem .65rem;
+      border-bottom: 1px solid rgba(148,163,184,.16);
+    }
+
+    .settings-title{
+      font-size: .92rem;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      color: rgb(15 23 42);
+    }
+
+    html.dark .settings-title{
+      color: rgb(241 245 249);
+    }
+
+    .settings-subtitle{
+      margin-top: .15rem;
+      font-size: .72rem;
+      color: rgb(100 116 139);
+    }
+
+    html.dark .settings-subtitle{
+      color: rgb(148 163 184);
+    }
+
+    .settings-section{
+      padding: .75rem;
+    }
+
+    .settings-section + .settings-section{
+      border-top: 1px solid rgba(148,163,184,.14);
+    }
+
+    .settings-label{
+      margin-bottom: .55rem;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgb(100 116 139);
+    }
+
+    html.dark .settings-label{
+      color: rgb(148 163 184);
+    }
+
+    .theme-choice{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .45rem;
+    }
+
+    .theme-choice-btn{
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(226,232,240,.78);
+      background: rgba(255,255,255,.62);
+      padding: .55rem .7rem;
+      color: rgb(15 23 42);
+      font-size: .82rem;
+      font-weight: 700;
+      text-align: left;
+      transition: background-color .14s ease, border-color .14s ease, transform .08s ease, box-shadow .14s ease;
+    }
+
+    .theme-choice-btn:hover{
+      background: rgba(248,250,252,.95);
+      border-color: rgba(99,102,241,.28);
+    }
+
+    .theme-choice-btn:active{
+      transform: translateY(1px);
+    }
+
+    .theme-choice-btn.is-active{
+      border-color: rgba(99,102,241,.50);
+      background: linear-gradient(90deg, rgba(99,102,241,.14), rgba(16,185,129,.09));
+      box-shadow: 0 10px 24px rgba(99,102,241,.12);
+    }
+
+    html.dark .theme-choice-btn{
+      border-color: rgba(51,65,85,.88);
+      background: rgba(255,255,255,.045);
+      color: rgb(226 232 240);
+    }
+
+    html.dark .theme-choice-btn:hover{
+      background: rgba(255,255,255,.07);
+      border-color: rgba(129,140,248,.30);
+    }
+
+    html.dark .theme-choice-btn.is-active{
+      border-color: rgba(129,140,248,.48);
+      background: linear-gradient(90deg, rgba(129,140,248,.18), rgba(16,185,129,.08));
+      box-shadow: 0 12px 30px rgba(0,0,0,.32);
+    }
+
+    .theme-choice-icon{
+      width: 28px;
+      height: 28px;
+      border-radius: .8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15,23,42,.06);
+      flex: 0 0 auto;
+    }
+
+    html.dark .theme-choice-icon{
+      background: rgba(255,255,255,.08);
+    }
+
+    .settings-links{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .45rem;
+    }
+
+    .settings-links a{
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: .95rem;
+      border: 1px solid rgba(226,232,240,.72);
+      background: rgba(255,255,255,.48);
+      color: rgb(51 65 85);
+      font-size: .78rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background-color .14s ease, border-color .14s ease, transform .08s ease;
+    }
+
+    .settings-links a:hover{
+      background: rgba(248,250,252,.95);
+      border-color: rgba(99,102,241,.24);
+    }
+
+    .settings-links a:active{
+      transform: translateY(1px);
+    }
+
+    html.dark .settings-links a{
+      border-color: rgba(51,65,85,.82);
+      background: rgba(255,255,255,.04);
+      color: rgb(203 213 225);
+    }
+
+    html.dark .settings-links a:hover{
+      background: rgba(255,255,255,.07);
+      border-color: rgba(129,140,248,.28);
+    }
+
+    @media (max-width: 520px){
+      .settings-trigger{
+        width: 40px;
+        height: 40px;
+        border-radius: .95rem;
+      }
+
+      .settings-menu{
+        position: fixed;
+        top: 72px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+      }
+    }
   </style>
 </head>
-<body>
-  <!-- Google Tag Manager (noscript) -->
+
+<body class="min-h-screen pt-16 text-slate-900 dark:text-slate-100 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M3CQTM2P"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-  <main class="wrap">
-    <h1>İstifadə Şərtləri</h1>
-    <small>Son yenilənmə: 2025-11-22 • Bu sənəd hüquqi məsləhət deyil.</small>
 
-    <div class="card">
-      <h2>1. Xidmətin mahiyyəti</h2>
-      <p>EduPlan (<a href="https://www.eduplan.az/">eduplan.az</a>) Azərbaycan məktəbləri üçün 
-      müəllim və şagirdlərə yönəlmiş rəqəmsal resurs platformasıdır. 
-      Platforma tədris məqsədli fayllar (KSQ/BSQ, PP, kalkulyator və s.) təqdim edir.
-      Bütün xidmətlər hal-hazırda tam <strong>pulsuz</strong> şəkildə təqdim olunur.</p>
+  <a href="#main"
+     class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow">
+    Kontentə keç
+  </a>
 
-      <h2>2. Qəbul edilən istifadə</h2>
-      <ul>
-        <li>Saytı yalnız qanuni, etik və təhsil məqsədləri üçün istifadə edin.</li>
-        <li>Təhlükəsizlik mexanizmlərini sındırmaq və ya sistemə icazəsiz müdaxilə etmək qadağandır.</li>
-        <li>Müəllif hüquqları ilə qorunan materialları yalnız icazə olduğu halda paylaşmaq/yükləmək olar.</li>
-      </ul>
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-indigo-200/60 to-emerald-200/60 dark:from-indigo-500/15 dark:to-emerald-500/10"></div>
+    <div class="absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl bg-gradient-to-tr from-amber-200/60 to-pink-200/60 dark:from-amber-500/10 dark:to-pink-500/10"></div>
+  </div>
 
-      <h2>3. Məzmun və müəllif hüquqları</h2>
-      <p>Saytdakı loqo, dizayn, məzmun və proqram kodu EduPlan-a məxsusdur. 
-      Üçüncü tərəflərin resursları müvafiq sahiblərinə aiddir.
-      EduPlan məzmunun dəqiqliyinə çalışır, lakin səhvlərin və ya köhnəlmiş məlumatların
-      olma ehtimalı istisna edilmir.</p>
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-slate-950/60 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="h-16 flex items-center justify-between gap-3">
+        <a href="/" class="flex items-center gap-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          <img src="assets/ep-favicon-light.svg" alt="EduPlan" class="h-9 w-9 dark:hidden" width="36" height="36" />
+          <img src="assets/ep-favicon-dark.svg" alt="" aria-hidden="true" class="h-9 w-9 hidden dark:block" width="36" height="36" />
+          <span class="font-semibold tracking-tight">EduPlan AZ</span>
+        </a>
 
-      <h2>4. Zəmanətlərdən imtina</h2>
-      <p>EduPlan bütün resurs və alətləri “olduğu kimi” təqdim edir. 
-      Saytın fasiləsiz və qüsursuz işləməsinə dair heç bir zəmanət verilmir.
-      İstifadəçi xidmətin nəticələrinə görə məsuliyyəti özü daşıyır.</p>
+        <!-- Settings menu -->
+        <div class="settings-wrap">
+          <button
+            id="settings-toggle"
+            type="button"
+            class="settings-trigger"
+            aria-label="Parametrlər"
+            aria-haspopup="menu"
+            aria-expanded="false"
+          >
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M14 7a2 2 0 1 0 4 0 2 2 0 0 0-4 0ZM6 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
 
-      <h2>5. Məsuliyyətin məhdudlaşdırılması</h2>
-      <p>EduPlan, saytdan istifadədən və ya istifadənin mümkün olmamasından yaranan 
-      hər hansı dolayı, təsadüfi və ya nəticə etibarlı zərərlərə görə məsuliyyət daşımır.
-      Xidmət pulsuz təqdim olunduğundan, EduPlan-a qarşı heç bir maliyyə tələbi irəli sürülə bilməz.</p>
+          <div id="settings-menu" class="settings-menu hidden" role="menu" aria-labelledby="settings-toggle">
+            <div class="settings-head">
+              <div>
+                <div class="settings-title">Parametrlər</div>
+                <div class="settings-subtitle">Görünüş və sürətli keçidlər</div>
+              </div>
+            </div>
 
-      <h2>6. Üçüncü tərəf linkləri və reklam</h2>
-      <p>Saytda bəzən üçüncü tərəf linkləri və ya reklamlar (məsələn, Google AdSense) ola bilər.
-      EduPlan bu məzmunlara və ya onların məxfilik təcrübələrinə görə məsuliyyət daşımır.
-      İstifadəçi bu linklərə keçməklə üçüncü tərəfin şərtlərini qəbul etmiş sayılır.</p>
+            <div class="settings-section">
+              <div class="settings-label">Görünüş</div>
 
-      <h2>7. Dəyişikliklər</h2>
-      <p>EduPlan bu şərtləri zaman-zaman yeniləyə bilər. 
-      “Son yenilənmə” tarixi sənədin yuxarısında göstərilir. 
-      Saytdan istifadə etməyə davam etməklə siz yenilənmiş şərtləri qəbul etmiş sayılırsınız.</p>
+              <div class="theme-choice" role="group" aria-label="Görünüş seçimi">
+                <button type="button" class="theme-choice-btn" data-theme-option="system">
+                  <span class="theme-choice-icon">◐</span>
+                  <span>Sistem</span>
+                </button>
 
-      <h2>8. Əlaqə</h2>
-      <p>Sual və təkliflər üçün bizimlə əlaqə saxlayın: 
-      <a href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a></p>
+                <button type="button" class="theme-choice-btn" data-theme-option="light">
+                  <span class="theme-choice-icon">☀</span>
+                  <span>Açıq</span>
+                </button>
 
+                <button type="button" class="theme-choice-btn" data-theme-option="dark">
+                  <span class="theme-choice-icon">☾</span>
+                  <span>Qaranlıq</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-label">Sayt</div>
+
+              <div class="settings-links">
+                <a href="/about.html">Haqqımızda</a>
+                <a href="/contact.html">Əlaqə</a>
+                <a href="/privacy.html">Məxfilik</a>
+                <a href="/terms.html">Şərtlər</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <section class="pt-8 sm:pt-10 pb-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-300">Şərtlər</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+          İstifadə Şərtləri
+        </h1>
+        <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">
+          Bu səhifədə EduPlan.az saytından istifadə qaydaları, məzmun, müəllif hüquqları və məsuliyyət şərtləri göstərilir.
+        </p>
+        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
+          Son yenilənmə: 2025-11-22 · Bu sənəd hüquqi məsləhət deyil.
+        </p>
+      </div>
+    </section>
+
+    <section class="rounded-3xl border border-slate-200/70 dark:border-slate-800/70 bg-white/70 dark:bg-white/5 backdrop-blur p-6 sm:p-10 shadow-sm">
+      <div class="space-y-8 text-base leading-7 text-slate-700 dark:text-slate-200">
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">1. Xidmətin mahiyyəti</h2>
+          <p class="mt-3">
+            EduPlan
+            (<a class="font-semibold underline underline-offset-4 hover:opacity-80" href="https://www.eduplan.az/">eduplan.az</a>)
+            Azərbaycan məktəbləri üçün müəllim və şagirdlərə yönəlmiş rəqəmsal resurs platformasıdır.
+            Platforma tədris məqsədli fayllar və alətlər — KSQ/BSQ, PP, kalkulyator və digər resurslar təqdim edir.
+            Bütün xidmətlər hal-hazırda tam <strong>pulsuz</strong> şəkildə təqdim olunur.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">2. Qəbul edilən istifadə</h2>
+          <ul class="mt-3 list-disc pl-6 space-y-2">
+            <li>Saytı yalnız qanuni, etik və təhsil məqsədləri üçün istifadə edin.</li>
+            <li>Təhlükəsizlik mexanizmlərini sındırmaq və ya sistemə icazəsiz müdaxilə etmək qadağandır.</li>
+            <li>Müəllif hüquqları ilə qorunan materialları yalnız icazə olduğu halda paylaşmaq və ya yükləmək olar.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">3. Məzmun və müəllif hüquqları</h2>
+          <p class="mt-3">
+            Saytdakı loqo, dizayn, məzmun və proqram kodu EduPlan-a məxsusdur.
+            Üçüncü tərəflərin resursları müvafiq sahiblərinə aiddir.
+            EduPlan məzmunun dəqiqliyinə çalışır, lakin səhvlərin və ya köhnəlmiş məlumatların
+            olma ehtimalı istisna edilmir.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">4. Zəmanətlərdən imtina</h2>
+          <p class="mt-3">
+            EduPlan bütün resurs və alətləri “olduğu kimi” təqdim edir.
+            Saytın fasiləsiz və qüsursuz işləməsinə dair heç bir zəmanət verilmir.
+            İstifadəçi xidmətin nəticələrinə görə məsuliyyəti özü daşıyır.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">5. Məsuliyyətin məhdudlaşdırılması</h2>
+          <p class="mt-3">
+            EduPlan, saytdan istifadədən və ya istifadənin mümkün olmamasından yaranan
+            hər hansı dolayı, təsadüfi və ya nəticə etibarlı zərərlərə görə məsuliyyət daşımır.
+            Xidmət pulsuz təqdim olunduğundan, EduPlan-a qarşı heç bir maliyyə tələbi irəli sürülə bilməz.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">6. Üçüncü tərəf linkləri və reklam</h2>
+          <p class="mt-3">
+            Saytda bəzən üçüncü tərəf linkləri və ya reklamlar, məsələn Google AdSense, ola bilər.
+            EduPlan bu məzmunlara və ya onların məxfilik təcrübələrinə görə məsuliyyət daşımır.
+            İstifadəçi bu linklərə keçməklə üçüncü tərəfin şərtlərini qəbul etmiş sayılır.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">7. Dəyişikliklər</h2>
+          <p class="mt-3">
+            EduPlan bu şərtləri zaman-zaman yeniləyə bilər.
+            “Son yenilənmə” tarixi sənədin yuxarısında göstərilir.
+            Saytdan istifadə etməyə davam etməklə siz yenilənmiş şərtləri qəbul etmiş sayılırsınız.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">8. Əlaqə</h2>
+          <p class="mt-3">
+            Sual və təkliflər üçün bizimlə əlaqə saxlayın:
+            <a class="font-semibold underline underline-offset-4 hover:opacity-80" href="mailto:eduplan.az@gmail.com">eduplan.az@gmail.com</a>
+          </p>
+        </section>
+
+      </div>
+    </section>
   </main>
+
+  <footer class="mt-10 border-t border-slate-200/70 dark:border-slate-800/70">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-4 items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+      <div>
+        © <span id="year"></span> <span class="font-semibold text-slate-900 dark:text-slate-100">EduPlan AZ</span> · Bütün hüquqlar qorunur
+      </div>
+
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <a class="hover:underline underline-offset-4" href="/about.html">Haqqımızda</a>
+        <a class="hover:underline underline-offset-4" href="/contact.html">Əlaqə</a>
+        <a class="hover:underline underline-offset-4" href="/terms.html">Şərtlər</a>
+        <a class="hover:underline underline-offset-4" href="/privacy.html">Məxfilik</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- JS: year + settings menu + theme -->
+  <script>
+    (function () {
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const settingsToggle = document.getElementById('settings-toggle');
+      const settingsMenu = document.getElementById('settings-menu');
+      const themeButtons = document.querySelectorAll('[data-theme-option]');
+      const meta = document.getElementById('theme-color');
+      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+
+      function getStoredThemePref() {
+        try {
+          const saved = localStorage.getItem('theme');
+          return (saved === 'dark' || saved === 'light') ? saved : 'system';
+        } catch (e) {
+          return 'system';
+        }
+      }
+
+      function resolveTheme(pref) {
+        if (pref === 'dark' || pref === 'light') return pref;
+        return (mq && mq.matches) ? 'dark' : 'light';
+      }
+
+      function applyTheme(theme) {
+        const isDark = theme === 'dark';
+
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.dataset.theme = theme;
+
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+
+        const favicon = document.getElementById('favicon');
+        if (favicon) {
+          favicon.setAttribute(
+            'href',
+            isDark ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+          );
+        }
+      }
+
+      function syncThemeButtons(pref) {
+        themeButtons.forEach(btn => {
+          const active = btn.dataset.themeOption === pref;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+
+      function setThemePref(pref) {
+        const nextPref = (pref === 'dark' || pref === 'light') ? pref : 'system';
+
+        try {
+          if (nextPref === 'system') localStorage.removeItem('theme');
+          else localStorage.setItem('theme', nextPref);
+        } catch (e) {}
+
+        applyTheme(resolveTheme(nextPref));
+        syncThemeButtons(nextPref);
+      }
+
+      function openSettings() {
+        if (!settingsMenu || !settingsToggle) return;
+        settingsMenu.classList.remove('hidden');
+        settingsToggle.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeSettings() {
+        if (!settingsMenu || !settingsToggle) return;
+        settingsMenu.classList.add('hidden');
+        settingsToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function toggleSettings() {
+        if (!settingsMenu) return;
+        settingsMenu.classList.contains('hidden') ? openSettings() : closeSettings();
+      }
+
+      const initialPref = getStoredThemePref();
+      applyTheme(resolveTheme(initialPref));
+      syncThemeButtons(initialPref);
+
+      settingsToggle && settingsToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleSettings();
+      });
+
+      settingsMenu && settingsMenu.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          setThemePref(btn.dataset.themeOption);
+          closeSettings();
+        });
+      });
+
+      document.addEventListener('click', closeSettings);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeSettings();
+      });
+
+      const onSystemChange = function (e) {
+        if (getStoredThemePref() === 'system') {
+          applyTheme(e.matches ? 'dark' : 'light');
+          syncThemeButtons('system');
+        }
+      };
+
+      if (mq) {
+        if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+        else if (mq.addListener) mq.addListener(onSystemChange);
+      }
+    })();
+  </script>
 </body>
 </html>
-
-
-

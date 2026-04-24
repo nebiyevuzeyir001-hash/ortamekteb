@@ -183,13 +183,15 @@ html.dark .settings-trigger:hover{
   width: min(92vw, 330px);
   z-index: 80;
   border-radius: 1.35rem;
-  border: 1px solid rgba(226,232,240,.92);
+  border: 1px solid rgba(226,232,240,.95);
   background:
-    radial-gradient(circle at top right, rgba(99,102,241,.10), transparent 36%),
-    linear-gradient(180deg, rgba(255,255,255,.97), rgba(248,250,252,.96));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 24px 70px rgba(15,23,42,.20);
+    radial-gradient(circle at top right, rgba(99,102,241,.08), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,.985), rgba(248,250,252,.975));
+  backdrop-filter: blur(30px) saturate(165%);
+  -webkit-backdrop-filter: blur(30px) saturate(165%);
+  box-shadow:
+    0 26px 80px rgba(15,23,42,.22),
+    0 0 0 1px rgba(255,255,255,.62) inset;
   padding: .75rem;
 }
 
@@ -198,11 +200,15 @@ html.dark .settings-trigger:hover{
 }
 
 html.dark .settings-menu{
-  border-color: rgba(71,85,105,.95);
+  border-color: rgba(71,85,105,.92);
   background:
-    radial-gradient(circle at top right, rgba(129,140,248,.14), transparent 38%),
-    linear-gradient(180deg, rgba(8,15,30,.97), rgba(2,6,23,.965));
-  box-shadow: 0 26px 80px rgba(0,0,0,.62);
+    radial-gradient(circle at top right, rgba(129,140,248,.13), transparent 40%),
+    linear-gradient(180deg, rgba(8,15,30,.985), rgba(2,6,23,.975));
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  box-shadow:
+    0 28px 90px rgba(0,0,0,.68),
+    0 0 0 1px rgba(255,255,255,.055) inset;
 }
 
 .settings-head{

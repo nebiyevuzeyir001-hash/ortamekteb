@@ -412,10 +412,20 @@
     }
     html.dark .tt-table th{ background: rgba(15,23,42,.7); }
 
-    .tt-slot-muted{ color: rgb(148 163 184); font-style: italic; }
-    html.dark .tt-slot-muted{ color: rgb(100 116 139); }
+.tt-slot-muted{ color: rgb(148 163 184); font-style: italic; }
+html.dark .tt-slot-muted{ color: rgb(100 116 139); }
 
-    #unplacedContainer{ white-space: pre-line; }
+/* Desktop cədvəl görünüşü */
+.tt-desktop-view{
+  display: block;
+}
+
+/* Mobil nəticə görünüşü default gizlidir */
+.tt-mobile-schedule{
+  display: none;
+}
+
+#unplacedContainer{ white-space: pre-line; }
 
     /* ===== Premium custom select (dropdown) ===== */
     .ep-native-select{
@@ -954,6 +964,199 @@
   footer .py-8{
     padding-top: 22px !important;
     padding-bottom: 22px !important;
+  }
+
+  /* =====================================================
+     PREMIUM MOBİL NƏTİCƏ GÖRÜNÜŞÜ
+     Telefonda cədvəl scroll yox, gün kartları kimi görünür.
+  ===================================================== */
+  #timetableContainer{
+    overflow: visible;
+    -webkit-overflow-scrolling: auto;
+    padding-bottom: 0;
+  }
+
+  .tt-desktop-view{
+    display: none;
+  }
+
+  .tt-mobile-schedule{
+    display: block;
+  }
+
+  .ttm-class-chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 12px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(99,102,241,.24);
+    background: linear-gradient(90deg, rgba(99,102,241,.14), rgba(16,185,129,.10));
+    color: rgb(67 56 202);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .01em;
+  }
+
+  html.dark .ttm-class-chip{
+    border-color: rgba(129,140,248,.22);
+    background: linear-gradient(90deg, rgba(99,102,241,.18), rgba(16,185,129,.10));
+    color: rgb(226 232 240);
+  }
+
+  .ttm-day-card{
+    border: 1px solid rgba(148,163,184,.18);
+    border-radius: 20px;
+    background:
+      radial-gradient(circle at top left, rgba(99,102,241,.10), transparent 34%),
+      rgba(255,255,255,.52);
+    box-shadow: 0 12px 30px rgba(15,23,42,.06);
+    padding: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  html.dark .ttm-day-card{
+    border-color: rgba(148,163,184,.14);
+    background:
+      radial-gradient(circle at top left, rgba(129,140,248,.12), transparent 36%),
+      rgba(255,255,255,.035);
+    box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  }
+
+  .ttm-day-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .ttm-day-title{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 850;
+    color: rgb(15 23 42);
+  }
+
+  html.dark .ttm-day-title{
+    color: rgb(241 245 249);
+  }
+
+  .ttm-day-dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgb(99,102,241), rgb(16,185,129));
+    box-shadow: 0 0 0 4px rgba(99,102,241,.12);
+    flex: 0 0 auto;
+  }
+
+  .ttm-day-count{
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 4px 8px;
+    border: 1px solid rgba(148,163,184,.18);
+    background: rgba(255,255,255,.46);
+    color: rgb(100 116 139);
+    font-size: 10.5px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  html.dark .ttm-day-count{
+    border-color: rgba(148,163,184,.14);
+    background: rgba(255,255,255,.045);
+    color: rgb(148 163 184);
+  }
+
+  .ttm-lessons{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ttm-lesson{
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 9px;
+    border-radius: 16px;
+    border: 1px solid rgba(148,163,184,.16);
+    background: rgba(255,255,255,.54);
+  }
+
+  html.dark .ttm-lesson{
+    border-color: rgba(148,163,184,.12);
+    background: rgba(255,255,255,.045);
+  }
+
+  .ttm-hour{
+    min-width: 42px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(99,102,241,.18), rgba(16,185,129,.12));
+    color: rgb(67 56 202);
+    font-size: 12px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+  }
+
+  html.dark .ttm-hour{
+    background: linear-gradient(135deg, rgba(129,140,248,.18), rgba(16,185,129,.10));
+    color: rgb(226 232 240);
+  }
+
+  .ttm-lesson-main{
+    min-width: 0;
+  }
+
+  .ttm-subject{
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 850;
+    color: rgb(15 23 42);
+    overflow-wrap: anywhere;
+  }
+
+  html.dark .ttm-subject{
+    color: rgb(241 245 249);
+  }
+
+  .ttm-teacher{
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.25;
+    color: rgb(100 116 139);
+    overflow-wrap: anywhere;
+  }
+
+  html.dark .ttm-teacher{
+    color: rgb(148 163 184);
+  }
+
+  .ttm-empty{
+    border: 1px dashed rgba(148,163,184,.22);
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+    color: rgb(148 163 184);
+    font-size: 12px;
+    background: rgba(255,255,255,.28);
+  }
+
+  html.dark .ttm-empty{
+    border-color: rgba(148,163,184,.14);
+    background: rgba(255,255,255,.025);
+    color: rgb(100 116 139);
   }
 }
   </style>
@@ -3303,42 +3506,107 @@ const BATCH = Math.max(40, Math.min(140, Math.floor(8000 / Math.max(1, nBlocks))
           classTabs.appendChild(btn);
         });
 
-        function renderForClass(classId) {
-          const matrix = timetable[classId];
-          if (!matrix) {
-            timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Bu sinif üçün cədvəl tapılmadı.</div>';
-            return;
-          }
+function renderForClass(classId) {
+  const matrix = timetable[classId];
+  if (!matrix) {
+    timetableContainer.innerHTML = '<div class="text-[12px] text-slate-500 dark:text-slate-400">Bu sinif üçün cədvəl tapılmadı.</div>';
+    return;
+  }
 
-          let html = '<table class="tt-table"><thead><tr><th>Saat</th>';
-          daysLabels.forEach(d => { html += `<th>${d}</th>`; });
-          html += '</tr></thead><tbody>';
+  const classObj = classes.find(c => Number(c.id) === Number(classId));
+  const className = escapeHtml(classObj?.name || '');
 
-          for (let s = 0; s < lessonsPerDay; s++) {
-            html += `<tr><th>${s + 1}</th>`;
-            for (let d = 0; d < daysCount; d++) {
-              const cell = matrix[d][s];
-              if (!cell) {
-                html += `<td><span class="tt-slot-muted">—</span></td>`;
-              } else if (cell.part === 0) {
-                const b = cell.block;
-const subj = escapeHtml(b.subject);
-const tLab = escapeHtml(teacherLabel(teachers, b.teacherId));
-                const rowspan = b.length > 1 ? b.length : 1;
-                html += `<td rowspan="${rowspan}">
+  /* Desktop / planşet üçün klassik cədvəl */
+  let desktopHtml = '<div class="tt-desktop-view">';
+  desktopHtml += '<table class="tt-table"><thead><tr><th>Saat</th>';
+  daysLabels.forEach(d => { desktopHtml += `<th>${d}</th>`; });
+  desktopHtml += '</tr></thead><tbody>';
+
+  for (let s = 0; s < lessonsPerDay; s++) {
+    desktopHtml += `<tr><th>${s + 1}</th>`;
+    for (let d = 0; d < daysCount; d++) {
+      const cell = matrix[d][s];
+      if (!cell) {
+        desktopHtml += `<td><span class="tt-slot-muted">—</span></td>`;
+      } else if (cell.part === 0) {
+        const b = cell.block;
+        const subj = escapeHtml(b.subject);
+        const tLab = escapeHtml(teacherLabel(teachers, b.teacherId));
+        const rowspan = b.length > 1 ? b.length : 1;
+
+        desktopHtml += `<td rowspan="${rowspan}">
                           <div class="font-semibold">${subj}</div>
                           <div class="text-[10px] mt-0.5 text-slate-500 dark:text-slate-400">${tLab}</div>
                         </td>`;
-              } else {
-                // rowspan-a görə boş qalır
-              }
-            }
-            html += '</tr>';
-          }
+      } else {
+        // rowspan-a görə boş qalır
+      }
+    }
+    desktopHtml += '</tr>';
+  }
 
-          html += '</tbody></table>';
-          timetableContainer.innerHTML = html;
-        }
+  desktopHtml += '</tbody></table></div>';
+
+  /* Telefon üçün premium gün kartları */
+  let mobileHtml = `<div class="tt-mobile-schedule" aria-label="${className} sinfi üçün dərs cədvəli">`;
+
+  if (className) {
+    mobileHtml += `<div class="ttm-class-chip">📅 ${className} sinfi</div>`;
+  }
+
+  for (let d = 0; d < daysCount; d++) {
+    let lessonsHtml = '';
+    let dayHoursCount = 0;
+
+    for (let s = 0; s < lessonsPerDay; s++) {
+      const cell = matrix[d][s];
+
+      // Qoşa dərsdə ikinci hissəni ayrıca təkrar göstərmirik
+      if (!cell || cell.part !== 0) continue;
+
+      const b = cell.block;
+      const len = b.length || 1;
+      const subj = escapeHtml(b.subject);
+      const tLab = escapeHtml(teacherLabel(teachers, b.teacherId));
+      const hourLabel = len > 1 ? `${s + 1}–${s + len}` : `${s + 1}`;
+
+      dayHoursCount += len;
+
+      lessonsHtml += `
+        <div class="ttm-lesson">
+          <div class="ttm-hour">${hourLabel}</div>
+          <div class="ttm-lesson-main">
+            <div class="ttm-subject">${subj}</div>
+            ${tLab ? `<div class="ttm-teacher">Müəllim: ${tLab}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    if (!lessonsHtml) {
+      lessonsHtml = `<div class="ttm-empty">Bu gün dərs yoxdur</div>`;
+    }
+
+    mobileHtml += `
+      <section class="ttm-day-card">
+        <div class="ttm-day-head">
+          <div class="ttm-day-title">
+            <span class="ttm-day-dot"></span>
+            <span>${escapeHtml(daysLabels[d])}</span>
+          </div>
+          <div class="ttm-day-count">${dayHoursCount ? `${dayHoursCount} saat` : 'Boş'}</div>
+        </div>
+        <div class="ttm-lessons">
+          ${lessonsHtml}
+        </div>
+      </section>
+    `;
+  }
+
+  mobileHtml += '</div>';
+
+  timetableContainer.innerHTML = desktopHtml + mobileHtml;
+}
 
         const totalRequiredHours =
           Number(result.targetHours) ||

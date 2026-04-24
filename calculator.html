@@ -31,11 +31,7 @@
   <meta property="og:image" content="https://www.eduplan.az/assets/og-image.jpg" />
   <meta property="og:url" content="https://www.eduplan.az/calculator.html" />
 
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" type="image/svg+xml" href="logo.svg">
-  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="favicon-48x48.png" sizes="48x48">
-  <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+  <link id="favicon" rel="icon" href="/favicon-light.ico?v=2" sizes="any">
   <link rel="icon" type="image/png" href="android-chrome-192x192.png" sizes="192x192">
   <link rel="icon" type="image/png" href="android-chrome-512x512.png" sizes="512x512">
   <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
@@ -56,6 +52,13 @@
 
         const meta = document.getElementById('theme-color');
         if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f8fafc');
+        const favicon = document.getElementById('favicon');
+if (favicon) {
+  favicon.setAttribute(
+    'href',
+    theme === 'dark' ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+  );
+}
       } catch (e) {}
     })();
   </script>
@@ -1089,13 +1092,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return (mq && mq.matches) ? 'dark' : 'light';
     }
 
-    function applyTheme(theme) {
-      const isDark = theme === 'dark';
-      document.documentElement.classList.toggle('dark', isDark);
-      document.documentElement.dataset.theme = theme;
-      if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
-    }
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
 
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.dataset.theme = theme;
+
+  if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#f8fafc');
+
+  const favicon = document.getElementById('favicon');
+  if (favicon) {
+    favicon.setAttribute(
+      'href',
+      isDark ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+    );
+  }
+}
     function syncThemeButtons(pref) {
       themeButtons.forEach(btn => {
         const active = btn.dataset.themeOption === pref;

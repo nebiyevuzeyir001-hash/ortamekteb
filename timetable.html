@@ -592,6 +592,336 @@
       .t-days{ gap: 5px; }
       .t-hours{ gap: 5px; }
     }
+    /* =========================================================
+   TELEFON GÖRÜNÜŞÜ
+   Yalnız 640px və aşağı ekranlara təsir edir.
+   HTML və JS-ə toxunmur.
+========================================================= */
+@media (max-width: 640px){
+
+  html{
+    scroll-padding-top: 68px;
+  }
+
+  body{
+    padding-top: 64px;
+  }
+
+  .ep-frame{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  main#main{
+    padding-top: 8px;
+  }
+
+  .ep-center > section.py-6{
+    padding-top: 14px !important;
+    padding-bottom: 18px !important;
+  }
+
+  .ep-center > section.py-6 h1{
+    font-size: 1.55rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em;
+  }
+
+  .ep-center > section.py-6 p{
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  #tt-panel{
+    border-radius: 22px !important;
+  }
+
+  #tt-panel > div:first-child{
+    padding: 14px !important;
+  }
+
+  #tt-panel > div:first-child .font-semibold{
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  #tt-panel > .p-6{
+    padding: 12px !important;
+  }
+
+  .ep-card{
+    border-radius: 20px !important;
+    padding: 14px !important;
+  }
+
+  .section-title{
+    font-size: .72rem;
+    letter-spacing: .055em;
+  }
+
+  #tt-panel .ep-card > .flex.items-center.justify-between{
+    gap: 10px;
+    align-items: center;
+  }
+
+  #tt-panel .ep-card > .flex.items-center.justify-between button{
+    min-height: 34px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  #tt-panel .text-\[11px\]{
+    line-height: 1.55;
+  }
+
+  /* Məktəb parametrləri telefonda alt-alta düşsün */
+  #tt-panel .grid.grid-cols-2{
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  #tt-panel .mt-3.grid{
+    gap: 10px !important;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  .ep-select-btn{
+    min-height: 42px;
+    border-radius: 14px;
+    font-size: 13px;
+  }
+
+  table.config-table input,
+  table.config-table select{
+    min-height: 42px;
+    border-radius: 14px;
+    font-size: 13px;
+    padding: .55rem .72rem;
+  }
+
+  /* =====================================================
+     Müəllimlər / Siniflər / Fənn bölmələri telefonda
+     sıxılmış cədvəl yox, kart-kart görünsün.
+  ===================================================== */
+  table.config-table{
+    display: block;
+    width: 100%;
+    border-spacing: 0;
+  }
+
+  table.config-table thead{
+    display: none;
+  }
+
+  table.config-table tbody{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  table.config-table tr{
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,.18);
+    background: rgba(255,255,255,.46);
+    box-shadow: 0 10px 24px rgba(15,23,42,.05);
+  }
+
+  html.dark table.config-table tr{
+    border-color: rgba(148,163,184,.14);
+    background: rgba(255,255,255,.035);
+    box-shadow: 0 12px 28px rgba(0,0,0,.26);
+  }
+
+  table.config-table td{
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100% !important;
+    padding: 7px 0;
+    overflow: visible;
+  }
+
+  table.config-table td::before{
+    content: "";
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: rgb(100 116 139);
+  }
+
+  html.dark table.config-table td::before{
+    color: rgb(148 163 184);
+  }
+
+  /* Müəllimlər */
+  #teacherTable td:nth-child(1)::before{ content: "Ad, soyad"; }
+  #teacherTable td:nth-child(2)::before{ content: "Kod"; }
+  #teacherTable td:nth-child(3)::before{ content: "Həftəlik max"; }
+  #teacherTable td:nth-child(4)::before{ content: "Gündə max"; }
+  #teacherTable td:nth-child(5)::before{ content: "Dərs saatları"; }
+  #teacherTable td:nth-child(6)::before{ content: "Gəlmə günləri"; }
+
+  /* Siniflər */
+  #classTable td:nth-child(1)::before{ content: "Sinif"; }
+  #classTable td:nth-child(2)::before{ content: "Gündə max dərs"; }
+
+  /* Fənn / dərs saatları */
+  #lessonTable td:nth-child(1)::before{ content: "Sinif"; }
+  #lessonTable td:nth-child(2)::before{ content: "Fənn"; }
+  #lessonTable td:nth-child(3)::before{ content: "Müəllim"; }
+  #lessonTable td:nth-child(4)::before{ content: "Həftəlik saat"; }
+  #lessonTable td:nth-child(5)::before{ content: "Ağır?"; }
+  #lessonTable td:nth-child(6)::before{ content: "Qoşa"; }
+
+  /* Sil düyməsi */
+  table.config-table td.no-print{
+    display: flex;
+    justify-content: flex-end;
+    width: 100% !important;
+    padding-top: 10px;
+    margin-top: 4px;
+    border-top: 1px solid rgba(148,163,184,.14);
+  }
+
+  table.config-table td.no-print::before{
+    display: none;
+  }
+
+  table.config-table td.no-print button{
+    min-height: 32px;
+    padding: 4px 8px;
+  }
+
+  /* Müəllim saat/gün checkbox-ları */
+  .t-mini-actions{
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .t-mini-btn{
+    min-height: 28px;
+    padding: .25rem .55rem;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+
+  .t-hours,
+  .t-days{
+    gap: 8px;
+    font-size: 11.5px;
+  }
+
+  .t-hours label,
+  .t-days label{
+    min-height: 26px;
+    padding: 2px 0;
+  }
+
+  #lessonTable td:nth-child(5) input[type="checkbox"]{
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hazırlayıcı düymələri */
+  #btnGenerate,
+  #btnResetAll{
+    width: 100%;
+    min-height: 46px;
+    border-radius: 16px;
+  }
+
+  /* Nəticə */
+  #resultCard .flex.items-center.justify-between{
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  #resultStats{
+    max-width: 58%;
+    text-align: right;
+    line-height: 1.35;
+  }
+
+  #classTabs{
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn{
+    flex: 0 0 auto;
+    padding: .38rem .82rem;
+    font-size: .76rem;
+  }
+
+  #timetableContainer{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .tt-table{
+    min-width: 620px;
+    font-size: 11px;
+  }
+
+  .tt-table th,
+  .tt-table td{
+    padding: .34rem .38rem;
+  }
+
+  .tt-table th:first-child{
+    position: sticky;
+    left: 0;
+    z-index: 2;
+  }
+
+  .tt-table tbody th:first-child{
+    background: rgba(148,163,184,.16);
+  }
+
+  html.dark .tt-table tbody th:first-child{
+    background: rgba(15,23,42,.95);
+  }
+
+  /* Məlumat bölməsi */
+  section.ep-card.mt-10{
+    margin-top: 24px !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  section.ep-card.mt-10 h2{
+    font-size: 1.55rem !important;
+    line-height: 1.2;
+  }
+
+  section.ep-card.mt-10 .text-base{
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  section.ep-card.mt-10 ul,
+  section.ep-card.mt-10 ol{
+    padding-left: 18px;
+  }
+
+  footer .py-8{
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+  }
+}
   </style>
 </head>
 

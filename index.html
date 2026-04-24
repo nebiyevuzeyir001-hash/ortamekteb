@@ -18,13 +18,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="language" content="az" />
   <meta name="format-detection" content="telephone=no" />
   <link rel="canonical" href="https://www.eduplan.az/" />
-  <!-- Favicons / PWA -->
-  <link rel="icon" href="/favicon-light.ico" sizes="any" media="(prefers-color-scheme: light)">
-  <link rel="icon" href="/favicon-dark.ico" sizes="any" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="/favicon-light.ico" sizes="any">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
-  <link rel="manifest" href="/manifest.webmanifest">
+<!-- Favicons / PWA -->
+<link id="favicon" rel="icon" href="/favicon-light.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ea5e9">
+<link rel="manifest" href="/manifest.webmanifest">
 
   <meta name="application-name" content="EduPlan" />
   <meta name="apple-mobile-web-app-title" content="EduPlan" />
@@ -84,6 +82,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         const meta = document.getElementById('theme-color');
         if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#ffffff');
+        const favicon = document.getElementById('favicon');
+if (favicon) {
+  favicon.setAttribute(
+    'href',
+    theme === 'dark' ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+  );
+}
       } catch (e) {}
     })();
   </script>
@@ -771,12 +776,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return (mq && mq.matches) ? 'dark' : 'light';
     }
 
-    function applyTheme(theme) {
-      const isDark = theme === 'dark';
-      document.documentElement.classList.toggle('dark', isDark);
-      document.documentElement.dataset.theme = theme;
-      if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
-    }
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.dataset.theme = theme;
+
+  if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+
+  const favicon = document.getElementById('favicon');
+  if (favicon) {
+    favicon.setAttribute(
+      'href',
+      isDark ? '/favicon-dark.ico?v=2' : '/favicon-light.ico?v=2'
+    );
+  }
+}
 
     function syncThemeButtons(pref) {
       themeButtons.forEach(btn => {

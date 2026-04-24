@@ -2238,6 +2238,35 @@ let __teacherCodeSeq = 1;
           }, 420);
         }
       }
+      function isMobilePhone() {
+  try {
+    return window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+  } catch (e) {
+    return false;
+  }
+}
+
+function scrollToElementTop(el, opts = {}) {
+  if (!el) return;
+
+  const topGap = opts.topGap ?? 14;
+  const behavior = prefersReduceMotion() ? 'auto' : (opts.behavior ?? 'smooth');
+  const r = pageRect(el);
+
+  const targetY = r.top - (getHeaderHeight() + topGap);
+  scrollToY(targetY, behavior);
+}
+
+function scrollToElementTopStable(el, opts = {}) {
+  if (!el) return;
+
+  const run = () => scrollToElementTop(el, opts);
+
+  requestAnimationFrame(() => requestAnimationFrame(run));
+  window.setTimeout(run, 80);
+  window.setTimeout(run, 180);
+  window.setTimeout(run, 320);
+}
 bindPrettySelectDocCloser();
       function makePrettySelect(selectEl, opts = {}) {
         if (!selectEl || selectEl.dataset.epPrettySelect === '1') return;
@@ -4141,9 +4170,15 @@ softWarnings.textContent = parts.join('\n\n');
 
           if (myRun !== __runId) return;
 
-          renderTimetable(config, result);
+renderTimetable(config, result);
 
-          ensureVisibleStable(document.getElementById('resultCard'), { topGap: 18, bottomGap: 16 });
+const resultCardEl = document.getElementById('resultCard');
+
+if (isMobilePhone()) {
+  scrollToElementTopStable(resultCardEl, { topGap: 14, behavior: 'smooth' });
+} else {
+  ensureVisibleStable(resultCardEl, { topGap: 18, bottomGap: 16 });
+}
 
           const target = Number(result.targetHours) || Number(config._targetHours) || sumRequiredHours(config.lessons);
           const bestPlaced = result.placedCount || 0;

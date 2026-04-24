@@ -349,20 +349,18 @@
     html.dark .t-mini-btn:hover{ background: rgba(255,255,255,.07); }
 
     /* Class / Lesson tables */
-    #classTable, #lessonTable{ table-layout: fixed; width:100%; min-width:0; }
-    #classTable th:nth-child(1), #classTable td:nth-child(1){ width: 18%; }
-    #classTable th:nth-child(2), #classTable td:nth-child(2){ width: 28%; }
-    #classTable th:nth-child(3), #classTable td:nth-child(3){ width: 18%; }
-    #classTable th:nth-child(4), #classTable td:nth-child(4){ width: 26%; }
-    #classTable th:nth-child(5), #classTable td:nth-child(5){ width: 10%; }
+#classTable, #lessonTable{ table-layout: fixed; width:100%; min-width:0; }
+#classTable th:nth-child(1), #classTable td:nth-child(1){ width: 28%; }
+#classTable th:nth-child(2), #classTable td:nth-child(2){ width: 62%; }
+#classTable th:nth-child(3), #classTable td:nth-child(3){ width: 10%; }
 
-    #lessonTable th:nth-child(1), #lessonTable td:nth-child(1){ width: 15%; }
-    #lessonTable th:nth-child(2), #lessonTable td:nth-child(2){ width: 28%; }
-    #lessonTable th:nth-child(3), #lessonTable td:nth-child(3){ width: 23%; }
-    #lessonTable th:nth-child(4), #lessonTable td:nth-child(4){ width: 12%; }
-    #lessonTable th:nth-child(5), #lessonTable td:nth-child(5){ width: 6%; }
-    #lessonTable th:nth-child(6), #lessonTable td:nth-child(6){ width: 14%; }
-    #lessonTable th:nth-child(7), #lessonTable td:nth-child(7){ width: 2%; }
+#lessonTable th:nth-child(1), #lessonTable td:nth-child(1){ width: 15%; }
+#lessonTable th:nth-child(2), #lessonTable td:nth-child(2){ width: 28%; }
+#lessonTable th:nth-child(3), #lessonTable td:nth-child(3){ width: 23%; }
+#lessonTable th:nth-child(4), #lessonTable td:nth-child(4){ width: 12%; }
+#lessonTable th:nth-child(5), #lessonTable td:nth-child(5){ width: 6%; }
+#lessonTable th:nth-child(6), #lessonTable td:nth-child(6){ width: 14%; }
+#lessonTable th:nth-child(7), #lessonTable td:nth-child(7){ width: 2%; }
 
     /* Tabs */
     .tab-btn{
@@ -744,22 +742,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </button>
                 </div>
 
-                <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                  Səviyyə və növbə hazırda informasiya üçündür. “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
-                </div>
+<div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+  “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
+</div>
 
-                <table class="config-table" id="classTable">
-                  <thead>
-                    <tr>
-                      <th>Sinif</th>
-                      <th>Səviyyə</th>
-                      <th>Növbə</th>
-                      <th>Gündə max dərs</th>
-                      <th class="no-print"></th>
-                    </tr>
-                  </thead>
-                  <tbody id="classTbody"></tbody>
-                </table>
+<table class="config-table" id="classTable">
+  <thead>
+    <tr>
+      <th>Sinif</th>
+      <th>Gündə max dərs</th>
+      <th class="no-print"></th>
+    </tr>
+  </thead>
+  <tbody id="classTbody"></tbody>
+</table>
               </div>
 
               <!-- 4) Fənn / dərs saatları -->
@@ -867,7 +863,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <ol class="mt-2 list-decimal pl-6 space-y-1">
                   <li><strong>Məktəb parametrləri</strong> — həftə günü sayı və gündə maksimum saatı seçin.</li>
                   <li><strong>Müəllimlər</strong> — hər müəllimin limitlərini, uyğun saatları və gəlmə günlərini yazın.</li>
-                  <li><strong>Siniflər</strong> — sinif siyahısını (səviyyə, növbə, gündə limit) daxil edin.</li>
+                  <li><strong>Siniflər</strong> — sinif siyahısını və gündəlik dərs limitini daxil edin.</li>
                   <li><strong>Fənn / dərs saatları</strong> — hər sinif üçün hansı fənnin hansı müəllim tərəfindən və həftədə neçə saat keçiriləcəyini əlavə edin.</li>
                   <li><strong>⚙️ Cədvəli qur</strong> — sistem <strong>tam həll tapılanadək</strong> fərqli kombinasiyalar sınayır.</li>
                   <li><strong>Nəticə</strong> — sinif tablarını dəyişərək cədvəli yoxlayın, lazım olsa parametrləri düzəldin və yenidən qurun.</li>
@@ -967,9 +963,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <li>
                     <strong>Gündə max dərs</strong> boş qalarsa standart limit kimi <strong>“Gündə dərs saatı (max)”</strong> tətbiq olunur.
                     Əgər rəqəm yazsanız, həmin sinif üçün gündəlik limit ayrıca təyin olunur.
-                  </li>
-                  <li>
-                    <strong>Növbə</strong> (Səhər/Günorta) hazırda <strong>informasiya üçündür</strong> — alqoritm növbəyə görə ayrıca məhdudiyyət tətbiq etmir.
                   </li>
                 </ul>
               </div>
@@ -1503,33 +1496,17 @@ function cleanupPrettySelects(root){
   syncTeacherDayVisibility(dc);
   syncTeacherHourVisibility(currentLessonsPerDay());
 }
-      function addClassRow(initial = {}) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name || ''}"></td>
-          <td>
-            <select class="c-level">
-              <option value="ibtidai" ${initial.level === 'ibtidai' ? 'selected' : ''}>İbtidai (1-4)</option>
-              <option value="esas" ${initial.level === 'esas' ? 'selected' : ''}>Əsas (5-8)</option>
-              <option value="yuxari" ${initial.level === 'yuxari' ? 'selected' : ''}>Yuxarı (9-11)</option>
-            </select>
-          </td>
-          <td>
-            <select class="c-shift">
-              <option value="seher" ${initial.shift === 'seher' ? 'selected' : ''}>Səhər</option>
-              <option value="gunorta" ${initial.shift === 'gunorta' ? 'selected' : ''}>Günorta</option>
-            </select>
-          </td>
-          <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
-          <td class="no-print text-right">
-            <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
-          </td>
-        `;
-        classTbody.appendChild(tr);
-
-        makePrettySelect(tr.querySelector('.c-level'), { size: 'sm' });
-        makePrettySelect(tr.querySelector('.c-shift'), { size: 'sm' });
-      }
+function addClassRow(initial = {}) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name || ''}"></td>
+    <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
+    <td class="no-print text-right">
+      <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
+    </td>
+  `;
+  classTbody.appendChild(tr);
+}
 
       function addLessonRow(initial = {}) {
         const tr = document.createElement('tr');
@@ -1704,23 +1681,21 @@ function readConfig() {
   });
 
   const classes = [];
-  classTbody.querySelectorAll('tr').forEach(tr => {
-    const name = tr.querySelector('.c-name')?.value.trim();
-    if (!name) return;
-    const level = tr.querySelector('.c-level')?.value || 'esas';
-    const shift = tr.querySelector('.c-shift')?.value || 'seher';
+classTbody.querySelectorAll('tr').forEach(tr => {
+  const name = tr.querySelector('.c-name')?.value.trim();
+  if (!name) return;
 
-    const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
-    const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
+  const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
+  const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
 
-    classes.push({
-      id: classes.length,
-      name,
-      level,
-      shift,
-      maxPerDay: maxDay
-    });
+  classes.push({
+    id: classes.length,
+    name,
+    level: 'esas',
+    shift: 'seher',
+    maxPerDay: maxDay
   });
+});
 // ✅ Dublikat sinif adı / müəllim kodu-adı yoxlaması (overwrite olmasın)
 {
   const seenClasses = new Set();
@@ -3183,8 +3158,8 @@ softWarnings.textContent = parts.join('\n\n');
 addTeacherRow({ name: 'Əhmədov Firdovsi', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
 addTeacherRow({ name: 'İsfəndiyarlı Məzahir', weeklyMax: 24, dailyMax: 6, availableDays: [0,1,2,3,4] });
 
-addClassRow({ name: '5A', level: 'esas', shift: 'seher' });
-addClassRow({ name: '6A', level: 'esas', shift: 'seher' });
+addClassRow({ name: '5A' });
+addClassRow({ name: '6A' });
 
 addLessonRow({ className: '5A', subject: 'Riyaziyyat', teacher: '1', hours: 4, heavy: true, doubleMode: 'prefer' });
 addLessonRow({ className: '5A', subject: 'Azərbaycan dili', teacher: '2', hours: 3, heavy: false, doubleMode: 'none' });

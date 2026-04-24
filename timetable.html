@@ -348,58 +348,11 @@
     }
     html.dark .t-mini-btn:hover{ background: rgba(255,255,255,.07); }
 
-/* Class / Lesson tables */
-.class-grid-wrap{
-  width: 100%;
-  max-width: 920px;
-}
-
-.class-grid-head,
-.class-grid-row{
-  display: grid;
-  grid-template-columns: 240px minmax(260px, 1fr) 60px;
-  gap: 12px;
-  align-items: center;
-}
-
-.class-grid-head{
-  padding: 4px 6px;
-  font-size: .72rem;
-  font-weight: 600;
-  color: rgb(100 116 139);
-}
-
-html.dark .class-grid-head{
-  color: rgb(148 163 184);
-}
-
-.class-grid-body{
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.class-grid-row{
-  padding: 0 6px;
-}
-
-.class-grid-row input{
-  padding: .44rem .64rem;
-  border-radius: var(--ep-radius-sm);
-  min-height: var(--ep-field-h-sm);
-  font-size: 12.5px;
-  line-height: 1.35;
-}
-
-.class-del-cell{
-  text-align: right;
-}
-
-#lessonTable{
-  table-layout: fixed;
-  width:100%;
-  min-width:0;
-}
+    /* Class / Lesson tables */
+#classTable, #lessonTable{ table-layout: fixed; width:100%; min-width:0; }
+#classTable th:nth-child(1), #classTable td:nth-child(1){ width: 28%; }
+#classTable th:nth-child(2), #classTable td:nth-child(2){ width: 62%; }
+#classTable th:nth-child(3), #classTable td:nth-child(3){ width: 10%; }
 
 #lessonTable th:nth-child(1), #lessonTable td:nth-child(1){ width: 15%; }
 #lessonTable th:nth-child(2), #lessonTable td:nth-child(2){ width: 28%; }
@@ -408,21 +361,6 @@ html.dark .class-grid-head{
 #lessonTable th:nth-child(5), #lessonTable td:nth-child(5){ width: 6%; }
 #lessonTable th:nth-child(6), #lessonTable td:nth-child(6){ width: 14%; }
 #lessonTable th:nth-child(7), #lessonTable td:nth-child(7){ width: 2%; }
-
-@media (max-width: 700px){
-  .class-grid-head{
-    display: none;
-  }
-
-  .class-grid-row{
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .class-del-cell{
-    text-align: left;
-  }
-}
 
     /* Tabs */
     .tab-btn{
@@ -794,30 +732,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </table>
               </div>
 
-<!-- 3) Siniflər -->
-<div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
-  <div class="flex items-center justify-between mb-2">
-    <div class="section-title">Siniflər</div>
-    <button type="button" id="btnAddClass"
-            class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
-      ➕ Əlavə et
-    </button>
-  </div>
+              <!-- 3) Siniflər -->
+              <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="section-title">Siniflər</div>
+                  <button type="button" id="btnAddClass"
+                          class="ep-btn-secondary no-print inline-flex items-center gap-1 rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-semibold hover:bg-slate-200/70 dark:hover:bg-slate-900/60 transition">
+                    ➕ Əlavə et
+                  </button>
+                </div>
 
-  <div class="text-[11px] text-slate-500 dark:text-slate-400 mb-4">
-    “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
-  </div>
-
-  <div class="class-grid-wrap">
-    <div class="class-grid-head">
-      <div>Sinif</div>
-      <div>Gündə max dərs</div>
-      <div class="no-print"></div>
-    </div>
-
-    <div id="classTbody" class="class-grid-body"></div>
-  </div>
+<div class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+  “Gündə max dərs” boş qalarsa standart limit istifadə olunur.
 </div>
+
+<table class="config-table" id="classTable">
+  <thead>
+    <tr>
+      <th>Sinif</th>
+      <th>Gündə max dərs</th>
+      <th class="no-print"></th>
+    </tr>
+  </thead>
+  <tbody id="classTbody"></tbody>
+</table>
+              </div>
 
               <!-- 4) Fənn / dərs saatları -->
               <div class="ep-card rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-white/5 p-4">
@@ -1558,22 +1497,15 @@ function cleanupPrettySelects(root){
   syncTeacherHourVisibility(currentLessonsPerDay());
 }
 function addClassRow(initial = {}) {
-  const row = document.createElement('div');
-  row.className = 'class-grid-row';
-
-  row.innerHTML = `
-    <div>
-      <input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name || ''}">
-    </div>
-    <div>
-      <input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}">
-    </div>
-    <div class="no-print class-del-cell">
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="c-name" placeholder="məs: 5A" value="${initial.name || ''}"></td>
+    <td><input type="number" class="c-maxday" min="0" max="8" placeholder="Boş: standart" value="${initial.maxPerDay ?? ''}"></td>
+    <td class="no-print text-right">
       <button type="button" class="text-xs text-rose-500 hover:underline c-del">Sil</button>
-    </div>
+    </td>
   `;
-
-  classTbody.appendChild(row);
+  classTbody.appendChild(tr);
 }
 
       function addLessonRow(initial = {}) {
@@ -1643,8 +1575,9 @@ function addClassRow(initial = {}) {
       });
 classTbody.addEventListener('click', (e) => {
   if (e.target.classList.contains('c-del')) {
-    const row = e.target.closest('.class-grid-row');
-    row?.remove();
+    const tr = e.target.closest('tr');
+    cleanupPrettySelects(tr);
+    tr?.remove();
   }
 });
 
@@ -1747,12 +1680,12 @@ function readConfig() {
     });
   });
 
-const classes = [];
-classTbody.querySelectorAll('.class-grid-row').forEach(row => {
-  const name = row.querySelector('.c-name')?.value.trim();
+  const classes = [];
+classTbody.querySelectorAll('tr').forEach(tr => {
+  const name = tr.querySelector('.c-name')?.value.trim();
   if (!name) return;
 
-  const raw = Number(row.querySelector('.c-maxday')?.value) || 0;
+  const raw = Number(tr.querySelector('.c-maxday')?.value) || 0;
   const maxDay = raw > 0 ? Math.min(raw, lessonsPerDay) : 0;
 
   classes.push({

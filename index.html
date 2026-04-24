@@ -830,11 +830,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       e.stopPropagation();
     });
 
-    themeButtons.forEach(btn => {
-      btn.addEventListener('click', function () {
-        setThemePref(btn.dataset.themeOption);
-      });
-    });
+themeButtons.forEach(btn => {
+  btn.addEventListener('click', function () {
+    setThemePref(btn.dataset.themeOption);
+    closeSettings();
+  });
+});
 
     document.addEventListener('click', closeSettings);
 

@@ -825,7 +825,41 @@
     min-height: 26px;
     padding: 2px 0;
   }
+  /* Dərs saatları: telefonda sağ boş qalmasın, saatlar tam enə yayılsın */
+  #teacherTable td:nth-child(5){
+    grid-template-columns: 1fr;
+    gap: 8px;
+    align-items: start;
+  }
 
+  #teacherTable td:nth-child(5)::before{
+    grid-column: 1 / -1;
+  }
+
+  #teacherTable td:nth-child(5) > .t-mini-actions,
+  #teacherTable td:nth-child(5) > .t-hours{
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  #teacherTable td:nth-child(5) > .t-hours{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  #teacherTable td:nth-child(5) > .t-hours label{
+    justify-content: center;
+    min-height: 32px;
+    border: 1px solid rgba(148,163,184,.18);
+    border-radius: 12px;
+    background: rgba(255,255,255,.38);
+  }
+
+  html.dark #teacherTable td:nth-child(5) > .t-hours label{
+    border-color: rgba(148,163,184,.14);
+    background: rgba(255,255,255,.035);
+  }
   #lessonTable td:nth-child(5) input[type="checkbox"]{
     width: 18px;
     height: 18px;

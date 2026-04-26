@@ -1539,7 +1539,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   <div>
                     <label class="block text-xs mb-1 text-slate-600 dark:text-slate-300">Həftəlik iş günü</label>
                     <select id="daysCount">
-                      <option value="5">5 gün (B.e–C.u)</option>
+                      <option value="5">5 gün (B.e–C)</option>
                       <option value="6">6 gün (B.e–Ş)</option>
                     </select>
                   </div>
@@ -2134,10 +2134,10 @@ function applyTheme(theme) {
       const daysCountSelect = document.getElementById('daysCount');
       const lessonsPerDayInput = document.getElementById('lessonsPerDay');
 
-      const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C','C.u'];
-      const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C','C.u','Ş'];
-      const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C','C.u','Ş'];
-      const HOUR_LABELS_FULL = ['1','2','3','4','5','6','7','8'];
+const DAYS_LABELS_5 = ['B.e','Ç.a','Ç','C.a','C'];
+const DAYS_LABELS_6 = ['B.e','Ç.a','Ç','C.a','C','Ş'];
+const DAY_LABELS_FULL = ['B.e','Ç.a','Ç','C.a','C','Ş'];
+const HOUR_LABELS_FULL = ['1','2','3','4','5','6','7','8'];
 
       const __epSelectInstances = new Set();
 let __epSelectDocBound = false;
@@ -3377,15 +3377,28 @@ function attemptBuild(config) {
     b.__difficulty = Math.max(1, daysAvail * Math.max(1, slotsAvail));
   });
 
-  blocks.sort((a, b) => {
-    if (a.__hardDouble !== b.__hardDouble) return a.__hardDouble - b.__hardDouble;
-    if (a.__pair !== b.__pair) return a.__pair - b.__pair;
-    if (optNoClassGaps && a.__minSlot !== b.__minSlot) return a.__minSlot - b.__minSlot;
-    if (a.__difficulty !== b.__difficulty) return a.__difficulty - b.__difficulty;
-    if (b.length !== a.length) return b.length - a.length;
-    if (b.heavy !== a.heavy) return (b.heavy ? 1 : 0) - (a.heavy ? 1 : 0);
-    return a.__r - b.__r;
-  });
+blocks.sort((a, b) => {
+  if (a.__hardDouble !== b.__hardDouble) return a.__hardDouble - b.__hardDouble;
+  if (a.__pair !== b.__pair) return a.__pair - b.__pair;
+
+  // ✅ Boşluqsuz rejimdə əvvəlcə ağır olmayan dərslər yerləşsin.
+  // Beləliklə 1-ci saatları mümkün qədər yüngül dərslər tutur,
+  // ağır fənlər isə orta saatlara daha rahat düşür.
+  if (optNoClassGaps && a.heavy !== b.heavy) {
+    return (a.heavy ? 1 : 0) - (b.heavy ? 1 : 0);
+  }
+
+  if (optNoClassGaps && a.__minSlot !== b.__minSlot) return a.__minSlot - b.__minSlot;
+  if (a.__difficulty !== b.__difficulty) return a.__difficulty - b.__difficulty;
+  if (b.length !== a.length) return b.length - a.length;
+
+  // ✅ Gaps rejimində də eyni uzunluq/çətinlikdə ağır olmayan dərs əvvəl gəlsin.
+  if (a.heavy !== b.heavy) {
+    return (a.heavy ? 1 : 0) - (b.heavy ? 1 : 0);
+  }
+
+  return a.__r - b.__r;
+});
 
   // Timetable matrices
   const timetable = {};
@@ -3688,18 +3701,31 @@ function findTeacherConflictBlock(teacherId, day, slot){
     return cands[idx];
   }
 
-  function tryPlaceBlock(block){
-    const avoidEdgesStage1 = !!(optHeavyAvoidEdges && block.heavy);
+function tryPlaceBlock(block){
+  const avoidEdgesStage1 = !!(optHeavyAvoidEdges && block.heavy);
 
-    // stage-1 (heavy kənar olmasın)
-    let cands = getCandidates(block, avoidEdgesStage1);
-    let pick = pickFromTopK(cands, 8);
-    if (pick) { place(block, pick.d, pick.s); return true; }
+  // stage-1: ağır fənn kənar saatlara düşməsin
+  let cands = getCandidates(block, avoidEdgesStage1);
+  let pick = pickFromTopK(cands, 8);
+  if (pick) { place(block, pick.d, pick.s); return true; }
 
-    // stage-2 (kənara icazə ver)
-    cands = getCandidates(block, false);
-    pick = pickFromTopK(cands, 8);
-    if (pick) { place(block, pick.d, pick.s); return true; }
+  // ✅ Əsas düzəliş:
+  // "Sinifdə boşluq olmasın" aktiv olanda ağır fənn ilk cəhddə 1-ci saata düşməyə məcbur qalırsa,
+  // dərhal stage-2-yə keçməsin. Bir neçə dəfə növbəyə qaytarılsın ki,
+  // əvvəlcə ağır olmayan dərslər 1-ci/sonuncu saatları tutsun.
+  if (optNoClassGaps && avoidEdgesStage1) {
+    const heavyRetry = retryCount.get(block.__id) || 0;
+    const heavyEdgeDelayLimit = Math.max(3, Math.min(8, lessonsPerDay + 1));
+
+    if (heavyRetry < heavyEdgeDelayLimit) {
+      return false;
+    }
+  }
+
+  // stage-2: yalnız artıq başqa real seçim qalmayanda kənar saata icazə ver
+  cands = getCandidates(block, false);
+  pick = pickFromTopK(cands, 8);
+  if (pick) { place(block, pick.d, pick.s); return true; }
 function tryPlaceWithEvict(block){
   // evict yalnız gaps rejimində mənalıdır
   if (optNoClassGaps) return false;
